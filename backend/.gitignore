@@ -122,6 +122,9 @@ coverage
 ############################
 
 .env
+.env.*
+!.env.example
+!.env.railway.example
 license.txt
 exports
 .strapi
