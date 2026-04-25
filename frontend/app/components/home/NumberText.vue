@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
           <img src="/home/BirImage.png" class="section-two-center-image" alt="" />
 
           <div class="section-two-left main left-block">
-            <img class="section-two-left-image" src="/home/ikkimun.png" alt="" />
+            <img class="section-two-left-image" :src="s2Img || '/home/ikkimun.png'" alt="" />
           </div>
 
           <div class="section-two-right main right-block">

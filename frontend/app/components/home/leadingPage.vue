@@ -19,20 +19,24 @@ type LandingRes = {
 };
 
 const query = `
-  query LandingPage {
-    landingPage {
+  query LandingPage($locale: I18NLocaleCode) {
+    landingPage(locale: $locale) {
       slogan { url }
       sloganMobile { url }
     }
   }
 `;
 
+const { locale } = useI18n();
+const gqlLocale = computed(() => (locale.value === "en" ? "en" : "ru"));
+
 const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query },
+  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
   server: false,
   key: "landing-slogan",
+  watch: [gqlLocale],
 });
 
 const page = computed(() => data.value?.data?.landingPage ?? null);
