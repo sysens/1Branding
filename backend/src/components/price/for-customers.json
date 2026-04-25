@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_price_for_customers",
+  "info": {
+    "displayName": "ForCustomers"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

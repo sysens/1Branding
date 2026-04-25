@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_landing_page_answer_questions",
+  "info": {
+    "displayName": "AnswerQuestion"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "text"
+    },
+    "answer": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

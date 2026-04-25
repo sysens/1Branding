@@ -1,0 +1,24 @@
+
+services:
+  backend:
+    container_name: sdfghu-strapi
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: sdfghu-strapi
+
+    restart: unless-stopped
+    env_file: .env
+
+    volumes:
+      - temp:/app/.tmp
+      - public:/app/public/uploads
+
+    ports:
+      - '1337:1337'
+
+volumes:
+  temp:
+  public:

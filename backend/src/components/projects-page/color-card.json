@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_projects_page_color_cards",
+  "info": {
+    "displayName": "ColorCard"
+  },
+  "options": {},
+  "attributes": {
+    "HexColorCode": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

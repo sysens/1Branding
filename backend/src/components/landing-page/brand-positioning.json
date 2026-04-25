@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_landing_page_brand_positionings",
+  "info": {
+    "displayName": "BrandPositioning"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subTitle": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

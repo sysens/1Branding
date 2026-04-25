@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_contacts_page_write_to_one_brendings",
+  "info": {
+    "displayName": "WriteToOneBrending"
+  },
+  "options": {},
+  "attributes": {
+    "topic": {
+      "type": "component",
+      "component": "contacts-page.topic",
+      "repeatable": false
+    },
+    "requestedServicesMessage": {
+      "type": "component",
+      "component": "contacts-page.requested-services-message",
+      "repeatable": false
+    },
+    "contactsInputs": {
+      "type": "component",
+      "component": "contacts-page.contact",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

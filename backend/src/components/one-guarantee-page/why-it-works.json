@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_one_guarantee_page_why_it_works",
+  "info": {
+    "displayName": "WhyItWorks"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    },
+    "checkMark": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

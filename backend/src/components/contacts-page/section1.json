@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_contacts_page_section1s",
+  "info": {
+    "displayName": "Section1"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "location": {
+      "type": "component",
+      "component": "contacts-page.location",
+      "repeatable": false
+    },
+    "workingHours": {
+      "type": "component",
+      "component": "contacts-page.working-hours",
+      "repeatable": false
+    },
+    "contactInfo": {
+      "type": "component",
+      "component": "contacts-page.contact-info",
+      "repeatable": false
+    },
+    "note": {
+      "type": "component",
+      "component": "contacts-page.note",
+      "repeatable": false
+    },
+    "downloadBrief": {
+      "type": "component",
+      "component": "contacts-page.download-brief",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

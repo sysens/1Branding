@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_contacts_page_working_hours",
+  "info": {
+    "displayName": "WorkingHours"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "hour": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

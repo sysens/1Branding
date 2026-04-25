@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_one_guarantee_page_effectives",
+  "info": {
+    "displayName": "Effective"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "whyItWorks": {
+      "type": "component",
+      "component": "one-guarantee-page.why-it-works",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

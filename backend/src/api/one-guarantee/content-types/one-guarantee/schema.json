@@ -1,0 +1,69 @@
+{
+  "kind": "singleType",
+  "collectionName": "one_guarantees",
+  "info": {
+    "singularName": "one-guarantee",
+    "pluralName": "one-guarantees",
+    "displayName": "OneGuarantee"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "section2": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "one-guarantee-page.guarantee",
+      "repeatable": false
+    },
+    "section3": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "one-guarantee-page.comments-section",
+      "repeatable": false
+    },
+    "section4": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "landing-page.design-elements",
+      "repeatable": false
+    },
+    "section5": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "one-guarantee-page.effective",
+      "repeatable": false
+    },
+    "section6": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "one-guarantee-page.section6",
+      "repeatable": false
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_seo_one_guarantee_pages",
+  "info": {
+    "displayName": "OneGuaranteePage"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

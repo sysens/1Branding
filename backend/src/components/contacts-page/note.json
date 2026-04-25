@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_contacts_page_notes",
+  "info": {
+    "displayName": "Note"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

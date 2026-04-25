@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_contacts_page_topics",
+  "info": {
+    "displayName": "Topic"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "input": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

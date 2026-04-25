@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_about_page_team_sections",
+  "info": {
+    "displayName": "TeamSection"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

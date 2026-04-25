@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_footer_social_media_links",
+  "info": {
+    "displayName": "SocialMediaLinks"
+  },
+  "options": {},
+  "attributes": {
+    "behanceLink": {
+      "type": "string"
+    },
+    "instagramLink": {
+      "type": "string"
+    },
+    "telegramLink": {
+      "type": "string"
+    },
+    "linkedinLink": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

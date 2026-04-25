@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_projects_page_color_palettes",
+  "info": {
+    "displayName": "ColorPalette"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "colorCard": {
+      "type": "component",
+      "component": "projects-page.color-card",
+      "repeatable": true
+    },
+    "text": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

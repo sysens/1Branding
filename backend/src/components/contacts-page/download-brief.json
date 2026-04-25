@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_contacts_page_download_briefs",
+  "info": {
+    "displayName": "DownloadBrief"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    }
+  },
+  "config": {}
+}

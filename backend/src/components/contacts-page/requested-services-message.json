@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_contacts_page_requested_services_messages",
+  "info": {
+    "displayName": "RequestedServicesMessage"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "input": {
+      "type": "text"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    }
+  },
+  "config": {}
+}

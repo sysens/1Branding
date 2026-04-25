@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_one_guarantee_page_comments_sections",
+  "info": {
+    "displayName": "CommentsSection"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subTitle": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "component",
+      "component": "one-guarantee-page.comments",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

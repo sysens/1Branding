@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contacts_requests",
+  "info": {
+    "singularName": "contacts-request",
+    "pluralName": "contacts-requests",
+    "displayName": "ContactsRequest"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "TopicInput": {
+      "type": "text",
+      "required": true
+    },
+    "requestedServicesMessageInput": {
+      "type": "text",
+      "required": true
+    },
+    "requestedServicesMessageFile": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "FullName": {
+      "type": "text",
+      "required": true
+    },
+    "JobTitle": {
+      "type": "string",
+      "required": true
+    },
+    "Company": {
+      "type": "string",
+      "required": true
+    },
+    "PhoneNumber": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    }
+  }
+}

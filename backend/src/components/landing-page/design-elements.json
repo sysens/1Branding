@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_landing_page_design_elements",
+  "info": {
+    "displayName": "DesignElements"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "cards": {
+      "type": "component",
+      "component": "landing-page.design-el-cards",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

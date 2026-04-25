@@ -1,0 +1,219 @@
+{
+  "lang": {
+    "ru": "Ru",
+    "en": "En"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contacts": "Contacts",
+    "prices": "Prices",
+    "news": "News"
+  },
+  "brand": {
+    "one": "One",
+    "brandingSuffix": "branding",
+    "oneGuaranteeSuffix": "Guarantee’s"
+  },
+  "footer": {
+    "branding": "Branding",
+    "presentations": "Presentations",
+    "illustrations": "Illustrations",
+    "packaging": "Packaging",
+    "questions": "Questions",
+    "services": "Services",
+    "copyright": "OneBranding. All rights reserved."
+  },
+  "seo": {
+    "home": "Home",
+    "about": "About",
+    "contacts": "Contacts",
+    "price": "Prices",
+    "oneGuarantee": "OneGuarantee"
+  },
+ "common": {
+    "prev": "Previous",
+    "next": "Next",
+    "from": "from",
+    "showMore": "Show more",
+    "learnMore": "Learn more",
+    "addFile": "Add file",
+    "maxFileSize": "maximum 10 MB",
+    "contacts": "Contacts",
+    "send": "Send",
+    "sending": "Sending...",
+    "downloadBrief": "download brief",
+    "socials": "SOCIALS",
+    "graphqlUrlEmpty": "GRAPHQL_URL EMPTY",
+    "loading": "Loading...",
+    "noFileSelected": "No file selected",
+    "requiredField": "Please fill all required fields",
+    "invalidEmail": "Enter a valid email (must contain {'@'})",
+    "fileRequired": "Please attach a file",
+    "fileUploadFailed": "File upload failed",
+    "sent": "Sent",
+    "error": "Error"
+  },
+  "home": {
+    "freshProjects": "fresh projects",
+    "gridTitle": "What we do?",
+    "pictureOnWord": {
+      "top": "Strong design for brands",
+      "bottom": "Smart solutions for growth"
+    },
+    "earthDives": {
+      "title": "What we offer",
+      "fallbackTitle": "Logo and brand identity",
+      "fallbackDesc": "We create memorable visual identities that reflect your brand values."
+    },
+    "numberText": {
+      "titleGreen": "HAPPY",
+      "titleWhite": "CLIENTS",
+      "desc": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+    },
+    "ndNumberText": {
+      "panels": [
+        {
+          "titleGreen": "HAPPY",
+          "titleWhite": "CLIENTS",
+          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+        },
+        {
+          "titleGreen": "HAPPY",
+          "titleWhite": "CLIENTS",
+          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+        },
+        {
+          "titleGreen": "HAPPY",
+          "titleWhite": "CLIENTS",
+          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+        },
+        {
+          "titleGreen": "HAPPY",
+          "titleWhite": "CLIENTS",
+          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+        },
+        {
+          "titleGreen": "HAPPY",
+          "titleWhite": "CLIENTS",
+          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
+        },
+        {
+          "titleGreen": "STRONG",
+          "titleWhite": "DESIGN",
+          "text": "We build a visual system that sets the brand apart: structure, typography, identity, and details. Everything is aimed at recognition and growing trust. Design becomes a tool that works for results and sales."
+        },
+        {
+          "titleGreen": "SMART",
+          "titleWhite": "SOLUTIONS",
+          "text": "We combine analysis, creativity, and meaning: from idea to the final package. There is logic in every step so it is clear, beautiful, and convenient for the client. This helps make decisions faster and improves conversion."
+        }
+      ]
+    },
+    "rowShorteners": {
+      "title": "Frequently asked questions",
+      "faqs": [
+        {
+          "title": "How do you work?",
+          "text": "We start with a deep understanding of your brand. Each project goes through research, concept, design, and final presentation. We stay in touch at every step so the result reflects your goals and style."
+        },
+        {
+          "title": "How long does a project take?",
+          "text": "Timelines depend on the complexity of the project. On average, development takes 2 to 6 weeks, including analytics, design, and final delivery."
+        },
+        {
+          "title": "What's included in design?",
+          "text": "UX research, prototyping, UI design, adaptation for mobile devices, and handoff to developers."
+        },
+        {
+          "title": "Do you work under contract?",
+          "text": "Yes, all projects are carried out under contract with clear stages, timelines, and fixed pricing."
+        }
+      ]
+    }
+  },
+  "projectsPage": {
+    "title": "Our projects",
+    "subtitle": "We are proud of every project that helps our clients grow and develop"
+  },
+  "productsPage": {
+    "title": "Branding",
+    "subtitle": "We create brand identity that sets your brand apart from competitors. Unique concepts and a recognizable style."
+  },
+  "productSlug": {
+    "titleFallback": "Branding",
+    "descFallback": "We create brand identity that sets your brand apart from competitors. Unique concepts and a recognizable style."
+  },
+  "aboutPage": {
+    "title": "Meet our team",
+    "freshProjectsTitle": "Fresh projects",
+    "moreButton": "More"
+  },
+  "newsPage": {
+    "title": "Our studio blog"
+  },
+  "news": {
+    "otherNews": "Other news",
+    "slideTitle": "OneBrending updated the Coffee & Co. style.",
+    "slideDate": "12.10.2025"
+  },
+  "oneGuarantee": {
+    "clientsTitle": "What our clients say",
+    "clientsSubtitle": "Honest impressions from people who have already used our services.",
+    "section2": {
+      "title": "ONEGUARANTEE",
+      "text1": "Design that is guaranteed* to appeal to the brand’s target audience!",
+      "text2": "We validate our solutions through an online group of top designers (each group includes about 5 thousand real people who are ready to evaluate our solutions).",
+      "text3": "There are many companies that offer creative solutions instead of effective ones. Such solutions attract attention, look interesting, bold, and innovative, but often do not meet the client’s business goals.",
+      "text4": "In this approach, creativity and beauty go against effectiveness. The agency’s creative vision influences the result instead of joint work within the client’s business interests.",
+      "text5": "Onebranding brings the agency and client closer, makes the relationship partner-based and clear, and the result of the work effective!",
+      "highlightToken": "guaranteed*"
+    },
+    "reasonsTitle": "WHY DOES THIS WORK EFFECTIVELY?"
+  },
+  "costs": {
+    "title": "Our services and prices",
+    "debugTitle": "dfsfsdf",
+    "slider": {
+      "cardTitlePrefix": "ULTRA",
+      "cardTitleHighlight": "BRANDING",
+      "dev": {
+        "prefix": "development of",
+        "highlight": "complex",
+        "suffix": "fields/industries"
+      },
+      "desc1": "Branding in complex fields requires specialized knowledge and approaches due to business specifics, technical aspects, or target audience characteristics. Branding in complex industries can be challenging, but the right strategy and a focus on audience needs will help you stand out and successfully present your brand.",
+      "desc2": "Branding in complex fields requires specialized knowledge and approaches due to business specifics, technical aspects, or target audience characteristics. Branding in complex industries can be challenging, but the right strategy and focus on"
+    }
+  },
+  "warning": {
+    "title": "Dear customers",
+    "text": "We value your time and want to note that pricing is calculated individually and depends on project complexity, timelines, and scope of work. Before we start, we clarify goals, stages, and budget to propose the best solution and a transparent plan. Please leave up-to-date contact details — this will speed up coordination and preparation of a commercial proposal. If you have any questions, write to us and we will consult in detail. Thank you for your understanding and trust."
+  },
+  "contacts": {
+    "title": "CONTACTS",
+    "addressTitle": "ADDRESS",
+    "addressText": "Tashkent, Shaykhantakhur district, Amir Temur St., 18A, office 5, Uzbekistan, 100047",
+    "workTitle": "WORKING HOURS",
+    "workHours": "Monday — Friday 10:00 — 19:00",
+    "contactInfoTitle": "CONTACT INFORMATION",
+    "noteTitle": "NOTE",
+    "noteText": "The agency works mainly with legal entities and large projects. Please provide working contact details when reaching out.",
+    "briefText": "You can email us or fill out the form below.",
+    "form": {
+      "title": "Contact One branding",
+      "description": "Before starting work on a project, we ask clients to answer a few questions. Your answers help us choose the most suitable tools to solve your task. The more details you provide about your project, the more accurate our proposal will be. This helps us understand how we can be useful. Our first conversation can be much more focused if we collect information and prepare for the meeting. And if we see that your task is not within our profile, we will recommend suitable partners.",
+      "topicTitle": "Subject",
+      "topicInput": "Name your project*",
+      "servicesTitle": "Which services would you like to order from us",
+      "servicesInput": "Message",
+      "fullName": "Full name*",
+      "jobTitle": "Job title",
+      "company": "Company*",
+      "phone": "Phone*",
+      "email": "E-mail*",
+      "agreement": "By submitting the request, you agree to the user agreement"
+    }
+  }
+}

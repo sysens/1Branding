@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_one_guarantee_page_comments",
+  "info": {
+    "displayName": "comments"
+  },
+  "options": {},
+  "attributes": {
+    "authorFullName": {
+      "type": "string"
+    },
+    "authorQuote": {
+      "type": "text"
+    },
+    "authorPosition": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

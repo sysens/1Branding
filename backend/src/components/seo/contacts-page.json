@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_seo_contacts_pages",
+  "info": {
+    "displayName": "ContactsPage"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

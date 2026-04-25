@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_contacts_page_locations",
+  "info": {
+    "displayName": "Location"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
