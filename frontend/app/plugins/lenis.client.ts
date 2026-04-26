@@ -1,4 +1,5 @@
 import Lenis from "lenis"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default defineNuxtPlugin((nuxtApp) => {
   if (import.meta.server) return
@@ -14,6 +15,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   let rafId = 0
   let prevFullPath = ""
+  const updateScrollTrigger = () => ScrollTrigger.update()
+
+  lenis.on("scroll", updateScrollTrigger)
 
   const raf = (time: number) => {
     lenis.raf(time)
@@ -37,6 +41,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         prevFullPath = route.fullPath
         lenis.resize()
+        ScrollTrigger.refresh()
       })
     })
   }

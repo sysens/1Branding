@@ -1,26 +1,8 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, ref, computed } from "vue";
-import type { Swiper as SwiperInstance } from "swiper/types";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
-type LenisController = {
-  scrollTo: (
-    target: number,
-    options?: {
-      duration?: number;
-      easing?: (value: number) => number;
-      immediate?: boolean;
-      lock?: boolean;
-    }
-  ) => void;
-};
-type LenisAwareNuxtApp = ReturnType<typeof useNuxtApp> & {
-  $lenis?: LenisController;
-};
-type ScrollTriggerController = {
-  update: () => void;
-};
 
 type Panel = {
   titleGreen: string;
@@ -94,62 +76,6 @@ const root = ref<HTMLElement | null>(null);
 
 let ctx: GsapContext | null = null;
 let ready = false;
-let detachInteractions: (() => void) | null = null;
-
-const isCoarsePointer = () =>
-  process.client && window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
-
-const isTouchInside = (target: EventTarget | null, host: HTMLElement) =>
-  target instanceof Node ? host.contains(target) : false;
-
-const easeInOutCubic = (t: number) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-const smoothTo = (to: number, ms = 650) => {
-  const nuxtApp = useNuxtApp() as LenisAwareNuxtApp;
-  const lenis = nuxtApp.$lenis;
-
-  if (lenis?.scrollTo) {
-    lenis.scrollTo(to, {
-      duration: ms / 1000,
-      easing: easeInOutCubic,
-      immediate: false,
-      lock: true,
-    });
-    return;
-  }
-
-  const start = window.scrollY || document.documentElement.scrollTop || 0;
-  const diff = to - start;
-  if (Math.abs(diff) < 2) return;
-
-  const startTime = performance.now();
-
-  const tick = (now: number) => {
-    const p = Math.min(1, (now - startTime) / ms);
-    const y = start + diff * easeInOutCubic(p);
-    window.scrollTo(0, y);
-    if (p < 1) requestAnimationFrame(tick);
-  };
-
-  requestAnimationFrame(tick);
-};
-
-const getTop = (el: HTMLElement) => {
-  const y = window.scrollY || document.documentElement.scrollTop || 0;
-  const rect = el.getBoundingClientRect();
-  return rect.top + y;
-};
-
-const tickSt = (scrollTrigger: ScrollTriggerController, frames = 14) => {
-  let n = 0;
-  const f = () => {
-    scrollTrigger.update();
-    n += 1;
-    if (n < frames) requestAnimationFrame(f);
-  };
-  requestAnimationFrame(f);
-};
 
 const initGsap = async () => {
   await nextTick();
@@ -188,46 +114,66 @@ const initGsap = async () => {
       },
     });
 
-    gsap.set(items, { opacity: 0, yPercent: 12, pointerEvents: "none" });
-    gsap.set(items[0], { opacity: 1, yPercent: 0, pointerEvents: "auto" });
-
-    const stepPx = 400;
-    const total = Math.max(0, items.length - 1) * stepPx;
+    gsap.set(items, {
+      autoAlpha: 0,
+      yPercent: 10,
+      pointerEvents: "none",
+      willChange: "transform, opacity",
+    });
+    gsap.set(items[0], { autoAlpha: 1, yPercent: 0, pointerEvents: "auto" });
 
     const tl = gsap.timeline({
+      defaults: { ease: "power2.inOut" },
       scrollTrigger: {
         trigger: pinWrap,
         start: "top top",
-        end: `+=${total}`,
+        end: () => {
+          const viewport = window.innerHeight || 800;
+          const segment = Math.min(Math.max(viewport * 0.85, 620), 980);
+          return `+=${Math.max(items.length, 2) * segment}`;
+        },
         pin: true,
-        scrub: 1, // Smooth scrub
-        snap: {
-          snapTo: 1 / Math.max(1, items.length - 1),
-          duration: { min: 0.2, max: 0.5 },
-          delay: 0.1,
-          ease: "power1.inOut"
-        }
-      }
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
     });
+
+    const holdDuration = 0.9;
+    const transitionDuration = 0.65;
 
     items.forEach((item, i) => {
       if (i > 0) {
-        // Fade out previous
-        tl.to(items[i - 1], { opacity: 0, yPercent: -12, pointerEvents: "none", duration: 1 }, i * 2);
-        // Fade in current
-        tl.fromTo(item, { opacity: 0, yPercent: 12 }, { opacity: 1, yPercent: 0, pointerEvents: "auto", duration: 1 }, i * 2);
+        const previousItem = items[i - 1];
+
+        tl.to({}, { duration: holdDuration });
+        tl.set(previousItem, { pointerEvents: "none" });
+        tl.to(previousItem, {
+          autoAlpha: 0,
+          yPercent: -10,
+          duration: transitionDuration,
+        });
+        tl.fromTo(
+          item,
+          { autoAlpha: 0, yPercent: 10, pointerEvents: "none" },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            pointerEvents: "auto",
+            duration: transitionDuration,
+          },
+          "<"
+        );
       }
     });
+
+    tl.to({}, { duration: holdDuration });
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
       });
     });
-
-    detachInteractions = () => {
-      // Nothing custom to detach anymore!
-    };
   }, root.value);
 
   ready = true;
@@ -239,7 +185,6 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  detachInteractions?.();
   ctx?.revert();
   ctx = null;
   ready = false;
