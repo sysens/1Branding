@@ -189,10 +189,11 @@ const rowsConfig = computed(() => {
               :key="row.key + '-' + i"
               :src="src"
               alt=""
-              loading="lazy"
               decoding="async"
-              class="marquee-image md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
+              class="marquee-image blur-md bg-white/10 transition-[filter,background-color] duration-700 ease-in-out md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
               draggable="false"
+              @load="$event.target.classList && $event.target.classList.remove('blur-md', 'bg-white/10')"
+              :ref="(el) => { if (el && el.complete && el.classList) el.classList.remove('blur-md', 'bg-white/10') }"
             />
           </component>
         </div>

@@ -70,7 +70,7 @@ const marqueeDuration = computed(() => {
 </script>
 
 <template>
-  <section class="spaceBetween relative h-auto flex items-center w-full top-20 md:top-0">
+  <section class="spaceBetween relative h-auto flex items-center  w-full top-20 md:top-0">
     <div class="w-full overflow-hidden">
       <div
         class="flex w-max animate-marquee will-change-transform"
@@ -82,7 +82,7 @@ const marqueeDuration = computed(() => {
             :key="'a-' + i"
             :src="src"
             alt=""
-            class="h-[27px] w-auto shrink-0 object-cover md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
+            class="h-[27px] w-auto max-w-[150px] md:max-w-[250px] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
             draggable="false"
           />
         </div>
@@ -93,7 +93,7 @@ const marqueeDuration = computed(() => {
             :key="'b-' + i"
             :src="src"
             alt=""
-            class="h-[27px] w-auto shrink-0 md:h-[3.0625rem] object-cover opacity-90 select-none pointer-events-none"
+            class="h-[27px] w-auto max-w-[150px] md:max-w-[250px] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
             draggable="false"
           />
         </div>

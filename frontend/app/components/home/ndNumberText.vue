@@ -165,11 +165,8 @@ const initGsap = async () => {
     const host = root.value!;
     const pinWrap = host.querySelector<HTMLElement>(".pin-wrap");
     const items = gsap.utils.toArray<HTMLElement>(host.querySelectorAll(".panel"));
-    const brandsTarget = root.value!.querySelector<HTMLElement>(".brands-target");
 
     if (!pinWrap || items.length === 0) return;
-
-    const clampIndex = (n: number) => Math.max(0, Math.min(items.length - 1, n));
 
     const leftBlock = host.querySelector<HTMLElement>(".left-block");
     const rightBlock = host.querySelector<HTMLElement>(".right-block");
@@ -183,22 +180,10 @@ const initGsap = async () => {
       once: true,
       onEnter: () => {
         if (leftBlock) {
-          gsap.to(leftBlock, {
-            x: 0,
-            opacity: 1,
-            duration: 0.9,
-            ease: "power3.out",
-          });
+          gsap.to(leftBlock, { x: 0, opacity: 1, duration: 0.9, ease: "power3.out" });
         }
-
         if (rightBlock) {
-          gsap.to(rightBlock, {
-            x: 0,
-            opacity: 1,
-            duration: 0.9,
-            delay: 0.12,
-            ease: "power3.out",
-          });
+          gsap.to(rightBlock, { x: 0, opacity: 1, duration: 0.9, delay: 0.12, ease: "power3.out" });
         }
       },
     });
@@ -206,214 +191,33 @@ const initGsap = async () => {
     gsap.set(items, { opacity: 0, yPercent: 12, pointerEvents: "none" });
     gsap.set(items[0], { opacity: 1, yPercent: 0, pointerEvents: "auto" });
 
-    let active = 0;
-    let animating = false;
+    const stepPx = 400;
+    const total = Math.max(0, items.length - 1) * stepPx;
 
-    const goTo = (index: number) => {
-      const i = clampIndex(index);
-      if (i === active) return;
-      if (animating) return;
-
-      const prev = items[active];
-      const next = items[i];
-      if (!prev || !next) return;
-
-      animating = true;
-
-      const dir = i > active ? 1 : -1;
-
-      gsap.set(prev, { pointerEvents: "none" });
-      gsap.set(next, { pointerEvents: "none" });
-
-      gsap
-        .timeline({
-          defaults: { ease: "power2.out", duration: 0.42 },
-          onComplete: () => {
-            active = i;
-            gsap.set(items, { pointerEvents: "none" });
-            const cur = items[active];
-            if (cur) gsap.set(cur, { pointerEvents: "auto" });
-            animating = false;
-          },
-        })
-        .to(prev, { opacity: 0, yPercent: -12 * dir }, 0)
-        .fromTo(
-          next,
-          { opacity: 0, yPercent: 12 * dir },
-          { opacity: 1, yPercent: 0 },
-          0.02
-        );
-    };
-
-    const stepPx = 260;
-    const extraPx = 180;
-    const total = Math.max(0, items.length - 1) * stepPx + extraPx;
-
-    const st = ScrollTrigger.create({
-      trigger: pinWrap,
-      start: "top top",
-      end: `+=${total}`,
-      pin: true,
-      scrub: false,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        const idx = Math.round(self.progress * (items.length - 1));
-        goTo(idx);
-      },
-      onLeave: () => {
-        if (!brandsTarget) return;
-        const y = getTop(brandsTarget);
-        smoothTo(y, 650);
-      },
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinWrap,
+        start: "top top",
+        end: `+=${total}`,
+        pin: true,
+        scrub: 1, // Smooth scrub
+        snap: {
+          snapTo: 1 / Math.max(1, items.length - 1),
+          duration: { min: 0.2, max: 0.5 },
+          delay: 0.1,
+          ease: "power1.inOut"
+        }
+      }
     });
 
-    const getEdge = (edge: "start" | "end") => {
-      const value = st[edge];
-      return typeof value === "number" ? value : 0;
-    };
-
-    const jumpOutDown = () => {
-      const end = getEdge("end");
-      window.scrollTo(0, end + 2);
-      ScrollTrigger.update();
-    };
-
-    const jumpOutUp = () => {
-      const start = getEdge("start");
-      window.scrollTo(0, Math.max(0, start - 2));
-      ScrollTrigger.update();
-    };
-
-    const getSnapY = (targetIndex: number) => {
-      const last = Math.max(1, items.length - 1);
-      const idx = clampIndex(targetIndex);
-      const p = idx / last;
-
-      const start = getEdge("start");
-      const end = getEdge("end");
-
-      return start + p * (end - start);
-    };
-
-    let wheelAcc = 0;
-    let wheelResetTimer: number | null = null;
-    const WHEEL_THRESHOLD = 120;
-    let lastY = 0;
-    let touchActive = false;
-    let touchAcc = 0;
-    const TOUCH_THRESHOLD = 70;
-
-    const onWheel = (e: WheelEvent) => {
-      if (!st.isActive) return;
-
-      const d = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-
-      if (d > 0 && active >= items.length - 1) {
-        e.preventDefault();
-        jumpOutDown();
-        return;
+    items.forEach((item, i) => {
+      if (i > 0) {
+        // Fade out previous
+        tl.to(items[i - 1], { opacity: 0, yPercent: -12, pointerEvents: "none", duration: 1 }, i * 2);
+        // Fade in current
+        tl.fromTo(item, { opacity: 0, yPercent: 12 }, { opacity: 1, yPercent: 0, pointerEvents: "auto", duration: 1 }, i * 2);
       }
-
-      if (d < 0 && active <= 0) {
-        e.preventDefault();
-        jumpOutUp();
-        return;
-      }
-
-      e.preventDefault();
-
-      wheelAcc += d;
-
-      if (wheelResetTimer) window.clearTimeout(wheelResetTimer);
-      wheelResetTimer = window.setTimeout(() => {
-        wheelAcc = 0;
-        wheelResetTimer = null;
-      }, 120);
-
-      if (Math.abs(wheelAcc) < WHEEL_THRESHOLD) return;
-      if (animating) return;
-
-      const nextIndex = clampIndex(wheelAcc > 0 ? active + 1 : active - 1);
-      wheelAcc = 0;
-
-      goTo(nextIndex);
-
-      const y = getSnapY(nextIndex);
-      smoothTo(y, 520);
-      tickSt(ScrollTrigger, 16);
-    };
-
-    const enableCustomWheel = !isCoarsePointer();
-    const enableCustomTouch = isCoarsePointer();
-
-    const onTouchStart = (e: TouchEvent) => {
-      if (!enableCustomTouch || !st.isActive) return;
-      if (!isTouchInside(e.target, host)) return;
-      if (!e.touches || e.touches.length === 0) return;
-
-      touchActive = true;
-      lastY = e.touches[0].clientY;
-      touchAcc = 0;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!enableCustomTouch || !st.isActive || !touchActive) return;
-      if (!isTouchInside(e.target, host)) return;
-      if (!e.touches || e.touches.length === 0) return;
-
-      const y = e.touches[0].clientY;
-      const dy = lastY - y;
-      if (Math.abs(dy) < 4) return;
-
-      if (dy > 18 && active >= items.length - 1) {
-        e.preventDefault();
-        jumpOutDown();
-        touchActive = false;
-        touchAcc = 0;
-        return;
-      }
-
-      if (dy < -18 && active <= 0) {
-        e.preventDefault();
-        jumpOutUp();
-        touchActive = false;
-        touchAcc = 0;
-        return;
-      }
-
-      e.preventDefault();
-
-      touchAcc += dy;
-      lastY = y;
-
-      if (Math.abs(touchAcc) < TOUCH_THRESHOLD) return;
-      if (animating) return;
-
-      const nextIndex = clampIndex(touchAcc > 0 ? active + 1 : active - 1);
-      touchAcc = 0;
-
-      goTo(nextIndex);
-
-      const snapY = getSnapY(nextIndex);
-      smoothTo(snapY, 560);
-      tickSt(ScrollTrigger, 16);
-    };
-
-    const onTouchEnd = () => {
-      touchActive = false;
-      touchAcc = 0;
-    };
-
-    if (enableCustomWheel) {
-      window.addEventListener("wheel", onWheel, { passive: false });
-    }
-
-    if (enableCustomTouch) {
-      host.addEventListener("touchstart", onTouchStart, { passive: true });
-      host.addEventListener("touchmove", onTouchMove, { passive: false });
-      host.addEventListener("touchend", onTouchEnd, { passive: true });
-      host.addEventListener("touchcancel", onTouchEnd, { passive: true });
-    }
+    });
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -422,18 +226,7 @@ const initGsap = async () => {
     });
 
     detachInteractions = () => {
-      if (enableCustomWheel) {
-        window.removeEventListener("wheel", onWheel);
-      }
-      if (enableCustomTouch) {
-        host.removeEventListener("touchstart", onTouchStart);
-        host.removeEventListener("touchmove", onTouchMove);
-        host.removeEventListener("touchend", onTouchEnd);
-        host.removeEventListener("touchcancel", onTouchEnd);
-      }
-      if (wheelResetTimer) window.clearTimeout(wheelResetTimer);
-      st.kill();
-      detachInteractions = null;
+      // Nothing custom to detach anymore!
     };
   }, root.value);
 
