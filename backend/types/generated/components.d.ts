@@ -488,7 +488,7 @@ export interface ProjectsPageSection2 extends Struct.ComponentSchema {
   };
   attributes: {
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    text: Schema.Attribute.String;
+    text: Schema.Attribute.Text;
     title: Schema.Attribute.String;
   };
 }

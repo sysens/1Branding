@@ -1,20 +1,44 @@
-// import type { Core } from '@strapi/strapi';
+import type { Core, Schema, UID } from "@strapi/strapi";
+
+const isApiSingleType = (
+  uid: string,
+  contentType: Schema.ContentType
+): uid is UID.ContentType =>
+  uid.startsWith("api::") && contentType.kind === "singleType";
+
+const ensureSingleTypeDocument = async (
+  strapi: Core.Strapi,
+  uid: UID.ContentType
+): Promise<void> => {
+  const existingDocument = await strapi.documents(uid).findFirst();
+
+  if (existingDocument) {
+    return;
+  }
+
+  await strapi.documents(uid).create({ data: {} });
+  strapi.log.info(`Bootstrap created missing single type document for ${uid}`);
+};
+
+const ensureDefaultSingleTypeDocuments = async (
+  strapi: Core.Strapi
+): Promise<void> => {
+  const singleTypeUids = Object.entries(strapi.contentTypes)
+    .filter(
+      (entry): entry is [UID.ContentType, Schema.ContentType] =>
+        isApiSingleType(entry[0], entry[1])
+    )
+    .map(([uid]) => uid);
+
+  for (const uid of singleTypeUids) {
+    await ensureSingleTypeDocument(strapi, uid);
+  }
+};
 
 export default {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register() {},
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {},
+  async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    await ensureDefaultSingleTypeDocuments(strapi);
+  },
 };
