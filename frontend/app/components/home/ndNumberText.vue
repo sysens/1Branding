@@ -212,7 +212,7 @@ onBeforeUnmount(() => {
           class="main left-block flex-1 flex justify-center md:justify-start relative left-0 md:left-0 lg:left-4 xl:left-[8.75rem] w-full max-w-[360px] md:max-w-[380px] lg:max-w-[430px] xl:max-w-none z-0"
         >
           <video
-            class="relative z-[1] top-0 md:top-[20px] lg:top-[0px] xl:top-[0px] w-[281px] h-[383px] md:w-[310px] md:h-[430px] lg:w-[460px] lg:h-[800px] xl:w-[29.5625rem] xl:h-[50.8125rem] object-cover scale-[1] md:scale-[1] lg:scale-[1.08] xl:scale-150"
+            class="relative z-[1] top-0 md:top-[20px] lg:top-[0px] xl:top-[0px] w-[281px] h-[383px] md:w-[310px] md:h-[430px] lg:w-[460px] lg:h-[800px] xl:w-[29.5625rem] xl:h-[61rem] object-cover scale-[1] md:scale-[1] lg:scale-[1.08] xl:scale-150"
             autoplay
             muted
             loop
@@ -225,7 +225,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div
-          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-[8.75rem] min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
+          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-[8.75rem] xl:self-center xl:-translate-y-20 min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
         >
           <div class="relative w-full h-full overflow-visible">
             <div
