@@ -12,7 +12,9 @@
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "files"
+        "files",
+        "images",
+        "videos"
       ]
     }
   },

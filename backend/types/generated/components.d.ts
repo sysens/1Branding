@@ -69,7 +69,7 @@ export interface ContactsPageDownloadBrief extends Struct.ComponentSchema {
     displayName: 'DownloadBrief';
   };
   attributes: {
-    file: Schema.Attribute.Media<'files'>;
+    file: Schema.Attribute.Media<'files' | 'images' | 'videos'>;
     text: Schema.Attribute.Text;
   };
 }
@@ -139,7 +139,7 @@ export interface ContactsPageSection2 extends Struct.ComponentSchema {
     displayName: 'Section2';
   };
   attributes: {
-    text: Schema.Attribute.String;
+    text: Schema.Attribute.Text;
     title: Schema.Attribute.String;
   };
 }
