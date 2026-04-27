@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_landing_page_brand_collages",
+  "info": {
+    "displayName": "BrandCollage"
+  },
+  "options": {},
+  "attributes": {
+    "row1": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "row2": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "row3": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  },
+  "config": {}
+}

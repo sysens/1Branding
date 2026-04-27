@@ -660,6 +660,15 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
     };
   };
   attributes: {
+    brandCollage: Schema.Attribute.Component<
+      'landing-page.brand-collage',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

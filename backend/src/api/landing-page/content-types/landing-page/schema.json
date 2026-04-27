@@ -43,6 +43,16 @@
         "videos"
       ]
     },
+    "brandCollage": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "landing-page.brand-collage",
+      "repeatable": false
+    },
     "section2": {
       "type": "component",
       "pluginOptions": {

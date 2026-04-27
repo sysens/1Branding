@@ -205,6 +205,18 @@ export interface LandingPageAnswerQuestion extends Struct.ComponentSchema {
   };
 }
 
+export interface LandingPageBrandCollage extends Struct.ComponentSchema {
+  collectionName: 'components_landing_page_brand_collages';
+  info: {
+    displayName: 'BrandCollage';
+  };
+  attributes: {
+    row1: Schema.Attribute.Media<'images', true>;
+    row2: Schema.Attribute.Media<'images', true>;
+    row3: Schema.Attribute.Media<'images', true>;
+  };
+}
+
 export interface LandingPageBrandPositioning extends Struct.ComponentSchema {
   collectionName: 'components_landing_page_brand_positionings';
   info: {
@@ -567,6 +579,7 @@ declare module '@strapi/strapi' {
       'contacts-page.write-to-one-brending': ContactsPageWriteToOneBrending;
       'footer.social-media-links': FooterSocialMediaLinks;
       'landing-page.answer-question': LandingPageAnswerQuestion;
+      'landing-page.brand-collage': LandingPageBrandCollage;
       'landing-page.brand-positioning': LandingPageBrandPositioning;
       'landing-page.design-el-cards': LandingPageDesignElCards;
       'landing-page.design-elements': LandingPageDesignElements;

@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import MarqueeMedia from "./MarqueeMedia.vue";
+import {
+  buildBrandCollageRowsConfig,
+  getLocalBrandCollageRows,
+} from "~/utils/brandCollageRows";
 
 type Props = {
   logos?: string[];
+  rowSets?: string[][];
+  staticMediaBaseUrl?: string;
   rows?: number;
   durationSeconds?: number;
   linkTo?: string;
@@ -14,6 +21,8 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), {
   logos: undefined,
+  rowSets: undefined,
+  staticMediaBaseUrl: "",
   rows: 3,
   durationSeconds: 120,
   showTitle: false,
@@ -28,142 +37,19 @@ const hasButtonText = computed(() => !!props.button?.trim());
 const shouldShowTitle = computed(() => props.showTitle && hasTitleText.value);
 const shouldShowButton = computed(() => props.showButton && hasButtonText.value);
 
-const mulberry32 = (seed: number) => {
-  let t = seed >>> 0;
-  return () => {
-    t += 0x6d2b79f5;
-    let x = Math.imul(t ^ (t >>> 15), 1 | t);
-    x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
-    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-  };
-};
-
-const shuffleArray = (arr: string[], seed: number) => {
-  const rand = mulberry32(seed);
-  const copy = [...arr];
-
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-
-  return copy;
-};
-
-const spreadDuplicates = (arr: string[], seed: number) => {
-  if (arr.length <= 1) return arr;
-
-  const rand = mulberry32(seed);
-  const result = [...arr];
-
-  for (let pass = 0; pass < result.length * 3; pass++) {
-    let changed = false;
-
-    for (let i = 1; i < result.length; i++) {
-      if (result[i] === result[i - 1]) {
-        let swapIndex = -1;
-
-        for (let j = i + 1; j < result.length; j++) {
-          const prevOk = result[j] !== result[i - 1];
-          const nextOk = j === result.length - 1 || result[j + 1] !== result[i];
-          if (prevOk && nextOk) {
-            swapIndex = j;
-            break;
-          }
-        }
-
-        if (swapIndex === -1) {
-          const candidates: number[] = [];
-          for (let j = 0; j < result.length; j++) {
-            if (j !== i && result[j] !== result[i - 1]) {
-              candidates.push(j);
-            }
-          }
-
-          if (candidates.length) {
-            swapIndex = candidates[Math.floor(rand() * candidates.length)];
-          }
-        }
-
-        if (swapIndex !== -1) {
-          [result[i], result[swapIndex]] = [result[swapIndex], result[i]];
-          changed = true;
-        }
-      }
-    }
-
-    if (!changed) break;
-  }
-
-  return result;
-};
-
-const row1 = [
-  "/home/threeLayerLocal/11.webp",
-  "/home/threeLayerLocal/12.webp",
-  "/home/threeLayerLocal/13.webp",
-  "/home/threeLayerLocal/14.webp",
-  "/home/threeLayerLocal/15.webp",
-  "/home/threeLayerLocal/16.webp",
-  "/home/threeLayerLocal/17.webp",
-  "/home/threeLayerLocal/18.webp",
-  "/home/threeLayerLocal/19.webp",
-  "/home/threeLayerLocal/199.webp",
-];
-
-const row2 = [
-  "/home/threeLayerLocal/21.webp",
-  "/home/threeLayerLocal/22.webp",
-  "/home/threeLayerLocal/23.webp",
-  "/home/threeLayerLocal/24.webp",
-  "/home/threeLayerLocal/25.webp",
-  "/home/threeLayerLocal/26.webp",
-  "/home/threeLayerLocal/27.webp",
-  "/home/threeLayerLocal/28.webp",
-  "/home/threeLayerLocal/29.webp",
-  "/home/threeLayerLocal/299.webp",
-];
-
-const row3 = [
-  "/home/threeLayerLocal/31.webp",
-  "/home/threeLayerLocal/32.webp",
-  "/home/threeLayerLocal/33.webp",
-  "/home/threeLayerLocal/34.webp",
-  "/home/threeLayerLocal/35.webp",
-  "/home/threeLayerLocal/36.webp",
-  "/home/threeLayerLocal/37.webp",
-  "/home/threeLayerLocal/38.webp",
-  "/home/threeLayerLocal/39.webp",
-  "/home/threeLayerLocal/40.webp",
-];
-
-const localRowSets = [row1, row2, row3];
-
-const buildRowLogos = (logos: string[], rowIdx: number) => {
-  const seed = 12345 + rowIdx * 99991;
-  const shuffled = shuffleArray(logos, seed);
-  return spreadDuplicates(shuffled, seed + 77);
-};
+const fallbackRowSets = computed(() =>
+  getLocalBrandCollageRows(props.staticMediaBaseUrl)
+);
 
 const rowsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
+  const legacyLogos = props.logos?.length ? [props.logos] : [];
 
-  return Array.from({ length: total }, (_, idx) => {
-    const isReverse = idx % 2 === 1;
-    const source =
-      localRowSets[idx] && localRowSets[idx].length
-        ? localRowSets[idx]
-        : localRowSets[idx % localRowSets.length] || props.logos || row1;
-
-    const preparedLogos = buildRowLogos(source, idx);
-
-    return {
-      key: `row-${idx}`,
-      animClass: isReverse ? "animate-marquee-reverse" : "animate-marquee",
-      withLink: idx === 0,
-      logos: preparedLogos,
-      duplicatedLogos: [...preparedLogos, ...preparedLogos],
-    };
+  return buildBrandCollageRowsConfig({
+    totalRows: total,
+    adminRowSets: props.rowSets?.length ? props.rowSets : legacyLogos,
+    fallbackRowSets: fallbackRowSets.value,
+    linkTo: props.linkTo,
   });
 });
 </script>
@@ -184,16 +70,12 @@ const rowsConfig = computed(() => {
             :to="row.withLink ? props.linkTo : undefined"
             class="flex items-center gap-2 md:gap-3 md:px-1.5 px-1"
           >
-            <img
-              v-for="(src, i) in row.duplicatedLogos"
+            <MarqueeMedia
+              v-for="(image, i) in row.duplicatedImages"
               :key="row.key + '-' + i"
-              :src="src"
-              alt=""
-              decoding="async"
-              class="marquee-image blur-md bg-white/10 transition-[filter,background-color] duration-700 ease-in-out md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
-              draggable="false"
-              @load="$event.target.classList && $event.target.classList.remove('blur-md', 'bg-white/10')"
-              :ref="(el) => { if (el && el.complete && el.classList) el.classList.remove('blur-md', 'bg-white/10') }"
+              :src="image.src"
+              :placeholder-src="image.placeholderSrc"
+              :eager="row.key === 'row-0' && i < 4"
             />
           </component>
         </div>
@@ -246,7 +128,7 @@ const rowsConfig = computed(() => {
   animation: marquee var(--marquee-duration) linear infinite reverse;
 }
 
-.marquee-image {
+.marquee-image-frame {
   transform: translateZ(0);
   backface-visibility: hidden;
 }

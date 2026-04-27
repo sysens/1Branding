@@ -17,6 +17,8 @@ const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 const route = useRoute();
 const nuxtApp = useNuxtApp();
+const { rowSets: brandCollageRows, staticMediaBaseUrl } =
+  await useBrandCollageRows();
 
 const loading = ref(true);
 const hashScrollDone = ref(false);
@@ -178,7 +180,13 @@ onMounted(async () => {
       <div
         class="home-three-layer relative md:bottom-28 md:right-[42px] md:w-[120%] md:-translate-y-10 md:rotate-[-6deg] [transform-style:preserve-3d] md:pb-40"
       >
-        <ThreeLayer :rows="3" :showTitle="false" :showButton="false" />
+        <ThreeLayer
+          :rows="3"
+          :row-sets="brandCollageRows"
+          :static-media-base-url="staticMediaBaseUrl"
+          :showTitle="false"
+          :showButton="false"
+        />
       </div>
 
       <div class="home-nd-number-text">
@@ -294,6 +302,7 @@ onMounted(async () => {
     transform: translateY(-1.5rem) rotate(-4deg);
   }
 
+  .home-three-layer :deep(.marquee-image-frame),
   .home-three-layer :deep(.animate-marquee img),
   .home-three-layer :deep(.animate-marquee-reverse img) {
     width: 26rem;

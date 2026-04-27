@@ -26,6 +26,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       graphqlUrl: process.env.NUXT_PUBLIC_GRAPHQL_URL,
+      staticMediaBaseUrl: process.env.NUXT_PUBLIC_STATIC_MEDIA_BASE_URL || "",
     },
   },
 
