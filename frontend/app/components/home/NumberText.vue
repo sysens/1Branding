@@ -180,8 +180,8 @@ onBeforeUnmount(() => {
     <div class="section-two-bg">
       <div class="ichkidiv">
         <div class="section-two-wrap containerr relative md:top-20 bottom-32">
-          <div class="section-two-left main left-block">
-            <TextHoverEffect text="2500" class="section-two-number" />
+          <div class="section-two-number-layer main left-block">
+            <TextHoverEffect text="2500" class="section-two-number" :duration="0" />
           </div>
 
           <div class="section-two-right main right-block">
@@ -235,40 +235,40 @@ onBeforeUnmount(() => {
   z-index: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  justify-items: center;
-  gap: clamp(2rem, 4vw, 5rem);
+  justify-content: flex-end;
   padding-top: clamp(7rem, 8vw, 8.75rem);
   min-height: 100vh;
 }
 
-.section-two-left,
 .section-two-right {
   position: relative;
-  flex: 1 1 0%;
   min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.section-two-left {
+.section-two-number-layer {
+  position: absolute;
+  left: clamp(-4rem, -1.5vw, -1rem);
+  top: clamp(15rem, 28vh, 21rem);
   z-index: 0;
-  align-items: center;
+  width: min(70vw, 58rem);
+  height: clamp(18rem, 28vw, 26rem);
   pointer-events: auto;
 }
 
 .section-two-number {
-  width: min(52vw, 42rem);
-  height: clamp(11rem, 21vw, 17rem);
-  opacity: 0.88;
-  transform: translateX(-2vw);
+  width: 100%;
+  height: 100%;
 }
 
 .section-two-right {
+  width: min(48vw, 40rem);
   z-index: 1;
   align-items: center;
   text-align: center;
+  margin-right: clamp(1rem, 3vw, 4.5rem);
 }
 
 .section-two-title {
@@ -353,22 +353,26 @@ onBeforeUnmount(() => {
     min-height: 52rem;
   }
 
-  .section-two-number {
-    width: min(50vw, 36rem);
-    height: clamp(10rem, 20vw, 15rem);
+  .section-two-number-layer {
+    width: min(67vw, 50rem);
+    height: clamp(16rem, 27vw, 23rem);
   }
 }
 
 /* 1200 dan past */
 @media (max-width: 1200px) {
   .section-two-wrap {
-    gap: 2rem;
     min-height: 48rem;
   }
 
-  .section-two-number {
-    width: min(50vw, 32rem);
-    height: clamp(9rem, 19vw, 13rem);
+  .section-two-number-layer {
+    left: -4rem;
+    width: min(66vw, 45rem);
+    height: clamp(14rem, 27vw, 20rem);
+  }
+
+  .section-two-right {
+    width: min(50vw, 34rem);
   }
 
   .section-two-desc {
@@ -381,30 +385,24 @@ onBeforeUnmount(() => {
   .section-two-wrap {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 1.25rem;
+    justify-content: flex-end;
     padding-top: 7rem;
     min-height: 44rem;
   }
 
-  .section-two-left,
   .section-two-right {
-    flex: 0 0 50%;
-    max-width: 50%;
+    width: min(50vw, 28rem);
     min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .section-two-left {
-    align-items: center;
-  }
-
-  .section-two-number {
-    width: min(48vw, 27rem);
-    height: 10rem;
-    transform: translateX(-1vw);
+  .section-two-number-layer {
+    left: -3rem;
+    top: 18rem;
+    width: min(59vw, 34rem);
+    height: 14rem;
   }
 
   .section-two-right {
@@ -413,7 +411,8 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding-left: 1rem;
+    margin-right: 0;
+    padding-left: 0;
     margin-left: 0;
   }
 
@@ -462,14 +461,19 @@ onBeforeUnmount(() => {
 /* 991 dan past */
 @media (max-width: 991px) {
   .section-two-wrap {
-    gap: 1.25rem;
     padding-top: 7rem;
     min-height: 44rem;
   }
 
-  .section-two-number {
-    width: min(48vw, 24rem);
-    height: 9rem;
+  .section-two-number-layer {
+    left: -3rem;
+    top: 18rem;
+    width: min(58vw, 30rem);
+    height: 12.5rem;
+  }
+
+  .section-two-right {
+    width: min(52vw, 27rem);
   }
 
   .section-two-title-top {
@@ -500,23 +504,18 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 2rem;
     padding-top: 110px;
     min-height: auto;
     height: auto;
   }
 
-  .section-two-left {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 0;
-  }
-
-  .section-two-number {
-    width: min(94vw, 28rem);
-    height: 10rem;
-    transform: none;
+  .section-two-number-layer {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: min(100vw, 34rem);
+    height: 13rem;
+    margin-top: 2rem;
   }
 
   .section-two-right {
@@ -559,12 +558,11 @@ onBeforeUnmount(() => {
 @media (max-width: 575px) {
   .section-two-wrap {
     padding-top: 100px;
-    gap: 1rem;
   }
 
-  .section-two-number {
-    width: min(94vw, 23rem);
-    height: 8.5rem;
+  .section-two-number-layer {
+    width: min(104vw, 29rem);
+    height: 11rem;
   }
 
   .section-two-title {
@@ -595,9 +593,9 @@ onBeforeUnmount(() => {
 
 /* Juda kichik mobile */
 @media (max-width: 390px) {
-  .section-two-number {
-    width: min(96vw, 20rem);
-    height: 7.5rem;
+  .section-two-number-layer {
+    width: min(108vw, 25rem);
+    height: 9.5rem;
   }
 
   .section-two-title-top {
