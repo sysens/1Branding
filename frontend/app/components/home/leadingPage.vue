@@ -139,7 +139,7 @@ onBeforeUnmount(() => {
       <img
         src="/home/Frame 2147223311.png"
         alt=""
-        class="transition-all duration-500 ease-out md:h-[6.25rem] md:w-[6.25rem] w-[80px] h-[80px] group-hover:scale-110 group-hover:drop-shadow-[0_0_60px_#03CB00] group-hover:brightness-110"
+        class="transition-all duration-500 ease-out md:h-[5rem] md:w-[5rem] w-[64px] h-[64px] group-hover:scale-110 group-hover:drop-shadow-[0_0_48px_#03CB00] group-hover:brightness-110"
       />
     </NuxtLink>
   </Teleport>

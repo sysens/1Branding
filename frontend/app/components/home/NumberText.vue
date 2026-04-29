@@ -3,6 +3,7 @@ import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue"
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Brands from "./Brands.vue";
+import TextHoverEffect from "./TextHoverEffect.vue";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,13 +15,10 @@ const { t, locale } = useI18n<{ message: any }, AppLocale>();
 const localePath = useLocalePath();
 const router = useRouter();
 
-type Media = { url?: string | null };
-
 type LandingRes = {
   data?: {
     landingPage?: {
       section2?: {
-        countImage?: Media | null;
         title?: string | null;
         description?: string | null;
       } | null;
@@ -37,7 +35,6 @@ const query = `
   query LandingPage($locale: I18NLocaleCode) {
     landingPage(locale: $locale) {
       section2 {
-        countImage { url }
         title
         description
       }
@@ -58,17 +55,8 @@ const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
 });
 
 const page = computed(() => data.value?.data?.landingPage ?? null);
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
 
 const s2 = computed(() => page.value?.section2 ?? null);
-const s2Img = computed(() => resolveMedia(s2.value?.countImage?.url ?? null));
 const s2Title = computed(() => (s2.value?.title ?? "").trim());
 const s2Desc = computed(() => (s2.value?.description ?? "").trim());
 const s2TitleGreen = computed(() => s2Title.value || t("home.numberText.titleGreen"));
@@ -188,14 +176,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="root" class="section-two-root ]">
+  <div ref="root" class="section-two-root">
     <div class="section-two-bg">
       <div class="ichkidiv">
         <div class="section-two-wrap containerr relative md:top-20 bottom-32">
-          <img src="/home/BirImage.png" class="section-two-center-image" alt="" />
-
           <div class="section-two-left main left-block">
-            <img class="section-two-left-image" :src="s2Img || '/home/ikkimun.png'" alt="" />
+            <TextHoverEffect text="2500" class="section-two-number" />
           </div>
 
           <div class="section-two-right main right-block">
@@ -248,31 +234,17 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
   justify-items: center;
-  gap: clamp(0.5rem, 1.2vw, 1.5rem);
+  gap: clamp(2rem, 4vw, 5rem);
   padding-top: clamp(7rem, 8vw, 8.75rem);
   min-height: 100vh;
-}
-
-.section-two-center-image {
-  position: absolute;
-  left: 39%;
-  top: 56%;
-  z-index: 0;
-  width: clamp(18rem, 24vw, 26.25rem);
-  height: auto;
-  max-height: 46.1875rem;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-  transform: translate(-50%, -50%);
 }
 
 .section-two-left,
 .section-two-right {
   position: relative;
-  z-index: 0;
   flex: 1 1 0%;
   min-width: 0;
   display: flex;
@@ -281,14 +253,22 @@ onBeforeUnmount(() => {
 }
 
 .section-two-left {
-  padding-bottom: 0;
+  z-index: 0;
+  align-items: center;
+  pointer-events: auto;
 }
 
-.section-two-left-image {
-  display: block;
-  width: min(100%, 38rem);
-  height: auto;
-  max-width: 100%;
+.section-two-number {
+  width: min(52vw, 42rem);
+  height: clamp(11rem, 21vw, 17rem);
+  opacity: 0.88;
+  transform: translateX(-2vw);
+}
+
+.section-two-right {
+  z-index: 1;
+  align-items: center;
+  text-align: center;
 }
 
 .section-two-title {
@@ -338,6 +318,7 @@ onBeforeUnmount(() => {
   letter-spacing: 0;
   color: #cccccc;
   max-width: 36rem;
+  text-align: center;
 }
 
 .section-two-button {
@@ -345,6 +326,7 @@ onBeforeUnmount(() => {
   max-width: 100%;
   height: 60px;
   margin-bottom: clamp(1rem, 4vw, 3.5rem);
+  align-self: center;
   border: 2px solid #03cb00;
   border-radius: 9999px;
   background: #000000;
@@ -371,31 +353,22 @@ onBeforeUnmount(() => {
     min-height: 52rem;
   }
 
-  .section-two-center-image {
-    left: 39%;
-    top: 48%;
-  }
-
-  .section-two-left-image {
-    width: min(100%, 34rem);
+  .section-two-number {
+    width: min(50vw, 36rem);
+    height: clamp(10rem, 20vw, 15rem);
   }
 }
 
 /* 1200 dan past */
 @media (max-width: 1200px) {
   .section-two-wrap {
-    gap: 1rem;
+    gap: 2rem;
     min-height: 48rem;
   }
 
-  .section-two-center-image {
-    left: 39%;
-    top: 52%;
-    width: clamp(16rem, 22vw, 22rem);
-  }
-
-  .section-two-left-image {
-    width: min(100%, 30rem);
+  .section-two-number {
+    width: min(50vw, 32rem);
+    height: clamp(9rem, 19vw, 13rem);
   }
 
   .section-two-desc {
@@ -408,8 +381,8 @@ onBeforeUnmount(() => {
   .section-two-wrap {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0;
+    justify-content: center;
+    gap: 1.25rem;
     padding-top: 7rem;
     min-height: 44rem;
   }
@@ -425,23 +398,21 @@ onBeforeUnmount(() => {
   }
 
   .section-two-left {
-    align-items: flex-start;
-    padding-bottom: 0;
+    align-items: center;
   }
 
-  .section-two-left-image {
-    display: block;
-    width: 100%;
-    max-width: 25rem;
-    height: auto;
+  .section-two-number {
+    width: min(48vw, 27rem);
+    height: 10rem;
+    transform: translateX(-1vw);
   }
 
   .section-two-right {
     position: relative;
     z-index: 2;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    text-align: left;
+    text-align: center;
     padding-left: 1rem;
     margin-left: 0;
   }
@@ -451,18 +422,11 @@ onBeforeUnmount(() => {
   .section-two-title-bottom,
   .section-two-desc {
     width: 100%;
-    text-align: left;
+    text-align: center;
   }
 
   .section-two-button {
-    align-self: flex-start;
-  }
-
-  .section-two-center-image {
-    left: 39%;
-    top: 44%;
-    width: 18rem;
-    height: auto;
+    align-self: center;
   }
 
   .section-two-title {
@@ -498,23 +462,14 @@ onBeforeUnmount(() => {
 /* 991 dan past */
 @media (max-width: 991px) {
   .section-two-wrap {
-    gap: 0.75rem;
+    gap: 1.25rem;
     padding-top: 7rem;
     min-height: 44rem;
   }
 
-  .section-two-center-image {
-    left: 40%;
-    top: 46%;
-    width: 18rem;
-  }
-
-  .section-two-left {
-    padding-bottom: 0;
-  }
-
-  .section-two-left-image {
-    width: min(100%, 24rem);
+  .section-two-number {
+    width: min(48vw, 24rem);
+    height: 9rem;
   }
 
   .section-two-title-top {
@@ -545,38 +500,29 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 1.25rem;
+    gap: 2rem;
     padding-top: 110px;
     min-height: auto;
     height: auto;
-  }
-
-  .section-two-center-image {
-    left: 50%;
-    top: 20rem;
-    width: min(240px, 145vw);
-    height: auto;
-    max-height: none;
   }
 
   .section-two-left {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding-bottom: 0;
-    margin-top: 24rem;
+    margin-top: 0;
   }
 
-  .section-two-left-image {
-    display: block;
-    width: 100%;
-    max-width: 420px;
-    height: auto;
-    object-fit: contain;
+  .section-two-number {
+    width: min(94vw, 28rem);
+    height: 10rem;
+    transform: none;
   }
 
   .section-two-right {
     width: 100%;
+    align-items: center;
+    text-align: center;
   }
 
   .section-two-title {
@@ -596,6 +542,7 @@ onBeforeUnmount(() => {
   .section-two-desc {
     font-size: 14px;
     max-width: 100%;
+    text-align: center;
   }
 
   .section-two-button {
@@ -615,17 +562,9 @@ onBeforeUnmount(() => {
     gap: 1rem;
   }
 
-  .section-two-center-image {
-    top: 59%;
-    width: min(280px, 100vw);
-  }
-
-  .section-two-left {
-    margin-top: 20rem;
-  }
-
-  .section-two-left-image {
-    max-width: 360px;
+  .section-two-number {
+    width: min(94vw, 23rem);
+    height: 8.5rem;
   }
 
   .section-two-title {
@@ -656,17 +595,9 @@ onBeforeUnmount(() => {
 
 /* Juda kichik mobile */
 @media (max-width: 390px) {
-  .section-two-center-image {
-    top: 52%;
-    width: min(220px, 155vw);
-  }
-
-  .section-two-left {
-    margin-top: 17.5rem;
-  }
-
-  .section-two-left-image {
-    max-width: 320px;
+  .section-two-number {
+    width: min(96vw, 20rem);
+    height: 7.5rem;
   }
 
   .section-two-title-top {
