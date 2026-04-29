@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
 
     <div class="containerr bg-transparent">
       <div
-        class="pin-wrap flex flex-col md:flex-row items-center md:items-center xl:items-end justify-center md:justify-between xl:justify-end gap-y-8 md:gap-y-0 md:gap-x-6 lg:gap-x-10 xl:gap-x-0 px-[18px] md:px-[30px] lg:px-[40px] xl:px-0 py-[40px] md:py-[70px] xl:py-[6.25rem] overflow-hidden"
+        class="pin-wrap flex flex-col md:flex-row items-center md:items-center xl:items-end justify-center md:justify-between xl:justify-end gap-y-8 md:gap-y-0 md:gap-x-6 lg:gap-x-10 xl:gap-x-0 px-[18px] md:px-[30px] lg:px-[40px] xl:px-0 py-[40px] md:py-[70px] xl:py-[6.25rem] bg-red-100 overflow-hidden"
       >
         <div
           class="main left-block flex-1 flex justify-center md:justify-start relative left-0 md:left-0 lg:left-4 xl:left-[8.75rem] w-full max-w-[360px] md:max-w-[380px] lg:max-w-[430px] xl:max-w-none z-0"
