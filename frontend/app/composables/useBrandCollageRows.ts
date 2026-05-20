@@ -57,7 +57,6 @@ export const useBrandCollageRows = async (): Promise<UseBrandCollageRowsResult> 
           query: brandCollageQuery,
           variables: { locale: gqlLocale.value },
         })),
-        server: false,
         key: "landing-brand-collage",
         watch: [gqlLocale],
       })

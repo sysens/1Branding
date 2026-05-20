@@ -7,22 +7,55 @@ const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 
-type Media = { url?: string | null };
+type GsapContext = { revert: () => void };
+
+type MediaText = {
+  alternativeText?: string | null;
+  caption?: string | null;
+};
+
+type HeroSlogan = {
+  mutedText?: string | null;
+  mainText?: string | null;
+  accentText?: string | null;
+};
+
+type HeroCopy = {
+  mutedLines: string[];
+  mainText: string;
+  accentText: string;
+};
 
 type LandingRes = {
   data?: {
     landingPage?: {
-      slogan?: Media | null;
-      sloganMobile?: Media | null;
+      heroSlogan?: HeroSlogan | null;
+      slogan?: MediaText | null;
+      sloganMobile?: MediaText | null;
     } | null;
   };
+  errors?: Array<{ message: string }>;
 };
 
 const query = `
   query LandingPage($locale: I18NLocaleCode) {
     landingPage(locale: $locale) {
-      slogan { url }
-      sloganMobile { url }
+      heroSlogan {
+        mutedText
+        mainText
+        accentText
+      }
+      slogan { alternativeText caption }
+      sloganMobile { alternativeText caption }
+    }
+  }
+`;
+
+const legacyQuery = `
+  query LandingPage($locale: I18NLocaleCode) {
+    landingPage(locale: $locale) {
+      slogan { alternativeText caption }
+      sloganMobile { alternativeText caption }
     }
   }
 `;
@@ -30,32 +63,109 @@ const query = `
 const { locale } = useI18n();
 const gqlLocale = computed(() => (locale.value === "en" ? "en" : "ru"));
 
-const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
+const fetchLandingHero = async (requestQuery: string): Promise<LandingRes> => {
+  if (!GRAPHQL_URL) {
+    return {};
+  }
+
+  const response = await $fetch<LandingRes>(GRAPHQL_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: {
+      query: requestQuery,
+      variables: { locale: gqlLocale.value },
+    },
+  });
+
+  if (response.errors?.length) {
+    throw new Error(response.errors[0]?.message || "Landing hero query failed");
+  }
+
+  return response;
+};
+
+const { data } = await useAsyncData<LandingRes>("landing-slogan", async () => {
+  try {
+    return await fetchLandingHero(query);
+  } catch {
+    try {
+      return await fetchLandingHero(legacyQuery);
+    } catch {
+      return {};
+    }
+  }
+}, {
   server: false,
-  key: "landing-slogan",
   watch: [gqlLocale],
 });
 
 const page = computed(() => data.value?.data?.landingPage ?? null);
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
+const DEFAULT_HERO_COPY: HeroCopy = {
+  mutedLines: ["DESIGN IS NOT", "JUST WHAT", "IT LOOKS LIKE", "AND FEELS LIKE."],
+  mainText: "DESIGN IS",
+  accentText: "HOW IT WORKS",
 };
 
-const sloganImg = computed(() => resolveMedia(page.value?.slogan?.url ?? null));
-const sloganMobileImg = computed(() =>
-  resolveMedia(page.value?.sloganMobile?.url ?? null)
+const splitTextLines = (value: string | null | undefined): string[] =>
+  (value ?? "")
+    .split(/\r?\n|\|/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+const firstTextValue = (values: Array<string | null | undefined>): string => {
+  for (const value of values) {
+    const trimmed = value?.trim();
+
+    if (trimmed) {
+      return trimmed;
+    }
+  }
+
+  return "";
+};
+
+const mediaText = computed(() =>
+  firstTextValue([
+    page.value?.slogan?.caption,
+    page.value?.slogan?.alternativeText,
+    page.value?.sloganMobile?.caption,
+    page.value?.sloganMobile?.alternativeText,
+  ])
 );
 
-let ctx: any = null;
+const heroCopy = computed<HeroCopy>(() => {
+  const heroSlogan = page.value?.heroSlogan;
+  const mutedLines = splitTextLines(heroSlogan?.mutedText);
+  const mainText = heroSlogan?.mainText?.trim();
+  const accentText = heroSlogan?.accentText?.trim();
+
+  if (mutedLines.length || mainText || accentText) {
+    return {
+      mutedLines: mutedLines.length ? mutedLines : DEFAULT_HERO_COPY.mutedLines,
+      mainText: mainText || DEFAULT_HERO_COPY.mainText,
+      accentText: accentText || DEFAULT_HERO_COPY.accentText,
+    };
+  }
+
+  const legacyLines = splitTextLines(mediaText.value);
+
+  if (legacyLines.length >= 3) {
+    return {
+      mutedLines: legacyLines.slice(0, -2),
+      mainText: legacyLines[legacyLines.length - 2] || DEFAULT_HERO_COPY.mainText,
+      accentText: legacyLines[legacyLines.length - 1] || DEFAULT_HERO_COPY.accentText,
+    };
+  }
+
+  return DEFAULT_HERO_COPY;
+});
+
+const heroAriaLabel = computed(() =>
+  [...heroCopy.value.mutedLines, heroCopy.value.mainText, heroCopy.value.accentText].join(" ")
+);
+
+let ctx: GsapContext | null = null;
 
 const isModifiedEvent = (event: MouseEvent) => {
   return !!(
@@ -118,14 +228,26 @@ onBeforeUnmount(() => {
 
     <div class="relative md:top-[22%] top-[30%]">
       <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products">
-        <picture>
-          <source media="(max-width: 767px)" :srcset="sloganMobileImg || sloganImg" />
-          <img
-            class="mainImg md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
-            :src="sloganImg"
-            alt="mainImg"
-          />
-        </picture>
+        <div
+          class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
+          :aria-label="heroAriaLabel"
+        >
+          <div class="hero-slogan__muted" aria-hidden="true">
+            <span v-for="line in heroCopy.mutedLines" :key="line">
+              {{ line }}
+            </span>
+          </div>
+
+          <div class="hero-slogan__main" aria-hidden="true">
+            {{ heroCopy.mainText }}
+          </div>
+
+          <div class="hero-slogan__accent-shell" aria-hidden="true">
+            <div class="hero-slogan__accent">
+              {{ heroCopy.accentText }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -150,5 +272,79 @@ onBeforeUnmount(() => {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   will-change: transform;
+}
+
+.hero-slogan {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  color: #ffffff;
+  font-family: var(--app-font-display, "SF Pro Display", "SF Pro Text", sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0;
+  box-sizing: border-box;
+  padding-left: 2.4rem;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-slogan__muted {
+  display: flex;
+  flex-direction: column;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 1.875rem;
+  font-weight: 300;
+  line-height: 0.94;
+}
+
+.hero-slogan__main {
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 4.4rem;
+  font-weight: 300;
+  line-height: 0.88;
+  white-space: nowrap;
+}
+
+.hero-slogan__accent-shell {
+  width: min(100%, 41.25rem);
+  transform: rotate(-2.2deg);
+  transform-origin: left center;
+}
+
+.hero-slogan__accent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.1rem;
+  border: 0.19rem solid #03cb00;
+  border-radius: 1.6rem;
+  color: #03cb00;
+  font-size: 3.3rem;
+  font-weight: 700;
+  line-height: 0.95;
+  text-align: center;
+  text-shadow: 0 0 1.15rem rgba(3, 203, 0, 0.48);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .hero-slogan {
+    padding-left: 0.4rem;
+  }
+
+  .hero-slogan__muted {
+    font-size: 1.6rem;
+  }
+
+  .hero-slogan__main {
+    font-size: 3.35rem;
+  }
+
+  .hero-slogan__accent {
+    min-height: 3.25rem;
+    border-radius: 1.15rem;
+    font-size: 2.55rem;
+  }
 }
 </style>

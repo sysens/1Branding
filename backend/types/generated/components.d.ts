@@ -265,6 +265,18 @@ export interface LandingPageFaq extends Struct.ComponentSchema {
   };
 }
 
+export interface LandingPageHeroSlogan extends Struct.ComponentSchema {
+  collectionName: 'components_landing_page_hero_slogans';
+  info: {
+    displayName: 'HeroSlogan';
+  };
+  attributes: {
+    accentText: Schema.Attribute.String;
+    mainText: Schema.Attribute.String;
+    mutedText: Schema.Attribute.Text;
+  };
+}
+
 export interface LandingPageInfo extends Struct.ComponentSchema {
   collectionName: 'components_landing_page_infos';
   info: {
@@ -584,6 +596,7 @@ declare module '@strapi/strapi' {
       'landing-page.design-el-cards': LandingPageDesignElCards;
       'landing-page.design-elements': LandingPageDesignElements;
       'landing-page.faq': LandingPageFaq;
+      'landing-page.hero-slogan': LandingPageHeroSlogan;
       'landing-page.info': LandingPageInfo;
       'landing-page.partner': LandingPagePartner;
       'landing-page.projects-images': LandingPageProjectsImages;

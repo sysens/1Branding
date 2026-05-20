@@ -3,17 +3,22 @@ import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue"
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Brands from "./Brands.vue";
-import TextHoverEffect from "./TextHoverEffect.vue";
+import StaticOutlineNumber from "./StaticOutlineNumber.vue";
 
 gsap.registerPlugin(ScrollTrigger);
+
+type GsapContext = { revert: () => void };
+type AppLocale = "ru" | "en";
+type CurveScrollState = { isActive: boolean };
+type SectionTitleParts = {
+  highlight: string;
+  rest: string;
+};
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 
-type AppLocale = "ru" | "en";
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
-const localePath = useLocalePath();
-const router = useRouter();
+const { t, locale } = useI18n();
 
 type LandingRes = {
   data?: {
@@ -59,22 +64,67 @@ const page = computed(() => data.value?.data?.landingPage ?? null);
 const s2 = computed(() => page.value?.section2 ?? null);
 const s2Title = computed(() => (s2.value?.title ?? "").trim());
 const s2Desc = computed(() => (s2.value?.description ?? "").trim());
-const s2TitleGreen = computed(() => s2Title.value || t("home.numberText.titleGreen"));
-const s2TitleWhite = computed(() =>
-  s2Title.value ? "" : t("home.numberText.titleWhite")
-);
 const s2DescText = computed(() => s2Desc.value || t("home.numberText.desc"));
 
-const s2TitleLines = computed(() => {
-  const words = (s2TitleGreen.value || "").trim().split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return { top: words[0], bottom: words.slice(1).join(" ") };
+const splitTitleWords = (title: string) => title.trim().split(/\s+/).filter(Boolean);
+const getTitleLocale = () => (gqlLocale.value === "ru" ? "ru-RU" : "en-US");
+
+const toDisplayTitleWord = (word: string, isFirstWord: boolean) => {
+  const lowerCasedWord = word.toLocaleLowerCase(getTitleLocale());
+
+  if (!isFirstWord) {
+    return lowerCasedWord;
   }
-  return { top: s2TitleGreen.value, bottom: "" };
+
+  const [firstLetter = "", ...restLetters] = Array.from(lowerCasedWord);
+
+  return `${firstLetter.toLocaleUpperCase(getTitleLocale())}${restLetters.join("")}`;
+};
+
+const toDisplayTitleParts = (words: string[]): SectionTitleParts => {
+  const [firstWord = "", ...restWords] = words;
+
+  return {
+    highlight: toDisplayTitleWord(firstWord, true),
+    rest: restWords.map((word) => toDisplayTitleWord(word, false)).join(" "),
+  };
+};
+
+const s2TitleParts = computed<SectionTitleParts>(() => {
+  const cmsTitleWords = splitTitleWords(s2Title.value);
+
+  if (cmsTitleWords.length > 0) {
+    return toDisplayTitleParts(cmsTitleWords);
+  }
+
+  return toDisplayTitleParts([
+    ...splitTitleWords(t("home.numberText.titleGreen")),
+    ...splitTitleWords(t("home.numberText.titleWhite")),
+  ]);
 });
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
+let ctx: GsapContext | null = null;
+
+const DEFAULT_CURVE_HEIGHT = 522;
+const getCurveHeight = (element: HTMLElement) => {
+  const rawValue = getComputedStyle(element)
+    .getPropertyValue("--section-two-curve-height")
+    .trim();
+  const parsedValue = Number.parseFloat(rawValue);
+
+  return Number.isFinite(parsedValue) && parsedValue > 0
+    ? parsedValue
+    : DEFAULT_CURVE_HEIGHT;
+};
+
+const getCurveFlattenDistance = (element: HTMLElement) => {
+  return Math.min(getCurveHeight(element), window.innerHeight * 0.65);
+};
+
+const setCurvePinned = (element: HTMLElement, isPinned: boolean) => {
+  element.classList.toggle("section-two-bg--curve-pinned", isPinned);
+};
 
 const init = async () => {
   await nextTick();
@@ -88,6 +138,36 @@ const init = async () => {
   ctx = gsap.context(() => {
     const left = root.value!.querySelector<HTMLElement>(".left-block");
     const right = root.value!.querySelector<HTMLElement>(".right-block");
+    const bg = root.value!.querySelector<HTMLElement>(".section-two-bg");
+
+    if (bg) {
+      gsap.set(bg, {
+        "--section-two-radius-left-x": "50%",
+        "--section-two-radius-right-x": "62%",
+        "--section-two-radius-left-y": "25%",
+        "--section-two-radius-right-y": "22%",
+      });
+
+      gsap.to(bg, {
+        "--section-two-radius-left-x": "0%",
+        "--section-two-radius-right-x": "0%",
+        "--section-two-radius-left-y": "0%",
+        "--section-two-radius-right-y": "0%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: bg,
+          start: () => `bottom-=${getCurveHeight(bg)} top`,
+          end: () => `+=${getCurveFlattenDistance(bg)}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onEnter: () => setCurvePinned(bg, true),
+          onEnterBack: () => setCurvePinned(bg, true),
+          onLeave: () => setCurvePinned(bg, false),
+          onLeaveBack: () => setCurvePinned(bg, false),
+          onUpdate: (state: CurveScrollState) => setCurvePinned(bg, state.isActive),
+        },
+      });
+    }
 
     if (!left || !right) return;
 
@@ -129,38 +209,6 @@ const init = async () => {
   }, root.value);
 };
 
-const isModifiedEvent = (event: MouseEvent) => {
-  return !!(
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey ||
-    event.button !== 0
-  );
-};
-
-const onLearnMoreClick = async (event: MouseEvent) => {
-  if (!process.client) return;
-  if (isModifiedEvent(event)) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const target = localePath("/About");
-
-  try {
-    await navigateTo(target);
-    return;
-  } catch {
-    try {
-      await router.push(target);
-      return;
-    } catch {
-      window.location.href = target;
-    }
-  }
-};
-
 onMounted(async () => {
   await init();
 });
@@ -170,6 +218,12 @@ watch(gqlLocale, async () => {
 });
 
 onBeforeUnmount(() => {
+  const bg = root.value?.querySelector<HTMLElement>(".section-two-bg");
+
+  if (bg) {
+    setCurvePinned(bg, false);
+  }
+
   ctx?.revert();
   ctx = null;
 });
@@ -179,29 +233,27 @@ onBeforeUnmount(() => {
   <div ref="root" class="section-two-root">
     <div class="section-two-bg">
       <div class="ichkidiv">
-        <div class="section-two-wrap containerr relative md:top-20 bottom-32">
+        <div class="section-two-wrap containerr">
           <div class="section-two-number-layer main left-block">
-            <TextHoverEffect text="2500" class="section-two-number" :duration="0" />
+            <StaticOutlineNumber text="2500" class="section-two-number" />
           </div>
 
           <div class="section-two-right main right-block">
             <h1 class="section-two-title">
-              <span class="section-two-title-top">
-                {{ s2TitleLines.top }}
+              <span class="section-two-title-highlight">
+                {{ s2TitleParts.highlight }}
               </span>
 
-              <span v-if="s2TitleLines.bottom" class="section-two-title-bottom">
-                {{ s2TitleLines.bottom }}
+              {{ " " }}
+
+              <span v-if="s2TitleParts.rest" class="section-two-title-rest">
+                {{ s2TitleParts.rest }}
               </span>
             </h1>
 
             <p class="section-two-desc">
               {{ s2DescText }}
             </p>
-
-            <button type="button" class="section-two-button" @click="onLearnMoreClick">
-              {{ $t("common.learnMore") }}
-            </button>
           </div>
         </div>
       </div>
@@ -220,23 +272,65 @@ onBeforeUnmount(() => {
 }
 
 .section-two-bg {
+  --section-two-curve-height: 522px;
+  --section-two-radius-left-x: 50%;
+  --section-two-radius-right-x: 62%;
+  --section-two-radius-left-y: 25%;
+  --section-two-radius-right-y: 22%;
+  position: relative;
   height: 100vh;
   display: flex;
   justify-content: center;
   width: 100%;
-  background-image: url("/home/Sukaground.svg");
+  overflow: hidden;
+  isolation: isolate;
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
 }
 
+.section-two-bg::before,
+.section-two-bg::after {
+  position: absolute;
+  width: 100%;
+  height: var(--section-two-curve-height);
+  border-radius:
+    var(--section-two-radius-left-x) var(--section-two-radius-right-x) 0 0 /
+    var(--section-two-radius-left-y) var(--section-two-radius-right-y) 0 0;
+  bottom: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.section-two-bg::before {
+  z-index: 1;
+  background-color: black;
+  border-top: 3px solid #03cb00;
+  border-bottom: none;
+}
+
+.section-two-bg::after {
+  z-index: 0;
+  box-shadow: 0px 0rem 7rem 2rem rgba(21, 224, 1, 0.95);
+  clip-path: inset(-9rem 0 0 0);
+}
+
+.section-two-bg--curve-pinned::before,
+.section-two-bg--curve-pinned::after {
+  position: fixed;
+  top: 0;
+  bottom: auto;
+  left: 0;
+}
+
 .section-two-wrap {
   position: relative;
-  z-index: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-top: clamp(7rem, 8vw, 8.75rem);
+  justify-content: center;
+  padding-inline: clamp(1rem, 4vw, 4rem);
+  padding-top: clamp(3rem, 5vw, 5rem);
   min-height: 100vh;
 }
 
@@ -250,12 +344,28 @@ onBeforeUnmount(() => {
 
 .section-two-number-layer {
   position: absolute;
-  left: clamp(-4rem, -1.5vw, -1rem);
-  top: clamp(15rem, 28vh, 21rem);
+  left: 50%;
+  top: clamp(15rem, 42vh, 24rem);
   z-index: 0;
-  width: min(70vw, 58rem);
-  height: clamp(18rem, 28vw, 26rem);
-  pointer-events: auto;
+  width: min(132vw, 104rem);
+  height: clamp(17rem, 40vw, 34rem);
+  pointer-events: none;
+  translate: -50% -30%;
+}
+
+.section-two-number-layer::after {
+  position: absolute;
+  inset: 50% -4% -16%;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.48) 34%,
+      rgba(0, 0, 0, 0.9) 70%,
+      #000000 100%
+    );
 }
 
 .section-two-number {
@@ -264,81 +374,69 @@ onBeforeUnmount(() => {
 }
 
 .section-two-right {
-  width: min(48vw, 40rem);
-  z-index: 1;
+  width: min(90vw, 72rem);
+  z-index: 2;
   align-items: center;
   text-align: center;
-  margin-right: clamp(1rem, 3vw, 4.5rem);
+  margin-right: 0;
+  transform: translateY(clamp(0.75rem, 9vh, 5.8rem));
 }
 
 .section-two-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  column-gap: clamp(0.45rem, 1.2vw, 1rem);
+  row-gap: 0.15em;
   margin: 0;
   padding-top: 0;
-  font-weight: 400;
-  font-size: 4rem;
-  line-height: 100%;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 4.6vw, 4.6rem);
+  line-height: 0.98;
   letter-spacing: 0;
-  text-transform: uppercase;
-  color: #03cb00;
-  vertical-align: middle;
-}
-
-.section-two-title-top {
-  display: block;
-  font-family: "Oswald", sans-serif;
-  font-weight: 400;
-  font-size: clamp(2.8rem, 4.5vw, 4rem);
-  line-height: 100%;
-  letter-spacing: clamp(-2px, -0.25vw, -4px);
-  vertical-align: middle;
-  text-transform: uppercase;
-  color: #03cb00;
-}
-
-.section-two-title-bottom {
-  display: block;
-  font-family: "Oswald", sans-serif;
-  font-weight: 400;
-  font-size: clamp(4rem, 6.7vw, 6rem);
-  line-height: 100%;
-  letter-spacing: clamp(-0.08rem, -0.2vw, -0.25rem);
-  vertical-align: middle;
-  text-transform: uppercase;
+  text-transform: none;
   color: #ffffff;
+  vertical-align: middle;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.72);
+}
+
+.section-two-title-highlight {
+  display: block;
+  color: transparent;
+  background:
+    linear-gradient(180deg, #59ff48 0%, #03cb00 54%, #017c00 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+.section-two-title-rest {
+  display: block;
+  color: transparent;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #e8e8e8 48%, #8b8b8b 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
 .section-two-desc {
   margin: 0;
-  padding-top: clamp(1.2rem, 2.5vw, 2.5rem);
-  padding-bottom: clamp(1.2rem, 2.5vw, 2.5rem);
+  padding-top: clamp(0.45rem, 0.9vw, 0.8rem);
+  padding-bottom: 0;
   font-family: "Poppins", "Inter", sans-serif;
   font-weight: 300;
-  font-size: clamp(0.95rem, 1.1vw, 1rem);
+  font-size: clamp(0.72rem, 0.86vw, 0.9rem);
   line-height: 120%;
   letter-spacing: 0;
   color: #cccccc;
-  max-width: 36rem;
+  width: min(86vw, 66rem);
+  max-width: 66rem;
   text-align: center;
-}
-
-.section-two-button {
-  width: 280px;
-  max-width: 100%;
-  height: 60px;
-  margin-bottom: clamp(1rem, 4vw, 3.5rem);
-  align-self: center;
-  border: 2px solid #03cb00;
-  border-radius: 9999px;
-  background: #000000;
-  color: #ffffff;
-  box-shadow: 0 0 20px rgba(3, 203, 0, 0.6);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.section-two-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(3, 203, 0, 0.9);
 }
 
 .section-two-brands {
@@ -347,118 +445,74 @@ onBeforeUnmount(() => {
   margin-top: clamp(3.5rem, 6vw, 7.5rem);
 }
 
-/* 1400 dan past */
 @media (max-width: 1400px) {
   .section-two-wrap {
     min-height: 52rem;
   }
 
   .section-two-number-layer {
-    width: min(67vw, 50rem);
-    height: clamp(16rem, 27vw, 23rem);
+    width: min(134vw, 96rem);
+    height: clamp(16rem, 39vw, 31rem);
   }
 }
 
-/* 1200 dan past */
 @media (max-width: 1200px) {
   .section-two-wrap {
     min-height: 48rem;
   }
 
   .section-two-number-layer {
-    left: -4rem;
-    width: min(66vw, 45rem);
-    height: clamp(14rem, 27vw, 20rem);
+    top: clamp(14rem, 40vh, 22rem);
+    width: min(136vw, 86rem);
+    height: clamp(15rem, 38vw, 29rem);
   }
 
   .section-two-right {
-    width: min(50vw, 34rem);
+    width: min(90vw, 58rem);
   }
 
   .section-two-desc {
-    max-width: 30rem;
+    max-width: 58rem;
   }
 }
 
-/* TABLET FIX: 769 - 1024 */
 @media (min-width: 769px) and (max-width: 1024px) {
   .section-two-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
     padding-top: 7rem;
     min-height: 44rem;
   }
 
   .section-two-right {
-    width: min(50vw, 28rem);
+    width: min(92vw, 52rem);
     min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    transform: translateY(4.3rem);
   }
 
   .section-two-number-layer {
-    left: -3rem;
     top: 18rem;
-    width: min(59vw, 34rem);
-    height: 14rem;
-  }
-
-  .section-two-right {
-    position: relative;
-    z-index: 2;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-right: 0;
-    padding-left: 0;
-    margin-left: 0;
+    width: min(138vw, 70rem);
+    height: 21rem;
   }
 
   .section-two-title,
-  .section-two-title-top,
-  .section-two-title-bottom,
   .section-two-desc {
     width: 100%;
     text-align: center;
   }
 
-  .section-two-button {
-    align-self: center;
-  }
-
   .section-two-title {
     padding-top: 0;
-  }
-
-  .section-two-title-top {
-    font-size: 2.9rem;
-    letter-spacing: -2px;
-    line-height: 0.95;
-  }
-
-  .section-two-title-bottom {
-    font-size: 4.8rem;
-    letter-spacing: -0.08rem;
+    font-size: clamp(2.8rem, 6.5vw, 4rem);
     line-height: 0.95;
   }
 
   .section-two-desc {
-    max-width: 25rem;
-    font-size: 0.95rem;
-    padding-top: 1.25rem;
-    padding-bottom: 1.5rem;
-  }
-
-  .section-two-button {
-    width: 240px;
-    height: 56px;
-    margin-bottom: 1rem;
+    max-width: 46rem;
+    font-size: 0.86rem;
+    padding-top: 0.75rem;
   }
 }
 
-/* 991 dan past */
 @media (max-width: 991px) {
   .section-two-wrap {
     padding-top: 7rem;
@@ -466,87 +520,47 @@ onBeforeUnmount(() => {
   }
 
   .section-two-number-layer {
-    left: -3rem;
-    top: 18rem;
-    width: min(58vw, 30rem);
-    height: 12.5rem;
+    top: 17.2rem;
+    width: min(140vw, 62rem);
+    height: 19rem;
   }
 
   .section-two-right {
-    width: min(52vw, 27rem);
-  }
-
-  .section-two-title-top {
-    font-size: 2.75rem;
-    letter-spacing: -2px;
-  }
-
-  .section-two-title-bottom {
-    font-size: 4.5rem;
-    letter-spacing: -0.08rem;
+    width: min(92vw, 46rem);
+    transform: translateY(4rem);
   }
 
   .section-two-desc {
-    font-size: 0.95rem;
-    max-width: 24rem;
-  }
-
-  .section-two-button {
-    width: 240px;
-    height: 56px;
+    font-size: 0.84rem;
+    max-width: 39rem;
   }
 }
 
-/* Mobile */
 @media (max-width: 767px) {
   .section-two-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 110px;
-    min-height: auto;
-    height: auto;
+    padding-top: 7rem;
+    min-height: 38rem;
   }
 
   .section-two-number-layer {
-    position: relative;
-    left: auto;
-    top: auto;
-    width: min(100vw, 34rem);
-    height: 13rem;
-    margin-top: 2rem;
+    top: 15.5rem;
+    width: min(150vw, 48rem);
+    height: 15rem;
   }
 
   .section-two-right {
     width: 100%;
-    align-items: center;
-    text-align: center;
+    transform: translateY(3.3rem);
   }
 
   .section-two-title {
-    padding-top: 33px;
-  }
-
-  .section-two-title-top {
-    font-size: 40px;
-    letter-spacing: -4px;
-  }
-
-  .section-two-title-bottom {
-    font-size: 64px;
-    letter-spacing: normal;
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+    line-height: 0.95;
   }
 
   .section-two-desc {
     font-size: 14px;
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .section-two-button {
-    width: 280px;
-    margin-bottom: 0;
+    max-width: 34rem;
   }
 
   .section-two-brands {
@@ -554,56 +568,39 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Kichik mobile */
 @media (max-width: 575px) {
   .section-two-wrap {
-    padding-top: 100px;
+    padding-inline: 1rem;
+    padding-top: 6.5rem;
+    min-height: 35rem;
   }
 
   .section-two-number-layer {
-    width: min(104vw, 29rem);
+    top: 14.8rem;
+    width: min(158vw, 40rem);
+    height: 12.5rem;
+  }
+
+  .section-two-title {
+    font-size: clamp(2.15rem, 12vw, 3.25rem);
+  }
+
+  .section-two-desc {
+    padding-top: 0.85rem;
+    font-size: 14px;
+    max-width: 29rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .section-two-number-layer {
+    top: 14rem;
+    width: min(164vw, 34rem);
     height: 11rem;
   }
 
   .section-two-title {
-    padding-top: 18px;
-  }
-
-  .section-two-title-top {
-    font-size: 34px;
-    letter-spacing: -2px;
-  }
-
-  .section-two-title-bottom {
-    font-size: 52px;
-  }
-
-  .section-two-desc {
-    padding-top: 1.25rem;
-    padding-bottom: 1.5rem;
-    font-size: 14px;
-  }
-
-  .section-two-button {
-    width: 100%;
-    max-width: 280px;
-    height: 56px;
-  }
-}
-
-/* Juda kichik mobile */
-@media (max-width: 390px) {
-  .section-two-number-layer {
-    width: min(108vw, 25rem);
-    height: 9.5rem;
-  }
-
-  .section-two-title-top {
-    font-size: 30px;
-  }
-
-  .section-two-title-bottom {
-    font-size: 46px;
+    font-size: 2.05rem;
   }
 }
 </style>

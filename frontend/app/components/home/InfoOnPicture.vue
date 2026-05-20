@@ -2,22 +2,37 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 
 type AppLocale = "ru" | "en";
+type GsapContext = { revert: () => void };
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const LOCAL_INFO_MEDIA_FALLBACK = "/home/quaker.mp4";
 
-const { locale } = useI18n<{ message: any }, AppLocale>();
+const i18n = useI18n();
+const locale = i18n.locale;
 
 type Media = { url?: string | null };
+type SectionBlock = {
+  title?: string | null;
+  description?: string | null;
+  image?: Media | null;
+};
+type TitleParts = {
+  lead: string;
+  accent: string;
+};
+type MediaKind = "image" | "video";
+type InfoDisplayBlock = {
+  titleParts: TitleParts;
+  description: string;
+  mediaSrc: string;
+  mediaKind: MediaKind;
+};
 
 type LandingRes = {
   data?: {
     landingPage?: {
-      section10?: Array<{
-        title?: string | null;
-        description?: string | null;
-        image?: Media | null;
-      }> | null;
+      section10?: Array<SectionBlock | null> | null;
     } | null;
   };
   errors?: Array<{ message: string }>;
@@ -54,22 +69,91 @@ const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
 const page = computed(() => data.value?.data?.landingPage ?? null);
 const s10 = computed(() => page.value?.section10 ?? []);
 
-const firstBlock = computed(() => s10.value[0] ?? null);
-const secondBlock = computed(() => s10.value[1] ?? null);
-
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
 const resolveMedia = (url?: string | null) => {
   if (!url) return "";
   if (url.startsWith("http")) return url;
+  if (url.startsWith("/home/") || url.startsWith("/General/")) return url;
   if (url.startsWith("/")) return apiBase.value + url;
   return apiBase.value + "/" + url;
 };
 
+const fallbackBlock = computed<SectionBlock>(() =>
+  gqlLocale.value === "ru"
+    ? {
+        title: "Фирменный стиль ключ к узнаваемости продукта.",
+        description:
+          "Именно единый визуальный язык формирует первое впечатление и закрепляется в памяти клиента. Когда бренд последователен в цветах, форме и подаче, его легко узнать среди сотен конкурентов.",
+        image: { url: LOCAL_INFO_MEDIA_FALLBACK },
+      }
+    : {
+        title: "Brand identity is the key to product recognition.",
+        description:
+          "A consistent visual language creates the first impression and stays in the customer's memory. When a brand is consistent in colors, shapes, and presentation, it becomes easy to recognize among hundreds of competitors.",
+        image: { url: LOCAL_INFO_MEDIA_FALLBACK },
+      }
+);
+
+const getMediaKind = (src: string): MediaKind =>
+  /\.(mp4|webm|mov)(?:[?#].*)?$/i.test(src) ? "video" : "image";
+
+const splitTitle = (title?: string | null): TitleParts => {
+  const text = (title ?? "").trim();
+
+  if (!text) {
+    return { lead: "", accent: "" };
+  }
+
+  const lower = text.toLocaleLowerCase();
+  const markers = ["key to ", "ключ к "];
+
+  for (const marker of markers) {
+    const index = lower.indexOf(marker);
+
+    if (index >= 0) {
+      const accentStart = index + marker.length;
+
+      return {
+        lead: text.slice(0, accentStart).trim(),
+        accent: text.slice(accentStart).trim(),
+      };
+    }
+  }
+
+  const words = text.split(/\s+/);
+
+  if (words.length <= 2) {
+    return { lead: text, accent: "" };
+  }
+
+  return {
+    lead: words.slice(0, -2).join(" "),
+    accent: words.slice(-2).join(" "),
+  };
+};
+
+const isVisibleSectionBlock = (
+  block: SectionBlock | null
+): block is SectionBlock =>
+  Boolean(block?.title || block?.description || block?.image?.url);
+
+const infoBlocks = computed<InfoDisplayBlock[]>(() =>
+  (s10.value.filter(isVisibleSectionBlock).length
+    ? s10.value.filter(isVisibleSectionBlock)
+    : [fallbackBlock.value]
+  ).map((block) => ({
+      titleParts: splitTitle(block.title),
+      description: block.description ?? "",
+      mediaSrc: resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK,
+      mediaKind: getMediaKind(resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK),
+    }))
+);
+
 const root = ref<HTMLElement | null>(null);
 
 let observer: IntersectionObserver | null = null;
-let ctx: any = null;
+let ctx: GsapContext | null = null;
 let inited = false;
 
 const initGsap = async () => {
@@ -84,15 +168,15 @@ const initGsap = async () => {
 
   ctx = gsap.context(() => {
     const el = root.value!;
-    const leftCols = el.querySelectorAll<HTMLElement>(".left-col");
-    const rightCols = el.querySelectorAll<HTMLElement>(".right-col");
+    const copyBlocks = el.querySelectorAll<HTMLElement>(".info-copy");
+    const imageFrames = el.querySelectorAll<HTMLElement>(".info-image-frame");
 
-    leftCols.forEach((item) => {
-      gsap.set(item, { x: -160, opacity: 0 });
+    copyBlocks.forEach((item) => {
+      gsap.set(item, { y: 42, opacity: 0 });
     });
 
-    rightCols.forEach((item) => {
-      gsap.set(item, { x: 160, opacity: 0 });
+    imageFrames.forEach((item) => {
+      gsap.set(item, { y: 56, opacity: 0, scale: 0.96 });
     });
 
     ScrollTrigger.create({
@@ -104,11 +188,11 @@ const initGsap = async () => {
           defaults: { ease: "power3.out" },
         });
 
-        leftCols.forEach((item, index) => {
+        copyBlocks.forEach((item, index) => {
           tl.to(
             item,
             {
-              x: 0,
+              y: 0,
               opacity: 1,
               duration: 0.9,
             },
@@ -116,15 +200,16 @@ const initGsap = async () => {
           );
         });
 
-        rightCols.forEach((item, index) => {
+        imageFrames.forEach((item, index) => {
           tl.to(
             item,
             {
-              x: 0,
+              y: 0,
               opacity: 1,
+              scale: 1,
               duration: 0.9,
             },
-            index * 0.12 + 0.14
+            index * 0.12 + 0.18
           );
         });
       },
@@ -179,58 +264,127 @@ onBeforeUnmount(() => {
       class="absolute right-[1200px] top-[280px] w-[900px] h-[900px] object-contain pointer-events-none select-none -z-10"
     />
 
-    <div class="mt-10 md:pb-[2.5rem]">
-      <div
-        class="main containerr block md:flex md:items-center md:justify-center gap-[150px]"
+    <div class="info-stack containerr">
+      <section
+        v-for="(block, index) in infoBlocks"
+        :key="`${block.titleParts.lead}-${index}`"
+        class="info-block"
       >
-        <div class="left-col div item flex-1 max-w-[587px] will-change-transform">
-          <h1 class="text-[#FFFFFF] font-normal text-[48px] leading-[120%] tracking-[0%]">
-            {{ firstBlock?.title }}
-          </h1>
+        <div class="info-copy will-change-transform">
+          <h2 class="info-title">
+            <span v-if="block.titleParts.lead">
+              {{ block.titleParts.lead }}{{ block.titleParts.accent ? " " : "" }}
+            </span>
+            <span v-if="block.titleParts.accent" class="info-title__accent">
+              {{ block.titleParts.accent }}
+            </span>
+          </h2>
 
-          <p
-            class="md:pt-[3.125rem] pt-[30px] md:pb-[5.4375rem] pb-[30px] font-['Poppins','Inter',sans-serif] font-normal text-[15px] leading-[120%] text-[#808080] tracking-[0%]"
-          >
-            {{ firstBlock?.description }}
+          <p v-if="block.description" class="info-description">
+            {{ block.description }}
           </p>
         </div>
 
-        <div class="right-col will-change-transform">
-          <img
-            class="md:w-[587px] md:h-[430px] h-[264px] object-cover rounded-[30px] opacity-100"
-            :src="resolveMedia(firstBlock?.image?.url)"
-            alt=""
-          />
-        </div>
-      </div>
+        <div v-if="block.mediaSrc" class="info-image-frame will-change-transform">
+          <video
+            v-if="block.mediaKind === 'video'"
+            class="info-media"
+            :src="block.mediaSrc"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
 
-      <div
-        class="main containerr flex-row-reverse block md:flex md:items-center md:justify-center gap-[150px]"
-      >
-        <div class="left-col div item flex-1 max-w-[587px] will-change-transform">
-          <h1
-            class="text-[#FFFFFF] font-normal md:pt-0 pt-[30px] text-[48px] leading-[120%] tracking-[0%]"
-          >
-            {{ secondBlock?.title }}
-          </h1>
-
-          <p
-            class="md:pt-[3.125rem] pt-[30px] md:pb-[5.4375rem] pb-[30px] font-['Poppins','Inter',sans-serif] font-normal text-[15px] leading-[120%] text-[#808080] tracking-[0%]"
-          >
-            {{ secondBlock?.description }}
-          </p>
+          <img v-else class="info-media" :src="block.mediaSrc" alt="" />
         </div>
-
-        <div class="right-col will-change-transform">
-          <img
-            class="md:w-[587px] md:h-[430px] h-[264px] object-cover rounded-[30px] opacity-100"
-            :src="resolveMedia(secondBlock?.image?.url)"
-            alt=""
-          />
-        </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
 
-<style></style>
+<style scoped>
+.info-stack {
+  display: grid;
+  gap: clamp(4rem, 8vw, 7.5rem);
+  padding-top: clamp(2.5rem, 6vw, 5.5rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
+}
+
+.info-block {
+  display: grid;
+  justify-items: center;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.info-copy {
+  max-width: 70rem;
+  text-align: center;
+}
+
+.info-title {
+  color: #fff;
+  font-size: clamp(2.35rem, 5.3vw, 4.9rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.info-title span {
+  display: inline;
+}
+
+.info-title__accent {
+  color: #3bff28;
+}
+
+.info-description {
+  max-width: 62rem;
+  margin: 1rem auto 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.875rem, 1.18vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.info-image-frame {
+  width: min(100%, 74rem);
+  height: clamp(20rem, 54vw, 39.5rem);
+  overflow: hidden;
+  border-radius: clamp(1.4rem, 3vw, 2.25rem);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.info-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .info-stack {
+    gap: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .info-title {
+    font-size: clamp(2rem, 12vw, 3.2rem);
+    line-height: 1.05;
+  }
+
+  .info-description {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .info-image-frame {
+    height: 18rem;
+    border-radius: 1.5rem;
+  }
+}
+</style>

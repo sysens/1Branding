@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, ref, computed } from "vue";
+import ElectricOneNumber from "./ElectricOneNumber.vue";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
@@ -23,8 +24,6 @@ type LandingPageRes = {
 
 const config = useRuntimeConfig();
 const GRAPHQL_URL = (config.public.graphqlUrl as string) || "";
-const numberTextVideoPoster = "/home/Rectangle42027.png";
-const numberTextVideoSrc = "/home/1Number.mp4";
 
 const { locale } = useI18n();
 
@@ -73,6 +72,7 @@ const panels = computed<Panel[]>(() => {
 });
 
 const root = ref<HTMLElement | null>(null);
+const PIN_HEADER_OFFSET_PX = 118;
 
 let ctx: GsapContext | null = null;
 let ready = false;
@@ -91,8 +91,9 @@ const initGsap = async () => {
     const host = root.value!;
     const pinWrap = host.querySelector<HTMLElement>(".pin-wrap");
     const items = gsap.utils.toArray<HTMLElement>(host.querySelectorAll(".panel"));
+    const firstItem = items[0];
 
-    if (!pinWrap || items.length === 0) return;
+    if (!pinWrap || !firstItem) return;
 
     const leftBlock = host.querySelector<HTMLElement>(".left-block");
     const rightBlock = host.querySelector<HTMLElement>(".right-block");
@@ -120,13 +121,14 @@ const initGsap = async () => {
       pointerEvents: "none",
       willChange: "transform, opacity",
     });
-    gsap.set(items[0], { autoAlpha: 1, yPercent: 0, pointerEvents: "auto" });
+    gsap.set(firstItem, { autoAlpha: 1, yPercent: 0, pointerEvents: "auto" });
 
     const tl = gsap.timeline({
       defaults: { ease: "power2.inOut" },
       scrollTrigger: {
         trigger: pinWrap,
-        start: "top top",
+        start: () =>
+          window.innerWidth >= 768 ? `top ${PIN_HEADER_OFFSET_PX}px` : "top top",
         end: () => {
           const viewport = window.innerHeight || 800;
           const segment = Math.min(Math.max(viewport * 0.85, 620), 980);
@@ -145,6 +147,8 @@ const initGsap = async () => {
     items.forEach((item, i) => {
       if (i > 0) {
         const previousItem = items[i - 1];
+
+        if (!previousItem) return;
 
         tl.to({}, { duration: holdDuration });
         tl.set(previousItem, { pointerEvents: "none" });
@@ -206,26 +210,18 @@ onBeforeUnmount(() => {
 
     <div class="containerr bg-transparent">
       <div
-        class="pin-wrap flex flex-col md:flex-row items-center md:items-center xl:items-end justify-center md:justify-between xl:justify-end gap-y-8 md:gap-y-0 md:gap-x-6 lg:gap-x-10 xl:gap-x-0 px-[18px] md:px-[30px] lg:px-[40px] xl:px-0 py-[40px] md:py-[70px] xl:py-[6.25rem] bg-red-100 overflow-hidden"
+        class="pin-wrap flex flex-col md:flex-row items-center md:items-center xl:items-center justify-center md:justify-between xl:justify-center gap-y-6 md:gap-y-0 md:gap-x-6 lg:gap-x-8 xl:gap-x-16 px-[18px] md:px-[30px] lg:px-[40px] xl:px-0 py-7 md:py-10 lg:py-12 xl:py-10 overflow-hidden"
       >
         <div
-          class="main left-block flex-1 flex justify-center md:justify-start relative left-0 md:left-0 lg:left-4 xl:left-[8.75rem] w-full max-w-[360px] md:max-w-[380px] lg:max-w-[430px] xl:max-w-none z-0"
+          class="main left-block flex-1 flex justify-center md:justify-center relative left-0 md:left-0 lg:left-4 xl:left-[3.5rem] w-full max-w-[320px] md:max-w-[350px] lg:max-w-[420px] xl:max-w-[32rem] z-0"
         >
-          <video
-            class="relative z-[1] top-0 md:top-[20px] lg:top-[0px] xl:top-[0px] w-[281px] h-[383px] md:w-[310px] md:h-[430px] lg:w-[460px] lg:h-[800px] xl:w-[29.5625rem] xl:h-[61rem] object-cover scale-[1] md:scale-[1] lg:scale-[1.08] xl:scale-150"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            :poster="numberTextVideoPoster"
-          >
-            <source :src="numberTextVideoSrc" type="video/mp4" />
-          </video>
+          <ElectricOneNumber
+            class="relative z-[1] top-0 md:top-[8px] lg:top-0 xl:top-0 w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100"
+          />
         </div>
 
         <div
-          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-[8.75rem] xl:self-center xl:-translate-y-20 min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
+          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-0 xl:self-center xl:max-w-[52rem] min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
         >
           <div class="relative w-full h-full overflow-visible">
             <div

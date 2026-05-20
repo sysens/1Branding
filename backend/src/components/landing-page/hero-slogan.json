@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_landing_page_hero_slogans",
+  "info": {
+    "displayName": "HeroSlogan"
+  },
+  "options": {},
+  "attributes": {
+    "mutedText": {
+      "type": "text"
+    },
+    "mainText": {
+      "type": "string"
+    },
+    "accentText": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

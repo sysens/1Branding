@@ -41,6 +41,12 @@ const fallbackRowSets = computed(() =>
   getLocalBrandCollageRows(props.staticMediaBaseUrl)
 );
 
+const optimizedImage = useImage();
+const PRELOAD_IMAGE_LIMIT = 4;
+const MARQUEE_IMAGE_WIDTH = 486;
+const MARQUEE_IMAGE_HEIGHT = 273;
+const MARQUEE_IMAGE_QUALITY = 78;
+
 const rowsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
   const legacyLogos = props.logos?.length ? [props.logos] : [];
@@ -52,6 +58,42 @@ const rowsConfig = computed(() => {
     linkTo: props.linkTo,
   });
 });
+
+const preloadImageSources = computed(() => {
+  const firstRowImages = rowsConfig.value[0]?.duplicatedImages ?? [];
+  const seen = new Set<string>();
+  const sources: string[] = [];
+
+  for (const image of firstRowImages) {
+    if (seen.has(image.src)) {
+      continue;
+    }
+
+    seen.add(image.src);
+    sources.push(image.src);
+
+    if (sources.length >= PRELOAD_IMAGE_LIMIT) {
+      break;
+    }
+  }
+
+  return sources;
+});
+
+useHead(() => ({
+  link: preloadImageSources.value.map((src) => ({
+    rel: "preload",
+    as: "image",
+    href: optimizedImage(src, {
+      width: MARQUEE_IMAGE_WIDTH,
+      height: MARQUEE_IMAGE_HEIGHT,
+      fit: "cover",
+      format: "webp",
+      quality: MARQUEE_IMAGE_QUALITY,
+    }),
+    fetchpriority: "high",
+  })),
+}));
 </script>
 
 <template>

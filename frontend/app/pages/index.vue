@@ -22,6 +22,8 @@ const { rowSets: brandCollageRows, staticMediaBaseUrl } =
 
 const loading = ref(true);
 const hashScrollDone = ref(false);
+const INITIAL_LOADER_MIN_MS = 450;
+const INITIAL_LOADER_MAX_MS = 1200;
 
 type SeoRes = {
   data?: {
@@ -33,6 +35,21 @@ type SeoRes = {
     } | null;
   };
   errors?: Array<{ message: string }>;
+};
+
+type LenisScrollOptions = {
+  offset?: number;
+  duration?: number;
+  immediate?: boolean;
+  lock?: boolean;
+};
+
+type LenisInstance = {
+  scrollTo: (target: Element | number, options?: LenisScrollOptions) => void;
+};
+
+type NuxtAppWithLenis = ReturnType<typeof useNuxtApp> & {
+  $lenis?: LenisInstance;
 };
 
 const seoQuery = `
@@ -56,7 +73,7 @@ const { data: seoData } = canFetchSeo
       server: true,
       key: "seo-home",
     })
-  : { data: ref<SeoRes | null>(null) as any };
+  : { data: ref<SeoRes | null>(null) };
 
 const landingSeo = computed(() => seoData.value?.data?.seo?.landingPage ?? null);
 const seoTitle = computed(() => landingSeo.value?.title?.trim() || t("seo.home"));
@@ -97,7 +114,7 @@ const scrollToHash = async () => {
       const el = document.getElementById(id);
       if (!el) return;
 
-      const lenis = (nuxtApp as any).$lenis;
+      const lenis = (nuxtApp as NuxtAppWithLenis).$lenis;
 
       if (lenis?.scrollTo) {
         lenis.scrollTo(el, {
@@ -117,6 +134,29 @@ const scrollToHash = async () => {
   });
 };
 
+const waitForInitialPaint = async () => {
+  if (!process.client) return;
+
+  const minDelay = new Promise<void>((resolve) => {
+    window.setTimeout(resolve, INITIAL_LOADER_MIN_MS);
+  });
+
+  const maxDelay = new Promise<void>((resolve) => {
+    window.setTimeout(resolve, INITIAL_LOADER_MAX_MS);
+  });
+
+  const domReady = new Promise<void>((resolve) => {
+    if (document.readyState !== "loading") {
+      resolve();
+      return;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+  });
+
+  await Promise.race([Promise.all([minDelay, domReady]), maxDelay]);
+};
+
 watch(
   () => route.hash,
   async (newHash, oldHash) => {
@@ -131,6 +171,7 @@ watch(
 
 onMounted(async () => {
   await nextTick();
+  await waitForInitialPaint();
   loading.value = false;
 
   if (route.hash && !hashScrollDone.value) {
@@ -333,10 +374,9 @@ onMounted(async () => {
     text-align: center;
   }
 
-  .home-nd-number-text :deep(.left-block video) {
-    width: 23rem;
-    height: 33rem;
-    padding-bottom: 0;
+  .home-nd-number-text :deep(.left-block .electric-one-number) {
+    width: 22rem;
+    height: 32rem;
     top: 0;
   }
 
@@ -490,36 +530,25 @@ onMounted(async () => {
     bottom: 0;
   }
 
-  .home-info-picture :deep(.main) {
-    display: block;
+  .home-info-picture :deep(.info-stack) {
+    gap: 5rem;
+    padding-top: 3.5rem;
+    padding-bottom: 4.5rem;
   }
 
-  .home-info-picture :deep(.left-col),
-  .home-info-picture :deep(.right-col) {
-    max-width: 100%;
+  .home-info-picture :deep(.info-title) {
+    font-size: 3rem;
+    line-height: 1.05;
   }
 
-  .home-info-picture :deep(.right-col) {
-    flex-direction: column-reverse;
+  .home-info-picture :deep(.info-description) {
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
-  .home-info-picture :deep(.left-col img),
-  .home-info-picture :deep(.right-col img) {
-    width: 100%;
+  .home-info-picture :deep(.info-image-frame) {
     max-width: 42rem;
     height: 24rem;
-    margin: 0 auto;
-  }
-
-  .home-info-picture :deep(.left-col h1),
-  .home-info-picture :deep(.right-col h1) {
-    font-size: 3rem;
-  }
-
-  .home-info-picture :deep(.left-col p),
-  .home-info-picture :deep(.right-col p) {
-    font-size: 1rem;
-    line-height: 1.6;
   }
 
   .home-projects {

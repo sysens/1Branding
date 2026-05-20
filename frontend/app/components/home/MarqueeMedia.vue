@@ -21,6 +21,7 @@ const hasSeparatePlaceholder = computed(
   () => !!placeholderSrc.value && placeholderSrc.value !== imageSrc.value
 );
 const loadingMode = computed(() => (props.eager ? "eager" : "lazy"));
+const fetchPriority = computed(() => (props.eager ? "high" : "low"));
 
 watch(
   () => imageSrc.value,
@@ -49,11 +50,18 @@ const markLoaded = () => {
       draggable="false"
     />
 
-    <img
+    <NuxtImg
       :src="imageSrc"
       :alt="alt"
+      provider="ipx"
+      width="486"
+      height="273"
+      fit="cover"
+      format="webp"
+      quality="78"
       decoding="async"
       :loading="loadingMode"
+      :fetchpriority="fetchPriority"
       class="absolute inset-0 h-full w-full object-cover transition-[filter,opacity,transform] duration-700 ease-in-out"
       :class="
         loaded

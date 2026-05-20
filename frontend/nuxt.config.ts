@@ -1,5 +1,22 @@
 const frontendHost = process.env.NUXT_HOST || "127.0.0.1";
 const frontendPort = Number(process.env.NUXT_PORT || "3000");
+const viteAllowedHosts = [
+  "tubercularly-oversevere-louie.ngrok-free.dev",
+  ...(process.env.NUXT_VITE_ALLOWED_HOSTS || "")
+    .split(",")
+    .map((host) => host.trim())
+    .filter((host) => host.length > 0),
+];
+const imageDomains = [
+  "pub-156bce602951490e82e2418f1402419f.r2.dev",
+  ...(process.env.NUXT_IMAGE_DOMAINS || "")
+    .split(",")
+    .map((host) => host.trim())
+    .filter((host) => host.length > 0),
+];
+const longTermImageCacheHeaders = {
+  "cache-control": "public, max-age=31536000, immutable",
+};
 
 export default defineNuxtConfig({
   modules: [
@@ -30,6 +47,21 @@ export default defineNuxtConfig({
     },
   },
 
+  image: {
+    provider: "ipx",
+    domains: imageDomains,
+    format: ["webp"],
+  },
+
+  routeRules: {
+    "/_ipx/**": {
+      headers: longTermImageCacheHeaders,
+    },
+    "/home/threeLayerLocal/**": {
+      headers: longTermImageCacheHeaders,
+    },
+  },
+
   devtools: {
     enabled: true,
   },
@@ -52,7 +84,7 @@ export default defineNuxtConfig({
       },
     },
     server: {
-      allowedHosts: "all",
+      allowedHosts: viteAllowedHosts,
     },
   },
 

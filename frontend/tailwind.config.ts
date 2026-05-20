@@ -16,7 +16,11 @@ export default <Config>{
   theme: {
     extend: {
       fontFamily: {
-        oswald: ["Oswald", "sans-serif"],
+        sans: ["SF Pro Text", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        display: ["SF Pro Display", "SF Pro Text", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        oswald: ["SF Pro Display", "SF Pro Text", "sans-serif"],
+        inter: ["SF Pro Text", "sans-serif"],
+        poppins: ["SF Pro Text", "sans-serif"],
       },
 
       keyframes: {
@@ -29,10 +33,6 @@ export default <Config>{
       animation: {
         marquee: "marquee 120s linear infinite",
       },
-      fontFamily: {
-  inter: ["Inter", "sans-serif"],
-}
-
     },
   },
 

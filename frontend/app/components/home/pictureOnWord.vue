@@ -2,10 +2,14 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 
 type AppLocale = "ru" | "en";
+type GsapContext = { revert: () => void };
+type TranslationFunction = (key: string) => string;
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
+const i18n = useI18n();
+const locale = i18n.locale;
+const translate: TranslationFunction = (key) => i18n.t(key);
 
 type Media = { url?: string | null };
 
@@ -65,9 +69,9 @@ const imageSrc = computed(
   () => resolveMedia(s6.value?.image?.url ?? null) || "/home/aaaa.png"
 );
 
-const topText = computed(() => s6.value?.text1 || t("home.pictureOnWord.top"));
+const topText = computed(() => s6.value?.text1 || translate("home.pictureOnWord.top"));
 
-const bottomText = computed(() => s6.value?.text2 || t("home.pictureOnWord.bottom"));
+const bottomText = computed(() => s6.value?.text2 || translate("home.pictureOnWord.bottom"));
 
 const splitText = (s: string) => {
   const text = (s || "").trim();
@@ -83,7 +87,7 @@ const bottomParts = computed(() => splitText(bottomText.value));
 const root = ref<HTMLElement | null>(null);
 
 let observer: IntersectionObserver | null = null;
-let ctx: any = null;
+let ctx: GsapContext | null = null;
 let inited = false;
 
 const initGsap = async () => {
@@ -218,7 +222,7 @@ onBeforeUnmount(() => {
       class="relative z-[1] containerr min-h-[520px] w-full h-[700px] overflow-hidden"
     >
       <div
-        class="top-text absolute z-[5] left-[24px] md:left-[0.875rem] top-[31%] md:top-[18%] max-w-[340px] sm:max-w-[520px] md:max-w-[48.875rem] w-[80%] md:w-[60%]"
+        class="top-text absolute z-[5] w-full text-center"
       >
         <h2
           class="font-normal tracking-[0%] text-[30px] leading-[100%] md:text-[46px] md:leading-[120%]"
@@ -243,10 +247,10 @@ onBeforeUnmount(() => {
       </div>
 
       <div
-        class="bottom-text flex justify-end absolute z-[5] right-[14px] text-right md:right-[1%] bottom-[23%] md:bottom-[18%] w-[80%] md:w-[60%]"
+        class="bottom-text flex justify-center items-center text-center absolute z-[5] bottom-[23%] md:bottom-[18%] w-full"
       >
         <h1
-          class="font-normal tracking-[0%] text-[30px] leading-[120%] md:text-[45px] md:leading-[120%]"
+          class="font-normal tracking-[0%] text-[30px] leading-[120%] md:text-[45px] md:leading-[120%] w-[80%] md:w-[60%]"
         >
           <span class="text-[#19ff00]">{{ bottomParts.green }}</span>
           <span class="text-white break-words">{{ bottomParts.white }}</span>

@@ -43,6 +43,16 @@
         "videos"
       ]
     },
+    "heroSlogan": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "landing-page.hero-slogan",
+      "repeatable": false
+    },
     "brandCollage": {
       "type": "component",
       "pluginOptions": {
