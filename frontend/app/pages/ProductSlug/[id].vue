@@ -249,7 +249,6 @@ onBeforeUnmount(() => {
   <div class="bg-black relative overflow-x-hidden" :style="pageStyle">
     <Spinner
       v-if="loading"
-      src="/General/IMG_5528.mp4"
       :size="542"
       class="fixed inset-0 z-[9999]"
     />

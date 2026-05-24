@@ -687,7 +687,7 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
       'api::landing-page.landing-page'
     >;
     publishedAt: Schema.Attribute.DateTime;
-    section10: Schema.Attribute.Component<'landing-page.section9', true> &
+    section10: Schema.Attribute.Component<'landing-page.section9', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

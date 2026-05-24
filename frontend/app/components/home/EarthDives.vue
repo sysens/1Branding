@@ -186,6 +186,22 @@ const sectionTitle = computed(() => section4.value?.title || t("home.earthDives.
 
 const cards = computed<Card[]>(() => section4.value?.cards ?? []);
 
+const fallbackCards = computed<Card[]>(() =>
+  Array.from({ length: 3 }, () => ({
+    title: t("home.earthDives.fallbackTitle"),
+    description: t("home.earthDives.fallbackDesc"),
+    icon: null,
+  }))
+);
+
+const displayCards = computed<Card[]>(() => {
+  const cmsCards = cards.value
+    .filter((card) => Boolean(card?.title || card?.description || card?.icon?.url))
+    .slice(0, 3);
+
+  return [...cmsCards, ...fallbackCards.value].slice(0, 3);
+});
+
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
 const resolveMedia = (url?: string | null) => {
@@ -229,7 +245,7 @@ const resolveMedia = (url?: string | null) => {
         <div class="main flex-1">
           <div class="rowSection flex flex-col md:gap-[1.875rem] gap-[16px]">
             <div
-              v-for="(card, i) in cards"
+              v-for="(card, i) in displayCards"
               :key="i"
               class="row-item item md:h-[10rem] h-[130px] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[20px] md:rounded-[1.875rem] rounded-[20px] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[10px] md:py-[2.25rem] py-[20px] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
             >
@@ -251,31 +267,6 @@ const resolveMedia = (url?: string | null) => {
                   class="text-[#808080] font-normal line-clamp-4 md:pt-[1.875rem] pt-[10px] md:text-[0.9375rem] leading-[120%] md:tracking-normal text-[13px] tracking-[0%]"
                 >
                   {{ card.description }}
-                </p>
-              </div>
-            </div>
-
-            <div
-              v-if="!cards.length"
-              class="row-item item md:h-[10rem] h-[130px] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[20px] md:rounded-[1.875rem] rounded-[20px] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[10px] md:py-[2.25rem] py-[20px] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
-            >
-              <div class="shrink-0">
-                <img
-                  class="md:w-[4.375rem] md:h-[4.375rem] w-[40px] h-[40px] object-cover rounded-full"
-                  alt=""
-                />
-              </div>
-
-              <div>
-                <h1
-                  class="text-[#FFFFFF] font-semibold md:text-[1.25rem] leading-[100%] md:tracking-wider text-[16px] tracking-[0%]"
-                >
-                  {{ $t("home.earthDives.fallbackTitle") }}
-                </h1>
-                <p
-                  class="text-[#808080] font-normal line-clamp-4 md:pt-[1.875rem] pt-[10px] md:text-[0.9375rem] leading-[120%] md:tracking-normal text-[13px] tracking-[0%] font-['Poppins','Inter',sans-serif]"
-                >
-                  {{ $t("home.earthDives.fallbackDesc") }}
                 </p>
               </div>
             </div>

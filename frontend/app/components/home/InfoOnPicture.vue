@@ -32,7 +32,7 @@ type InfoDisplayBlock = {
 type LandingRes = {
   data?: {
     landingPage?: {
-      section10?: Array<SectionBlock | null> | null;
+      section10?: SectionBlock | Array<SectionBlock | null> | null;
     } | null;
   };
   errors?: Array<{ message: string }>;
@@ -65,9 +65,6 @@ const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
   key: "landing-section10",
   watch: [gqlLocale],
 });
-
-const page = computed(() => data.value?.data?.landingPage ?? null);
-const s10 = computed(() => page.value?.section10 ?? []);
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
@@ -138,17 +135,28 @@ const isVisibleSectionBlock = (
 ): block is SectionBlock =>
   Boolean(block?.title || block?.description || block?.image?.url);
 
-const infoBlocks = computed<InfoDisplayBlock[]>(() =>
-  (s10.value.filter(isVisibleSectionBlock).length
-    ? s10.value.filter(isVisibleSectionBlock)
-    : [fallbackBlock.value]
-  ).map((block) => ({
-      titleParts: splitTitle(block.title),
-      description: block.description ?? "",
-      mediaSrc: resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK,
-      mediaKind: getMediaKind(resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK),
-    }))
-);
+const page = computed(() => data.value?.data?.landingPage ?? null);
+const s10 = computed<SectionBlock | null>(() => {
+  const source = page.value?.section10;
+
+  if (Array.isArray(source)) {
+    return source.find(isVisibleSectionBlock) ?? null;
+  }
+
+  return source ?? null;
+});
+
+const infoBlock = computed<InfoDisplayBlock>(() => {
+  const block = isVisibleSectionBlock(s10.value) ? s10.value : fallbackBlock.value;
+  const mediaSrc = resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK;
+
+  return {
+    titleParts: splitTitle(block.title),
+    description: block.description ?? "",
+    mediaSrc,
+    mediaKind: getMediaKind(mediaSrc),
+  };
+});
 
 const root = ref<HTMLElement | null>(null);
 
@@ -265,31 +273,27 @@ onBeforeUnmount(() => {
     />
 
     <div class="info-stack containerr">
-      <section
-        v-for="(block, index) in infoBlocks"
-        :key="`${block.titleParts.lead}-${index}`"
-        class="info-block"
-      >
+      <section class="info-block">
         <div class="info-copy will-change-transform">
           <h2 class="info-title">
-            <span v-if="block.titleParts.lead">
-              {{ block.titleParts.lead }}{{ block.titleParts.accent ? " " : "" }}
+            <span v-if="infoBlock.titleParts.lead">
+              {{ infoBlock.titleParts.lead }}{{ infoBlock.titleParts.accent ? " " : "" }}
             </span>
-            <span v-if="block.titleParts.accent" class="info-title__accent">
-              {{ block.titleParts.accent }}
+            <span v-if="infoBlock.titleParts.accent" class="info-title__accent">
+              {{ infoBlock.titleParts.accent }}
             </span>
           </h2>
 
-          <p v-if="block.description" class="info-description">
-            {{ block.description }}
+          <p v-if="infoBlock.description" class="info-description">
+            {{ infoBlock.description }}
           </p>
         </div>
 
-        <div v-if="block.mediaSrc" class="info-image-frame will-change-transform">
+        <div v-if="infoBlock.mediaSrc" class="info-image-frame will-change-transform">
           <video
-            v-if="block.mediaKind === 'video'"
+            v-if="infoBlock.mediaKind === 'video'"
             class="info-media"
-            :src="block.mediaSrc"
+            :src="infoBlock.mediaSrc"
             autoplay
             muted
             loop
@@ -297,7 +301,7 @@ onBeforeUnmount(() => {
             preload="metadata"
           ></video>
 
-          <img v-else class="info-media" :src="block.mediaSrc" alt="" />
+          <img v-else class="info-media" :src="infoBlock.mediaSrc" alt="" />
         </div>
       </section>
     </div>
@@ -338,6 +342,12 @@ onBeforeUnmount(() => {
 
 .info-title__accent {
   color: #3bff28;
+  animation: info-accent-neon 2.8s ease-in-out infinite;
+  text-shadow:
+    0 0 0.2rem rgba(59, 255, 40, 0.95),
+    0 0 0.8rem rgba(59, 255, 40, 0.85),
+    0 0 1.6rem rgba(59, 255, 40, 0.55),
+    0 0 3rem rgba(59, 255, 40, 0.35);
 }
 
 .info-description {
@@ -363,6 +373,25 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@keyframes info-accent-neon {
+  0%,
+  100% {
+    text-shadow:
+      0 0 0.18rem rgba(59, 255, 40, 0.9),
+      0 0 0.75rem rgba(59, 255, 40, 0.82),
+      0 0 1.6rem rgba(59, 255, 40, 0.52),
+      0 0 3rem rgba(59, 255, 40, 0.34);
+  }
+
+  50% {
+    text-shadow:
+      0 0 0.35rem rgba(150, 255, 140, 1),
+      0 0 1.2rem rgba(59, 255, 40, 0.95),
+      0 0 2.4rem rgba(59, 255, 40, 0.68),
+      0 0 4.2rem rgba(59, 255, 40, 0.44);
+  }
 }
 
 @media (max-width: 767px) {

@@ -74,7 +74,7 @@ onMounted(async () => {
 
 <template>
   <div class="relative min-h-screen bg-black overflow-hidden">
-    <Spinner v-if="loading" src="/General/IMG_5528.mp4" :size="542" />
+    <Spinner v-if="loading" :size="542" />
 
     <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>

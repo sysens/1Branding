@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "mathjs": "^15.2.0",
+    "vue3-lottie": "^3.3.1"
+  }
+}

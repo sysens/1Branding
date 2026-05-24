@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, ref, computed } from "vue";
-import ElectricOneNumber from "./ElectricOneNumber.vue";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
@@ -30,6 +29,13 @@ const { locale } = useI18n();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
+
+const capitalizeText = (value: string) =>
+  value
+    .toLocaleLowerCase()
+    .replace(/(^|[\s-])(\p{L})/gu, (_, prefix: string, char: string) => {
+      return prefix + char.toLocaleUpperCase();
+    });
 
 const LANDING_QUERY = `
 query LandingPage($locale: I18NLocaleCode) {
@@ -63,8 +69,8 @@ const panels = computed<Panel[]>(() => {
 
   const mapped = raw
     .map((x) => ({
-      titleGreen: (x.title ?? "").toString(),
-      text: (x.subTitle ?? "").toString(),
+      titleGreen: capitalizeText((x.title ?? "").toString()),
+      text: capitalizeText((x.subTitle ?? "").toString()),
     }))
     .filter((x) => x.titleGreen.length || x.text.length);
 
@@ -215,8 +221,10 @@ onBeforeUnmount(() => {
         <div
           class="main left-block flex-1 flex justify-center md:justify-center relative left-0 md:left-0 lg:left-4 xl:left-[3.5rem] w-full max-w-[320px] md:max-w-[350px] lg:max-w-[420px] xl:max-w-[32rem] z-0"
         >
-          <ElectricOneNumber
-            class="relative z-[1] top-0 md:top-[8px] lg:top-0 xl:top-0 w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100"
+          <img
+            src="/General/one.svg"
+            alt=""
+            class="relative z-[1] top-0 md:top-[8px] lg:top-0 xl:top-0 w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100 object-contain"
           />
         </div>
 
@@ -227,16 +235,16 @@ onBeforeUnmount(() => {
             <div
               v-for="(p, i) in panels"
               :key="i"
-              class="panel absolute inset-0 h-full flex flex-col justify-center will-change-transform z-10"
+              class="panel absolute inset-0 h-full flex flex-col items-start justify-center will-change-transform z-10"
             >
               <h1
-                class="font-normal uppercase text-center text-[#03CB00] leading-[100%] tracking-[0] text-[40px] md:text-[46px] lg:text-[56px] xl:text-[4rem]"
+                class="font-normal text-left capitalize text-white leading-[100%] tracking-[0] text-[40px] md:text-[46px] lg:text-[56px] xl:text-[4rem]"
               >
                 {{ p.titleGreen }}
               </h1>
 
               <p
-                class="font-light font-['Poppins','Inter',sans-serif] text-center text-[#cccccc] leading-[120%] tracking-[0] px-2 md:px-4 lg:px-6 py-6 md:py-8 lg:py-10 text-[14px] md:text-[16px] lg:text-[20px] xl:text-[1.5rem] max-w-[640px] mx-auto"
+                class="font-light font-['Poppins','Inter',sans-serif] text-left capitalize text-[#cccccc] leading-[120%] tracking-[0] py-6 md:py-8 lg:py-10 text-[14px] md:text-[16px] lg:text-[20px] xl:text-[1.5rem] max-w-[640px]"
               >
                 {{ p.text }}
               </p>

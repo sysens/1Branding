@@ -121,7 +121,7 @@
         }
       },
       "component": "landing-page.section9",
-      "repeatable": true
+      "repeatable": false
     },
     "section11": {
       "type": "component",

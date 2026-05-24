@@ -11,7 +11,9 @@
     "cards": {
       "type": "component",
       "component": "landing-page.design-el-cards",
-      "repeatable": true
+      "repeatable": true,
+      "min": 3,
+      "max": 3
     }
   },
   "config": {}

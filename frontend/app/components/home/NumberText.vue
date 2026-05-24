@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
   width: min(132vw, 104rem);
   height: clamp(17rem, 40vw, 34rem);
   pointer-events: none;
-  translate: -50% -30%;
+  translate: -50% -10%;
 }
 
 .section-two-number-layer::after {
@@ -371,6 +371,7 @@ onBeforeUnmount(() => {
 .section-two-number {
   width: 100%;
   height: 100%;
+  pointer-events: auto;
 }
 
 .section-two-right {
@@ -379,7 +380,7 @@ onBeforeUnmount(() => {
   align-items: center;
   text-align: center;
   margin-right: 0;
-  transform: translateY(clamp(0.75rem, 9vh, 5.8rem));
+  transform: translateY(250px);
 }
 
 .section-two-title {

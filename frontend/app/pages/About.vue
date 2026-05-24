@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
     ref="rootRef"
     class="relative min-h-screen overflow-x-hidden overscroll-y-none bg-black"
   >
-    <Spinner v-if="loading" src="/General/IMG_5528.mp4" :size="542" />
+    <Spinner v-if="loading" :size="542" />
 
     <div class="edge-gradient edge-gradient-left edge-gradient-soft" />
     <div class="edge-gradient edge-gradient-right edge-gradient-soft" />

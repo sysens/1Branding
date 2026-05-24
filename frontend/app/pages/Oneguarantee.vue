@@ -151,7 +151,6 @@ onMounted(async () => {
   <div class="bg-black relative overflow-x-hidden">
     <Spinner
       v-if="loading"
-      src="/General/IMG_5528.mp4"
       :size="542"
       class="fixed inset-0 z-[9999]"
     />

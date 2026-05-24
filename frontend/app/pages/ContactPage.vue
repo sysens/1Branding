@@ -178,7 +178,6 @@ onBeforeUnmount(() => {
   <div ref="rootRef" class="relative overflow-x-hidden overscroll-y-none">
     <Spinner
       v-if="loading"
-      src="/General/IMG_5528.mp4"
       :size="542"
       class="fixed inset-0 z-[9999] pointer-events-none"
     />

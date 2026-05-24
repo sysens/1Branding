@@ -189,7 +189,7 @@ const loading = computed(() => pending.value || !data.value || !!gqlErrors.value
 
 <template>
   <div ref="root" class="relative overflow-x-hidden bg-black">
-    <Spinner v-if="loading" src="/General/IMG_5528.mp4" :size="542" />
+    <Spinner v-if="loading" :size="542" />
 
     <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>

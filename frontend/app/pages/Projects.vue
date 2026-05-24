@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="rootRef" class="relative">
-    <Spinner v-if="loading" src="/General/IMG_5528.mp4" :size="542" />
+    <Spinner v-if="loading" :size="542" />
 
     <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
