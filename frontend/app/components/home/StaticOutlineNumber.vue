@@ -77,11 +77,11 @@ const updateMaskPosition = (event: PointerEvent) => {
         y2="0"
       >
         <template v-if="hovered">
-          <stop offset="0%" stop-color="#eab308" />
-          <stop offset="25%" stop-color="#ef4444" />
-          <stop offset="50%" stop-color="#3b82f6" />
-          <stop offset="75%" stop-color="#06b6d4" />
-          <stop offset="100%" stop-color="#8b5cf6" />
+          <stop offset="0%" stop-color="#d8ffd2" />
+          <stop offset="18%" stop-color="#7dff68" />
+          <stop offset="42%" stop-color="#24ff1b" />
+          <stop offset="70%" stop-color="#03cb00" />
+          <stop offset="100%" stop-color="#00ff0d" />
         </template>
       </linearGradient>
 
@@ -149,8 +149,9 @@ const updateMaskPosition = (event: PointerEvent) => {
 
 .static-outline-number__text--gradient {
   opacity: 0;
-  filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6)) 
-          drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+  filter: drop-shadow(0 0 18px rgba(3, 203, 0, 0.9))
+          drop-shadow(0 0 34px rgba(0, 255, 13, 0.68))
+          drop-shadow(0 0 58px rgba(0, 255, 13, 0.32));
   animation: glow-pulse 2s ease-in-out infinite;
   transition: opacity 0.2s ease;
 }
@@ -161,12 +162,14 @@ const updateMaskPosition = (event: PointerEvent) => {
 
 @keyframes glow-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6)) 
-            drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+    filter: drop-shadow(0 0 18px rgba(3, 203, 0, 0.9))
+            drop-shadow(0 0 34px rgba(0, 255, 13, 0.68))
+            drop-shadow(0 0 58px rgba(0, 255, 13, 0.32));
   }
   50% {
-    filter: drop-shadow(0 0 30px rgba(234, 179, 8, 0.9)) 
-            drop-shadow(0 0 40px rgba(59, 130, 246, 0.7));
+    filter: drop-shadow(0 0 28px rgba(3, 203, 0, 0.95))
+            drop-shadow(0 0 48px rgba(0, 255, 13, 0.82))
+            drop-shadow(0 0 78px rgba(0, 255, 13, 0.44));
   }
 }
 </style>

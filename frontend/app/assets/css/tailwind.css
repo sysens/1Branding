@@ -276,7 +276,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 100px;
+    width: clamp(100px, 11vw, 220px);
     z-index: 30;
 }
 
@@ -288,6 +288,8 @@
     left: 0;
     background: linear-gradient(to right,
             rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.84) 22%,
+            rgba(0, 0, 0, 0.34) 68%,
             rgba(0, 0, 0, 0.01) 100%);
 }
 
@@ -295,6 +297,8 @@
     right: 0;
     background: linear-gradient(to left,
             rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 0.84) 22%,
+            rgba(0, 0, 0, 0.34) 68%,
             rgba(0, 0, 0, 0.01) 100%);
 }
 

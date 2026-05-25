@@ -210,7 +210,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <section class="home-number-text">
+      <section class="home-number-text -translate-y-[5%]">
         <div class="relative bottom-96">
           <div>
             <HomeNumberText />

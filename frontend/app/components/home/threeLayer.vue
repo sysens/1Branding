@@ -97,7 +97,7 @@ useHead(() => ({
 </script>
 
 <template>
-  <section class="relative z-10 bg-black w-full overflow-hidden flex items-center">
+  <section class="relative z-10 w-full overflow-visible bg-transparent flex items-center">
     <div class="w-[120%] -ml-[10%]">
       <div class="w-full overflow-hidden space-y-4">
         <div
