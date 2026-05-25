@@ -86,13 +86,44 @@ type ProjectsPage = {
 };
 
 type GqlRes = {
-  data?: { projectsPage?: ProjectsPage | null };
+  data?: {
+    projectsPage?: ProjectsPage | null;
+    fallbackProjectsPage?: ProjectsPage | null;
+  };
   errors?: Array<{ message: string }>;
 };
 
 const query = `
-  query ProjectsPage($documentId: ID!, $locale: I18NLocaleCode) {
+  query ProjectsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     projectsPage(documentId: $documentId, locale: $locale) {
+      projectColor
+      section1 {
+        projectTitle
+        text
+        images_connection {
+          nodes { url }
+        }
+      }
+      section2 {
+        title
+        text
+        id
+        image {
+          documentId
+          url
+        }
+      }
+      section3 {
+        id
+        title
+        text
+        colorCard {
+          HexColorCode
+          id
+        }
+      }
+    }
+    fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
       projectColor
       section1 {
         projectTitle
@@ -123,19 +154,29 @@ const query = `
   }
 `;
 
+const fallbackLocale: AppLocale = "en";
+
 const { data, error, pending } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: computed(() => ({
     query,
-    variables: { documentId: documentId.value, locale: gqlLocale.value },
+    variables: {
+      documentId: documentId.value,
+      locale: gqlLocale.value,
+      fallbackLocale,
+    },
   })),
   key: computed(() => `projects-page-${documentId.value}-${String(gqlLocale.value)}`),
   watch: [documentId, gqlLocale],
-  server: false,
 });
 
-const page = computed(() => data.value?.data?.projectsPage ?? null);
+const page = computed(
+  () =>
+    data.value?.data?.projectsPage ??
+    data.value?.data?.fallbackProjectsPage ??
+    null
+);
 
 const section1 = computed(() => page.value?.section1 ?? null);
 const section2 = computed(() => page.value?.section2 ?? null);

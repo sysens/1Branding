@@ -92,7 +92,11 @@ type CategoryNode = {
 type GqlRes = {
   data?: {
     category?: CategoryNode | null;
+    fallbackCategory?: CategoryNode | null;
     projectsPage?: {
+      projectColor?: string | null;
+    } | null;
+    fallbackProjectsPage?: {
       projectColor?: string | null;
     } | null;
   };
@@ -100,10 +104,26 @@ type GqlRes = {
 };
 
 const categoryId = computed(() => String(route.params.id || ""));
+const fallbackLocale: AppLocale = "en";
 
 const query = `
-  query CategoryById($documentId: ID!, $locale: I18NLocaleCode) {
+  query CategoryById($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     category(documentId: $documentId, locale: $locale) {
+      documentId
+      categoryName
+      description
+      projects_connection(pagination: { page: 1, pageSize: 100 }) {
+        nodes {
+          documentId
+          createdAt
+          section1 {
+            projectTitle
+            images { url }
+          }
+        }
+      }
+    }
+    fallbackCategory: category(documentId: $documentId, locale: $fallbackLocale) {
       documentId
       categoryName
       description
@@ -122,6 +142,9 @@ const query = `
     projectsPage(documentId: $documentId, locale: $locale) {
       projectColor
     }
+    fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
+      projectColor
+    }
   }
 `;
 
@@ -130,13 +153,16 @@ const { data: gqlData, error, pending } = await useFetch<GqlRes>(GRAPHQL_URL, {
   headers: { "Content-Type": "application/json" },
   body: computed(() => ({
     query,
-    variables: { documentId: categoryId.value, locale: gqlLocale.value },
+    variables: {
+      documentId: categoryId.value,
+      locale: gqlLocale.value,
+      fallbackLocale,
+    },
   })),
   key: computed(
     () => `productslug-category-${categoryId.value}-${String(gqlLocale.value)}`
   ),
   watch: [categoryId, gqlLocale],
-  server: false,
 });
 
 const gqlErrors = computed(
@@ -152,7 +178,9 @@ const resolveMedia = (url?: string | null) => {
   return apiBase.value + "/" + url;
 };
 
-const category = computed(() => gqlData.value?.data?.category ?? null);
+const category = computed(
+  () => gqlData.value?.data?.category ?? gqlData.value?.data?.fallbackCategory ?? null
+);
 
 const pageTitle = computed(
   () => category.value?.categoryName || t("productSlug.titleFallback")
@@ -185,7 +213,10 @@ const projectsFromApi = computed(() => {
 });
 
 const projectColor = computed(
-  () => gqlData.value?.data?.projectsPage?.projectColor || ""
+  () =>
+    gqlData.value?.data?.projectsPage?.projectColor ||
+    gqlData.value?.data?.fallbackProjectsPage?.projectColor ||
+    ""
 );
 
 const pageStyle = computed(() =>

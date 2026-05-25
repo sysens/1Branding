@@ -95,6 +95,7 @@ const page = ref(1);
 const pageSize = computed(() => Math.max(1, Number(props.pageSize) || 5));
 const isLoading = ref(false);
 const hasMore = ref(true);
+const fallbackLocale: AppLocale = "en";
 
 const allCategories = ref<CategoryNode[]>([]);
 
@@ -117,6 +118,19 @@ const makeQuery = (p: number, ps: number) => `
   }
 `;
 
+const fetchCategoriesPage = async (p: number, localeValue: AppLocale) => {
+  const query = makeQuery(p, pageSize.value);
+
+  const { data } = await $fetch<GqlRes>(GRAPHQL_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: { query, variables: { locale: localeValue } },
+  });
+
+  const nodes = data?.categories_connection?.nodes ?? [];
+  return nodes.filter(Boolean) as CategoryNode[];
+};
+
 const fetchPage = async (p: number) => {
   if (!GRAPHQL_URL) return;
   if (isLoading.value) return;
@@ -124,16 +138,10 @@ const fetchPage = async (p: number) => {
 
   isLoading.value = true;
   try {
-    const query = makeQuery(p, pageSize.value);
-
-    const { data } = await $fetch<GqlRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query, variables: { locale: gqlLocale.value } },
-    });
-
-    const nodes = data?.categories_connection?.nodes ?? [];
-    const clean = nodes.filter(Boolean) as CategoryNode[];
+    let clean = await fetchCategoriesPage(p, gqlLocale.value);
+    if (!clean.length && gqlLocale.value !== fallbackLocale) {
+      clean = await fetchCategoriesPage(p, fallbackLocale);
+    }
 
     if (p === 1) {
       allCategories.value = clean;

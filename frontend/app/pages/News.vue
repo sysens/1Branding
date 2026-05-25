@@ -1,4 +1,3 @@
-buni xam
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";

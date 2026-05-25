@@ -54,11 +54,61 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    "/": {
+      isr: 300,
+    },
+    "/en": {
+      isr: 300,
+    },
+    "/Costs": {
+      isr: 300,
+    },
+    "/en/Costs": {
+      isr: 300,
+    },
+    "/Projects": {
+      isr: 300,
+    },
+    "/en/Projects": {
+      isr: 300,
+    },
+    "/News": {
+      isr: 300,
+    },
+    "/en/News": {
+      isr: 300,
+    },
+    "/ProductSlug/**": {
+      isr: 300,
+    },
+    "/en/ProductSlug/**": {
+      isr: 300,
+    },
+    "/ProjectSlug/**": {
+      isr: 300,
+    },
+    "/en/ProjectSlug/**": {
+      isr: 300,
+    },
+    "/NewsSlug/**": {
+      isr: 300,
+    },
+    "/en/NewsSlug/**": {
+      isr: 300,
+    },
     "/_ipx/**": {
       headers: longTermImageCacheHeaders,
     },
     "/home/threeLayerLocal/**": {
       headers: longTermImageCacheHeaders,
+    },
+  },
+
+  nitro: {
+    devStorage: {
+      cache: {
+        driver: "memory",
+      },
     },
   },
 

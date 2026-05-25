@@ -25,7 +25,13 @@ onBeforeUnmount(() => {
   ctx = null;
 });
 
+type AppLocale = "ru" | "en";
+
 const { locale } = useI18n();
+const gqlLocale = computed<AppLocale>(() =>
+  (locale.value as AppLocale) === "en" ? "en" : "ru"
+);
+const fallbackLocale: AppLocale = "en";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -57,13 +63,28 @@ type NewsItem = {
 };
 
 type GqlRes = {
-  data?: { newsPage?: NewsItem | null };
+  data?: {
+    newsPage?: NewsItem | null;
+    fallbackNewsPage?: NewsItem | null;
+  };
   errors?: Array<{ message: string }>;
 };
 
 const query = `
-  query NewsPage($documentId: ID!, $locale: I18NLocaleCode) {
+  query NewsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     newsPage(documentId: $documentId, locale: $locale) {
+      documentId
+      title
+      createdAt
+      publishedAt
+      updatedAt
+      image { url }
+      text
+      images_connection {
+        nodes { url }
+      }
+    }
+    fallbackNewsPage: newsPage(documentId: $documentId, locale: $fallbackLocale) {
       documentId
       title
       createdAt
@@ -83,14 +104,19 @@ const { data, error } = await useFetch<GqlRes>(GRAPHQL_URL, {
   headers: { "Content-Type": "application/json" },
   body: computed(() => ({
     query,
-    variables: { documentId: documentId.value, locale: (locale.value as any) || null },
+    variables: {
+      documentId: documentId.value,
+      locale: gqlLocale.value,
+      fallbackLocale,
+    },
   })),
-  key: computed(() => `news-page-${documentId.value}-${String(locale.value)}`),
-  watch: [documentId, locale],
-  server: false,
+  key: computed(() => `news-page-${documentId.value}-${String(gqlLocale.value)}`),
+  watch: [documentId, gqlLocale],
 });
 
-const news = computed(() => data.value?.data?.newsPage ?? null);
+const news = computed(
+  () => data.value?.data?.newsPage ?? data.value?.data?.fallbackNewsPage ?? null
+);
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 

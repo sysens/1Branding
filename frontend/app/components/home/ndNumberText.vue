@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div
-          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-0 xl:self-center xl:max-w-[52rem] min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
+          class="main right-block flex-1 relative w-full z-10 right-0 md:right-0 lg:right-4 xl:right-[4rem] 2xl:right-[5rem] xl:self-center xl:max-w-[52rem] min-h-[260px] h-[32vh] md:h-[360px] lg:h-[420px] xl:h-full xl:min-h-[320px] flex items-center"
         >
           <div class="relative w-full h-full overflow-visible">
             <div

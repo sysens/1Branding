@@ -168,6 +168,13 @@ type FooterSocialsRes = {
         telegramLink?: string | null;
       } | null;
     } | null;
+    fallbackFooter?: {
+      socialMedia?: {
+        instagramLink?: string | null;
+        behanceLink?: string | null;
+        telegramLink?: string | null;
+      } | null;
+    } | null;
   };
   errors?: Array<{ message: string }>;
 };
@@ -186,6 +193,7 @@ const gqlLocale = computed<AppLocale>(() =>
 );
 
 const lastPageCats = ref<{ documentId: string; categoryName: string }[]>([]);
+const fallbackLocale: AppLocale = "en";
 
 const makeQuery = (p: number, ps: number) => `
   query CategoriesConnection($locale: I18NLocaleCode) {
@@ -198,21 +206,31 @@ const makeQuery = (p: number, ps: number) => `
   }
 `;
 
-const fetchFirstPage = async (ps: number) => {
-  if (!GRAPHQL_URL) return;
+const fetchFirstPageByLocale = async (ps: number, localeValue: AppLocale) => {
+  if (!GRAPHQL_URL) {
+    return [] as { documentId: string; categoryName: string }[];
+  }
 
   const query = makeQuery(1, ps);
 
   const res = await $fetch<GqlRes>(GRAPHQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: { query, variables: { locale: gqlLocale.value } },
+    body: { query, variables: { locale: localeValue } },
   });
 
-  const nodes = (res?.data?.categories_connection?.nodes ?? []).filter(Boolean) as {
+  return (res?.data?.categories_connection?.nodes ?? []).filter(Boolean) as {
     documentId: string;
     categoryName: string;
   }[];
+};
+
+const fetchFirstPage = async (ps: number) => {
+  let nodes = await fetchFirstPageByLocale(ps, gqlLocale.value);
+
+  if (!nodes.length && gqlLocale.value !== fallbackLocale) {
+    nodes = await fetchFirstPageByLocale(ps, fallbackLocale);
+  }
 
   lastPageCats.value = nodes.slice(0, ps);
 };
@@ -228,8 +246,15 @@ watch(
 );
 
 const FOOTER_SOCIALS_QUERY = `
-  query FooterSocials($locale: I18NLocaleCode) {
+  query FooterSocials($locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     footer(locale: $locale) {
+      socialMedia {
+        instagramLink
+        behanceLink
+        telegramLink
+      }
+    }
+    fallbackFooter: footer(locale: $fallbackLocale) {
       socialMedia {
         instagramLink
         behanceLink
@@ -246,26 +271,32 @@ const { data: footerGql } = await useAsyncData<FooterSocialsRes>(
     return await $fetch(GRAPHQL_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: { query: FOOTER_SOCIALS_QUERY, variables: { locale: gqlLocale.value } },
+      body: {
+        query: FOOTER_SOCIALS_QUERY,
+        variables: { locale: gqlLocale.value, fallbackLocale },
+      },
     });
   },
   { watch: [gqlLocale] }
 );
 
-const instagramLink = computed(
+const socialMedia = computed(
   () =>
-    footerGql.value?.data?.footer?.socialMedia?.instagramLink ||
-    "https://www.instagram.com/"
+    footerGql.value?.data?.footer?.socialMedia ??
+    footerGql.value?.data?.fallbackFooter?.socialMedia ??
+    null
+);
+
+const instagramLink = computed(
+  () => socialMedia.value?.instagramLink || "https://www.instagram.com/"
 );
 
 const behanceLink = computed(
-  () =>
-    footerGql.value?.data?.footer?.socialMedia?.behanceLink || "https://www.behance.net"
+  () => socialMedia.value?.behanceLink || "https://www.behance.net"
 );
 
 const telegramLink = computed(
-  () =>
-    footerGql.value?.data?.footer?.socialMedia?.telegramLink || "https://web.telegram.org"
+  () => socialMedia.value?.telegramLink || "https://web.telegram.org"
 );
 
 const currentYear = new Date().getFullYear();

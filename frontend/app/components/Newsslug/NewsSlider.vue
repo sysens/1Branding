@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue";
+
+type AppLocale = "ru" | "en";
 
 type ImageType = { url: string | null };
 type NewsNode = {
@@ -149,14 +151,22 @@ onBeforeUnmount(() => {
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const { locale } = useI18n<{ message: any }, AppLocale>();
+const gqlLocale = computed<AppLocale>(() =>
+  (locale.value as AppLocale) === "en" ? "en" : "ru"
+);
+const fallbackLocale: AppLocale = "en";
 
 const pageSize = 10;
 const items = ref<NewsNode[]>([]);
 const pageInfo = ref<PageInfo>(null);
 
 const query = `
-  query NewsPagesConnection($page: Int!, $pageSize: Int!) {
-    newsPages_connection(pagination: { page: $page, pageSize: $pageSize }) {
+  query NewsPagesConnection($page: Int!, $pageSize: Int!, $locale: I18NLocaleCode) {
+    newsPages_connection(
+      locale: $locale
+      pagination: { page: $page, pageSize: $pageSize }
+    ) {
       nodes {
         documentId
         title
@@ -197,18 +207,28 @@ const formatDate = (iso?: string | null) => {
 
 const pickDate = (n: NewsNode) => n.createdAt || n.publishedAt || n.updatedAt || "";
 
-const fetchPage = async (p: number) => {
+const fetchPageByLocale = async (p: number, localeValue: AppLocale) => {
   if (!GRAPHQL_URL) return { nodes: [], pi: null as PageInfo };
 
   const res = await $fetch<GqlRes>(GRAPHQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: { query, variables: { page: p, pageSize } },
+    body: { query, variables: { page: p, pageSize, locale: localeValue } },
   });
 
   const nodes = res?.data?.newsPages_connection?.nodes ?? [];
   const pi = res?.data?.newsPages_connection?.pageInfo ?? null;
   return { nodes, pi };
+};
+
+const fetchPage = async (p: number) => {
+  const current = await fetchPageByLocale(p, gqlLocale.value);
+
+  if (current.nodes.length || gqlLocale.value === fallbackLocale) {
+    return current;
+  }
+
+  return await fetchPageByLocale(p, fallbackLocale);
 };
 
 const localePath = useLocalePath();
@@ -253,6 +273,10 @@ const initItems = async () => {
 };
 
 onMounted(async () => {
+  await initItems();
+});
+
+watch(gqlLocale, async () => {
   await initItems();
 });
 </script>

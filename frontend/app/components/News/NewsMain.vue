@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
+import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 let ctx: any = null;
@@ -27,7 +27,13 @@ onBeforeUnmount(() => {
   ctx = null;
 });
 
+type AppLocale = "ru" | "en";
+
 const { locale } = useI18n();
+const gqlLocale = computed<AppLocale>(() =>
+  (locale.value as AppLocale) === "en" ? "en" : "ru"
+);
+const fallbackLocale: AppLocale = "en";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -111,20 +117,34 @@ const formatDate = (iso?: string | null) => {
 
 const pickDate = (n: NewsNode) => n.createdAt || n.publishedAt || n.updatedAt || "";
 
-const fetchPage = async (p: number) => {
-  if (!GRAPHQL_URL) return [];
+const fetchPageByLocale = async (p: number, localeValue: AppLocale) => {
+  if (!GRAPHQL_URL) return { nodes: [] as NewsNode[], pi: null as NewsConn["pageInfo"] };
 
   const res = await $fetch<GqlRes>(GRAPHQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: {
       query,
-      variables: { page: p, pageSize, locale: (locale.value as any) || null },
+      variables: { page: p, pageSize, locale: localeValue },
     },
   });
 
   const nodes = res?.data?.newsPages_connection?.nodes ?? [];
   const pi = res?.data?.newsPages_connection?.pageInfo ?? null;
+
+  return { nodes, pi };
+};
+
+const fetchPage = async (p: number) => {
+  const current = await fetchPageByLocale(p, gqlLocale.value);
+  let nodes = current.nodes ?? [];
+  let pi = current.pi ?? null;
+
+  if (!nodes.length && gqlLocale.value !== fallbackLocale) {
+    const fallback = await fetchPageByLocale(p, fallbackLocale);
+    nodes = fallback.nodes ?? [];
+    pi = fallback.pi ?? null;
+  }
 
   pageInfo.value = pi;
   return nodes;

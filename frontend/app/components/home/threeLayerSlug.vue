@@ -3,6 +3,8 @@ import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+type AppLocale = "ru" | "en";
+
 type Props = {
   rows?: number;
   durationSeconds?: number;
@@ -17,6 +19,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const { locale } = useI18n<{ message: any }, AppLocale>();
+const gqlLocale = computed<AppLocale>(() =>
+  (locale.value as AppLocale) === "en" ? "en" : "ru"
+);
+const fallbackLocale: AppLocale = "en";
 
 type Media = { url: string | null };
 
@@ -41,13 +48,34 @@ type GqlRes = {
     categories_connection?: {
       nodes?: CategoryNode[];
     } | null;
+    fallbackCategoriesConnection?: {
+      nodes?: CategoryNode[];
+    } | null;
   };
   errors?: Array<{ message: string }>;
 };
 
 const query = `
-  query CategoriesConnection {
-    categories_connection {
+  query CategoriesConnection($locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+    categories_connection(locale: $locale) {
+      nodes {
+        categoryName
+        projects_connection(
+          pagination: { page: 1, pageSize: 10 }
+          sort: "createdAt:desc"
+        ) {
+          nodes {
+            documentId
+            createdAt
+            section1 {
+              projectTitle
+              images { url }
+            }
+          }
+        }
+      }
+    }
+    fallbackCategoriesConnection: categories_connection(locale: $fallbackLocale) {
       nodes {
         categoryName
         projects_connection(
@@ -71,8 +99,12 @@ const query = `
 const { data: gqlData } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query },
-  key: "categories-connection-marquee",
+  body: computed(() => ({
+    query,
+    variables: { locale: gqlLocale.value, fallbackLocale },
+  })),
+  key: computed(() => `categories-connection-marquee-${gqlLocale.value}`),
+  watch: [gqlLocale],
 });
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
@@ -126,7 +158,9 @@ type MarqueeItem = {
 };
 
 const marqueeItems = computed<MarqueeItem[]>(() => {
-  const categories = gqlData.value?.data?.categories_connection?.nodes ?? [];
+  const current = gqlData.value?.data?.categories_connection?.nodes ?? [];
+  const fallback = gqlData.value?.data?.fallbackCategoriesConnection?.nodes ?? [];
+  const categories = current.length ? current : fallback;
 
   const base = categories.flatMap((cat, catIdx) => {
     const projects = cat?.projects_connection?.nodes ?? [];

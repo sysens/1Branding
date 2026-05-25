@@ -242,6 +242,7 @@ type PriceCategory = {
 type PriceCategoriesResponse = {
   data?: {
     priceCategories?: PriceCategory[];
+    fallbackPriceCategories?: PriceCategory[];
   };
   errors?: Array<{ message: string }>;
 };
@@ -264,9 +265,20 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
+const fallbackLocale: AppLocale = "en";
+
 const query = `
-  query PriceCategories($locale: I18NLocaleCode!) {
+  query PriceCategories($locale: I18NLocaleCode!, $fallbackLocale: I18NLocaleCode!) {
     priceCategories(locale: $locale) {
+      title
+      pricing {
+        title
+        price
+        priceText
+        description
+      }
+    }
+    fallbackPriceCategories: priceCategories(locale: $fallbackLocale) {
       title
       pricing {
         title
@@ -283,16 +295,21 @@ const { data: priceRes } = await useFetch<PriceCategoriesResponse>(GRAPHQL_URL, 
   headers: {
     "Content-Type": "application/json",
   },
-  body: {
+  body: computed(() => ({
     query,
     variables: {
       locale: gqlLocale.value,
+      fallbackLocale,
     },
-  },
+  })),
+  key: computed(() => `price-categories-${gqlLocale.value}`),
+  watch: [gqlLocale],
 });
 
 const priceCategories = computed<PriceCategory[]>(() => {
-  return priceRes.value?.data?.priceCategories || [];
+  const current = priceRes.value?.data?.priceCategories || [];
+  if (current.length) return current;
+  return priceRes.value?.data?.fallbackPriceCategories || [];
 });
 
 const setPrevRef = (index: number, el: Element | null) => {
