@@ -223,10 +223,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="md:h-[120vh] h-[116vh] overflow-hidden">
+  <div class="leading-page-shell overflow-hidden">
     <div class="pt-[41px]"></div>
 
-    <div class="relative md:top-[22%] top-[30%]">
+    <div class="leading-copy-position relative">
       <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products">
         <div
           class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
@@ -274,7 +274,23 @@ onBeforeUnmount(() => {
   will-change: transform;
 }
 
+.leading-page-shell {
+  height: clamp(40rem, 108svh, 56rem);
+}
+
+.leading-copy-position {
+  top: 30%;
+}
+
 @media (min-width: 768px) {
+  .leading-page-shell {
+    height: clamp(42rem, 112svh, 58rem);
+  }
+
+  .leading-copy-position {
+    top: 22%;
+  }
+
   .contact-fab {
     right: max(6.25rem, calc((100vw - 1728px) / 2 + 6.25rem));
   }

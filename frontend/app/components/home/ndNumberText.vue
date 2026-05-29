@@ -79,6 +79,22 @@ const panels = computed<Panel[]>(() => {
 
 const root = ref<HTMLElement | null>(null);
 const PIN_HEADER_OFFSET_PX = 118;
+const TALL_VIEWPORT_HEIGHT_PX = 1400;
+const EXTRA_TALL_VIEWPORT_HEIGHT_PX = 2200;
+
+const getPinSegmentDistance = () => {
+  const viewport = window.innerHeight || 800;
+
+  if (viewport >= EXTRA_TALL_VIEWPORT_HEIGHT_PX) {
+    return 300;
+  }
+
+  if (viewport >= TALL_VIEWPORT_HEIGHT_PX) {
+    return 360;
+  }
+
+  return Math.min(Math.max(viewport * 0.42, 360), 560);
+};
 
 let ctx: GsapContext | null = null;
 let ready = false;
@@ -136,8 +152,7 @@ const initGsap = async () => {
         start: () =>
           window.innerWidth >= 768 ? `top ${PIN_HEADER_OFFSET_PX}px` : "top top",
         end: () => {
-          const viewport = window.innerHeight || 800;
-          const segment = Math.min(Math.max(viewport * 0.85, 620), 980);
+          const segment = getPinSegmentDistance();
           return `+=${Math.max(items.length, 2) * segment}`;
         },
         pin: true,

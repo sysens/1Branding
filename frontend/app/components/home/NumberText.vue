@@ -272,13 +272,14 @@ onBeforeUnmount(() => {
 }
 
 .section-two-bg {
+  --section-two-height: clamp(40rem, 100svh, 56rem);
   --section-two-curve-height: 522px;
   --section-two-radius-left-x: 50%;
   --section-two-radius-right-x: 62%;
   --section-two-radius-left-y: 25%;
   --section-two-radius-right-y: 22%;
   position: relative;
-  height: 100vh;
+  height: var(--section-two-height);
   display: flex;
   justify-content: center;
   width: 100%;
@@ -331,7 +332,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   padding-inline: clamp(1rem, 4vw, 4rem);
   padding-top: clamp(3rem, 5vw, 5rem);
-  min-height: 100vh;
+  min-height: var(--section-two-height);
 }
 
 .section-two-right {
@@ -345,10 +346,10 @@ onBeforeUnmount(() => {
 .section-two-number-layer {
   position: absolute;
   left: 50%;
-  top: clamp(15rem, 42vh, 24rem);
+  top: clamp(12rem, 34svh, 22rem);
   z-index: 0;
-  width: min(132vw, 104rem);
-  height: clamp(17rem, 40vw, 34rem);
+  width: min(132vw, 100rem);
+  height: clamp(15rem, 32vw, 31rem);
   pointer-events: none;
   translate: -50% -10%;
 }
@@ -380,7 +381,7 @@ onBeforeUnmount(() => {
   align-items: center;
   text-align: center;
   margin-right: 0;
-  transform: translateY(250px);
+  transform: translateY(clamp(7rem, 16svh, 12rem));
 }
 
 .section-two-title {
@@ -442,13 +443,34 @@ onBeforeUnmount(() => {
 
 .section-two-brands {
   position: relative;
-  z-index: 0;
-  margin-top: clamp(3.5rem, 6vw, 7.5rem);
+  z-index: 5;
+  margin-top: clamp(5rem, 8vw, 9rem);
+  margin-bottom: clamp(2.5rem, 5vw, 5.5rem);
+  isolation: isolate;
+}
+
+@media (min-width: 1280px) and (min-height: 900px) {
+  .section-two-bg {
+    --section-two-curve-height: 672px;
+  }
+
+  .section-two-number-layer {
+    top: clamp(16rem, 38svh, 24rem);
+  }
+
+  .section-two-right {
+    transform: translateY(clamp(8rem, 18svh, 13.5rem));
+  }
+
+  .section-two-brands {
+    margin-top: clamp(6rem, 9vw, 10.5rem);
+    margin-bottom: clamp(3.5rem, 6vw, 6.5rem);
+  }
 }
 
 @media (max-width: 1400px) {
   .section-two-wrap {
-    min-height: 52rem;
+    min-height: min(var(--section-two-height), 52rem);
   }
 
   .section-two-number-layer {
@@ -459,7 +481,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 1200px) {
   .section-two-wrap {
-    min-height: 48rem;
+    min-height: min(var(--section-two-height), 48rem);
   }
 
   .section-two-number-layer {
@@ -480,7 +502,7 @@ onBeforeUnmount(() => {
 @media (min-width: 769px) and (max-width: 1024px) {
   .section-two-wrap {
     padding-top: 7rem;
-    min-height: 44rem;
+    min-height: min(var(--section-two-height), 44rem);
   }
 
   .section-two-right {
@@ -517,7 +539,7 @@ onBeforeUnmount(() => {
 @media (max-width: 991px) {
   .section-two-wrap {
     padding-top: 7rem;
-    min-height: 44rem;
+    min-height: min(var(--section-two-height), 44rem);
   }
 
   .section-two-number-layer {
@@ -540,7 +562,7 @@ onBeforeUnmount(() => {
 @media (max-width: 767px) {
   .section-two-wrap {
     padding-top: 7rem;
-    min-height: 38rem;
+    min-height: min(var(--section-two-height), 38rem);
   }
 
   .section-two-number-layer {
@@ -573,7 +595,7 @@ onBeforeUnmount(() => {
   .section-two-wrap {
     padding-inline: 1rem;
     padding-top: 6.5rem;
-    min-height: 35rem;
+    min-height: min(var(--section-two-height), 35rem);
   }
 
   .section-two-number-layer {

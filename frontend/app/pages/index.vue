@@ -210,16 +210,14 @@ onMounted(async () => {
           </div>
         </div>
 
-        <section class="home-number-text -translate-y-[5%]">
-          <div class="relative bottom-96">
-            <div>
-              <HomeNumberText />
-            </div>
+        <section class="home-number-text">
+          <div>
+            <HomeNumberText />
           </div>
         </section>
 
         <div
-          class="home-three-layer relative md:bottom-28 md:w-full md:-translate-y-10 md:rotate-[-6deg] [transform-style:preserve-3d] md:pb-40"
+          class="home-three-layer"
         >
           <ThreeLayer
             :rows="3"
@@ -239,7 +237,7 @@ onMounted(async () => {
           <PictureWord />
         </div>
 
-        <div class="home-grid relative bottom-32 md:bottom-80">
+        <div class="home-grid">
           <GridSection />
         </div>
 
@@ -247,11 +245,11 @@ onMounted(async () => {
           <EarthDives />
         </div>
 
-        <div class="home-info-picture relative md:bottom-0 py-28 md:py-0">
+        <div class="home-info-picture">
           <InfoOnPicture />
         </div>
 
-        <div class="home-projects md:mb-[6.25rem] md:mt-32">
+        <div class="home-projects">
           <h1
             class="pb-20 text-center text-[40px] font-normal uppercase tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
           >
@@ -261,7 +259,7 @@ onMounted(async () => {
           <LazyHomeThreeLayerSlug />
         </div>
 
-        <div class="home-faq pt-20"><RowShorteners /></div>
+        <div class="home-faq"><RowShorteners /></div>
 
         <div>
           <Footer />
@@ -279,6 +277,90 @@ onMounted(async () => {
   margin-inline: auto;
   overflow: hidden;
   background: #000;
+}
+
+.home-number-text {
+  margin-top: clamp(-13rem, -12vw, -5rem);
+}
+
+.home-three-layer {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  margin-top: clamp(1.5rem, 4vw, 4rem);
+  padding-bottom: clamp(4rem, 8vw, 10rem);
+  transform: none;
+  transform-style: preserve-3d;
+}
+
+.home-grid {
+  margin-top: clamp(-8rem, -7vw, -3rem);
+}
+
+.home-nd-number-text {
+  margin-bottom: clamp(-5rem, -5vw, -2rem);
+}
+
+.home-info-picture {
+  position: relative;
+  padding-block: clamp(4rem, 7vw, 7rem);
+}
+
+.home-projects {
+  margin-top: clamp(4rem, 8vw, 8rem);
+  margin-bottom: clamp(4rem, 6vw, 6.25rem);
+}
+
+.home-faq {
+  padding-top: clamp(3rem, 5vw, 5rem);
+}
+
+@media (min-width: 1280px) and (min-height: 900px) {
+  .home-number-text {
+    margin-top: clamp(-11rem, -9vw, -4rem);
+  }
+
+  .home-three-layer {
+    margin-top: clamp(2.5rem, 5vw, 5.5rem);
+    padding-bottom: clamp(3.5rem, 6vw, 7rem);
+  }
+
+  .home-grid {
+    margin-top: clamp(-6rem, -5vw, -2.5rem);
+  }
+
+  .home-nd-number-text {
+    margin-bottom: clamp(-7rem, -6vw, -3rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .home-three-layer {
+    transform: rotate(-6deg);
+  }
+}
+
+@media (max-width: 767px) {
+  .home-number-text {
+    margin-top: clamp(-7rem, -16vw, -3rem);
+  }
+
+  .home-three-layer {
+    margin-top: 2rem;
+    padding-bottom: 3rem;
+  }
+
+  .home-grid {
+    margin-top: clamp(-4rem, -10vw, -2rem);
+  }
+
+  .home-nd-number-text {
+    margin-bottom: -2rem;
+  }
+
+  .home-info-picture {
+    padding-block: 4rem;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -345,11 +427,10 @@ onMounted(async () => {
   }
 
   .home-three-layer {
-    bottom: 7rem;
     right: 0;
     width: 100%;
     padding-bottom: 4rem;
-    transform: translateY(-1.5rem) rotate(-4deg);
+    transform: rotate(-4deg);
   }
 
   .home-three-layer :deep(.marquee-image-frame),
@@ -431,10 +512,6 @@ onMounted(async () => {
     top: 50%;
     width: 30rem;
     height: 32rem;
-  }
-
-  .home-grid {
-    bottom: 6rem;
   }
 
   .home-grid :deep(.containerr) {
@@ -533,10 +610,6 @@ onMounted(async () => {
   .home-big-brand :deep(.group p) {
     padding-top: 2.5rem;
     font-size: 1.25rem;
-  }
-
-  .home-info-picture {
-    bottom: 0;
   }
 
   .home-info-picture :deep(.info-stack) {

@@ -232,7 +232,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="">
-    <div ref="root" class="containerr mt-[350px]">
+    <div ref="root" class="containerr grid-section-shell">
       <h1
         class="font-normal md:text-[3.875rem] pb-[31px] text-white md:leading-[150%] md:tracking-[-0.04em] text-[40px] leading-[100%] tracking-[0] text-center"
       >
@@ -267,6 +267,10 @@ onBeforeUnmount(() => {
 .v {
   padding: 40px 0;
   min-height: 100vh;
+}
+
+.grid-section-shell {
+  margin-top: clamp(6rem, 12vw, 14rem);
 }
 
 .parent {

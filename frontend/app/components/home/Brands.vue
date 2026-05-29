@@ -70,7 +70,7 @@ const marqueeDuration = computed(() => {
 </script>
 
 <template>
-  <section class="spaceBetween relative h-auto flex items-center  w-full top-20 md:top-0">
+  <section class="spaceBetween relative z-[5] flex h-auto w-full items-center overflow-visible">
     <div class="w-full overflow-hidden">
       <div
         class="flex w-max animate-marquee will-change-transform"
@@ -103,5 +103,6 @@ const marqueeDuration = computed(() => {
 </template>
 <style scoped>
 .spaceBetween {
+  min-height: clamp(3rem, 5vw, 5.5rem);
 }
 </style>
