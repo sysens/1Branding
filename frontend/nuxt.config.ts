@@ -8,7 +8,6 @@ const viteAllowedHosts = [
     .filter((host) => host.length > 0),
 ];
 const imageDomains = [
-  "pub-156bce602951490e82e2418f1402419f.r2.dev",
   ...(process.env.NUXT_IMAGE_DOMAINS || "")
     .split(",")
     .map((host) => host.trim())
@@ -43,7 +42,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       graphqlUrl: process.env.NUXT_PUBLIC_GRAPHQL_URL,
-      staticMediaBaseUrl: process.env.NUXT_PUBLIC_STATIC_MEDIA_BASE_URL || "",
     },
   },
 

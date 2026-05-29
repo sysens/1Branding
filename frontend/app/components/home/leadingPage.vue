@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <NuxtLink
       :to="localePath('/ContactPage')"
-      class="contact-fab fixed md:right-[10%] right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[2147483646] group"
+      class="contact-fab fixed right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[2147483646] group"
       @click="onContactFabClick"
     >
       <img
@@ -272,6 +272,12 @@ onBeforeUnmount(() => {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .contact-fab {
+    right: max(6.25rem, calc((100vw - 1728px) / 2 + 6.25rem));
+  }
 }
 
 .hero-slogan {

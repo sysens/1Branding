@@ -13,7 +13,7 @@ Railway ichida bitta project ichida 3 ta service kerak:
 2. `backend`
 3. `Postgres`
 
-Media fayllar uchun alohida Railway volume kerak emas, chunki backend Cloudflare R2 bilan ishlaydi.
+Media fayllar serverning o'zidan beriladi. Railway'da uploadlar saqlanib qolishi uchun backend service'ga volume ulash tavsiya etiladi.
 
 ## Railway ichida qaysi variantni tanlash kerak
 
@@ -63,12 +63,8 @@ PUBLIC_BASE_URL=https://api.example.com
 DATABASE_CLIENT=postgres
 DATABASE_URL=${{Postgres.DATABASE_URL}}
 DATABASE_POOL_MIN=0
-UPLOAD_PROVIDER=r2
-R2_ACCESS_KEY_ID=...
-R2_SECRET_ACCESS_KEY=...
-R2_BUCKET=...
-R2_ACCOUNT_ID=...
-R2_PUBLIC_URL=https://media.example.com
+UPLOAD_PROVIDER=local
+UPLOAD_MAX_FILE_SIZE_MB=128
 ```
 
 ## Frontend env
@@ -92,23 +88,15 @@ NUXT_PUBLIC_GRAPHQL_URL=https://api.example.com/graphql
 3. `backend` env larni kiriting.
 4. `backend` uchun Railway domain generatsiya qiling.
 5. Strapi adminga kirib birinchi admin user yarating.
-6. Cloudflare R2 bucket va token yarating.
-7. `backend` ga R2 env larni kiriting va redeploy qiling.
-8. `frontend` service yarating va `/frontend` root directory qo'ying.
-9. `frontend` ga `NUXT_PUBLIC_GRAPHQL_URL` kiriting.
-10. `frontend` uchun domain generatsiya qiling.
-11. Railway custom domain larini Cloudflare DNS ga ulang.
-
-## Cloudflare R2
-
-1. Cloudflare dashboard -> R2 -> bucket yarating.
-2. `Object Read & Write` token yarating.
-3. Bucket Settings -> Custom Domains -> `media.example.com` ulang.
-4. `R2_PUBLIC_URL=https://media.example.com` qiling.
+6. Media uploadlar saqlanib qolishi uchun `backend` service'ga volume ulang.
+7. `frontend` service yarating va `/frontend` root directory qo'ying.
+8. `frontend` ga `NUXT_PUBLIC_GRAPHQL_URL` kiriting.
+9. `frontend` uchun domain generatsiya qiling.
+10. Railway custom domain larini Cloudflare DNS ga ulang.
 
 ## Muhim izohlar
 
 - Postgres uchun `pg` package kerak, package.json ga qo'shildi.
 - Strapi Docker ichida ishlagani uchun `DATABASE_POOL_MIN=0` tavsiya etiladi.
 - Frontend browserdan backendga ulanadi, shuning uchun `NUXT_PUBLIC_GRAPHQL_URL` public backend domain bo'lishi kerak.
-- Telegramga yuboriladigan media linklar `PUBLIC_BASE_URL` va R2 public URL to'g'ri bo'lishiga bog'liq.
+- Telegramga yuboriladigan media linklar `PUBLIC_BASE_URL` to'g'ri bo'lishiga bog'liq.

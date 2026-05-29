@@ -17,8 +17,7 @@ const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 const route = useRoute();
 const nuxtApp = useNuxtApp();
-const { rowSets: brandCollageRows, staticMediaBaseUrl } =
-  await useBrandCollageRows();
+const { rowSets: brandCollageRows } = await useBrandCollageRows();
 
 const loading = ref(true);
 const hashScrollDone = ref(false);
@@ -182,96 +181,106 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="relative overflow-x-hidden bg-black">
+  <div class="relative min-h-screen overflow-x-hidden bg-black">
     <Spinner v-if="loading" :size="542" />
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
+    <div class="home-page-frame">
+      <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
+      <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
-    <div class="relative z-10">
-      <div class="relative overflow-x-hidden">
-        <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
-          <LogoMarquee
-            direction="vertical"
-            :rows="15"
-            :duration-seconds="120"
-            :as-background="true"
+      <div class="relative z-10">
+        <div class="relative overflow-x-hidden">
+          <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
+            <LogoMarquee
+              direction="vertical"
+              :rows="15"
+              :duration-seconds="120"
+              :as-background="true"
+            />
+          </div>
+
+          <div class="relative">
+            <div class="pt-[30px] md:pt-10">
+              <Header />
+            </div>
+
+            <section class="leading-target home-leading">
+              <LeadingPage />
+            </section>
+          </div>
+        </div>
+
+        <section class="home-number-text -translate-y-[5%]">
+          <div class="relative bottom-96">
+            <div>
+              <HomeNumberText />
+            </div>
+          </div>
+        </section>
+
+        <div
+          class="home-three-layer relative md:bottom-28 md:w-full md:-translate-y-10 md:rotate-[-6deg] [transform-style:preserve-3d] md:pb-40"
+        >
+          <ThreeLayer
+            :rows="3"
+            :row-sets="brandCollageRows"
+            :showTitle="false"
+            :showButton="false"
           />
         </div>
 
-        <div class="relative">
-          <div class="pt-[30px] md:pt-10">
-            <Header />
-          </div>
-
-          <section class="leading-target home-leading">
-            <LeadingPage />
-          </section>
-        </div>
-      </div>
-
-      <section class="home-number-text -translate-y-[5%]">
-        <div class="relative bottom-96">
-          <div>
-            <HomeNumberText />
+        <div class="home-nd-number-text">
+          <div class="relative">
+            <NdNumberText />
           </div>
         </div>
-      </section>
 
-      <div
-        class="home-three-layer relative md:bottom-28 md:right-[42px] md:w-[120%] md:-translate-y-10 md:rotate-[-6deg] [transform-style:preserve-3d] md:pb-40"
-      >
-        <ThreeLayer
-          :rows="3"
-          :row-sets="brandCollageRows"
-          :static-media-base-url="staticMediaBaseUrl"
-          :showTitle="false"
-          :showButton="false"
-        />
-      </div>
-
-      <div class="home-nd-number-text">
-        <div class="relative">
-          <NdNumberText />
+        <div class="home-picture-word">
+          <PictureWord />
         </div>
-      </div>
 
-      <div class="home-picture-word">
-        <PictureWord />
-      </div>
+        <div class="home-grid relative bottom-32 md:bottom-80">
+          <GridSection />
+        </div>
 
-      <div class="home-grid relative bottom-32 md:bottom-80">
-        <GridSection />
-      </div>
+        <div class="home-earth">
+          <EarthDives />
+        </div>
 
-      <div class="home-earth">
-        <EarthDives />
-      </div>
+        <div class="home-info-picture relative md:bottom-0 py-28 md:py-0">
+          <InfoOnPicture />
+        </div>
 
-      <div class="home-info-picture relative md:bottom-0 py-28 md:py-0">
-        <InfoOnPicture />
-      </div>
+        <div class="home-projects md:mb-[6.25rem] md:mt-32">
+          <h1
+            class="pb-20 text-center text-[40px] font-normal uppercase tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
+          >
+            {{ $t("home.freshProjects") }}
+          </h1>
 
-      <div class="home-projects md:mb-[6.25rem] md:mt-32">
-        <h1
-          class="pb-20 text-center text-[40px] font-normal uppercase tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
-        >
-          {{ $t("home.freshProjects") }}
-        </h1>
+          <LazyHomeThreeLayerSlug />
+        </div>
 
-        <LazyHomeThreeLayerSlug />
-      </div>
+        <div class="home-faq pt-20"><RowShorteners /></div>
 
-      <div class="home-faq pt-20"><RowShorteners /></div>
-
-      <div>
-        <Footer />
+        <div>
+          <Footer />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.home-page-frame {
+  position: relative;
+  width: min(100%, 1728px);
+  min-height: 100vh;
+  margin-inline: auto;
+  overflow: hidden;
+  background: #000;
+}
+
 @media (min-width: 768px) and (max-width: 1023px) {
   .home-leading :deep(.products) {
     justify-content: center;

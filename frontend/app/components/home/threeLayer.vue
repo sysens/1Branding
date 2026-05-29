@@ -9,7 +9,6 @@ import {
 type Props = {
   logos?: string[];
   rowSets?: string[][];
-  staticMediaBaseUrl?: string;
   rows?: number;
   durationSeconds?: number;
   linkTo?: string;
@@ -22,7 +21,6 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   logos: undefined,
   rowSets: undefined,
-  staticMediaBaseUrl: "",
   rows: 3,
   durationSeconds: 120,
   showTitle: false,
@@ -37,15 +35,9 @@ const hasButtonText = computed(() => !!props.button?.trim());
 const shouldShowTitle = computed(() => props.showTitle && hasTitleText.value);
 const shouldShowButton = computed(() => props.showButton && hasButtonText.value);
 
-const fallbackRowSets = computed(() =>
-  getLocalBrandCollageRows(props.staticMediaBaseUrl)
-);
+const fallbackRowSets = computed(() => getLocalBrandCollageRows());
 
-const optimizedImage = useImage();
 const PRELOAD_IMAGE_LIMIT = 4;
-const MARQUEE_IMAGE_WIDTH = 486;
-const MARQUEE_IMAGE_HEIGHT = 273;
-const MARQUEE_IMAGE_QUALITY = 78;
 
 const rowsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
@@ -84,21 +76,15 @@ useHead(() => ({
   link: preloadImageSources.value.map((src) => ({
     rel: "preload",
     as: "image",
-    href: optimizedImage(src, {
-      width: MARQUEE_IMAGE_WIDTH,
-      height: MARQUEE_IMAGE_HEIGHT,
-      fit: "cover",
-      format: "webp",
-      quality: MARQUEE_IMAGE_QUALITY,
-    }),
+    href: src,
     fetchpriority: "high",
   })),
 }));
 </script>
 
 <template>
-  <section class="relative z-10 w-full overflow-visible bg-transparent flex items-center">
-    <div class="w-[120%] -ml-[10%]">
+  <section class="relative z-10 flex w-full items-center overflow-hidden bg-transparent">
+    <div class="w-full">
       <div class="w-full overflow-hidden space-y-4">
         <div
           v-for="row in rowsConfig"
@@ -116,7 +102,6 @@ useHead(() => ({
               v-for="(image, i) in row.duplicatedImages"
               :key="row.key + '-' + i"
               :src="image.src"
-              :placeholder-src="image.placeholderSrc"
               :eager="row.key === 'row-0' && i < 4"
             />
           </component>

@@ -30,18 +30,3 @@ export const resolveStrapiMediaUrl = (
   const apiBase = graphqlUrl.replace(/\/graphql\/?$/, "");
   return joinUrl(apiBase, url);
 };
-
-export const resolveStaticMediaUrl = (
-  path: string,
-  staticMediaBaseUrl: string
-): string => {
-  if (/^https?:\/\//i.test(path)) {
-    return path;
-  }
-
-  if (!staticMediaBaseUrl.trim()) {
-    return path;
-  }
-
-  return joinUrl(staticMediaBaseUrl, path);
-};

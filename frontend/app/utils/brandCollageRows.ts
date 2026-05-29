@@ -1,8 +1,5 @@
-import { resolveStaticMediaUrl } from "./strapiMedia";
-
 export type BrandCollageImage = {
   src: string;
-  placeholderSrc: string;
 };
 
 export type BrandCollageRowConfig = {
@@ -151,10 +148,7 @@ const getRow = (rowSets: string[][], rowIdx: number): string[] => {
   return cleanRow(rowSets[rowIdx % rowSets.length]);
 };
 
-export const getLocalBrandCollageRows = (staticMediaBaseUrl: string): string[][] =>
-  LOCAL_BRAND_COLLAGE_ROWS.map((row) =>
-    row.map((src) => resolveStaticMediaUrl(src, staticMediaBaseUrl))
-  );
+export const getLocalBrandCollageRows = (): string[][] => LOCAL_BRAND_COLLAGE_ROWS;
 
 export const buildBrandCollageRowsConfig = ({
   totalRows,
@@ -169,10 +163,8 @@ export const buildBrandCollageRowsConfig = ({
     const fallbackRow = getRow(fallbackRowSets, rowIdx);
     const sourceRow = adminRow.length ? adminRow : fallbackRow;
     const preparedImages = buildRowImages(sourceRow, rowIdx);
-    const preparedPlaceholders = buildRowImages(fallbackRow.length ? fallbackRow : sourceRow, rowIdx);
-    const images = preparedImages.map((src, imageIdx) => ({
+    const images = preparedImages.map((src) => ({
       src,
-      placeholderSrc: preparedPlaceholders[imageIdx % preparedPlaceholders.length] ?? src,
     }));
 
     return {

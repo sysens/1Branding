@@ -1,5 +1,5 @@
 import { computed, ref, type ComputedRef, type Ref } from "vue";
-import { resolveStrapiMediaUrl, trimTrailingSlash } from "~/utils/strapiMedia";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 type Media = {
   url?: string | null;
@@ -22,7 +22,6 @@ type LandingBrandCollageResponse = {
 
 type UseBrandCollageRowsResult = {
   rowSets: ComputedRef<string[][]>;
-  staticMediaBaseUrl: ComputedRef<string>;
 };
 
 const brandCollageQuery = `
@@ -76,12 +75,7 @@ export const useBrandCollageRows = async (): Promise<UseBrandCollageRowsResult> 
     ];
   });
 
-  const staticMediaBaseUrl = computed(() =>
-    trimTrailingSlash(String(runtimeConfig.public.staticMediaBaseUrl || ""))
-  );
-
   return {
     rowSets,
-    staticMediaBaseUrl,
   };
 };
