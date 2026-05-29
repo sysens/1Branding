@@ -25,6 +25,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/dist ./dist
 
+RUN mkdir -p /app/public/uploads && chmod -R 777 /app/public/uploads
+
 # Custom Pluginlar uchun yoqib qo'yiladi 
 COPY --from=builder /app/src ./src
 

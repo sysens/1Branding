@@ -8,9 +8,9 @@
     "build": "strapi build",
     "console": "strapi console",
     "deploy": "strapi deploy",
-    "dev": "strapi develop",
-    "develop": "strapi develop",
-    "start": "strapi start",
+    "dev": "node scripts/ensure-uploads.mjs && strapi develop",
+    "develop": "node scripts/ensure-uploads.mjs && strapi develop",
+    "start": "node scripts/ensure-uploads.mjs && strapi start",
     "strapi": "strapi"
   },
   "dependencies": {
