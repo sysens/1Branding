@@ -80,12 +80,10 @@ onMounted(async () => {
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
 
     <div class="relative z-10">
-      <div
-        class="vg bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-fit bg-top bg-no-repeat"
-      >
+      <div class="vg md:pt-[60px] pt-[30px]">
         <Header />
 
-        <div class="mx-auto relative bottom-7 max-w-[1760px] touch-pan-y">
+        <div class="mx-auto max-w-[1760px] touch-pan-y">
           <CostsSlider />
         </div>
       </div>
@@ -98,9 +96,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style>
-.pricingSwiper .swiper-slide-active .pricingCard {
-  box-shadow: -60px 0 90px rgba(78, 255, 13, 0.18), 60px 0 90px rgba(78, 255, 13, 0.15);
-}
-</style>

@@ -312,18 +312,21 @@ onBeforeUnmount(() => {
 .info-stack {
   display: grid;
   gap: clamp(4rem, 8vw, 7.5rem);
+  padding-inline: 0;
   padding-top: clamp(2.5rem, 6vw, 5.5rem);
   padding-bottom: clamp(3.5rem, 7vw, 6rem);
 }
 
 .info-block {
   display: grid;
+  width: 100%;
   justify-items: center;
   gap: clamp(1.5rem, 3vw, 2.25rem);
 }
 
 .info-copy {
   max-width: 70rem;
+  padding-inline: 20px;
   text-align: center;
 }
 
@@ -361,11 +364,13 @@ onBeforeUnmount(() => {
 }
 
 .info-image-frame {
-  width: min(100%, 74rem);
-  height: clamp(20rem, 54vw, 39.5rem);
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 2.16 / 1;
   overflow: hidden;
   border-radius: clamp(1.4rem, 3vw, 2.25rem);
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
+  box-shadow: none;
 }
 
 .info-media {
@@ -373,6 +378,8 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.035);
+  transform-origin: center;
 }
 
 @keyframes info-accent-neon {
@@ -412,6 +419,7 @@ onBeforeUnmount(() => {
   }
 
   .info-image-frame {
+    aspect-ratio: auto;
     height: 18rem;
     border-radius: 1.5rem;
   }

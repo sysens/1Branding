@@ -1,229 +1,55 @@
 <template>
-  <div class="relative h-full overflow-hidden">
-    <div
-      class="pb-[1.125rem] pt-[4.375rem] min-[950px]:pb-[3.375rem] min-[950px]:pt-[9.625rem] min-[1100px]:pb-[3.625rem] min-[1100px]:pt-[9.875rem] min-[1200px]:pb-[4rem] min-[1200px]:pt-[7rem]"
-    ></div>
-
-    <ClientOnly>
-      <div
-        class="flex flex-col gap-[0.625rem] min-[950px]:gap-[0.75rem] min-[1100px]:gap-[0.8125rem] min-[1200px]:gap-[0.875rem]"
-      >
-        <div
+  <div class="costs">
+      <div class="costs__inner">
+        <section
           v-for="(category, categoryIndex) in priceCategories"
           :key="`${category.title}-${categoryIndex}`"
-          class="pricingBorderSync relative w-full px-[0.75rem] min-[950px]:px-[2rem] min-[1100px]:px-[2.8rem] min-[1200px]:px-[3.5rem]"
+          class="costs-cat"
+          :class="{ 'costs-cat--hero': categoryIndex === 0 }"
         >
-          <h2
-            class="relative z-10 text-center md:top-10 text-[2.25rem] pb-[30px] md:pb-0 font-normal pt-[50px] leading-[100%] text-white min-[950px]:text-[2.3rem] min-[1100px]:text-[2.7rem] min-[1200px]:text-[3.125rem]"
-          >
-            {{ category.title }}
-          </h2>
+          <!-- glowing green sphere behind the first (hero) category -->
+          <span
+            v-if="categoryIndex === 0"
+            class="costs-sphere"
+            aria-hidden="true"
+          ></span>
 
-          <button
-            :ref="(el) => setPrevRef(categoryIndex, el)"
-            class="absolute left-[0.25rem] top-1/2 z-30 flex h-[3rem] w-[3rem] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[url('/home/Component3.png')] bg-[length:440%] bg-right bg-no-repeat transition-[background-size,box-shadow] duration-700 ease-out hover:bg-[length:420%] hover:shadow-[0_0_1.875rem_rgba(3,203,0,0.9)] min-[950px]:left-[0.4rem] min-[950px]:h-[3.3rem] min-[950px]:w-[3.3rem] min-[1100px]:left-[0.6rem] min-[1100px]:h-[4rem] min-[1100px]:w-[4rem] min-[1200px]:left-[0.75rem] min-[1200px]:h-[4.5rem] min-[1200px]:w-[4.5rem]"
-            aria-label="Prev"
-            type="button"
-          >
-            <img
-              class="h-[1rem] w-[1rem] min-[950px]:h-[1.0625rem] min-[950px]:w-[1.0625rem] min-[1100px]:h-[1.125rem] min-[1100px]:w-[1.125rem] min-[1200px]:h-[1.25rem] min-[1200px]:w-[1.25rem]"
-              src="/News/Vector (10).png"
-              alt=""
-            />
-          </button>
+          <div class="costs-cat__head">
+            <h2 class="costs-cat__title">{{ category.title }}</h2>
+            <p v-if="categoryDescription(category)" class="costs-cat__desc">
+              {{ categoryDescription(category) }}
+            </p>
+          </div>
 
-          <button
-            :ref="(el) => setNextRef(categoryIndex, el)"
-            class="absolute right-[0.25rem] top-1/2 z-30 flex h-[3rem] w-[3rem] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[url('/home/Component3.png')] bg-[length:440%] bg-right bg-no-repeat transition-[background-size,box-shadow] duration-700 ease-out hover:bg-[length:420%] hover:shadow-[0_0_1.875rem_rgba(3,203,0,0.9)] min-[950px]:right-[0.4rem] min-[950px]:h-[3.3rem] min-[950px]:w-[3.3rem] min-[1100px]:right-[0.6rem] min-[1100px]:h-[4rem] min-[1100px]:w-[4rem] min-[1200px]:right-[0.75rem] min-[1200px]:h-[4.5rem] min-[1200px]:w-[4.5rem]"
-            aria-label="Next"
-            type="button"
-          >
-            <img
-              class="h-[1rem] w-[1rem] min-[950px]:h-[1.0625rem] min-[950px]:w-[1.0625rem] min-[1100px]:h-[1.125rem] min-[1100px]:w-[1.125rem] min-[1200px]:h-[1.25rem] min-[1200px]:w-[1.25rem]"
-              src="/News/Vector (11).png"
-              alt=""
-            />
-          </button>
-
-          <Swiper
-            effect="coverflow"
-            :centered-slides="true"
-            :grab-cursor="true"
-            :loop="false"
-            :initial-slide="getInitialSlide(category.pricing)"
-            :slides-per-view="3"
-            :space-between="20"
-            :observer="true"
-            :observe-parents="true"
-            :update-on-window-resize="true"
-            :watch-slides-progress="true"
-            :keyboard="{ enabled: true }"
-            :navigation="false"
-            :pagination="false"
-            :modules="modules"
-            :coverflow-effect="{
-              rotate: 0,
-              stretch: 0,
-              depth: 260,
-              modifier: 0,
-              slideShadows: false,
-            }"
-            :breakpoints="{
-              0: {
-                slidesPerView: 1,
-                spaceBetween: 14,
-                centeredSlides: true,
-                coverflowEffect: {
-                  rotate: 0,
-                  stretch: 0,
-                  depth: 160,
-                  modifier: 0,
-                  slideShadows: false,
-                },
-              },
-              950: {
-                slidesPerView: 3,
-                spaceBetween: 6,
-                centeredSlides: true,
-                coverflowEffect: {
-                  rotate: 0,
-                  stretch: 0,
-                  depth: 260,
-                  modifier: 0,
-                  slideShadows: false,
-                },
-              },
-              1100: {
-                slidesPerView: 3,
-                spaceBetween: 10,
-                centeredSlides: true,
-                coverflowEffect: {
-                  rotate: 0,
-                  stretch: 0,
-                  depth: 420,
-                  modifier: 0,
-                  slideShadows: false,
-                },
-              },
-              1200: {
-                slidesPerView: 3,
-                spaceBetween: 12,
-                centeredSlides: true,
-                coverflowEffect: {
-                  rotate: 0,
-                  stretch: 0,
-                  depth: 660,
-                  modifier: 0,
-                  slideShadows: false,
-                },
-              },
-            }"
-            class="pricingSwiper w-full pb-[3.25rem] pt-[1.75rem] min-[950px]:pb-[3.375rem] min-[950px]:pt-[1.875rem] min-[1100px]:pb-[3.625rem] min-[1100px]:pt-[2rem] min-[1200px]:pb-[4rem]"
-            @swiper="(s) => onSwiper(categoryIndex, s, category.pricing)"
-            @slideChange="() => onSlideChange(categoryIndex)"
-            @transitionEnd="() => onSlideChange(categoryIndex)"
-          >
-            <SwiperSlide
-              v-for="(item, index) in category.pricing"
-              :key="`${category.title}-${item.title}-${index}`"
-              class="pricingSlide"
+          <div class="costs-cards">
+            <button
+              v-for="(item, itemIndex) in category.pricing"
+              :key="`${category.title}-${item.title}-${itemIndex}`"
+              type="button"
+              class="costs-card"
+              :class="{ 'costs-card--active': activeIndex[categoryIndex] === itemIndex }"
+              @mouseenter="setActive(categoryIndex, itemIndex)"
+              @focus="setActive(categoryIndex, itemIndex)"
             >
-              <div
-                class="pricingCard flex flex-col rounded-[2rem] bg-cover bg-no-repeat px-[1rem] py-[1.75rem] text-white backdrop-blur-md min-[950px]:rounded-[2.125rem] min-[950px]:px-[1.1rem] min-[950px]:py-[1.75rem] min-[1100px]:rounded-[2.25rem] min-[1100px]:px-[1.3rem] min-[1100px]:py-[1.9rem] min-[1200px]:rounded-[2.5rem] min-[1200px]:px-[1.5rem] min-[1200px]:py-[2rem]"
-              >
-                <video
-                  data-pricing-video
-                  class="absolute inset-0 z-[-1] h-full w-full object-cover"
-                  :src="videoSrc"
-                  :poster="videoPoster"
-                  muted
-                  loop
-                  playsinline
-                  preload="none"
-                ></video>
+              <span class="costs-card__badge" aria-hidden="true">
+                <span>1</span>
+              </span>
 
-                <div
-                  class="flex items-center justify-between gap-[0.625rem] pb-[1.25rem] min-[950px]:pb-[1.375rem] min-[1100px]:pb-[1.5rem] min-[1200px]:pb-[1.75rem]"
-                >
-                  <div class="flex">
-                    <p
-                      class="font-['Oswald'] text-[1.5rem] font-medium leading-[1.08] tracking-normal text-[#9CDE9F] min-[950px]:text-[1.7rem] min-[1100px]:text-[2rem] min-[1200px]:text-[2.25rem]"
-                    >
-                      {{ getFirstWord(item.title) }}
-                      <span class="text-white">{{ getRemainingWords(item.title) }}</span>
-                    </p>
-                  </div>
+              <span class="costs-card__name">{{ item.title }}</span>
 
-                  <div
-                    class="flex items-center justify-center rounded-[0.875rem] border border-white/10 bg-white/10"
-                  >
-                    <img
-                      class="h-[2.25rem] w-[2.25rem] shrink-0 min-[950px]:h-[2.9rem] min-[950px]:w-[2.9rem] min-[1100px]:h-[3.4rem] min-[1100px]:w-[3.4rem] min-[1200px]:h-[4rem] min-[1200px]:w-[4rem]"
-                      src="/Costs/image 94 (1).png"
-                      alt=""
-                    />
-                  </div>
-                </div>
-
-                <div
-                  class="flex items-end gap-[0.375rem] pb-[0.875rem] pt-[1rem] min-[950px]:gap-[0.375rem] min-[950px]:pb-[0.9375rem] min-[950px]:pt-[0.875rem] min-[1100px]:gap-[0.4375rem] min-[1100px]:pb-[1rem] min-[1200px]:gap-[0.5rem] min-[1200px]:pb-[1.25rem]"
-                >
-                  <p
-                    class="relative bottom-[1rem] truncate pb-[0.125rem] text-center font-['Poppins','Inter',sans-serif] text-[0.875rem] font-normal leading-[1.2] tracking-normal min-[950px]:bottom-[1.35rem] min-[950px]:text-[0.95rem] min-[1100px]:bottom-[1.75rem] min-[1100px]:text-[1.05rem] min-[1200px]:bottom-[2rem] min-[1200px]:text-[1.25rem]"
-                  >
-                    от
-                  </p>
-
-                  <span
-                    class="font-['Oswald'] text-[3rem] font-medium leading-[100%] tracking-normal min-[950px]:text-[3.4rem] min-[1100px]:text-[4rem] min-[1200px]:text-[4.75rem]"
-                  >
-                    {{ splitPrice(item.price).main }}
-                  </span>
-
-                  <span
-                    class="text-center font-['Poppins','Inter',sans-serif] text-[0.875rem] font-normal leading-[1.2] tracking-normal min-[950px]:text-[0.95rem] min-[1100px]:text-[1.05rem] min-[1200px]:text-[1.25rem]"
-                  >
-                    {{ splitPrice(item.price).decimal }}
-                  </span>
-                </div>
-
-                <p
-                  class="font-['Poppins','Inter',sans-serif] text-[0.875rem] font-medium leading-[120%] tracking-normal min-[950px]:text-[0.95rem] min-[1100px]:text-[1rem] min-[1200px]:text-[1.125rem]"
-                >
-                  {{ item.priceText }}
-                </p>
-
-                <div
-                  class="my-[1.25rem] h-[0.09375rem] bg-white min-[950px]:my-[1.3125rem] min-[1100px]:my-[1.375rem] min-[1200px]:my-[1.5rem]"
-                ></div>
-
-                <p
-                  class="mt-auto flex justify-end pt-[1.25rem] font-['Poppins','Inter',sans-serif] text-[0.6875rem] font-light leading-[120%] tracking-normal min-[950px]:pt-[1.25rem] min-[950px]:text-[0.75rem] min-[1100px]:pt-[1.375rem] min-[1100px]:text-[0.8125rem] min-[1200px]:pt-[1.5rem] min-[1200px]:text-[0.9375rem]"
-                >
-                  {{ item.description }}
-                </p>
-              </div>
-            </SwiperSlide>
-            <div
-              class="pb-[1.125rem] pt-[4.375rem] min-[950px]:pb-[3.375rem] min-[950px]:pt-[9.625rem] min-[1100px]:pb-[3.625rem] min-[1100px]:pt-[9.875rem] min-[1200px]:pb-[4rem] min-[1200px]:pt-[7rem]"
-            ></div>
-          </Swiper>
-        </div>
+              <span class="costs-card__price">
+                <span class="costs-card__from">{{ fromLabel }}</span>
+                <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
+              </span>
+            </button>
+          </div>
+        </section>
       </div>
-    </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from "vue";
-import type { Swiper as SwiperInstance } from "swiper/types";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { EffectCoverflow, Keyboard, Navigation, Pagination } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { computed, reactive, watch } from "vue";
 
 type AppLocale = "ru" | "en";
 
@@ -249,17 +75,8 @@ type PriceCategoriesResponse = {
 
 const { locale } = useI18n();
 
-const modules = [EffectCoverflow, Keyboard, Navigation, Pagination];
-
-const swiperInstances = ref<Record<number, SwiperInstance | null>>({});
-const prevRefs = ref<Record<number, HTMLElement | null>>({});
-const nextRefs = ref<Record<number, HTMLElement | null>>({});
-
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = runtimeConfig.public.graphqlUrl as string;
-
-const videoSrc = "/Costs/New.mp4";
-const videoPoster = "/Costs/image_2026-01-22_17-02-52.jpg";
 
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
@@ -312,343 +129,252 @@ const priceCategories = computed<PriceCategory[]>(() => {
   return priceRes.value?.data?.fallbackPriceCategories || [];
 });
 
-const setPrevRef = (index: number, el: Element | null) => {
-  prevRefs.value[index] = el as HTMLElement | null;
+const fromLabel = computed(() => (locale.value === "ru" ? "от" : "from"));
+
+const categoryDescription = (category: PriceCategory) =>
+  category.pricing?.[0]?.description?.trim() ||
+  category.pricing?.[0]?.priceText?.trim() ||
+  "";
+
+const formatPrice = (value: string) => {
+  const raw = String(value || "").trim();
+  const number = raw.replace(/[^\d.,]/g, "");
+  const currency = raw.replace(/[\d.,\s]/g, "") || "$";
+  return number ? `${number}${currency}` : raw;
 };
 
-const setNextRef = (index: number, el: Element | null) => {
-  nextRefs.value[index] = el as HTMLElement | null;
-};
+// Highlighted ("featured") card per category — defaults to the first, follows hover/focus.
+const activeIndex = reactive<Record<number, number>>({});
 
-const getInitialSlide = (items: PricingItem[]) => {
-  if (!items.length) return 0;
-  if (items.length === 1) return 0;
-  return 1;
-};
+watch(
+  priceCategories,
+  (categories) => {
+    categories.forEach((_, index) => {
+      if (activeIndex[index] === undefined) activeIndex[index] = 0;
+    });
+  },
+  { immediate: true }
+);
 
-const splitPrice = (value: string) => {
-  const cleaned = String(value || "").trim();
-  const match = cleaned.match(/^([^0-9]*\d[\d\s.,]*?)(\.\d+)?$/);
-
-  if (!match) {
-    return {
-      main: cleaned,
-      decimal: "",
-    };
-  }
-
-  return {
-    main: match[1] || cleaned,
-    decimal: match[2] || "",
-  };
-};
-
-const getFirstWord = (value: string) => {
-  const text = String(value || "").trim();
-  if (!text) return "";
-  return text.split(" ")[0] || "";
-};
-
-const getRemainingWords = (value: string) => {
-  const text = String(value || "").trim();
-  if (!text) return "";
-  const parts = text.split(" ");
-  return parts.slice(1).join(" ");
-};
-
-const applyVideoState = async (categoryIndex: number) => {
-  await nextTick();
-
-  const swiper = swiperInstances.value[categoryIndex];
-  if (!swiper?.el) return;
-
-  const allVideos = swiper.el.querySelectorAll("video[data-pricing-video]");
-  allVideos.forEach((v: HTMLVideoElement) => {
-    try {
-      v.pause();
-      v.currentTime = 0;
-      v.load();
-    } catch {}
-  });
-
-  const activeSlide = swiper.slides?.[swiper.activeIndex];
-  const activeVideo = activeSlide?.querySelector?.(
-    "video[data-pricing-video]"
-  ) as HTMLVideoElement | null;
-
-  if (!activeVideo) return;
-
-  try {
-    const p = activeVideo.play();
-    if (p?.catch) p.catch(() => {});
-  } catch {}
-};
-
-const bindNavigation = async (categoryIndex: number) => {
-  await nextTick();
-
-  const swiper = swiperInstances.value[categoryIndex];
-  const prevEl = prevRefs.value[categoryIndex];
-  const nextEl = nextRefs.value[categoryIndex];
-
-  if (!swiper || !prevEl || !nextEl) return;
-
-  if (!swiper.params.navigation || typeof swiper.params.navigation === "boolean") {
-    swiper.params.navigation = {};
-  }
-
-  swiper.params.navigation.prevEl = prevEl;
-  swiper.params.navigation.nextEl = nextEl;
-
-  if (swiper.navigation) {
-    swiper.navigation.destroy();
-    swiper.navigation.init();
-    swiper.navigation.update();
-  }
-
-  swiper.update();
-};
-
-const onSwiper = async (
-  categoryIndex: number,
-  s: SwiperInstance,
-  items: PricingItem[]
-) => {
-  swiperInstances.value[categoryIndex] = s;
-
-  await bindNavigation(categoryIndex);
-
-  nextTick(() => {
-    s.update();
-    s.slideTo(getInitialSlide(items), 0, false);
-    applyVideoState(categoryIndex);
-  });
-};
-
-const onSlideChange = (categoryIndex: number) => {
-  applyVideoState(categoryIndex);
+const setActive = (categoryIndex: number, itemIndex: number) => {
+  activeIndex[categoryIndex] = itemIndex;
 };
 </script>
 
-<style>
-.pricingSwiper .swiper-wrapper {
-  align-items: center;
+<style scoped>
+.costs {
+  position: relative;
+  width: 100%;
 }
 
-.pricingSlide {
+.costs__inner {
+  position: relative;
+  margin-inline: auto;
+  width: min(100%, 70rem);
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 7vw, 7rem);
   display: flex;
-  height: 31rem;
+  flex-direction: column;
+  gap: clamp(3rem, 7vw, 7rem);
+}
+
+/* ---------- category block ---------- */
+.costs-cat {
+  position: relative;
+}
+
+.costs-cat--hero {
+  padding-top: clamp(1rem, 6vw, 5rem);
+}
+
+/* glowing green sphere on the hero category (right side) */
+.costs-sphere {
+  position: absolute;
+  top: clamp(-28rem, -26vw, -16rem);
+  right: clamp(-36rem, -28vw, -22rem);
+  width: clamp(48rem, 74vw, 78rem);
+  height: clamp(48rem, 74vw, 78rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(3, 40, 20, 0) 53%,
+    rgba(14, 170, 74, 0.22) 60%,
+    rgba(70, 255, 130, 0.85) 65%,
+    rgba(40, 220, 100, 0.35) 69%,
+    rgba(10, 120, 54, 0.1) 74%,
+    rgba(3, 40, 20, 0) 80%
+  );
+  filter: blur(0.35rem);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.costs-cat__head {
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  padding-left: clamp(0.25rem, 1.5vw, 1.5rem);
+}
+
+.costs-cat__title {
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.4rem);
+  color: #ffffff;
+  font-family: var(--app-font-display, "SF Pro Display", sans-serif);
+  font-weight: 300;
+  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.costs-cat__desc {
+  margin: 0;
+  max-width: 58rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--app-font-display, "SF Pro Display", sans-serif);
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+/* ---------- cards ---------- */
+.costs-cards {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.4vw, 1.15rem);
+}
+
+.costs-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: clamp(4.75rem, 9vw, 8.25rem);
+  padding: clamp(1rem, 2.2vw, 1.75rem) clamp(1.4rem, 3vw, 2.85rem);
+  border: 0.125rem solid rgba(70, 200, 120, 0.16);
+  border-radius: clamp(1.25rem, 2vw, 1.85rem);
+  background:
+    radial-gradient(
+      135% 170% at 0% 120%,
+      rgba(40, 206, 118, 0.98) 0%,
+      rgba(18, 124, 74, 0.92) 30%,
+      rgba(8, 58, 37, 0.93) 56%,
+      rgba(4, 16, 11, 1) 77%
+    ),
+    #05100b;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.costs-card:hover {
+  transform: translateY(-1px);
+}
+
+.costs-card--active {
+  border-color: #3bec57;
+  box-shadow:
+    0 0 0 0.0625rem rgba(59, 236, 87, 0.55),
+    0 0 3rem rgba(47, 224, 74, 0.5),
+    inset 0 0 1.6rem rgba(47, 224, 74, 0.14);
+  background:
+    radial-gradient(
+      135% 170% at 0% 120%,
+      rgba(54, 232, 138, 1) 0%,
+      rgba(24, 150, 90, 0.95) 30%,
+      rgba(10, 74, 47, 0.95) 56%,
+      rgba(4, 18, 12, 1) 79%
+    ),
+    #05100b;
+}
+
+.costs-card__name {
+  font-family: "Oswald", "SF Pro Display", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  background: linear-gradient(96deg, #ffffff 0%, #ffffff 46%, #c9d2cd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.costs-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.35rem, 0.7vw, 0.6rem);
+  white-space: nowrap;
+}
+
+.costs-card__from {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.75rem, 1vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: lowercase;
+}
+
+.costs-card__amount {
+  font-family: "Oswald", "SF Pro Display", sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3vw, 2.75rem);
+  line-height: 1;
+  color: #ffffff;
+}
+
+/* "1" badge — only visible on the active card, top-right corner */
+.costs-card__badge {
+  position: absolute;
+  top: clamp(-0.9rem, -1.4vw, -1.4rem);
+  right: clamp(1.25rem, 3vw, 2.75rem);
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 2.75rem;
-  padding-right: 2.75rem;
-  box-sizing: border-box;
+  width: clamp(2.4rem, 3.6vw, 3.4rem);
+  height: clamp(2.4rem, 3.6vw, 3.4rem);
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #8dff97 0%, #28d24a 52%, #0c9636 100%);
+  box-shadow:
+    0 0 1.4rem rgba(47, 224, 74, 0.8),
+    inset 0 -0.18rem 0.4rem rgba(0, 0, 0, 0.28),
+    inset 0 0.2rem 0.45rem rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.pricingCard {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 2rem;
-  --main-bg: conic-gradient(
-    from var(--border-angle),
-    rgba(0, 0, 0, 0.65),
-    rgba(0, 0, 0, 0.85) 5%,
-    rgba(0, 0, 0, 0.85) 60%,
-    rgba(0, 0, 0, 0.65) 95%
-  );
-  --gradient-border: conic-gradient(
-    from var(--border-angle),
-    transparent 0%,
-    rgba(3, 203, 0, 0) 0%,
-    rgba(3, 203, 0, 0) calc(100% - var(--trail-stop)),
-    rgba(3, 203, 0, 0.25) calc(100% - (var(--trail-stop) * 0.8)),
-    #03cb00 calc(100% - (var(--trail-stop) * 0.55)),
-    #ffffff calc(100% - (var(--trail-stop) * 0.2)),
-    rgba(3, 203, 0, 0.15) calc(100% - (var(--trail-stop) * 0.05)),
-    rgba(3, 203, 0, 0) 100%
-  );
-  border: solid 0.3125rem transparent;
-  background: var(--main-bg) padding-box, var(--gradient-border) border-box,
-    var(--main-bg) border-box;
-  background-position: center center;
+.costs-card__badge span {
+  font-family: "Oswald", "SF Pro Display", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.6vw, 1.5rem);
+  color: #ffffff;
+  text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.45);
+  line-height: 1;
 }
 
-.pricingSwiper .swiper-slide {
-  transform: scale(0.9);
-  opacity: 0.45;
-  filter: blur(0.0125rem);
-  transform-origin: center;
-  transition: transform 500ms ease, opacity 500ms ease, filter 500ms ease;
+.costs-card--active .costs-card__badge {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.pricingSwiper .swiper-slide-active {
-  transform: scale(1) !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-.pricingSwiper .swiper-slide-prev,
-.pricingSwiper .swiper-slide-next {
-  transform: scale(0.94) !important;
-  opacity: 0.7 !important;
-  filter: none !important;
-}
-
-@property --border-angle {
-  syntax: "<angle>";
-  inherits: true;
-  initial-value: 0turn;
-}
-
-.pricingBorderSync {
-  --border-angle: 0turn;
-  --trail-px: 25rem;
-  --trail-stop: 25%;
-  animation: border-spin 6.6s linear infinite;
-}
-
-@keyframes border-spin {
-  to {
-    --border-angle: 1turn;
-  }
-}
-
-.pricingSwiper .swiper-slide-active .pricingCard {
-  box-shadow: 0 0 0.125rem rgba(0, 255, 13, 0.15), 0 0 0.3125rem rgba(0, 255, 13, 0.1),
-    0 0.1875rem 0.1875rem rgba(0, 0, 0, 0.35);
-}
-
-@media (max-width: 59.374rem) {
-  .pricingSwiper .swiper-wrapper {
-    align-items: stretch;
+@media (max-width: 37.5rem) {
+  .costs-card {
+    border-radius: 1.1rem;
+    padding: 1rem 1.1rem;
   }
 
-  .pricingSlide {
-    height: auto !important;
-    min-height: auto;
-    align-items: stretch;
-    padding-left: 1.75rem;
-    padding-right: 1.75rem;
-  }
-
-  .pricingCard {
-    height: 100%;
-    min-height: 100%;
-  }
-
-  .pricingSwiper {
-    overflow: visible;
-  }
-
-  .pricingSwiper .swiper-slide {
-    transform: scale(1);
-    opacity: 1;
-    filter: none;
-  }
-
-  .pricingSwiper .swiper-slide-prev,
-  .pricingSwiper .swiper-slide-next,
-  .pricingSwiper .swiper-slide-active {
-    transform: scale(1) !important;
-    opacity: 1 !important;
-    filter: none !important;
-  }
-}
-
-@media (min-width: 59.375rem) and (max-width: 68.75rem) {
-  .pricingSlide {
-    height: 36rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  .pricingCard {
-    width: min(100%, 23rem);
-    border-radius: 2.125rem;
-  }
-
-  .pricingSwiper .swiper-slide {
-    transform: scale(0.88);
-    opacity: 0.4;
-    filter: blur(0.015625rem);
-  }
-
-  .pricingSwiper .swiper-slide-prev,
-  .pricingSwiper .swiper-slide-next {
-    transform: scale(0.92) !important;
-    opacity: 0.6 !important;
-    filter: none !important;
-  }
-
-  .pricingSwiper .swiper-slide-active .pricingCard {
-    box-shadow: 0 0 1.25rem rgba(0, 255, 13, 0.14), 0 0 0.75rem rgba(0, 255, 13, 0.08),
-      0 0.75rem 2rem rgba(0, 0, 0, 0.38);
-  }
-}
-
-@media (min-width: 68.75rem) and (max-width: 74.99rem) {
-  .pricingSlide {
-    height: 39rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  .pricingCard {
-    width: min(100%, 25rem);
-    border-radius: 2.25rem;
-  }
-
-  .pricingSwiper .swiper-slide {
-    transform: scale(0.84);
-    opacity: 0.35;
-    filter: blur(0.01875rem);
-  }
-
-  .pricingSwiper .swiper-slide-prev,
-  .pricingSwiper .swiper-slide-next {
-    transform: scale(0.9) !important;
-    opacity: 0.62 !important;
-    filter: none !important;
-  }
-
-  .pricingSwiper .swiper-slide-active .pricingCard {
-    box-shadow: 0 0 1.75rem rgba(0, 255, 13, 0.18), 0 0 1rem rgba(0, 255, 13, 0.1),
-      0 0.875rem 2.5rem rgba(0, 0, 0, 0.42);
-  }
-}
-
-@media (min-width: 75rem) {
-  .pricingSlide {
-    height: 48rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  .pricingCard {
-    width: min(100%, 34rem);
-    border-radius: 2.5rem;
-  }
-
-  .pricingSwiper .swiper-slide {
-    transform: scale(0.78);
-    opacity: 0.2;
-    filter: blur(0.025rem);
-  }
-
-  .pricingSwiper .swiper-slide-prev,
-  .pricingSwiper .swiper-slide-next {
-    transform: scale(0.86) !important;
-    opacity: 0.45 !important;
-    filter: none !important;
-  }
-
-  .pricingSwiper .swiper-slide-active .pricingCard {
-    box-shadow: 0 0 3.75rem rgba(0, 255, 13, 0.22), 0 0 2.1875rem rgba(0, 255, 13, 0.14),
-      0 1.5625rem 5rem rgba(0, 0, 0, 0.55);
+  .costs-card__name,
+  .costs-card__amount {
+    font-size: clamp(1.15rem, 6.4vw, 1.6rem);
   }
 }
 </style>

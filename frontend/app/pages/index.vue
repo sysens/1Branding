@@ -5,12 +5,13 @@ import Spinner from "~/components/Spinner.vue";
 
 import LeadingPage from "~/components/home/leadingPage.vue";
 import NdNumberText from "~/components/home/ndNumberText.vue";
-import PictureWord from "~/components/home/pictureOnWord.vue";
+import FirstGlanceSections from "~/components/home/FirstGlanceSections.vue";
 import GridSection from "~/components/home/GridSection.vue";
 import EarthDives from "~/components/home/EarthDives.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
 import RowShorteners from "~/components/home/rowShorteners.vue";
 import ThreeLayer from "~/components/home/threeLayer.vue";
+import UiContainerScrollAnimation from "~/components/ui/container-scroll-animation.vue";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -77,6 +78,15 @@ const { data: seoData } = canFetchSeo
 const landingSeo = computed(() => seoData.value?.data?.seo?.landingPage ?? null);
 const seoTitle = computed(() => landingSeo.value?.title?.trim() || t("seo.home"));
 const seoDesc = computed(() => landingSeo.value?.description?.trim() || "");
+const freshProjectsTitle = computed(() => t("home.freshProjects").trim() || "Fresh projects");
+const freshProjectsTitleParts = computed(() => {
+  const [first = "", ...rest] = freshProjectsTitle.value.split(/\s+/).filter(Boolean);
+
+  return {
+    first,
+    rest: rest.join(" "),
+  };
+});
 
 const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, "");
 const canonical = computed(() => (siteUrl ? siteUrl + route.path : ""));
@@ -233,8 +243,8 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="home-picture-word">
-          <PictureWord />
+        <div class="home-first-glance">
+          <FirstGlanceSections />
         </div>
 
         <div class="home-grid">
@@ -250,10 +260,74 @@ onMounted(async () => {
         </div>
 
         <div class="home-projects">
+          <div class="home-project-scroll">
+            <UiContainerScrollAnimation>
+              <template #title>
+                <div class="project-scroll-copy">
+                  <h2 class="project-scroll-title">
+                    We build digital experiences<br />
+                    that feel <span>premium</span> work flawlessly
+                  </h2>
+                  <p class="project-scroll-description">
+                    and turn every interaction into a stronger connection between the brand and its audience.
+                  </p>
+                </div>
+              </template>
+
+              <div class="project-dashboard-preview" aria-hidden="true">
+                <div class="project-dashboard-preview__topbar">
+                  <div class="project-dashboard-preview__brand">one</div>
+                  <div class="project-dashboard-preview__tabs">
+                    <span>Home</span>
+                    <span>Analytics</span>
+                    <span>Product</span>
+                    <span>Customers</span>
+                  </div>
+                  <div class="project-dashboard-preview__user"></div>
+                </div>
+                <div class="project-dashboard-preview__headline">
+                  <span>Powerful dashboard for</span>
+                  <strong>Sales &amp; Engagement</strong>
+                </div>
+                <div class="project-dashboard-preview__grid">
+                  <div class="project-dashboard-preview__panel project-dashboard-preview__panel--wide">
+                    <div class="project-dashboard-preview__metric">$17,495.79</div>
+                    <div class="project-dashboard-preview__bars">
+                      <span v-for="height in [34, 48, 42, 64, 86, 46, 74]" :key="height" :style="{ height: `${height}%` }"></span>
+                    </div>
+                  </div>
+                  <div class="project-dashboard-preview__panel">
+                    <div class="project-dashboard-preview__list">
+                      <span v-for="row in 5" :key="row"></span>
+                    </div>
+                  </div>
+                  <div class="project-dashboard-preview__panel">
+                    <div class="project-dashboard-preview__line"></div>
+                    <div class="project-dashboard-preview__metric">11.3k</div>
+                  </div>
+                  <div class="project-dashboard-preview__panel project-dashboard-preview__panel--small">
+                    <div class="project-dashboard-preview__dots">
+                      <span v-for="dot in 24" :key="dot"></span>
+                    </div>
+                  </div>
+                  <div class="project-dashboard-preview__panel project-dashboard-preview__panel--small">
+                    <div class="project-dashboard-preview__metric">23.5k</div>
+                    <div class="project-dashboard-preview__line project-dashboard-preview__line--short"></div>
+                  </div>
+                </div>
+              </div>
+            </UiContainerScrollAnimation>
+          </div>
+
           <h1
-            class="pb-20 text-center text-[40px] font-normal uppercase tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
+            class="fresh-projects-title pb-20 text-center text-[40px] font-normal tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
           >
-            {{ $t("home.freshProjects") }}
+            <span class="fresh-projects-title__green">
+              {{ freshProjectsTitleParts.first }}
+            </span>
+            <span v-if="freshProjectsTitleParts.rest">
+              {{ " " + freshProjectsTitleParts.rest }}
+            </span>
           </h1>
 
           <LazyHomeThreeLayerSlug />
@@ -309,6 +383,216 @@ onMounted(async () => {
 .home-projects {
   margin-top: clamp(4rem, 8vw, 8rem);
   margin-bottom: clamp(4rem, 6vw, 6.25rem);
+}
+
+.home-project-scroll {
+  position: relative;
+  z-index: 2;
+  margin-bottom: clamp(-5rem, -6vw, -2rem);
+}
+
+.project-scroll-copy {
+  color: #ffffff;
+  font-family: var(--app-font-display, "SF Pro Display", "SF Pro Text", sans-serif);
+  text-align: center;
+}
+
+.project-scroll-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 5.4vw, 5.25rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.project-scroll-title span {
+  color: #03cb00;
+}
+
+.project-scroll-description {
+  margin: clamp(0.8rem, 1.6vw, 1.25rem) auto 0;
+  max-width: 58rem;
+  color: #ffffff;
+  font-size: clamp(1rem, 1.45vw, 1.45rem);
+  line-height: 1.35;
+}
+
+.project-dashboard-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #06110d 0%, #040908 46%, #030504 100%);
+  box-shadow: inset 0 0 0 1px rgba(93, 255, 93, 0.1);
+}
+
+.project-dashboard-preview__topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.project-dashboard-preview__brand,
+.project-dashboard-preview__tabs span,
+.project-dashboard-preview__user {
+  border: 1px solid rgba(89, 255, 72, 0.18);
+  background: rgba(0, 0, 0, 0.36);
+}
+
+.project-dashboard-preview__brand {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  place-items: center;
+  border-radius: 9999px;
+  color: #03cb00;
+  font-weight: 800;
+}
+
+.project-dashboard-preview__tabs {
+  display: flex;
+  flex: 1;
+  gap: 0.65rem;
+}
+
+.project-dashboard-preview__tabs span {
+  border-radius: 9999px;
+  padding: 0.65rem 1rem;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.8rem;
+}
+
+.project-dashboard-preview__user {
+  width: 5.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+}
+
+.project-dashboard-preview__headline {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(0.5rem, 2vw, 1.5rem);
+  text-align: center;
+}
+
+.project-dashboard-preview__headline span,
+.project-dashboard-preview__headline strong {
+  display: block;
+  font-size: clamp(1.5rem, 2.4vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.project-dashboard-preview__headline span {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.project-dashboard-preview__headline strong {
+  color: #59ff48;
+}
+
+.project-dashboard-preview__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: clamp(0.75rem, 1.2vw, 1rem);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.project-dashboard-preview__panel {
+  min-height: 10rem;
+  border: 1px solid rgba(89, 255, 72, 0.16);
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.48);
+  box-shadow: inset 0 0 30px rgba(3, 203, 0, 0.08);
+}
+
+.project-dashboard-preview__panel--wide {
+  grid-row: span 2;
+  padding: 1.25rem;
+}
+
+.project-dashboard-preview__panel--small {
+  min-height: 8rem;
+  padding: 1rem;
+}
+
+.project-dashboard-preview__metric {
+  color: #baffb3;
+  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+  font-weight: 800;
+}
+
+.project-dashboard-preview__bars {
+  display: flex;
+  align-items: end;
+  height: 11rem;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+}
+
+.project-dashboard-preview__bars span {
+  flex: 1;
+  min-width: 0.8rem;
+  border-radius: 9999px 9999px 0 0;
+  background: linear-gradient(180deg, #8cff3f 0%, #03cb00 55%, rgba(3, 203, 0, 0.18) 100%);
+  box-shadow: 0 0 24px rgba(89, 255, 72, 0.38);
+}
+
+.project-dashboard-preview__list {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.project-dashboard-preview__list span {
+  height: 1.4rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), rgba(3, 203, 0, 0.24));
+}
+
+.project-dashboard-preview__line {
+  width: 80%;
+  height: 5rem;
+  margin: 1.5rem auto;
+  border-bottom: 3px solid #59ff48;
+  border-radius: 0 0 50% 50%;
+  box-shadow: 0 0 20px rgba(89, 255, 72, 0.42);
+}
+
+.project-dashboard-preview__line--short {
+  width: 100%;
+  height: 3rem;
+  margin: 0.75rem 0 0;
+}
+
+.project-dashboard-preview__dots {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+}
+
+.project-dashboard-preview__dots span {
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: rgba(89, 255, 72, 0.22);
+}
+
+.project-dashboard-preview__dots span:nth-child(5n) {
+  background: #59ff48;
+  box-shadow: 0 0 18px rgba(89, 255, 72, 0.72);
+}
+
+.fresh-projects-title {
+  text-transform: none;
+}
+
+.fresh-projects-title__green {
+  color: #03cb00;
 }
 
 .home-faq {
@@ -490,30 +774,6 @@ onMounted(async () => {
     margin: 0 auto;
   }
 
-  .home-picture-word :deep(.top-text) {
-    left: 2rem;
-    top: 18%;
-    max-width: 34rem;
-  }
-
-  .home-picture-word :deep(.bottom-text) {
-    right: 2rem;
-    bottom: 16%;
-    max-width: 32rem;
-  }
-
-  .home-picture-word :deep(.top-text h2),
-  .home-picture-word :deep(.bottom-text h1) {
-    font-size: 3.25rem;
-    line-height: 1.1;
-  }
-
-  .home-picture-word :deep(.center-image) {
-    top: 50%;
-    width: 30rem;
-    height: 32rem;
-  }
-
   .home-grid :deep(.containerr) {
     margin-top: 14rem;
   }
@@ -629,8 +889,9 @@ onMounted(async () => {
   }
 
   .home-info-picture :deep(.info-image-frame) {
-    max-width: 42rem;
-    height: 24rem;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.16 / 1;
   }
 
   .home-projects {

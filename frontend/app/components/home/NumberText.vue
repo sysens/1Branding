@@ -232,6 +232,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="root" class="section-two-root">
     <div class="section-two-bg">
+      <div class="section-two-curve" aria-hidden="true"></div>
       <div class="ichkidiv">
         <div class="section-two-wrap containerr">
           <div class="section-two-number-layer main left-block">
@@ -283,41 +284,56 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
 }
 
-.section-two-bg::before,
-.section-two-bg::after {
+.section-two-curve,
+.section-two-curve::before,
+.section-two-curve::after {
   position: absolute;
   width: 100%;
   height: var(--section-two-curve-height);
   border-radius:
     var(--section-two-radius-left-x) var(--section-two-radius-right-x) 0 0 /
     var(--section-two-radius-left-y) var(--section-two-radius-right-y) 0 0;
-  bottom: 0;
-  content: "";
   pointer-events: none;
 }
 
-.section-two-bg::before {
+.section-two-curve {
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  overflow: visible;
+}
+
+.section-two-curve::before,
+.section-two-curve::after {
+  inset: 0;
+  content: "";
+}
+
+.section-two-curve::before {
   z-index: 1;
   background-color: black;
   border-top: 3px solid #03cb00;
   border-bottom: none;
 }
 
-.section-two-bg::after {
+.section-two-curve::after {
   z-index: 0;
-  box-shadow: 0px 0rem 7rem 2rem rgba(21, 224, 1, 0.95);
-  clip-path: inset(-9rem 0 0 0);
+  border-top: 3px solid rgba(3, 203, 0, 0.92);
+  border-bottom: none;
+  filter:
+    drop-shadow(0 0 1.8rem rgba(21, 224, 1, 0.95))
+    drop-shadow(0 0 5.2rem rgba(21, 224, 1, 0.82));
+  clip-path: inset(-8rem 0 45% 0);
 }
 
-.section-two-bg--curve-pinned::before,
-.section-two-bg--curve-pinned::after {
+.section-two-bg--curve-pinned .section-two-curve {
   position: fixed;
   top: 0;
   bottom: auto;
@@ -333,6 +349,7 @@ onBeforeUnmount(() => {
   padding-inline: clamp(1rem, 4vw, 4rem);
   padding-top: clamp(3rem, 5vw, 5rem);
   min-height: var(--section-two-height);
+  overflow: visible;
 }
 
 .section-two-right {
@@ -350,6 +367,7 @@ onBeforeUnmount(() => {
   z-index: 0;
   width: min(132vw, 100rem);
   height: clamp(15rem, 32vw, 31rem);
+  overflow: visible;
   pointer-events: none;
   translate: -50% -10%;
 }

@@ -18,6 +18,19 @@ import GradualBlur from "./components/GradualBlur.vue";
       curve="bezier"
       :exponential="true"
       :opacity="1"
+      :z-index="700"
+    />
+
+    <GradualBlur
+      target="page"
+      position="top"
+      height="6rem"
+      :strength="2"
+      :divCount="5"
+      curve="bezier"
+      :exponential="true"
+      :opacity="1"
+      :z-index="700"
     />
   </div>
 </template>

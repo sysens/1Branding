@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, ref, computed } from "vue";
+import { onMounted, onBeforeUnmount, nextTick, ref, computed, watch } from "vue";
+import ScrollGooeyText from "./ScrollGooeyText.vue";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
@@ -7,6 +8,10 @@ type GsapContext = { revert: () => void };
 type Panel = {
   titleGreen: string;
   text: string;
+};
+
+type ScrollProgressState = {
+  progress: number;
 };
 
 type LandingPageRes = {
@@ -78,6 +83,7 @@ const panels = computed<Panel[]>(() => {
 });
 
 const root = ref<HTMLElement | null>(null);
+const scrollProgress = ref(0);
 const PIN_HEADER_OFFSET_PX = 118;
 const TALL_VIEWPORT_HEIGHT_PX = 1400;
 const EXTRA_TALL_VIEWPORT_HEIGHT_PX = 2200;
@@ -99,6 +105,41 @@ const getPinSegmentDistance = () => {
 let ctx: GsapContext | null = null;
 let ready = false;
 
+const clampProgress = (value: number) => {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return Math.min(Math.max(value, 0), 1);
+};
+
+const panelTitles = computed<string[]>(() =>
+  panels.value
+    .map((panel) => panel.titleGreen || panel.text)
+    .map((title) => title.trim())
+    .filter(Boolean)
+);
+
+const activePanelIndex = computed(() => {
+  const count = panels.value.length;
+
+  if (count <= 1) {
+    return 0;
+  }
+
+  return Math.min(count - 1, Math.round(clampProgress(scrollProgress.value) * (count - 1)));
+});
+
+const activeDescription = computed(() => {
+  const panel = panels.value[activePanelIndex.value];
+
+  return panel?.text ?? "";
+});
+
+const setScrollProgress = (state: ScrollProgressState) => {
+  scrollProgress.value = clampProgress(state.progress);
+};
+
 const initGsap = async () => {
   await nextTick();
   await nextTick();
@@ -109,16 +150,19 @@ const initGsap = async () => {
 
   gsap.registerPlugin(ScrollTrigger);
 
+  ctx?.revert();
+  ctx = null;
+  scrollProgress.value = 0;
+
   ctx = gsap.context(() => {
     const host = root.value!;
     const pinWrap = host.querySelector<HTMLElement>(".pin-wrap");
-    const items = gsap.utils.toArray<HTMLElement>(host.querySelectorAll(".panel"));
-    const firstItem = items[0];
 
-    if (!pinWrap || !firstItem) return;
+    if (!pinWrap) return;
 
     const leftBlock = host.querySelector<HTMLElement>(".left-block");
     const rightBlock = host.querySelector<HTMLElement>(".right-block");
+    const panelCount = Math.max(panels.value.length, 2);
 
     if (leftBlock) gsap.set(leftBlock, { x: -380, opacity: 0 });
     if (rightBlock) gsap.set(rightBlock, { x: 180, opacity: 0 });
@@ -137,62 +181,18 @@ const initGsap = async () => {
       },
     });
 
-    gsap.set(items, {
-      autoAlpha: 0,
-      yPercent: 10,
-      pointerEvents: "none",
-      willChange: "transform, opacity",
+    ScrollTrigger.create({
+      trigger: pinWrap,
+      start: () =>
+        window.innerWidth >= 768 ? `top ${PIN_HEADER_OFFSET_PX}px` : "top top",
+      end: () => `+=${panelCount * getPinSegmentDistance()}`,
+      pin: true,
+      scrub: 0.8,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: setScrollProgress,
+      onRefresh: setScrollProgress,
     });
-    gsap.set(firstItem, { autoAlpha: 1, yPercent: 0, pointerEvents: "auto" });
-
-    const tl = gsap.timeline({
-      defaults: { ease: "power2.inOut" },
-      scrollTrigger: {
-        trigger: pinWrap,
-        start: () =>
-          window.innerWidth >= 768 ? `top ${PIN_HEADER_OFFSET_PX}px` : "top top",
-        end: () => {
-          const segment = getPinSegmentDistance();
-          return `+=${Math.max(items.length, 2) * segment}`;
-        },
-        pin: true,
-        scrub: 0.8,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    const holdDuration = 0.9;
-    const transitionDuration = 0.65;
-
-    items.forEach((item, i) => {
-      if (i > 0) {
-        const previousItem = items[i - 1];
-
-        if (!previousItem) return;
-
-        tl.to({}, { duration: holdDuration });
-        tl.set(previousItem, { pointerEvents: "none" });
-        tl.to(previousItem, {
-          autoAlpha: 0,
-          yPercent: -10,
-          duration: transitionDuration,
-        });
-        tl.fromTo(
-          item,
-          { autoAlpha: 0, yPercent: 10, pointerEvents: "none" },
-          {
-            autoAlpha: 1,
-            yPercent: 0,
-            pointerEvents: "auto",
-            duration: transitionDuration,
-          },
-          "<"
-        );
-      }
-    });
-
-    tl.to({}, { duration: holdDuration });
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -209,26 +209,26 @@ onMounted(async () => {
   await initGsap();
 });
 
+watch(
+  () => panels.value.length,
+  async () => {
+    if (!process.client) return;
+
+    ready = false;
+    await initGsap();
+  }
+);
+
 onBeforeUnmount(() => {
   ctx?.revert();
   ctx = null;
   ready = false;
+  scrollProgress.value = 0;
 });
 </script>
 
 <template>
   <div ref="root" class="relative overflow-hidden z-[2]">
-    <img
-      src="/General/Ellipse (3).png"
-      alt=""
-      class="absolute right-[-140px] top-[-80px] w-[520px] h-[520px] md:right-[-120px] md:top-[-50px] md:w-[620px] md:h-[620px] lg:right-[-80px] lg:top-0 lg:w-[760px] lg:h-[760px] xl:right-40 xl:top-0 xl:w-[900px] xl:h-[900px] object-contain pointer-events-none select-none z-[2]"
-    />
-    <img
-      src="/General/Ellipse (5).png"
-      alt=""
-      class="absolute right-[-140px] bottom-[-120px] w-[520px] h-[520px] md:right-[-120px] md:bottom-[-80px] md:w-[620px] md:h-[620px] lg:right-[-80px] lg:bottom-0 lg:w-[760px] lg:h-[760px] xl:right-40 xl:bottom-0 xl:w-[900px] xl:h-[900px] object-contain pointer-events-none select-none z-[2]"
-    />
-
     <div class="containerr bg-transparent">
       <div
         class="pin-wrap flex flex-col md:flex-row items-center md:items-center xl:items-center justify-center md:justify-between xl:justify-center gap-y-6 md:gap-y-0 md:gap-x-6 lg:gap-x-8 xl:gap-x-16 px-[18px] md:px-[30px] lg:px-[40px] xl:px-0 py-7 md:py-10 lg:py-12 xl:py-10 overflow-hidden"
@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
           <img
             src="/General/one.svg"
             alt=""
-            class="relative z-[1] top-0 md:top-[8px] lg:top-0 xl:top-0 w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100 object-contain"
+            class="relative z-[1] top-[-24px] md:top-[-32px] lg:top-[-40px] xl:top-[-36px] w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100 object-contain"
           />
         </div>
 
@@ -248,20 +248,16 @@ onBeforeUnmount(() => {
         >
           <div class="relative w-full h-full overflow-visible">
             <div
-              v-for="(p, i) in panels"
-              :key="i"
-              class="panel absolute inset-0 h-full flex flex-col items-start justify-center will-change-transform z-10"
+              class="panel absolute inset-0 h-full flex flex-col items-center justify-center will-change-transform z-10"
             >
-              <h1
-                class="font-normal text-left capitalize text-white leading-[100%] tracking-[0] text-[40px] md:text-[46px] lg:text-[56px] xl:text-[4rem]"
-              >
-                {{ p.titleGreen }}
-              </h1>
+              <ScrollGooeyText
+                :texts="panelTitles"
+                :progress="scrollProgress"
+                class="nd-gooey-title"
+              />
 
-              <p
-                class="font-light font-['Poppins','Inter',sans-serif] text-left capitalize text-[#cccccc] leading-[120%] tracking-[0] py-6 md:py-8 lg:py-10 text-[14px] md:text-[16px] lg:text-[20px] xl:text-[1.5rem] max-w-[640px]"
-              >
-                {{ p.text }}
+              <p class="nd-gooey-description">
+                {{ activeDescription }}
               </p>
             </div>
           </div>
@@ -270,3 +266,72 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.panel {
+  transform: translateY(clamp(-3rem, -5vh, -2rem));
+}
+
+.nd-gooey-title {
+  width: min(100%, 52rem);
+  min-height: clamp(11.5rem, 16vw, 15rem);
+  color: #ffffff;
+  font-size: clamp(2.5rem, 4.7vw, 4rem);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.nd-gooey-description {
+  width: min(100%, 46rem);
+  margin: clamp(1.75rem, 2.5vw, 3rem) auto 0;
+  padding: 0;
+  color: #cccccc;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(0.875rem, 1.45vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .nd-gooey-title {
+    width: 100%;
+    min-height: clamp(8.5rem, 20vw, 11rem);
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  .nd-gooey-description {
+    width: min(100%, 38rem);
+    max-width: 38rem;
+    margin-inline: auto;
+    font-size: 1.125rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel {
+    transform: translateY(-1.5rem);
+  }
+
+  .nd-gooey-title {
+    width: 100%;
+    min-height: clamp(7rem, 30vw, 10rem);
+    font-size: clamp(2.1rem, 10vw, 3rem);
+    text-align: center;
+  }
+
+  .nd-gooey-description {
+    width: min(100%, 34rem);
+    max-width: 34rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+}
+</style>
