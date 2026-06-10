@@ -13,6 +13,19 @@
     },
     "accentText": {
       "type": "string"
+    },
+    "scrollEyebrowText": {
+      "type": "string"
+    },
+    "scrollHeadlineText": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   },
   "config": {}

@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_landing_page_spline_robots",
+  "info": {
+    "displayName": "SplineRobot"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "sceneUrl": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

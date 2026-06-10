@@ -113,6 +113,16 @@
       "component": "landing-page.what-we-do",
       "repeatable": false
     },
+    "splineRobot": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "landing-page.spline-robot",
+      "repeatable": false
+    },
     "section10": {
       "type": "component",
       "pluginOptions": {

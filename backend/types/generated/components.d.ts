@@ -272,8 +272,11 @@ export interface LandingPageHeroSlogan extends Struct.ComponentSchema {
   };
   attributes: {
     accentText: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
     mainText: Schema.Attribute.String;
     mutedText: Schema.Attribute.Text;
+    scrollEyebrowText: Schema.Attribute.String;
+    scrollHeadlineText: Schema.Attribute.String;
   };
 }
 
@@ -323,6 +326,18 @@ export interface LandingPageSection9 extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface LandingPageSplineRobot extends Struct.ComponentSchema {
+  collectionName: 'components_landing_page_spline_robots';
+  info: {
+    displayName: 'SplineRobot';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    sceneUrl: Schema.Attribute.String;
     title: Schema.Attribute.String;
   };
 }
@@ -601,6 +616,7 @@ declare module '@strapi/strapi' {
       'landing-page.partner': LandingPagePartner;
       'landing-page.projects-images': LandingPageProjectsImages;
       'landing-page.section9': LandingPageSection9;
+      'landing-page.spline-robot': LandingPageSplineRobot;
       'landing-page.stats': LandingPageStats;
       'landing-page.tools': LandingPageTools;
       'landing-page.what-we-do': LandingPageWhatWeDo;
