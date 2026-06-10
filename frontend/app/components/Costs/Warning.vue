@@ -77,7 +77,13 @@ const text = computed(() => forCustomer.value?.text?.trim() || t("warning.text")
   <div class="bg-black">
     <div class="lastComp containerr">
       <div class="flex gap-[16px] pb-[30px]">
-        <div><img src="/Costs/carbon_warning (1).png" alt="" /></div>
+        <div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2L2 20h20L12 2z" stroke="#808080" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M12 9v5" stroke="#808080" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="12" cy="17" r="0.75" fill="#808080"/>
+          </svg>
+        </div>
         <div>
           <h1
             class="text-[#808080]  font-normal text-[24px] leading-[25px] tracking-normal align-middle"
