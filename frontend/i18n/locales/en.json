@@ -135,7 +135,8 @@
   },
   "projectsPage": {
     "title": "Our projects",
-    "subtitle": "We are proud of every project that helps our clients grow and develop"
+    "subtitle": "We are proud of every project that helps our clients grow and develop",
+    "viewProject": "View project"
   },
   "productsPage": {
     "title": "Branding",

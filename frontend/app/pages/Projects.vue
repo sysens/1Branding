@@ -1,62 +1,14 @@
 <script setup lang="ts">
 import Spinner from "~/components/Spinner.vue";
-import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
-
-let ctx: any = null;
+import { ref, onMounted, nextTick } from "vue";
 
 const loading = ref(true);
 
 const rootRef = ref<HTMLElement | null>(null);
-const productsRef = ref<HTMLElement | null>(null);
-const secondRef = ref<HTMLElement | null>(null);
-const mainProductRef = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
   await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  if (!rootRef.value) {
-    loading.value = false;
-    return;
-  }
-
-  ctx = gsap.context(() => {
-    const products = productsRef.value;
-    const second = secondRef.value;
-    const mainProduct = mainProductRef.value;
-
-    if (products) {
-      gsap.fromTo(
-        products,
-        { x: -160, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 0.6, ease: "power3.out" }
-      );
-    }
-
-    if (second) {
-      gsap.fromTo(
-        second,
-        { x: 160, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 0.6, ease: "power3.out" }
-      );
-    }
-
-    if (mainProduct) {
-      gsap.fromTo(
-        mainProduct,
-        { x: 0, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 1.2, ease: "power3.out" }
-      );
-    }
-  }, rootRef);
-
   loading.value = false;
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
 });
 </script>
 
@@ -73,25 +25,36 @@ onBeforeUnmount(() => {
           <Header />
         </div>
 
-        <div ref="productsRef" class="products">
-          <h1
-            class="font-normal text-center px-[20px] md:px-0 md:pt-[115px] pt-[137px] text-[#FFFFFF] md:text-[62px] md:leading-[100%] md:tracking-[0] text-[40px] leading-[120%] tracking-normal"
-          >
+        <div class="products">
+          <h1 class="projects-hero-title px-[20px] md:px-0 md:pt-[115px] pt-[137px]">
             {{ $t("projectsPage.title") }}
           </h1>
 
           <h2
-            class="text-[#FFFFFF] px-[20px] md:px-0 pt-[29px] font-light md:text-[16px] md:leading-[28px] md:tracking-[0] text-[14px] leading-[120%] tracking-normal text-center font-['Poppins','Inter',sans-serif]"
+            class="text-[#FFFFFF] px-[20px] md:px-0 pt-[29px] font-light md:text-[18px] md:leading-[30px] md:tracking-[0] text-[14px] leading-[140%] tracking-normal text-center font-['Poppins','Inter',sans-serif] max-w-[640px] mx-auto opacity-90"
           >
             {{ $t("projectsPage.subtitle") }}
           </h2>
         </div>
-
-        <div ref="secondRef" class="second"></div>
-        <div ref="mainProductRef" class="mainProduct"></div>
       </div>
 
-      <ProjectsMarquee />
+      <ProjectsShowcase />
+
+      <Footer />
     </div>
   </div>
 </template>
+
+<style scoped>
+.projects-hero-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: clamp(3.4rem, 9vw, 8.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  background: linear-gradient(92deg, #03cb00 6%, #5fe92c 48%, #c8f531 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+</style>

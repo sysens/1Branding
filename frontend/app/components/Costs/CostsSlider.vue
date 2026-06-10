@@ -31,9 +31,13 @@
               @mouseenter="setActive(categoryIndex, itemIndex)"
               @focus="setActive(categoryIndex, itemIndex)"
             >
-              <span class="costs-card__badge" aria-hidden="true">
-                <span>1</span>
-              </span>
+              <img
+                class="costs-card__badge"
+                src="/Costs/one.png"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
 
               <span class="costs-card__name">{{ item.title }}</span>
 
@@ -194,15 +198,17 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
   width: clamp(48rem, 74vw, 78rem);
   height: clamp(48rem, 74vw, 78rem);
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(3, 40, 20, 0) 53%,
-    rgba(14, 170, 74, 0.22) 60%,
-    rgba(70, 255, 130, 0.85) 65%,
-    rgba(40, 220, 100, 0.35) 69%,
-    rgba(10, 120, 54, 0.1) 74%,
-    rgba(3, 40, 20, 0) 80%
-  );
+  background:
+    url("/Costs/branding-sphere.png") center / cover no-repeat,
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(3, 40, 20, 0) 53%,
+      rgba(14, 170, 74, 0.22) 60%,
+      rgba(70, 255, 130, 0.85) 65%,
+      rgba(40, 220, 100, 0.35) 69%,
+      rgba(10, 120, 54, 0.1) 74%,
+      rgba(3, 40, 20, 0) 80%
+    );
   filter: blur(0.35rem);
   pointer-events: none;
   z-index: 0;
@@ -257,14 +263,9 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
   border: 0.125rem solid rgba(70, 200, 120, 0.16);
   border-radius: clamp(1.25rem, 2vw, 1.85rem);
   background:
-    radial-gradient(
-      135% 170% at 0% 120%,
-      rgba(40, 206, 118, 0.98) 0%,
-      rgba(18, 124, 74, 0.92) 30%,
-      rgba(8, 58, 37, 0.93) 56%,
-      rgba(4, 16, 11, 1) 77%
-    ),
-    #05100b;
+    url("/Costs/shape-11.png") left top / 58% auto no-repeat,
+    radial-gradient(120% 150% at -2% -10%, #0e4a2e 0%, #082619 34%, #05140d 62%, #04100b 100%),
+    #04100b;
   color: #ffffff;
   text-align: left;
   cursor: pointer;
@@ -282,14 +283,9 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
     0 0 3rem rgba(47, 224, 74, 0.5),
     inset 0 0 1.6rem rgba(47, 224, 74, 0.14);
   background:
-    radial-gradient(
-      135% 170% at 0% 120%,
-      rgba(54, 232, 138, 1) 0%,
-      rgba(24, 150, 90, 0.95) 30%,
-      rgba(10, 74, 47, 0.95) 56%,
-      rgba(4, 18, 12, 1) 79%
-    ),
-    #05100b;
+    url("/Costs/shape-11.png") left top / 62% auto no-repeat,
+    radial-gradient(120% 150% at -2% -10%, #14663f 0%, #0b3a24 34%, #06190f 62%, #04120c 100%),
+    #04120c;
 }
 
 .costs-card__name {
@@ -331,34 +327,18 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
   color: #ffffff;
 }
 
-/* "1" badge — only visible on the active card, top-right corner */
+/* "1" badge image — only visible on the active card, top-right corner */
 .costs-card__badge {
   position: absolute;
-  top: clamp(-0.9rem, -1.4vw, -1.4rem);
-  right: clamp(1.25rem, 3vw, 2.75rem);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(2.4rem, 3.6vw, 3.4rem);
-  height: clamp(2.4rem, 3.6vw, 3.4rem);
-  border-radius: 50%;
-  background: radial-gradient(circle at 36% 30%, #8dff97 0%, #28d24a 52%, #0c9636 100%);
-  box-shadow:
-    0 0 1.4rem rgba(47, 224, 74, 0.8),
-    inset 0 -0.18rem 0.4rem rgba(0, 0, 0, 0.28),
-    inset 0 0.2rem 0.45rem rgba(255, 255, 255, 0.5);
+  z-index: 3;
+  top: clamp(-1.5rem, -2.1vw, -1.9rem);
+  right: clamp(0.75rem, 2.2vw, 1.6rem);
+  width: clamp(3.5rem, 5vw, 5.5rem);
+  height: auto;
   opacity: 0;
   transform: scale(0.6);
   transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.costs-card__badge span {
-  font-family: "Oswald", "SF Pro Display", sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.05rem, 1.6vw, 1.5rem);
-  color: #ffffff;
-  text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.45);
-  line-height: 1;
+  pointer-events: none;
 }
 
 .costs-card--active .costs-card__badge {
