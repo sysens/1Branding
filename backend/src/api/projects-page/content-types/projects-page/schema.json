@@ -56,33 +56,18 @@
       "customField": "plugin::color-picker.color",
       "options": {
         "format": "hex"
-      },
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
       }
     },
     "projectLogo": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "allowedTypes": ["images"]
     },
     "tags": {
       "type": "component",
       "repeatable": true,
-      "component": "projects-page.tag",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "component": "projects-page.tag"
     }
   }
 }

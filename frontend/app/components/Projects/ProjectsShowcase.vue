@@ -71,7 +71,7 @@ const extendedSupported = ref(true);
 
 const makeQuery = (p: number, ps: number, extended: boolean) => `
   query ProjectsShowcase($locale: I18NLocaleCode) {
-    projectsPages_connection(pagination: { page: ${p}, pageSize: ${ps} }, locale: $locale) {
+    projectsPages_connection(pagination: { page: ${p}, pageSize: ${ps} }, sort: "createdAt:asc", locale: $locale) {
       nodes {
         documentId
         projectColor
@@ -279,7 +279,7 @@ const projectsView = computed<ShowcaseItem[]>(() => {
 .projects-showcase__list {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.85rem, 1.6vw, 1.4rem);
+  gap: clamp(0.35rem, 0.5rem, 1.4rem);
 }
 
 /* ---------- one project row: narrow info card + wide media, full-screen tall ---------- */
@@ -425,23 +425,27 @@ const projectsView = computed<ShowcaseItem[]>(() => {
   transition: transform 0.6s ease;
 }
 
-/* colored glow rising from the bottom-left corner over the image */
+/* colored glow rising from the bottom-left corner over the image;
+   --glow lifts the accent toward white so dark brand colors read just as strong */
 .project-feature__media::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
+  --glow: color-mix(in srgb, var(--accent) 78%, #ffffff);
   background:
     radial-gradient(
-      95% 80% at 0% 100%,
-      color-mix(in srgb, var(--accent) 72%, transparent) 0%,
-      color-mix(in srgb, var(--accent) 38%, transparent) 34%,
-      transparent 62%
+      130% 115% at 0% 102%,
+      color-mix(in srgb, var(--glow) 92%, transparent) 0%,
+      color-mix(in srgb, var(--glow) 62%, transparent) 30%,
+      color-mix(in srgb, var(--glow) 28%, transparent) 58%,
+      transparent 82%
     ),
     linear-gradient(
-      200deg,
-      transparent 55%,
-      color-mix(in srgb, var(--accent) 28%, transparent) 100%
+      to top,
+      color-mix(in srgb, var(--glow) 46%, transparent) 0%,
+      color-mix(in srgb, var(--glow) 14%, transparent) 26%,
+      transparent 52%
     );
   pointer-events: none;
 }

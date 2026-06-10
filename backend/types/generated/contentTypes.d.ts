@@ -449,15 +449,6 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    heroSlogan: Schema.Attribute.Component<
-      'landing-page.hero-slogan',
-      false
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -681,6 +672,12 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    heroSlogan: Schema.Attribute.Component<'landing-page.hero-slogan', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -732,12 +729,6 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
-    splineRobot: Schema.Attribute.Component<'landing-page.spline-robot', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     slogan: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -745,6 +736,15 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
         };
       }>;
     sloganMobile: Schema.Attribute.Media<'images' | 'videos'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    splineRobot: Schema.Attribute.Component<
+      'landing-page.spline-robot',
+      false
+    > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -992,11 +992,13 @@ export interface ApiProjectsPageProjectsPage
       'api::projects-page.projects-page'
     >;
     projectColor: Schema.Attribute.String &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
+      Schema.Attribute.CustomField<
+        'plugin::color-picker.color',
+        {
+          format: 'hex';
+        }
+      >;
+    projectLogo: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     section1: Schema.Attribute.Component<'projects-page.hero-section', false> &
       Schema.Attribute.SetPluginOptions<{
@@ -1016,6 +1018,7 @@ export interface ApiProjectsPageProjectsPage
           localized: true;
         };
       }>;
+    tags: Schema.Attribute.Component<'projects-page.tag', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

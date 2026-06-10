@@ -246,7 +246,14 @@ export interface LandingPageDesignElements extends Struct.ComponentSchema {
     displayName: 'DesignElements';
   };
   attributes: {
-    cards: Schema.Attribute.Component<'landing-page.design-el-cards', true>;
+    cards: Schema.Attribute.Component<'landing-page.design-el-cards', true> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3;
+          min: 3;
+        },
+        number
+      >;
     title: Schema.Attribute.String;
   };
 }
@@ -532,6 +539,16 @@ export interface ProjectsPageSection2 extends Struct.ComponentSchema {
   };
 }
 
+export interface ProjectsPageTag extends Struct.ComponentSchema {
+  collectionName: 'components_projects_page_tags';
+  info: {
+    displayName: 'Tag';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+  };
+}
+
 export interface SeoAboutPage extends Struct.ComponentSchema {
   collectionName: 'components_seo_about_pages';
   info: {
@@ -632,6 +649,7 @@ declare module '@strapi/strapi' {
       'projects-page.color-palette': ProjectsPageColorPalette;
       'projects-page.hero-section': ProjectsPageHeroSection;
       'projects-page.section2': ProjectsPageSection2;
+      'projects-page.tag': ProjectsPageTag;
       'seo.about-page': SeoAboutPage;
       'seo.contacts-page': SeoContactsPage;
       'seo.landing-page': SeoLandingPage;
