@@ -3,14 +3,27 @@ import { computed } from "vue";
 import FooterBrandSparkles from "~/components/FooterBrandSparkles.vue";
 import FooterCopyBlock from "~/components/FooterCopyBlock.vue";
 import FooterRobotScene from "~/components/FooterRobotScene.vue";
+import type {
+  FooterSocialMediaLinks,
+  LandingPageContent,
+} from "~/types/landingPayload";
 
 type AppLocale = "ru" | "en";
 
-type SocialMediaLinks = {
-  instagramLink?: string | null;
-  behanceLink?: string | null;
-  telegramLink?: string | null;
-};
+type SocialMediaLinks = FooterSocialMediaLinks;
+
+const props = withDefaults(
+  defineProps<{
+    usePrefetchedData?: boolean;
+    landingPage?: LandingPageContent | null;
+    socialMedia?: SocialMediaLinks | null;
+  }>(),
+  {
+    usePrefetchedData: false,
+    landingPage: null,
+    socialMedia: null,
+  }
+);
 
 type FooterCopy = {
   headingLead: string;
@@ -92,9 +105,10 @@ const FOOTER_QUERY = `
   }
 `;
 
-const { data: footerGql } = await useAsyncData<FooterDataRes>(
+const { data: footerGql } = await useAsyncData<FooterDataRes | null>(
   () => `footer-data-${gqlLocale.value}`,
   async () => {
+    if (props.usePrefetchedData) return null;
     if (!GRAPHQL_URL) return {};
 
     return await $fetch<FooterDataRes>(GRAPHQL_URL, {
@@ -110,17 +124,29 @@ const { data: footerGql } = await useAsyncData<FooterDataRes>(
 );
 
 const socialMedia = computed<SocialMediaLinks | null>(
-  () =>
-    footerGql.value?.data?.footer?.socialMedia ??
-    footerGql.value?.data?.fallbackFooter?.socialMedia ??
-    null
+  () => {
+    if (props.usePrefetchedData) return props.socialMedia;
+
+    return (
+      footerGql.value?.data?.footer?.socialMedia ??
+      footerGql.value?.data?.fallbackFooter?.socialMedia ??
+      null
+    );
+  }
 );
 
 const sceneUrl = computed(
-  () =>
-    footerGql.value?.data?.landingPage?.splineRobot?.sceneUrl?.trim() ||
-    footerGql.value?.data?.fallbackLandingPage?.splineRobot?.sceneUrl?.trim() ||
-    DEFAULT_SCENE_URL
+  () => {
+    if (props.usePrefetchedData) {
+      return props.landingPage?.splineRobot?.sceneUrl?.trim() || DEFAULT_SCENE_URL;
+    }
+
+    return (
+      footerGql.value?.data?.landingPage?.splineRobot?.sceneUrl?.trim() ||
+      footerGql.value?.data?.fallbackLandingPage?.splineRobot?.sceneUrl?.trim() ||
+      DEFAULT_SCENE_URL
+    );
+  }
 );
 
 const instagramLink = computed(

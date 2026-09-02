@@ -1,51 +1,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import type { LandingSection7 } from "~/types/landingPayload";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { locale } = useI18n();
+type GsapContext = { revert: () => void };
 
-type Media = { url?: string | null; createdAt?: string | null };
-
-type LandingRes = {
-  data?: {
-    landingPage?: {
-      section7?: {
-        title?: string | null;
-        images?: Media[] | null;
-      } | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const gqlLocale = computed(() => {
-  return locale.value === "en" ? "en" : "ru";
-});
-
-const query = computed(
-  () => `
-  query LandingPage {
-    landingPage(locale: "${gqlLocale.value}") {
-      section7 {
-        title
-        images { url createdAt }
-      }
-    }
+const props = withDefaults(
+  defineProps<{
+    section?: LandingSection7 | null;
+  }>(),
+  {
+    section: null,
   }
-`
 );
-
-const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query: query.value,
-  })),
-  watch: [locale],
-  server: false,
-  key: "landing-section7",
-});
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
@@ -56,9 +24,9 @@ const resolveMedia = (url?: string | null) => {
   return apiBase.value + "/" + url;
 };
 
-const sectionTitle = computed(() => data.value?.data?.landingPage?.section7?.title ?? "");
+const sectionTitle = computed(() => props.section?.title ?? "");
 
-const imagesRaw = computed(() => data.value?.data?.landingPage?.section7?.images ?? []);
+const imagesRaw = computed(() => props.section?.images ?? []);
 
 const images = computed(() => {
   const arr = [...imagesRaw.value];
@@ -76,7 +44,7 @@ const imgAt = (i: number) =>
 const root = ref<HTMLElement | null>(null);
 
 let observer: IntersectionObserver | null = null;
-let ctx: any = null;
+let ctx: GsapContext | null = null;
 let inited = false;
 
 const initGsap = async () => {

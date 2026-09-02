@@ -1,59 +1,25 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import type { LandingSection11 } from "~/types/landingPayload";
 
-type AppLocale = "ru" | "en";
+type GsapContext = { revert: () => void };
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { t, tm, locale } = useI18n<{ message: any }, AppLocale>();
+const { t, tm } = useI18n();
 
-type LandingRes = {
-  data?: {
-    landingPage?: {
-      section11?: {
-        title?: string | null;
-        AnswerQuestions?: Array<{
-          question?: string | null;
-          answer?: string | null;
-        }> | null;
-      } | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
-const query = `
-  query LandingPage($locale: I18NLocaleCode) {
-    landingPage(locale: $locale) {
-      section11 {
-        title
-        AnswerQuestions { question answer }
-      }
-    }
+const props = withDefaults(
+  defineProps<{
+    section?: LandingSection11 | null;
+  }>(),
+  {
+    section: null,
   }
-`;
-
-const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  server: false,
-  key: "landing-section11",
-  watch: [gqlLocale],
-});
+);
 
 const openIndex = ref<number | null>(null);
 const root = ref<HTMLElement | null>(null);
 
 let observer: IntersectionObserver | null = null;
-let ctx: any = null;
+let ctx: GsapContext | null = null;
 let inited = false;
 
 const toggle = (i: number) => {
@@ -68,7 +34,7 @@ const fallbackFaqs = computed(() => {
   return Array.isArray(list) ? list : [];
 });
 
-const section11 = computed(() => data.value?.data?.landingPage?.section11 ?? null);
+const section11 = computed(() => props.section ?? null);
 
 const faqTitle = computed(() => section11.value?.title || t("home.rowShorteners.title"));
 

@@ -7,6 +7,7 @@ import {
   ref,
   watch,
 } from "vue";
+import { useViewportActivity } from "~/composables/useViewportActivity";
 
 type SparkleParticle = {
   x: number;
@@ -40,7 +41,9 @@ const props = withDefaults(defineProps<Props>(), {
   particleDensity: 1200,
 });
 
-const root = ref<HTMLDivElement | null>(null);
+const { targetRef: root, isActive } = useViewportActivity({
+  rootMargin: "250px 0px",
+});
 const canvas = ref<HTMLCanvasElement | null>(null);
 const isReady = ref(false);
 
@@ -136,7 +139,10 @@ const drawParticles = (
 };
 
 const renderFrame = (time: number) => {
-  if (!canvas.value || !root.value || !context) return;
+  if (!canvas.value || !root.value || !context || !isActive.value) {
+    animationFrame = 0;
+    return;
+  }
 
   const width = root.value.clientWidth;
   const height = root.value.clientHeight;
@@ -146,13 +152,23 @@ const renderFrame = (time: number) => {
   drawBackground(context, width, height);
   drawParticles(context, width, height, delta);
 
-  if (!reducedMotion) {
+  if (!reducedMotion && isActive.value) {
     animationFrame = window.requestAnimationFrame(renderFrame);
+  } else {
+    animationFrame = 0;
   }
 };
 
-const start = () => {
+const stop = () => {
   window.cancelAnimationFrame(animationFrame);
+  animationFrame = 0;
+};
+
+const start = () => {
+  stop();
+
+  if (!isActive.value) return;
+
   lastFrameTime = 0;
   animationFrame = window.requestAnimationFrame(renderFrame);
 };
@@ -164,8 +180,11 @@ const handleMotionPreference = (event: MediaQueryListEvent) => {
     return;
   }
 
-  window.cancelAnimationFrame(animationFrame);
-  renderFrame(window.performance.now());
+  stop();
+
+  if (isActive.value) {
+    renderFrame(window.performance.now());
+  }
 };
 
 onMounted(async () => {
@@ -189,9 +208,18 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  window.cancelAnimationFrame(animationFrame);
+  stop();
   resizeObserver?.disconnect();
   reducedMotionQuery?.removeEventListener("change", handleMotionPreference);
+});
+
+watch(isActive, (active) => {
+  if (active) {
+    start();
+    return;
+  }
+
+  stop();
 });
 
 watch(

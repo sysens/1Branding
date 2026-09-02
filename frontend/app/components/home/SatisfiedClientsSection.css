@@ -1,0 +1,222 @@
+.clients-reveal {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(4rem, 7vw, 8rem);
+  overflow: hidden;
+  isolation: isolate;
+  background: #000000;
+}
+
+.clients-reveal__window {
+  position: relative;
+  z-index: 1;
+  height: 100svh;
+  min-height: 40rem;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.clients-section {
+  --clients-curve-depth: clamp(6rem, 9vw, 9rem);
+  --clients-curve-top: clamp(2rem, 3vw, 3rem);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: min(100%, 1728px);
+  height: 100svh;
+  min-height: 40rem;
+  overflow: hidden;
+  background: transparent;
+  transform: translateX(-50%);
+}
+
+.clients-section__curve {
+  position: absolute;
+  top: var(--clients-curve-top);
+  right: -6%;
+  bottom: 0;
+  left: -6%;
+  z-index: 0;
+  background: #000000;
+  border-top: 3px solid rgba(3, 203, 0, 0.96);
+  border-radius: 50% 50% 0 0 / var(--clients-curve-depth) var(--clients-curve-depth) 0 0;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0 0.55rem rgba(21, 224, 1, 0.92))
+    drop-shadow(0 0 1.25rem rgba(21, 224, 1, 0.62))
+    drop-shadow(0 0 2rem rgba(21, 224, 1, 0.34));
+}
+
+.clients-section__logos {
+  position: absolute;
+  top: clamp(7.5rem, 15vh, 10rem);
+  left: -6%;
+  z-index: 4;
+  width: 112%;
+  transform: rotate(-4deg);
+  transform-origin: center;
+}
+
+.clients-section__logos::before,
+.clients-section__logos::after {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 10%;
+  height: 190%;
+  content: "";
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.clients-section__logos::before {
+  left: 0;
+  background: linear-gradient(90deg, #000000, transparent);
+}
+
+.clients-section__logos::after {
+  right: 0;
+  background: linear-gradient(-90deg, #000000, transparent);
+}
+
+.clients-section__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.clients-section__copy {
+  position: absolute;
+  top: clamp(14rem, 34vh, 23rem);
+  left: 50%;
+  z-index: 3;
+  width: min(92vw, 74rem);
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.clients-section__title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.16em;
+  margin: 0;
+  color: #ffffff;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(3rem, 5.1vw, 5.25rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.clients-section__title-highlight {
+  color: #03cb00;
+}
+
+.clients-section__description {
+  width: min(90vw, 68rem);
+  margin: clamp(0.75rem, 1.25vw, 1.15rem) auto 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(0.72rem, 0.82vw, 0.9rem);
+  font-weight: 300;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.clients-section__number {
+  position: absolute;
+  bottom: clamp(-3.25rem, -4vh, -1.5rem);
+  left: 50%;
+  z-index: 1;
+  width: min(150vw, 120rem);
+  height: clamp(17rem, 39vh, 29rem);
+  pointer-events: none;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+}
+
+.clients-section__collage {
+  position: relative;
+  left: 50%;
+  z-index: 3;
+  width: 116%;
+  margin-top: 0;
+  transform: translateX(-50%) rotate(-5deg) scale(1.04);
+  transform-origin: center top;
+}
+
+.clients-section__collage :deep(.marquee-image-frame) {
+  width: clamp(18rem, 24vw, 27rem) !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  border-radius: 2px !important;
+}
+
+.clients-section__collage :deep(.mt-20) {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .clients-reveal__window,
+  .clients-section {
+    min-height: 42rem;
+  }
+
+  .clients-section {
+    --clients-curve-depth: 5rem;
+    --clients-curve-top: 4.25rem;
+  }
+
+  .clients-section__curve {
+    right: -20%;
+    left: -20%;
+  }
+
+  .clients-section__logos {
+    top: 8.25rem;
+    left: -12%;
+    width: 124%;
+    transform: rotate(-5deg);
+  }
+
+  .clients-section__copy {
+    top: 15.25rem;
+    width: calc(100% - 2rem);
+  }
+
+  .clients-section__title {
+    font-size: clamp(2.25rem, 11vw, 3.25rem);
+    line-height: 1;
+  }
+
+  .clients-section__description {
+    width: min(100%, 34rem);
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .clients-section__number {
+    bottom: -1rem;
+    width: 158vw;
+    height: 14rem;
+  }
+
+  .clients-section__collage {
+    width: 136%;
+    margin-top: -2.5rem;
+    transform: translateX(-50%) rotate(-5deg) scale(1.05);
+  }
+
+  .clients-section__collage :deep(.marquee-image-frame) {
+    width: 15rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clients-section__logos,
+  .clients-section__number,
+  .clients-section__copy {
+    opacity: 1 !important;
+  }
+}

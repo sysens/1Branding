@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import GradualBlur from "./components/GradualBlur.vue";
+
+const route = useRoute();
+const showPageBlur = computed(() => !route.path.endsWith("/Projects"));
 </script>
 
 <template>
@@ -10,6 +14,7 @@ import GradualBlur from "./components/GradualBlur.vue";
     </NuxtLayout>
 
     <GradualBlur
+      v-if="showPageBlur"
       target="page"
       position="bottom"
       height="6rem"
@@ -22,6 +27,7 @@ import GradualBlur from "./components/GradualBlur.vue";
     />
 
     <GradualBlur
+      v-if="showPageBlur"
       target="page"
       position="top"
       height="6rem"

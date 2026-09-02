@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   loaded: [];
+  failed: [];
 }>();
 
 const host = ref<HTMLElement | null>(null);
@@ -98,6 +99,17 @@ const mountViewer = async () => {
     await import("@splinetool/viewer");
 
     const element = document.createElement("spline-viewer");
+    let hasCompletedLoading = false;
+
+    const handleLoadComplete = () => {
+      if (hasCompletedLoading) return;
+
+      hasCompletedLoading = true;
+      isLoading.value = false;
+      startLogoCleanup();
+      emit("loaded");
+    };
+
     element.setAttribute("url", scene);
     element.setAttribute("background", "#000000");
     element.setAttribute("events-target", "local");
@@ -109,11 +121,8 @@ const mountViewer = async () => {
     }
 
     element.className = "spline-scene-viewer__element";
-    element.addEventListener("load", () => {
-      isLoading.value = false;
-      startLogoCleanup();
-      emit("loaded");
-    });
+    element.addEventListener("load-complete", handleLoadComplete, { once: true });
+    element.addEventListener("load", handleLoadComplete, { once: true });
 
     target.appendChild(element);
     viewerElement = element;
@@ -121,6 +130,7 @@ const mountViewer = async () => {
   } catch {
     hasError.value = true;
     isLoading.value = false;
+    emit("failed");
   }
 };
 

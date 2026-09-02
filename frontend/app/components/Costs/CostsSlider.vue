@@ -7,12 +7,13 @@
           class="costs-cat"
           :class="{ 'costs-cat--hero': categoryIndex === 0 }"
         >
-          <!-- glowing green sphere behind the first (hero) category -->
-          <span
+          <CostsOrbitalGlow
             v-if="categoryIndex === 0"
-            class="costs-sphere"
-            aria-hidden="true"
-          ></span>
+            class="costs-cat__orbital-glow"
+            :speed="0.7"
+            :intensity="1.35"
+            :opacity="0.92"
+          />
 
           <div class="costs-cat__head">
             <h2 class="costs-cat__title">{{ category.title }}</h2>
@@ -54,6 +55,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
+import CostsOrbitalGlow from "~/components/Costs/CostsOrbitalGlow.vue";
 
 type AppLocale = "ru" | "en";
 
@@ -187,30 +189,13 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
 }
 
 .costs-cat--hero {
+  isolation: isolate;
   padding-top: clamp(1rem, 6vw, 5rem);
 }
 
-/* glowing green sphere on the hero category (right side) */
-.costs-sphere {
+.costs-cat__orbital-glow {
   position: absolute;
-  top: clamp(-28rem, -26vw, -16rem);
-  right: clamp(-36rem, -28vw, -22rem);
-  width: clamp(48rem, 74vw, 78rem);
-  height: clamp(48rem, 74vw, 78rem);
-  border-radius: 50%;
-  background:
-    url("/Costs/branding-sphere.png") center / cover no-repeat,
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(3, 40, 20, 0) 53%,
-      rgba(14, 170, 74, 0.22) 60%,
-      rgba(70, 255, 130, 0.85) 65%,
-      rgba(40, 220, 100, 0.35) 69%,
-      rgba(10, 120, 54, 0.1) 74%,
-      rgba(3, 40, 20, 0) 80%
-    );
-  filter: blur(0.35rem);
-  pointer-events: none;
+  inset: clamp(-1rem, -2vw, -0.25rem) clamp(-8rem, -7vw, -2rem) clamp(-3rem, -4vw, -1rem);
   z-index: 0;
 }
 

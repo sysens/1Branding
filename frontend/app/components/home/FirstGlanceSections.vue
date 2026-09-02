@@ -199,7 +199,7 @@ const sections: ProductStorySection[] = [
     left: auto;
     right: auto;
     width: 100%;
-    max-width: 34rem;
+    max-width: min(100%, 34rem);
     margin-top: 1.5rem;
     transform: none;
     text-align: left;
@@ -210,7 +210,7 @@ const sections: ProductStorySection[] = [
   }
 
   .first-glance-section__copy p {
-    max-width: 31rem;
+    max-width: min(100%, 31rem);
   }
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useViewportActivity } from "~/composables/useViewportActivity";
 
 type Props = {
   logos?: string[];
@@ -66,6 +67,9 @@ const staticLogos = [
   "/logoss/yana.webp",
 ];
 
+const MAX_LOGOS_PER_COLUMN = 18;
+const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
+
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
 
@@ -88,7 +92,7 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number) => {
     arr[i] = arr[j];
     arr[j] = tmp;
   }
-  return arr;
+  return arr.slice(0, MAX_LOGOS_PER_COLUMN);
 };
 
 const columnsConfig = computed(() => {
@@ -138,7 +142,10 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 </script>
 
 <template>
-  <section :class="rootClass">
+  <section
+    ref="targetRef"
+    :class="[rootClass, { 'logo-marquee--paused': !isActive }]"
+  >
     <div :class="innerWrapClass">
       <div class="w-full h-full rotate-[10deg] overflow-hidden">
         <div :class="[trackClass, colsGapClass]">
@@ -160,7 +167,15 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
                 :key="col.key + '-a-' + i"
                 :class="[imgWrapperClass, col.imgOpacityClass]"
               >
-                <img :src="src" alt="" :class="imgClass" draggable="false" />
+                <img
+                  :src="src"
+                  alt=""
+                  :class="imgClass"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                  draggable="false"
+                />
               </div>
             </component>
 
@@ -176,7 +191,15 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
                 :key="col.key + '-b-' + i"
                 :class="[imgWrapperClass, col.imgOpacityClass]"
               >
-                <img :src="src" alt="" :class="imgClass" draggable="false" />
+                <img
+                  :src="src"
+                  alt=""
+                  :class="imgClass"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                  draggable="false"
+                />
               </div>
             </component>
           </div>
@@ -198,6 +221,11 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 
 .marqueeVerticalReverse {
   animation: marqueeVertical var(--marquee-duration) linear infinite reverse;
+}
+
+.logo-marquee--paused .marqueeVertical,
+.logo-marquee--paused .marqueeVerticalReverse {
+  animation-play-state: paused;
 }
 
 @keyframes marqueeVertical {

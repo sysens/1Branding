@@ -19,11 +19,13 @@ const strokeGradientId = `static-outline-number-stroke-${rawId}`;
 const hoverGradientId = `static-outline-number-hover-${rawId}`;
 const revealMaskId = `static-outline-number-reveal-${rawId}`;
 const textMaskId = `static-outline-number-mask-${rawId}`;
+const hoverGlowFilterId = `static-outline-number-glow-${rawId}`;
 
 const strokeGradientUrl = computed(() => `url(#${strokeGradientId})`);
 const hoverGradientUrl = computed(() => `url(#${hoverGradientId})`);
 const revealMaskUrl = computed(() => `url(#${revealMaskId})`);
 const textMaskUrl = computed(() => `url(#${textMaskId})`);
+const hoverGlowFilterUrl = computed(() => `url(#${hoverGlowFilterId})`);
 const maskTransition = computed(() => `${props.duration}s ease-out`);
 
 const updateMaskPosition = (event: PointerEvent) => {
@@ -97,9 +99,60 @@ const updateMaskPosition = (event: PointerEvent) => {
         <stop offset="100%" stop-color="black" />
       </radialGradient>
 
-      <mask :id="textMaskId">
-        <rect x="0" y="0" width="100%" height="100%" :fill="revealMaskUrl" />
+      <mask
+        :id="textMaskId"
+        maskUnits="userSpaceOnUse"
+        x="-220"
+        y="-220"
+        width="1560"
+        height="740"
+      >
+        <rect x="-220" y="-220" width="1560" height="740" :fill="revealMaskUrl" />
       </mask>
+
+      <filter
+        :id="hoverGlowFilterId"
+        filterUnits="userSpaceOnUse"
+        x="-220"
+        y="-220"
+        width="1560"
+        height="740"
+        color-interpolation-filters="sRGB"
+      >
+        <feDropShadow
+          in="SourceGraphic"
+          dx="0"
+          dy="0"
+          stdDeviation="18"
+          flood-color="#03cb00"
+          flood-opacity="0.9"
+          result="glow-near"
+        />
+        <feDropShadow
+          in="SourceGraphic"
+          dx="0"
+          dy="0"
+          stdDeviation="34"
+          flood-color="#00ff0d"
+          flood-opacity="0.68"
+          result="glow-mid"
+        />
+        <feDropShadow
+          in="SourceGraphic"
+          dx="0"
+          dy="0"
+          stdDeviation="58"
+          flood-color="#00ff0d"
+          flood-opacity="0.32"
+          result="glow-far"
+        />
+        <feMerge>
+          <feMergeNode in="glow-far" />
+          <feMergeNode in="glow-mid" />
+          <feMergeNode in="glow-near" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
     </defs>
 
     <text
@@ -122,6 +175,7 @@ const updateMaskPosition = (event: PointerEvent) => {
       stroke-width="2.35"
       :stroke="hoverGradientUrl"
       :mask="textMaskUrl"
+      :filter="hoverGlowFilterUrl"
       class="static-outline-number__text static-outline-number__text--gradient"
       :class="{ 'static-outline-number__text--gradient-visible': hovered }"
     >
@@ -149,27 +203,10 @@ const updateMaskPosition = (event: PointerEvent) => {
 
 .static-outline-number__text--gradient {
   opacity: 0;
-  filter: drop-shadow(0 0 18px rgba(3, 203, 0, 0.9))
-          drop-shadow(0 0 34px rgba(0, 255, 13, 0.68))
-          drop-shadow(0 0 58px rgba(0, 255, 13, 0.32));
-  animation: glow-pulse 2s ease-in-out infinite;
   transition: opacity 0.2s ease;
 }
 
 .static-outline-number__text--gradient-visible {
   opacity: 1;
-}
-
-@keyframes glow-pulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 18px rgba(3, 203, 0, 0.9))
-            drop-shadow(0 0 34px rgba(0, 255, 13, 0.68))
-            drop-shadow(0 0 58px rgba(0, 255, 13, 0.32));
-  }
-  50% {
-    filter: drop-shadow(0 0 28px rgba(3, 203, 0, 0.95))
-            drop-shadow(0 0 48px rgba(0, 255, 13, 0.82))
-            drop-shadow(0 0 78px rgba(0, 255, 13, 0.44));
-  }
 }
 </style>

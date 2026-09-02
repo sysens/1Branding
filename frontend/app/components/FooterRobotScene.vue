@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import SplineSceneViewer from "~/components/home/SplineSceneViewer.vue";
 
 type Props = {
@@ -9,11 +9,75 @@ type Props = {
 const props = defineProps<Props>();
 
 const root = ref<HTMLElement | null>(null);
+const emblem = ref<HTMLImageElement | null>(null);
 const shouldLoad = ref(false);
+const isSceneLoaded = ref(false);
+const isSceneFailed = ref(false);
+const isEmblemLoaded = ref(false);
+const hasIntroSettled = ref(false);
+
+const ROBOT_INTRO_SETTLE_MS = 3200;
+
+const isReady = computed(
+  () =>
+    isSceneLoaded.value &&
+    isEmblemLoaded.value &&
+    hasIntroSettled.value
+);
+
+const isStageVisible = computed(() => isReady.value || isSceneFailed.value);
 
 let observer: IntersectionObserver | null = null;
+let introTimer: ReturnType<typeof setTimeout> | null = null;
+
+const clearIntroTimer = () => {
+  if (!introTimer) return;
+
+  clearTimeout(introTimer);
+  introTimer = null;
+};
+
+const resetSceneState = () => {
+  clearIntroTimer();
+  isSceneLoaded.value = false;
+  isSceneFailed.value = false;
+  hasIntroSettled.value = false;
+};
+
+const handleSceneLoaded = () => {
+  isSceneLoaded.value = true;
+  isSceneFailed.value = false;
+  clearIntroTimer();
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  introTimer = setTimeout(
+    () => {
+      hasIntroSettled.value = true;
+      introTimer = null;
+    },
+    prefersReducedMotion ? 0 : ROBOT_INTRO_SETTLE_MS
+  );
+};
+
+const handleSceneFailed = () => {
+  clearIntroTimer();
+  isSceneFailed.value = true;
+};
+
+const handleEmblemReady = () => {
+  isEmblemLoaded.value = true;
+};
+
+watch(() => props.scene, resetSceneState);
 
 onMounted(() => {
+  if (emblem.value?.complete) {
+    handleEmblemReady();
+  }
+
   if (!root.value) return;
 
   observer = new IntersectionObserver(
@@ -25,7 +89,7 @@ onMounted(() => {
     },
     {
       threshold: 0,
-      rootMargin: "500px 0px 500px 0px",
+      rootMargin: "1400px 0px 1400px 0px",
     }
   );
 
@@ -33,21 +97,41 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  clearIntroTimer();
   observer?.disconnect();
   observer = null;
 });
 </script>
 
 <template>
-  <div ref="root" class="footer-robot-scene">
-    <ClientOnly>
-      <SplineSceneViewer
-        v-if="shouldLoad"
-        :scene="scene"
-        :show-loader="false"
+  <div ref="root" class="footer-robot-scene" :aria-busy="!isStageVisible">
+    <div
+      class="footer-robot-scene__stage"
+      :class="{ 'footer-robot-scene__stage--visible': isStageVisible }"
+    >
+      <ClientOnly>
+        <SplineSceneViewer
+          v-if="shouldLoad"
+          :scene="scene"
+          :show-loader="false"
+          @loaded="handleSceneLoaded"
+          @failed="handleSceneFailed"
+        />
+        <div v-else class="footer-robot-scene__placeholder"></div>
+      </ClientOnly>
+
+      <img
+        ref="emblem"
+        src="/General/logorobo.webp"
+        alt=""
+        class="footer-robot-scene__emblem"
+        :class="{ 'footer-robot-scene__emblem--visible': isReady }"
+        aria-hidden="true"
+        draggable="false"
+        @load="handleEmblemReady"
+        @error="handleEmblemReady"
       />
-      <div v-else class="footer-robot-scene__placeholder"></div>
-    </ClientOnly>
+    </div>
   </div>
 </template>
 
@@ -57,6 +141,19 @@ onBeforeUnmount(() => {
   width: 100%;
   height: clamp(27rem, 43vw, 40rem);
   overflow: visible;
+}
+
+.footer-robot-scene__stage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.footer-robot-scene__stage--visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .footer-robot-scene :deep(.spline-scene-viewer) {
@@ -71,6 +168,25 @@ onBeforeUnmount(() => {
 .footer-robot-scene__placeholder {
   width: 100%;
   height: 100%;
+}
+
+/* This fallback overlay is revealed only after the Spline intro has settled. */
+.footer-robot-scene__emblem {
+  position: absolute;
+  left: 48%;
+  top: 47%;
+  height: 26%;
+  width: auto;
+  transform: translate(-50%, -50%) perspective(30rem) rotateX(-5deg);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 0.7rem rgba(3, 203, 0, 0.4));
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.footer-robot-scene__emblem--visible {
+  opacity: 1;
 }
 
 @media (max-width: 900px) {

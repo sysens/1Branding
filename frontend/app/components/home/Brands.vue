@@ -1,55 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useViewportActivity } from "~/composables/useViewportActivity";
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const { targetRef, isActive } = useViewportActivity({ rootMargin: "250px 0px" });
 
-type Media = { url?: string | null };
-
-type LandingRes = {
-  data?: {
-    landingPage?: {
-      section3?: {
-        partnersLogo?: Media[] | null;
-      } | null;
-    } | null;
-  };
-};
-
-const query = `
-  query LandingPage {
-    landingPage {
-      section3 {
-        partnersLogo { url }
-      }
-    }
+const props = withDefaults(
+  defineProps<{
+    logos?: string[];
+  }>(),
+  {
+    logos: () => [],
   }
-`;
-
-const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: { query },
-  server: false,
-  key: "landing-section3",
-});
-
-const page = computed(() => data.value?.data?.landingPage ?? null);
-
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
-
-const baseLogos = computed(() =>
-  (page.value?.section3?.partnersLogo ?? [])
-    .map((l) => resolveMedia(l.url))
-    .filter(Boolean)
 );
+
+const baseLogos = computed(() => props.logos.filter(Boolean));
 
 const MIN_ITEMS_FOR_SMOOTH = 24;
 
@@ -70,7 +34,11 @@ const marqueeDuration = computed(() => {
 </script>
 
 <template>
-  <section class="spaceBetween relative z-[5] flex h-auto w-full items-center overflow-visible">
+  <section
+    ref="targetRef"
+    class="spaceBetween relative z-[5] flex h-auto w-full items-center overflow-visible"
+    :class="{ 'brands--paused': !isActive }"
+  >
     <div class="w-full overflow-hidden">
       <div
         class="flex w-max animate-marquee will-change-transform"
@@ -104,5 +72,9 @@ const marqueeDuration = computed(() => {
 <style scoped>
 .spaceBetween {
   min-height: clamp(3rem, 5vw, 5.5rem);
+}
+
+.brands--paused .animate-marquee {
+  animation-play-state: paused;
 }
 </style>

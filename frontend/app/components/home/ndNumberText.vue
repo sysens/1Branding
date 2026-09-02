@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, ref, computed, watch } from "vue";
 import ScrollGooeyText from "./ScrollGooeyText.vue";
+import type { LandingSection5Item } from "~/types/landingPayload";
 
-type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
 
 type Panel = {
@@ -14,25 +14,13 @@ type ScrollProgressState = {
   progress: number;
 };
 
-type LandingPageRes = {
-  data?: {
-    landingPage?: {
-      section5?: Array<{
-        title?: string | null;
-        subTitle?: string | null;
-      } | null> | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const config = useRuntimeConfig();
-const GRAPHQL_URL = (config.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n();
-
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
+const props = withDefaults(
+  defineProps<{
+    section?: Array<LandingSection5Item | null> | null;
+  }>(),
+  {
+    section: null,
+  }
 );
 
 const capitalizeText = (value: string) =>
@@ -42,35 +30,10 @@ const capitalizeText = (value: string) =>
       return prefix + char.toLocaleUpperCase();
     });
 
-const LANDING_QUERY = `
-query LandingPage($locale: I18NLocaleCode) {
-  landingPage(locale: $locale) {
-    section5 {
-      title
-      subTitle
-    }
-  }
-}
-`;
-
-const { data: gqlRes } = await useAsyncData<LandingPageRes>(
-  "landing-page-section5",
-  async () => {
-    if (!GRAPHQL_URL) return {};
-    return await $fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: LANDING_QUERY, variables: { locale: gqlLocale.value } },
-    });
-  },
-  { watch: [gqlLocale] }
-);
-
 const panels = computed<Panel[]>(() => {
-  const raw = (gqlRes.value?.data?.landingPage?.section5 ?? []).filter(Boolean) as Array<{
-    title?: string | null;
-    subTitle?: string | null;
-  }>;
+  const raw = (props.section ?? []).filter(
+    (item): item is LandingSection5Item => item !== null
+  );
 
   const mapped = raw
     .map((x) => ({
@@ -236,11 +199,17 @@ onBeforeUnmount(() => {
         <div
           class="main left-block flex-1 flex justify-center md:justify-center relative left-0 md:left-0 lg:left-4 xl:left-[3.5rem] w-full max-w-[320px] md:max-w-[350px] lg:max-w-[420px] xl:max-w-[32rem] z-0"
         >
-          <img
-            src="/General/one.svg"
-            alt=""
-            class="relative z-[1] top-[-24px] md:top-[-32px] lg:top-[-40px] xl:top-[-36px] w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100 object-contain"
-          />
+          <video
+            class="electric-one-number relative z-[1] top-[-24px] md:top-[-32px] lg:top-[-40px] xl:top-[-36px] w-[220px] h-[310px] md:w-[260px] md:h-[370px] lg:w-[330px] lg:h-[500px] xl:w-[22rem] xl:h-[34rem] scale-[1] md:scale-[1.02] lg:scale-[1.04] xl:scale-100 object-contain"
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"
+            aria-hidden="true"
+          >
+            <source src="/home/1Number.mp4" type="video/mp4" />
+          </video>
         </div>
 
         <div

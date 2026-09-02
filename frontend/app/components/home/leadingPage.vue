@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import type { LandingPageContent } from "~/types/landingPayload";
 
 const localePath = useLocalePath();
 const router = useRouter();
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const props = defineProps<{
+  landingPage?: LandingPageContent | null;
+}>();
 
 type GsapContext = { revert: () => void };
-
-type MediaText = {
-  alternativeText?: string | null;
-  caption?: string | null;
-};
-
-type HeroSlogan = {
-  mutedText?: string | null;
-  mainText?: string | null;
-  accentText?: string | null;
-};
 
 type HeroCopy = {
   mutedLines: string[];
@@ -26,80 +17,7 @@ type HeroCopy = {
   accentText: string;
 };
 
-type LandingRes = {
-  data?: {
-    landingPage?: {
-      heroSlogan?: HeroSlogan | null;
-      slogan?: MediaText | null;
-      sloganMobile?: MediaText | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const query = `
-  query LandingPage($locale: I18NLocaleCode) {
-    landingPage(locale: $locale) {
-      heroSlogan {
-        mutedText
-        mainText
-        accentText
-      }
-      slogan { alternativeText caption }
-      sloganMobile { alternativeText caption }
-    }
-  }
-`;
-
-const legacyQuery = `
-  query LandingPage($locale: I18NLocaleCode) {
-    landingPage(locale: $locale) {
-      slogan { alternativeText caption }
-      sloganMobile { alternativeText caption }
-    }
-  }
-`;
-
-const { locale } = useI18n();
-const gqlLocale = computed(() => (locale.value === "en" ? "en" : "ru"));
-
-const fetchLandingHero = async (requestQuery: string): Promise<LandingRes> => {
-  if (!GRAPHQL_URL) {
-    return {};
-  }
-
-  const response = await $fetch<LandingRes>(GRAPHQL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: {
-      query: requestQuery,
-      variables: { locale: gqlLocale.value },
-    },
-  });
-
-  if (response.errors?.length) {
-    throw new Error(response.errors[0]?.message || "Landing hero query failed");
-  }
-
-  return response;
-};
-
-const { data } = await useAsyncData<LandingRes>("landing-slogan", async () => {
-  try {
-    return await fetchLandingHero(query);
-  } catch {
-    try {
-      return await fetchLandingHero(legacyQuery);
-    } catch {
-      return {};
-    }
-  }
-}, {
-  server: false,
-  watch: [gqlLocale],
-});
-
-const page = computed(() => data.value?.data?.landingPage ?? null);
+const page = computed(() => props.landingPage ?? null);
 
 const DEFAULT_HERO_COPY: HeroCopy = {
   mutedLines: ["DESIGN IS NOT", "JUST WHAT", "IT LOOKS LIKE", "AND FEELS LIKE."],

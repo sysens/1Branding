@@ -282,7 +282,7 @@ const projectsView = computed<ShowcaseItem[]>(() => {
   gap: clamp(0.35rem, 0.5rem, 1.4rem);
 }
 
-/* ---------- one project row: narrow info card + wide media, full-screen tall ---------- */
+/* - one project row: narrow info card + wide media, full-screen tall - */
 .project-feature {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);

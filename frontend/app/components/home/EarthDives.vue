@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import type { OneGuaranteeSection4 } from "~/types/landingPayload";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
 
 const root = ref<HTMLElement | null>(null);
+const earthDivesVideo = ref<HTMLVideoElement | null>(null);
+const shouldLoadVideo = ref(false);
 const earthDivesVideoPoster = "/home/earth.webp";
 const earthDivesVideoSrc = encodeURI("/home/Новый Проект.mp4");
 
 let observer: IntersectionObserver | null = null;
+let videoObserver: IntersectionObserver | null = null;
 let ctx: GsapContext | null = null;
 let inited = false;
 
@@ -113,11 +117,39 @@ onMounted(() => {
   );
 
   observer.observe(root.value);
+
+  const video = earthDivesVideo.value;
+  if (!video) return;
+
+  videoObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (entry?.isIntersecting) {
+        shouldLoadVideo.value = true;
+        void nextTick(async () => {
+          try {
+            await video.play();
+          } catch {
+            // Browser autoplay policy may require the first user interaction.
+          }
+        });
+        return;
+      }
+
+      video.pause();
+    },
+    { threshold: 0, rootMargin: "600px 0px 600px 0px" }
+  );
+
+  videoObserver.observe(video);
 });
 
 onBeforeUnmount(() => {
   observer?.disconnect();
   observer = null;
+
+  videoObserver?.disconnect();
+  videoObserver = null;
+  earthDivesVideo.value?.pause();
 
   ctx?.revert();
   ctx = null;
@@ -128,6 +160,15 @@ onBeforeUnmount(() => {
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t, locale } = useI18n();
+
+const props = withDefaults(
+  defineProps<{
+    section?: OneGuaranteeSection4 | null;
+  }>(),
+  {
+    section: null,
+  }
+);
 
 type Media = { url: string | null };
 
@@ -168,23 +209,36 @@ const query = `
   }
 `;
 
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  server: false,
-  key: "one-guarantee-section4",
-  watch: [gqlLocale],
-});
+const { data } = await useAsyncData<GqlRes | null>(
+  () => `one-guarantee-section4-${gqlLocale.value}`,
+  async () => {
+    if (props.section || !GRAPHQL_URL) return null;
 
-const section4 = computed(() => data.value?.data?.oneGuarantee?.section4 ?? null);
+    return await $fetch<GqlRes>(GRAPHQL_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: {
+        query,
+        variables: { locale: gqlLocale.value },
+      },
+    });
+  },
+  { watch: [gqlLocale] }
+);
+
+const section4 = computed(
+  () => props.section ?? data.value?.data?.oneGuarantee?.section4 ?? null
+);
 
 const sectionTitle = computed(() => section4.value?.title || t("home.earthDives.title"));
 
-const cards = computed<Card[]>(() => section4.value?.cards ?? []);
+const cards = computed<Card[]>(() =>
+  (section4.value?.cards ?? []).map((card) => ({
+    title: card.title ?? "",
+    description: card.description ?? "",
+    icon: card.icon?.url ? { url: card.icon.url } : null,
+  }))
+);
 
 const fallbackCards = computed<Card[]>(() =>
   Array.from({ length: 3 }, () => ({
@@ -230,15 +284,15 @@ const resolveMedia = (url?: string | null) => {
       <div class="md:flex inline-block md:gap-7 gap-2 place-items-center">
         <div class="main flex-1 flex justify-center md:py-0 py-[40px]">
           <video
+            ref="earthDivesVideo"
             class="left-earth-video left-earth w-[252px] h-[270px] md:w-[39.3125rem] md:h-[42.0625rem] object-cover"
-            autoplay
             muted
             loop
             playsinline
-            preload="none"
+            :preload="shouldLoadVideo ? 'metadata' : 'none'"
             :poster="earthDivesVideoPoster"
+            :src="shouldLoadVideo ? earthDivesVideoSrc : undefined"
           >
-            <source :src="earthDivesVideoSrc" type="video/mp4" />
           </video>
         </div>
 

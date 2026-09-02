@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import MarqueeMedia from "./MarqueeMedia.vue";
+import { useViewportActivity } from "~/composables/useViewportActivity";
 import {
   buildBrandCollageRowsConfig,
   getLocalBrandCollageRows,
@@ -38,6 +39,7 @@ const shouldShowButton = computed(() => props.showButton && hasButtonText.value)
 const fallbackRowSets = computed(() => getLocalBrandCollageRows());
 
 const PRELOAD_IMAGE_LIMIT = 4;
+const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
 
 const rowsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
@@ -83,7 +85,11 @@ useHead(() => ({
 </script>
 
 <template>
-  <section class="relative z-10 flex w-full items-center overflow-hidden bg-transparent">
+  <section
+    ref="targetRef"
+    class="relative z-10 flex w-full items-center overflow-hidden bg-transparent"
+    :class="{ 'brand-collage--paused': !isActive }"
+  >
     <div class="w-full">
       <div class="w-full overflow-hidden space-y-4">
         <div
@@ -153,6 +159,11 @@ useHead(() => ({
 
 .animate-marquee-reverse {
   animation: marquee var(--marquee-duration) linear infinite reverse;
+}
+
+.brand-collage--paused .animate-marquee,
+.brand-collage--paused .animate-marquee-reverse {
+  animation-play-state: paused;
 }
 
 .marquee-image-frame {

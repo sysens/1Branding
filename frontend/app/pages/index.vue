@@ -10,32 +10,46 @@ import GridSection from "~/components/home/GridSection.vue";
 import EarthDives from "~/components/home/EarthDives.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
 import RowShorteners from "~/components/home/rowShorteners.vue";
-import ThreeLayer from "~/components/home/threeLayer.vue";
 import UiContainerScrollAnimation from "~/components/ui/container-scroll-animation.vue";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 const route = useRoute();
 const nuxtApp = useNuxtApp();
-const { rowSets: brandCollageRows } = await useBrandCollageRows();
+const {
+  landingPage,
+  oneGuaranteeSection4,
+  seo: landingSeo,
+  footerSocialMedia,
+} = await useLandingPayload();
+
+const mapMediaUrls = (items?: Array<{ url?: string | null }> | null) =>
+  (items ?? [])
+    .map((item) => resolveStrapiMediaUrl(item.url ?? null, GRAPHQL_URL))
+    .filter((url): url is string => Boolean(url));
+
+const brandCollageRows = computed(() => {
+  const collage = landingPage.value?.brandCollage;
+
+  if (!collage) return [];
+
+  return [
+    mapMediaUrls(collage.row1),
+    mapMediaUrls(collage.row2),
+    mapMediaUrls(collage.row3),
+  ];
+});
+
+const partnerLogos = computed(() =>
+  mapMediaUrls(landingPage.value?.section3?.partnersLogo)
+);
 
 const loading = ref(true);
 const hashScrollDone = ref(false);
 const INITIAL_LOADER_MIN_MS = 450;
 const INITIAL_LOADER_MAX_MS = 1200;
-
-type SeoRes = {
-  data?: {
-    seo?: {
-      landingPage?: {
-        title?: string | null;
-        description?: string | null;
-      } | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
 
 type LenisScrollOptions = {
   offset?: number;
@@ -52,30 +66,6 @@ type NuxtAppWithLenis = ReturnType<typeof useNuxtApp> & {
   $lenis?: LenisInstance;
 };
 
-const seoQuery = `
-  query SeoHome {
-    seo {
-      landingPage {
-        title
-        description
-      }
-    }
-  }
-`;
-
-const canFetchSeo = Boolean(GRAPHQL_URL);
-
-const { data: seoData } = canFetchSeo
-  ? await useFetch<SeoRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: seoQuery },
-      server: true,
-      key: "seo-home",
-    })
-  : { data: ref<SeoRes | null>(null) };
-
-const landingSeo = computed(() => seoData.value?.data?.seo?.landingPage ?? null);
 const seoTitle = computed(() => landingSeo.value?.title?.trim() || t("seo.home"));
 const seoDesc = computed(() => landingSeo.value?.description?.trim() || "");
 const freshProjectsTitle = computed(() => t("home.freshProjects").trim() || "Fresh projects");
@@ -199,7 +189,7 @@ onMounted(async () => {
       <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
       <div class="relative z-10">
-        <div class="relative overflow-x-hidden">
+        <div class="home-hero-curtain relative overflow-x-hidden">
           <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
             <LogoMarquee
               direction="vertical"
@@ -215,31 +205,24 @@ onMounted(async () => {
             </div>
 
             <section class="leading-target home-leading">
-              <LeadingPage />
+              <LeadingPage :landing-page="landingPage" />
             </section>
           </div>
         </div>
 
         <section class="home-number-text">
           <div>
-            <HomeNumberText />
+            <HomeNumberText
+              :section="landingPage?.section2"
+              :partner-logos="partnerLogos"
+              :collage-rows="brandCollageRows"
+            />
           </div>
         </section>
 
-        <div
-          class="home-three-layer"
-        >
-          <ThreeLayer
-            :rows="3"
-            :row-sets="brandCollageRows"
-            :showTitle="false"
-            :showButton="false"
-          />
-        </div>
-
         <div class="home-nd-number-text">
           <div class="relative">
-            <NdNumberText />
+            <NdNumberText :section="landingPage?.section5" />
           </div>
         </div>
 
@@ -248,15 +231,15 @@ onMounted(async () => {
         </div>
 
         <div class="home-grid">
-          <GridSection />
+          <GridSection :section="landingPage?.section7" />
         </div>
 
         <div class="home-earth">
-          <EarthDives />
+          <EarthDives :section="oneGuaranteeSection4" />
         </div>
 
         <div class="home-info-picture">
-          <InfoOnPicture />
+          <InfoOnPicture :section="landingPage?.section10" />
         </div>
 
         <div class="home-projects">
@@ -333,10 +316,16 @@ onMounted(async () => {
           <LazyHomeThreeLayerSlug />
         </div>
 
-        <div class="home-faq"><RowShorteners /></div>
+        <div class="home-faq">
+          <RowShorteners :section="landingPage?.section11" />
+        </div>
 
         <div>
-          <Footer />
+          <Footer
+            use-prefetched-data
+            :landing-page="landingPage"
+            :social-media="footerSocialMedia"
+          />
         </div>
       </div>
     </div>
@@ -353,18 +342,18 @@ onMounted(async () => {
   background: #000;
 }
 
-.home-number-text {
-  margin-top: clamp(-13rem, -12vw, -5rem);
+.home-hero-curtain {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  isolation: isolate;
+  background: #000000;
 }
 
-.home-three-layer {
+.home-number-text {
   position: relative;
-  width: 100%;
   z-index: 1;
-  margin-top: clamp(1.5rem, 4vw, 4rem);
-  padding-bottom: clamp(4rem, 8vw, 10rem);
-  transform: none;
-  transform-style: preserve-3d;
+  margin-top: 0;
 }
 
 .home-grid {
@@ -600,15 +589,6 @@ onMounted(async () => {
 }
 
 @media (min-width: 1280px) and (min-height: 900px) {
-  .home-number-text {
-    margin-top: clamp(-11rem, -9vw, -4rem);
-  }
-
-  .home-three-layer {
-    margin-top: clamp(2.5rem, 5vw, 5.5rem);
-    padding-bottom: clamp(3.5rem, 6vw, 7rem);
-  }
-
   .home-grid {
     margin-top: clamp(-6rem, -5vw, -2.5rem);
   }
@@ -618,22 +598,7 @@ onMounted(async () => {
   }
 }
 
-@media (min-width: 768px) {
-  .home-three-layer {
-    transform: rotate(-6deg);
-  }
-}
-
 @media (max-width: 767px) {
-  .home-number-text {
-    margin-top: clamp(-7rem, -16vw, -3rem);
-  }
-
-  .home-three-layer {
-    margin-top: 2rem;
-    padding-bottom: 3rem;
-  }
-
   .home-grid {
     margin-top: clamp(-4rem, -10vw, -2rem);
   }
@@ -708,27 +673,6 @@ onMounted(async () => {
 
   .home-number-text :deep(.relative.z-0 + .relative.z-0) {
     margin-top: 5rem;
-  }
-
-  .home-three-layer {
-    right: 0;
-    width: 100%;
-    padding-bottom: 4rem;
-    transform: rotate(-4deg);
-  }
-
-  .home-three-layer :deep(.marquee-image-frame),
-  .home-three-layer :deep(.animate-marquee img),
-  .home-three-layer :deep(.animate-marquee-reverse img) {
-    width: 26rem;
-    height: 14.5rem;
-    border-radius: 1.5rem;
-  }
-
-  .home-three-layer :deep(a[href="/Projects"]),
-  .home-three-layer :deep(.flex.justify-center a) {
-    width: 15rem;
-    height: 3.5rem;
   }
 
   .home-nd-number-text :deep(.pin-wrap) {

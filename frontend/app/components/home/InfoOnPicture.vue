@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import type { LandingSection10Block } from "~/types/landingPayload";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
@@ -11,12 +12,7 @@ const LOCAL_INFO_MEDIA_FALLBACK = "/home/quaker.mp4";
 const i18n = useI18n();
 const locale = i18n.locale;
 
-type Media = { url?: string | null };
-type SectionBlock = {
-  title?: string | null;
-  description?: string | null;
-  image?: Media | null;
-};
+type SectionBlock = LandingSection10Block;
 type TitleParts = {
   lead: string;
   accent: string;
@@ -29,42 +25,18 @@ type InfoDisplayBlock = {
   mediaKind: MediaKind;
 };
 
-type LandingRes = {
-  data?: {
-    landingPage?: {
-      section10?: SectionBlock | Array<SectionBlock | null> | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
+const props = withDefaults(
+  defineProps<{
+    section?: SectionBlock | Array<SectionBlock | null> | null;
+  }>(),
+  {
+    section: null,
+  }
+);
 
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
-
-const query = `
-  query LandingPage($locale: I18NLocaleCode) {
-    landingPage(locale: $locale) {
-      section10 {
-        title
-        description
-        image { url }
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<LandingRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  server: false,
-  key: "landing-section10",
-  watch: [gqlLocale],
-});
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
@@ -135,9 +107,8 @@ const isVisibleSectionBlock = (
 ): block is SectionBlock =>
   Boolean(block?.title || block?.description || block?.image?.url);
 
-const page = computed(() => data.value?.data?.landingPage ?? null);
 const s10 = computed<SectionBlock | null>(() => {
-  const source = page.value?.section10;
+  const source = props.section;
 
   if (Array.isArray(source)) {
     return source.find(isVisibleSectionBlock) ?? null;
