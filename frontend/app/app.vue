@@ -7,7 +7,7 @@ const showPageBlur = computed(() => !route.path.endsWith("/Projects"));
 </script>
 
 <template>
-  <div class="min-h-screen overflow-x-hidden overscroll-y-none">
+  <div class="app-shell min-h-screen overscroll-y-none">
     <NuxtLoadingIndicator color="#03cb00" :height="4" />
     <NuxtLayout>
       <NuxtPage />
@@ -40,3 +40,9 @@ const showPageBlur = computed(() => !route.path.endsWith("/Projects"));
     />
   </div>
 </template>
+
+<style scoped>
+.app-shell {
+  overflow-x: clip;
+}
+</style>

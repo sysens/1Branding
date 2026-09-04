@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, ref, computed, watch } from "vue";
-import ScrollGooeyText from "./ScrollGooeyText.vue";
+import BlurText from "~/components/ui/BlurText.vue";
 import type { LandingSection5Item } from "~/types/landingPayload";
 
 type GsapContext = { revert: () => void };
@@ -76,13 +76,6 @@ const clampProgress = (value: number) => {
   return Math.min(Math.max(value, 0), 1);
 };
 
-const panelTitles = computed<string[]>(() =>
-  panels.value
-    .map((panel) => panel.titleGreen || panel.text)
-    .map((title) => title.trim())
-    .filter(Boolean)
-);
-
 const activePanelIndex = computed(() => {
   const count = panels.value.length;
 
@@ -97,6 +90,12 @@ const activeDescription = computed(() => {
   const panel = panels.value[activePanelIndex.value];
 
   return panel?.text ?? "";
+});
+
+const activeTitle = computed(() => {
+  const panel = panels.value[activePanelIndex.value];
+
+  return panel?.titleGreen || panel?.text || "";
 });
 
 const setScrollProgress = (state: ScrollProgressState) => {
@@ -219,15 +218,27 @@ onBeforeUnmount(() => {
             <div
               class="panel absolute inset-0 h-full flex flex-col items-center justify-center will-change-transform z-10"
             >
-              <ScrollGooeyText
-                :texts="panelTitles"
-                :progress="scrollProgress"
+              <BlurText
+                :key="`title-${activePanelIndex}`"
+                :text="activeTitle"
+                :delay="85"
+                :step-duration="0.28"
+                animate-by="words"
+                direction="top"
+                tag="h2"
                 class="nd-gooey-title"
               />
 
-              <p class="nd-gooey-description">
-                {{ activeDescription }}
-              </p>
+              <BlurText
+                :key="`description-${activePanelIndex}`"
+                :text="activeDescription"
+                :delay="18"
+                :step-duration="0.24"
+                animate-by="words"
+                direction="bottom"
+                tag="p"
+                class="nd-gooey-description"
+              />
             </div>
           </div>
         </div>
@@ -236,71 +247,4 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-.panel {
-  transform: translateY(clamp(-3rem, -5vh, -2rem));
-}
-
-.nd-gooey-title {
-  width: min(100%, 52rem);
-  min-height: clamp(11.5rem, 16vw, 15rem);
-  color: #ffffff;
-  font-size: clamp(2.5rem, 4.7vw, 4rem);
-  font-weight: 700;
-  line-height: 1.03;
-  letter-spacing: 0;
-  text-align: center;
-  text-transform: capitalize;
-}
-
-.nd-gooey-description {
-  width: min(100%, 46rem);
-  margin: clamp(1.75rem, 2.5vw, 3rem) auto 0;
-  padding: 0;
-  color: #cccccc;
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: clamp(0.875rem, 1.45vw, 1.5rem);
-  font-weight: 300;
-  line-height: 1.2;
-  letter-spacing: 0;
-  text-align: center;
-  text-transform: capitalize;
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .nd-gooey-title {
-    width: 100%;
-    min-height: clamp(8.5rem, 20vw, 11rem);
-    font-size: 3rem;
-    text-align: center;
-  }
-
-  .nd-gooey-description {
-    width: min(100%, 38rem);
-    max-width: 38rem;
-    margin-inline: auto;
-    font-size: 1.125rem;
-    text-align: center;
-  }
-}
-
-@media (max-width: 767px) {
-  .panel {
-    transform: translateY(-1.5rem);
-  }
-
-  .nd-gooey-title {
-    width: 100%;
-    min-height: clamp(7rem, 30vw, 10rem);
-    font-size: clamp(2.1rem, 10vw, 3rem);
-    text-align: center;
-  }
-
-  .nd-gooey-description {
-    width: min(100%, 34rem);
-    max-width: 34rem;
-    margin-inline: auto;
-    text-align: center;
-  }
-}
-</style>
+<style scoped src="./ndNumberText.css"></style>

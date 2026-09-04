@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import SplineSceneViewer from "~/components/home/SplineSceneViewer.vue";
+import { preloadSplineViewer } from "~/utils/splineViewerLoader";
 
 type Props = {
   scene: string;
+};
+
+type IdleWindow = Window & {
+  requestIdleCallback?: (
+    callback: IdleRequestCallback,
+    options?: IdleRequestOptions
+  ) => number;
+  cancelIdleCallback?: (handle: number) => void;
 };
 
 const props = defineProps<Props>();
@@ -14,56 +23,34 @@ const shouldLoad = ref(false);
 const isSceneLoaded = ref(false);
 const isSceneFailed = ref(false);
 const isEmblemLoaded = ref(false);
-const hasIntroSettled = ref(false);
-
-const ROBOT_INTRO_SETTLE_MS = 3200;
 
 const isReady = computed(
-  () =>
-    isSceneLoaded.value &&
-    isEmblemLoaded.value &&
-    hasIntroSettled.value
+  () => isSceneLoaded.value && isEmblemLoaded.value
 );
 
 const isStageVisible = computed(() => isReady.value || isSceneFailed.value);
 
 let observer: IntersectionObserver | null = null;
-let introTimer: ReturnType<typeof setTimeout> | null = null;
+let idleCallbackId: number | null = null;
+let preloadTimer: ReturnType<typeof setTimeout> | null = null;
 
-const clearIntroTimer = () => {
-  if (!introTimer) return;
-
-  clearTimeout(introTimer);
-  introTimer = null;
+const warmViewerModule = () => {
+  idleCallbackId = null;
+  preloadTimer = null;
+  void preloadSplineViewer().catch(() => undefined);
 };
 
 const resetSceneState = () => {
-  clearIntroTimer();
   isSceneLoaded.value = false;
   isSceneFailed.value = false;
-  hasIntroSettled.value = false;
 };
 
 const handleSceneLoaded = () => {
   isSceneLoaded.value = true;
   isSceneFailed.value = false;
-  clearIntroTimer();
-
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  introTimer = setTimeout(
-    () => {
-      hasIntroSettled.value = true;
-      introTimer = null;
-    },
-    prefersReducedMotion ? 0 : ROBOT_INTRO_SETTLE_MS
-  );
 };
 
 const handleSceneFailed = () => {
-  clearIntroTimer();
   isSceneFailed.value = true;
 };
 
@@ -74,6 +61,16 @@ const handleEmblemReady = () => {
 watch(() => props.scene, resetSceneState);
 
 onMounted(() => {
+  const idleWindow = window as IdleWindow;
+
+  if (idleWindow.requestIdleCallback) {
+    idleCallbackId = idleWindow.requestIdleCallback(warmViewerModule, {
+      timeout: 1200,
+    });
+  } else {
+    preloadTimer = setTimeout(warmViewerModule, 600);
+  }
+
   if (emblem.value?.complete) {
     handleEmblemReady();
   }
@@ -89,7 +86,7 @@ onMounted(() => {
     },
     {
       threshold: 0,
-      rootMargin: "1400px 0px 1400px 0px",
+      rootMargin: "600px 0px 600px 0px",
     }
   );
 
@@ -97,7 +94,18 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  clearIntroTimer();
+  const idleWindow = window as IdleWindow;
+
+  if (idleCallbackId !== null && idleWindow.cancelIdleCallback) {
+    idleWindow.cancelIdleCallback(idleCallbackId);
+    idleCallbackId = null;
+  }
+
+  if (preloadTimer) {
+    clearTimeout(preloadTimer);
+    preloadTimer = null;
+  }
+
   observer?.disconnect();
   observer = null;
 });
@@ -147,7 +155,7 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.3s ease 0.9s;
   pointer-events: none;
 }
 
@@ -170,7 +178,7 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
-/* This fallback overlay is revealed only after the Spline intro has settled. */
+/* Keep the fallback emblem on the same reveal timeline as the Spline scene. */
 .footer-robot-scene__emblem {
   position: absolute;
   left: 48%;
@@ -181,12 +189,21 @@ onBeforeUnmount(() => {
   mix-blend-mode: screen;
   filter: drop-shadow(0 0 0.7rem rgba(3, 203, 0, 0.4));
   opacity: 0;
+  transition: opacity 0.45s ease;
   pointer-events: none;
   z-index: 2;
 }
 
 .footer-robot-scene__emblem--visible {
   opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-robot-scene__stage,
+  .footer-robot-scene__emblem {
+    transition-delay: 0s;
+    transition-duration: 0s;
+  }
 }
 
 @media (max-width: 900px) {

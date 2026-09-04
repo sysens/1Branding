@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
         <div v-if="infoBlock.mediaSrc" class="info-image-frame will-change-transform">
           <video
             v-if="infoBlock.mediaKind === 'video'"
-            class="info-media"
+            class="info-media info-media--video"
             :src="infoBlock.mediaSrc"
             autoplay
             muted
@@ -351,6 +351,10 @@ onBeforeUnmount(() => {
   object-fit: cover;
   transform: scale(1.035);
   transform-origin: center;
+}
+
+.info-media--video {
+  transform: scale(1.45);
 }
 
 @keyframes info-accent-neon {

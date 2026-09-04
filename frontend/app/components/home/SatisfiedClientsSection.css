@@ -1,10 +1,10 @@
 .clients-reveal {
   position: relative;
   z-index: 1;
-  padding-bottom: clamp(4rem, 7vw, 8rem);
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   isolation: isolate;
-  background: #000000;
+  background: transparent;
 }
 
 .clients-reveal__window {
@@ -12,26 +12,25 @@
   z-index: 1;
   height: 100svh;
   min-height: 40rem;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  overflow: visible;
 }
 
 .clients-section {
   --clients-curve-depth: clamp(6rem, 9vw, 9rem);
-  --clients-curve-top: clamp(2rem, 3vw, 3rem);
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 50%;
   width: min(100%, 1728px);
   height: 100svh;
   min-height: 40rem;
-  overflow: hidden;
+  overflow: visible;
   background: transparent;
   transform: translateX(-50%);
 }
 
 .clients-section__curve {
   position: absolute;
-  top: var(--clients-curve-top);
+  top: 0;
   right: -6%;
   bottom: 0;
   left: -6%;
@@ -44,11 +43,12 @@
     drop-shadow(0 0 0.55rem rgba(21, 224, 1, 0.92))
     drop-shadow(0 0 1.25rem rgba(21, 224, 1, 0.62))
     drop-shadow(0 0 2rem rgba(21, 224, 1, 0.34));
+  visibility: visible;
 }
 
 .clients-section__logos {
   position: absolute;
-  top: clamp(7.5rem, 15vh, 10rem);
+  top: calc(var(--clients-curve-depth) + clamp(1.5rem, 3vh, 2.5rem));
   left: -6%;
   z-index: 4;
   width: 112%;
@@ -136,10 +136,17 @@
   transform-origin: center bottom;
 }
 
+.clients-section__collage-band {
+  position: relative;
+  z-index: 3;
+  padding-bottom: clamp(4rem, 7vw, 8rem);
+  overflow: visible;
+  background: #000000;
+}
+
 .clients-section__collage {
   position: relative;
   left: 50%;
-  z-index: 3;
   width: 116%;
   margin-top: 0;
   transform: translateX(-50%) rotate(-5deg) scale(1.04);
@@ -165,7 +172,6 @@
 
   .clients-section {
     --clients-curve-depth: 5rem;
-    --clients-curve-top: 4.25rem;
   }
 
   .clients-section__curve {
@@ -174,7 +180,7 @@
   }
 
   .clients-section__logos {
-    top: 8.25rem;
+    top: calc(var(--clients-curve-depth) + 2rem);
     left: -12%;
     width: 124%;
     transform: rotate(-5deg);

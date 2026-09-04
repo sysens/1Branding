@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { preloadSplineViewer } from "~/utils/splineViewerLoader";
 
 type Props = {
   scene: string;
@@ -96,7 +97,7 @@ const mountViewer = async () => {
   isLoading.value = true;
 
   try {
-    await import("@splinetool/viewer");
+    await preloadSplineViewer();
 
     const element = document.createElement("spline-viewer");
     let hasCompletedLoading = false;

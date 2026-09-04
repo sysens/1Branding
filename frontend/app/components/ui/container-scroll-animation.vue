@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 
+const emit = defineEmits<{
+  scrollProgress: [progress: number];
+}>();
+
 type GsapContext = {
   revert: () => void;
 };
@@ -10,15 +14,16 @@ type ScaleValues = {
   to: number;
 };
 
-const DESKTOP_INITIAL_ROTATE_X_DEG = 58;
-const MOBILE_INITIAL_ROTATE_X_DEG = 42;
+const INITIAL_ROTATE_X_DEG = 20;
 
 const containerRef = ref<HTMLElement | null>(null);
 const headerRef = ref<HTMLElement | null>(null);
 const cardRef = ref<HTMLElement | null>(null);
 
 let ctx: GsapContext | null = null;
+let viewportObserver: IntersectionObserver | null = null;
 let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+let hasEnteredLoadRange = false;
 
 const getScaleDimensions = (): ScaleValues => {
   if (!process.client) {
@@ -28,16 +33,6 @@ const getScaleDimensions = (): ScaleValues => {
   return window.innerWidth <= 768
     ? { from: 0.7, to: 0.9 }
     : { from: 1.05, to: 1 };
-};
-
-const getInitialRotateX = () => {
-  if (!process.client) {
-    return DESKTOP_INITIAL_ROTATE_X_DEG;
-  }
-
-  return window.innerWidth <= 768
-    ? MOBILE_INITIAL_ROTATE_X_DEG
-    : DESKTOP_INITIAL_ROTATE_X_DEG;
 };
 
 const initScrollAnimation = async () => {
@@ -64,10 +59,10 @@ const initScrollAnimation = async () => {
     });
 
     gsap.set(cardRef.value, {
-      rotateX: getInitialRotateX(),
+      rotateX: INITIAL_ROTATE_X_DEG,
       scale: scale.from,
       transformPerspective: 1000,
-      transformOrigin: "center top",
+      transformOrigin: "center center",
       willChange: "transform",
     });
 
@@ -76,8 +71,8 @@ const initScrollAnimation = async () => {
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.value,
-        start: "top 65%",
-        end: "bottom 20%",
+        start: "top bottom",
+        end: "bottom top",
         scrub: true,
         invalidateOnRefresh: true,
       },
@@ -89,10 +84,13 @@ const initScrollAnimation = async () => {
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.value,
-        start: "top 65%",
-        end: "bottom 20%",
+        start: "top bottom",
+        end: "bottom top",
         scrub: true,
         invalidateOnRefresh: true,
+        onUpdate: (scrollState: { progress: number }) => {
+          emit("scrollProgress", scrollState.progress);
+        },
       },
     });
 
@@ -103,6 +101,8 @@ const initScrollAnimation = async () => {
 };
 
 const scheduleRefresh = () => {
+  if (!hasEnteredLoadRange) return;
+
   if (resizeTimer) {
     clearTimeout(resizeTimer);
   }
@@ -113,13 +113,34 @@ const scheduleRefresh = () => {
   }, 160);
 };
 
-onMounted(async () => {
-  await initScrollAnimation();
+onMounted(() => {
+  if (containerRef.value) {
+    viewportObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+
+        hasEnteredLoadRange = true;
+        viewportObserver?.disconnect();
+        viewportObserver = null;
+        void initScrollAnimation();
+      },
+      {
+        threshold: 0,
+        rootMargin: "1400px 0px 1400px 0px",
+      }
+    );
+
+    viewportObserver.observe(containerRef.value);
+  }
+
   window.addEventListener("resize", scheduleRefresh);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", scheduleRefresh);
+  viewportObserver?.disconnect();
+  viewportObserver = null;
+  hasEnteredLoadRange = false;
 
   if (resizeTimer) {
     clearTimeout(resizeTimer);
@@ -177,8 +198,8 @@ onBeforeUnmount(() => {
   z-index: 2;
   width: 100%;
   max-width: 64rem;
-  height: 30rem;
-  margin: -7.25rem auto 0;
+  height: auto;
+  margin: -3rem auto 0;
   padding: 0.5rem;
   border: 4px solid #6c6c6c;
   border-radius: 30px;
@@ -194,7 +215,8 @@ onBeforeUnmount(() => {
 
 .container-scroll__viewport {
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 16px;
   background: #18181b;
@@ -207,12 +229,11 @@ onBeforeUnmount(() => {
   }
 
   .container-scroll__stage {
-    padding-block: 8.5rem 10rem;
+    padding-block: 10rem;
   }
 
   .container-scroll__card {
-    height: 40rem;
-    margin-top: -9.25rem;
+    margin-top: -3rem;
     padding: 1.5rem;
   }
 

@@ -149,6 +149,34 @@ const sceneUrl = computed(
   }
 );
 
+const sceneOrigin = computed(() => {
+  try {
+    return new URL(sceneUrl.value).origin;
+  } catch {
+    return "";
+  }
+});
+
+useHead(() => ({
+  link: [
+    ...(sceneOrigin.value
+      ? [
+          {
+            rel: "preconnect" as const,
+            href: sceneOrigin.value,
+            crossorigin: "anonymous" as const,
+          },
+        ]
+      : []),
+    {
+      rel: "prefetch",
+      href: sceneUrl.value,
+      as: "fetch",
+      crossorigin: "anonymous",
+    },
+  ],
+}));
+
 const instagramLink = computed(
   () => socialMedia.value?.instagramLink || "https://www.instagram.com/"
 );
