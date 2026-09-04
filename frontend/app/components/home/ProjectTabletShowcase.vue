@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
         :class="{
           'project-tablet__video--active': activeDirection === 'reverse',
         }"
-        src="/home/video-reverse.mp4"
+        src="/home/video.mp4"
         muted
         loop
         playsinline
