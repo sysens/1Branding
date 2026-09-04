@@ -1,127 +1,14 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, useTemplateRef } from "vue";
+import { useTemplateRef } from "vue";
 import ContainerScrollAnimation from "~/components/ui/container-scroll-animation.vue";
-
-type PlaybackDirection = "forward" | "reverse";
-
-const SCROLL_STOP_DELAY_MS = 160;
-const VIDEO_END_EPSILON_SECONDS = 1 / 30;
+import { useBidirectionalScrollVideo } from "~/composables/useBidirectionalScrollVideo";
 
 const forwardVideoRef = useTemplateRef<HTMLVideoElement>("forwardVideoRef");
 const reverseVideoRef = useTemplateRef<HTMLVideoElement>("reverseVideoRef");
-const activeDirection = ref<PlaybackDirection>("forward");
-
-let previousProgress: number | null = null;
-let stopTimer: ReturnType<typeof setTimeout> | null = null;
-
-const getActiveVideo = () =>
-  activeDirection.value === "forward"
-    ? forwardVideoRef.value
-    : reverseVideoRef.value;
-
-const pauseVideos = () => {
-  forwardVideoRef.value?.pause();
-  reverseVideoRef.value?.pause();
-};
-
-const clearStopTimer = () => {
-  if (!stopTimer) return;
-
-  clearTimeout(stopTimer);
-  stopTimer = null;
-};
-
-const getTimelineRatio = () => {
-  const forwardVideo = forwardVideoRef.value;
-  const reverseVideo = reverseVideoRef.value;
-
-  if (
-    !forwardVideo ||
-    !reverseVideo ||
-    !Number.isFinite(forwardVideo.duration) ||
-    !Number.isFinite(reverseVideo.duration) ||
-    forwardVideo.duration <= 0 ||
-    reverseVideo.duration <= 0
-  ) {
-    return 0;
-  }
-
-  if (activeDirection.value === "forward") {
-    return Math.min(Math.max(forwardVideo.currentTime / forwardVideo.duration, 0), 1);
-  }
-
-  return Math.min(
-    Math.max(1 - reverseVideo.currentTime / reverseVideo.duration, 0),
-    1
-  );
-};
-
-const syncVideoToTimeline = (
-  video: HTMLVideoElement,
-  direction: PlaybackDirection,
-  timelineRatio: number
-) => {
-  if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-
-  const lastStableFrame = Math.max(
-    video.duration - VIDEO_END_EPSILON_SECONDS,
-    0
-  );
-  const directionalRatio =
-    direction === "forward" ? timelineRatio : 1 - timelineRatio;
-
-  video.currentTime = directionalRatio * lastStableFrame;
-};
-
-const startPlayback = (direction: PlaybackDirection) => {
-  const timelineRatio = getTimelineRatio();
-
-  if (direction !== activeDirection.value) {
-    pauseVideos();
-    activeDirection.value = direction;
-
-    const targetVideo = getActiveVideo();
-
-    if (targetVideo) {
-      syncVideoToTimeline(targetVideo, direction, timelineRatio);
-    }
-  }
-
-  const activeVideo = getActiveVideo();
-
-  if (activeVideo?.paused) {
-    void activeVideo.play().catch(() => undefined);
-  }
-};
-
-const scheduleStop = () => {
-  clearStopTimer();
-
-  stopTimer = setTimeout(() => {
-    stopTimer = null;
-    pauseVideos();
-  }, SCROLL_STOP_DELAY_MS);
-};
-
-const handleScrollProgress = (progress: number) => {
-  if (previousProgress === null) {
-    previousProgress = progress;
-    return;
-  }
-
-  const progressDelta = progress - previousProgress;
-  previousProgress = progress;
-
-  if (Math.abs(progressDelta) < 0.00001) return;
-
-  startPlayback(progressDelta > 0 ? "forward" : "reverse");
-  scheduleStop();
-};
-
-onBeforeUnmount(() => {
-  clearStopTimer();
-  pauseVideos();
-});
+const { activeDirection, handleScrollProgress } = useBidirectionalScrollVideo(
+  forwardVideoRef,
+  reverseVideoRef
+);
 </script>
 
 <template>
@@ -150,9 +37,8 @@ onBeforeUnmount(() => {
         :class="{
           'project-tablet__video--active': activeDirection === 'forward',
         }"
-        src="/home/video.mp4"
+        src="/home/video-forward.mp4"
         muted
-        loop
         playsinline
         preload="auto"
         aria-hidden="true"
@@ -164,9 +50,8 @@ onBeforeUnmount(() => {
         :class="{
           'project-tablet__video--active': activeDirection === 'reverse',
         }"
-        src="/home/video.mp4"
+        src="/home/video-reverse.mp4"
         muted
-        loop
         playsinline
         preload="auto"
         aria-hidden="true"

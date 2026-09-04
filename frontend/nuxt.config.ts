@@ -7,11 +7,17 @@ const viteAllowedHosts = [
     .map((host) => host.trim())
     .filter((host) => host.length > 0),
 ];
+const defaultImageDomains = [
+  "pub-156bce602951490e82e2418f1402419f.r2.dev",
+];
 const imageDomains = [
-  ...(process.env.NUXT_IMAGE_DOMAINS || "")
-    .split(",")
-    .map((host) => host.trim())
-    .filter((host) => host.length > 0),
+  ...new Set([
+    ...defaultImageDomains,
+    ...(process.env.NUXT_IMAGE_DOMAINS || "")
+      .split(",")
+      .map((host) => host.trim())
+      .filter((host) => host.length > 0),
+  ]),
 ];
 const longTermImageCacheHeaders = {
   "cache-control": "public, max-age=31536000, immutable",

@@ -11,6 +11,7 @@ import EarthDives from "~/components/home/EarthDives.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
 import RowShorteners from "~/components/home/rowShorteners.vue";
 import ProjectTabletShowcase from "~/components/home/ProjectTabletShowcase.vue";
+import ThreeLayerSlug from "~/components/home/threeLayerSlug.vue";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 const runtimeConfig = useRuntimeConfig();
@@ -188,7 +189,7 @@ onMounted(async () => {
       <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
       <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
-      <div class="relative z-10">
+      <div class="home-page-content relative">
         <div class="home-reveal-stack">
           <div class="home-hero-curtain">
             <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
@@ -260,7 +261,7 @@ onMounted(async () => {
             </span>
           </h1>
 
-          <LazyHomeThreeLayerSlug />
+          <ThreeLayerSlug />
         </div>
 
         <div class="home-faq">
@@ -324,7 +325,9 @@ onMounted(async () => {
 
 .home-info-picture {
   position: relative;
+  z-index: 31;
   padding-block: clamp(4rem, 7vw, 7rem);
+  background: #000;
 }
 
 .home-projects {

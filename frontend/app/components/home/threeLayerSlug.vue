@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { computed, useTemplateRef } from "vue";
+import { useImageBatchReveal } from "~/composables/useImageBatchReveal";
 
 type AppLocale = "ru" | "en";
 
@@ -15,11 +14,9 @@ const props = withDefaults(defineProps<Props>(), {
   durationSeconds: 200,
 });
 
-gsap.registerPlugin(ScrollTrigger);
-
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { locale } = useI18n<{ message: any }, AppLocale>();
+const { locale } = useI18n();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
@@ -184,16 +181,18 @@ const marqueeItems = computed<MarqueeItem[]>(() => {
           to: localePath(`/ProjectSlug/${id}`),
         };
       })
-      .filter(Boolean) as MarqueeItem[];
+      .filter((item): item is MarqueeItem => item !== null);
   });
 
-  if (base.length === 0) return [];
+  const firstItem = base[0];
+
+  if (!firstItem) return [];
 
   const min = 8;
   const times = Math.max(2, Math.ceil(min / base.length));
 
   return Array.from({ length: base.length * times }, (_, i) => {
-    const item = base[i % base.length];
+    const item = base[i % base.length] ?? firstItem;
     return { ...item, key: `${item.key}-x${i}` };
   });
 });
@@ -213,74 +212,17 @@ const rowsConfig = computed(() => {
   });
 });
 
-const root = ref<HTMLElement | null>(null);
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
-
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  ctx?.revert();
-  ctx = null;
-
-  ctx = gsap.context(() => {
-    const el = root.value!;
-
-    gsap.set(el, { opacity: 0 });
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top 80%",
-      once: true,
-      onEnter: () => {
-        gsap.to(el, {
-          opacity: 1,
-          duration: 0.9,
-          ease: "power2.out",
-        });
-      },
-    });
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-    });
-  }, root.value);
-};
-
-onMounted(() => {
-  if (!root.value) return;
-
-  const rect = root.value.getBoundingClientRect();
-  const inViewNow = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inViewNow) initGsap();
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.01, rootMargin: "200px 0px 200px 0px" }
-  );
-
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-  ctx?.revert();
-  ctx = null;
-  inited = false;
-});
+const root = useTemplateRef<HTMLElement>("root");
+const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
 </script>
 
 <template>
-  <div ref="root">
+  <div
+    ref="root"
+    class="marquee-root"
+    :class="{ 'marquee-root--revealed': isRevealed }"
+    :aria-busy="!isRevealed"
+  >
     <section
       class="marquee-section relative bg-black w-full overflow-hidden flex items-center"
     >
@@ -290,7 +232,7 @@ onBeforeUnmount(() => {
       <div class="w-[120%] -ml-[10%] relative z-[1]">
         <div class="w-full overflow-hidden space-y-2">
           <div
-            v-for="row in rowsConfig"
+            v-for="(row, rowIndex) in rowsConfig"
             :key="row.key"
             class="flex w-max will-change-transform"
             :class="row.animClass"
@@ -298,16 +240,24 @@ onBeforeUnmount(() => {
           >
             <div class="flex items-center gap-2 px-1">
               <a
-                v-for="item in marqueeItems"
+                v-for="(item, itemIndex) in marqueeItems"
                 :key="row.key + '-a-' + item.key"
                 :href="item.to"
                 class="shrink-0 block"
                 @click.prevent="navigateSafely(item.to)"
               >
-                <img
+                <NuxtImg
                   :src="item.src"
                   :alt="item.title"
-                  class="md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
+                  width="486"
+                  height="273"
+                  format="webp"
+                  quality="82"
+                  fit="cover"
+                  loading="eager"
+                  decoding="async"
+                  :fetchpriority="rowIndex === 0 && itemIndex < 5 ? 'high' : 'auto'"
+                  class="marquee-image md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
               </a>
@@ -322,10 +272,18 @@ onBeforeUnmount(() => {
                 tabindex="-1"
                 @click.prevent="navigateSafely(item.to)"
               >
-                <img
+                <NuxtImg
                   :src="item.src"
-                  :alt="item.title"
-                  class="md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
+                  alt=""
+                  width="486"
+                  height="273"
+                  format="webp"
+                  quality="82"
+                  fit="cover"
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="auto"
+                  class="marquee-image md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
               </a>
@@ -345,84 +303,4 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee var(--marquee-duration) linear infinite;
-}
-
-.animate-marquee-reverse {
-  animation: marquee var(--marquee-duration) linear infinite reverse;
-}
-
-.marquee-section {
-  position: relative;
-}
-
-.edge-gradient {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 110px;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.edge-gradient-left {
-  left: 0;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.85) 25%,
-    rgba(0, 0, 0, 0.45) 65%,
-    rgba(0, 0, 0, 0) 100%
-  );
-}
-
-.edge-gradient-right {
-  right: 0;
-  background: linear-gradient(
-    to left,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.85) 25%,
-    rgba(0, 0, 0, 0.45) 65%,
-    rgba(0, 0, 0, 0) 100%
-  );
-}
-
-@media (max-width: 767px) {
-  .edge-gradient {
-    width: 50px;
-  }
-
-  .edge-gradient-left {
-    left: 0;
-    background: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0.85) 35%,
-      rgba(0, 0, 0, 0.4) 75%,
-      rgba(0, 0, 0, 0) 100%
-    );
-  }
-
-  .edge-gradient-right {
-    right: 0;
-    background: linear-gradient(
-      to left,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0.85) 35%,
-      rgba(0, 0, 0, 0.4) 75%,
-      rgba(0, 0, 0, 0) 100%
-    );
-  }
-}
-</style>
+<style scoped src="./threeLayerSlug.css"></style>
