@@ -93,15 +93,13 @@ useCinematicRevealMotion({ copyRef, logosRef, numberRef, rootRef, windowRef });
       </div>
     </div>
 
-    <div class="clients-section__collage-band">
-      <div class="clients-section__collage">
-        <ThreeLayer
-          :rows="3"
-          :row-sets="collageRows"
-          :show-title="false"
-          :show-button="false"
-        />
-      </div>
+    <div class="clients-section__collage">
+      <ThreeLayer
+        :rows="3"
+        :row-sets="collageRows"
+        :show-title="false"
+        :show-button="false"
+      />
     </div>
   </section>
 </template>

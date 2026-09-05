@@ -4,6 +4,7 @@ import { ref, computed, onMounted, nextTick, watch } from "vue";
 import Spinner from "~/components/Spinner.vue";
 
 import LeadingPage from "~/components/home/leadingPage.vue";
+import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
 import NdNumberText from "~/components/home/ndNumberText.vue";
 import FirstGlanceSections from "~/components/home/FirstGlanceSections.vue";
 import GridSection from "~/components/home/GridSection.vue";
@@ -190,8 +191,8 @@ onMounted(async () => {
       <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
       <div class="home-page-content relative">
-        <div class="home-reveal-stack">
-          <div class="home-hero-curtain">
+        <HeroClientsReveal>
+          <template #hero>
             <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
               <LogoMarquee
                 direction="vertical"
@@ -210,9 +211,8 @@ onMounted(async () => {
                 <LeadingPage :landing-page="landingPage" />
               </section>
             </div>
-          </div>
+          </template>
 
-          <section class="home-number-text">
             <div>
               <HomeNumberText
                 :section="landingPage?.section2"
@@ -220,8 +220,7 @@ onMounted(async () => {
                 :collage-rows="brandCollageRows"
               />
             </div>
-          </section>
-        </div>
+        </HeroClientsReveal>
 
         <div class="home-nd-number-text">
           <div class="relative">
@@ -292,27 +291,6 @@ onMounted(async () => {
   margin-inline: auto;
   overflow: clip;
   background: #000;
-}
-
-.home-reveal-stack {
-  position: relative;
-  isolation: isolate;
-}
-
-.home-hero-curtain {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  min-height: 100svh;
-  overflow: clip;
-  isolation: isolate;
-  background: #000000;
-}
-
-.home-number-text {
-  position: relative;
-  z-index: 2;
-  margin-top: 0;
 }
 
 .home-grid {

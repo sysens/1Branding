@@ -4,6 +4,9 @@ import GradualBlur from "./components/GradualBlur.vue";
 
 const route = useRoute();
 const showPageBlur = computed(() => !route.path.endsWith("/Projects"));
+const showBottomBlur = computed(() =>
+  showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/ContactPage")
+);
 </script>
 
 <template>
@@ -14,7 +17,7 @@ const showPageBlur = computed(() => !route.path.endsWith("/Projects"));
     </NuxtLayout>
 
     <GradualBlur
-      v-if="showPageBlur"
+      v-if="showBottomBlur"
       target="page"
       position="bottom"
       height="6rem"

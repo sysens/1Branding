@@ -24,6 +24,8 @@ const longTermImageCacheHeaders = {
 };
 
 export default defineNuxtConfig({
+  // Keep the generated project references identical in dev, prepare and build.
+  buildDir: ".nuxt",
   modules: [
     "@nuxt/fonts",
     "@nuxt/image",
@@ -159,7 +161,7 @@ export default defineNuxtConfig({
       fallbackLocale: "ru",
     },
 
-    vueI18n: "./i18n.config.ts",
+    vueI18n: "../i18n.config.ts",
   },
 
   compatibilityDate: "2024-04-03",

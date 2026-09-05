@@ -3,8 +3,10 @@ import Spinner from "~/components/Spinner.vue";
 
 import Form from "~/components/Contacts/Form.vue";
 import Locations from "~/components/Contacts/Locations.vue";
+import MovementFooter from "~/components/Contacts/MovementFooter.vue";
 
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import type { gsap } from "gsap";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -44,7 +46,7 @@ const { data: seoData } = canFetchSeo
       server: true,
       key: "seo-contacts-page",
     })
-  : { data: ref<SeoRes | null>(null) as any };
+  : { data: ref<SeoRes | null>(null) };
 
 const contactsSeo = computed(() => seoData.value?.data?.seo?.contactsPage ?? null);
 
@@ -71,21 +73,14 @@ useHead({
   link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
 });
 
-let ctx: any = null;
+let ctx: gsap.Context | null = null;
+const nuxtApp = useNuxtApp();
 
 const rootRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 
 const getLenis = () => {
-  const nuxtApp = useNuxtApp();
-  return (nuxtApp as any).$lenis as
-    | {
-        start?: () => void;
-        stop?: () => void;
-        resize?: () => void;
-        scrollTo?: (to: number | string | HTMLElement, opts?: any) => void;
-      }
-    | undefined;
+  return nuxtApp.$lenis;
 };
 
 const raf2 = () =>
@@ -107,7 +102,7 @@ const stabilizeAfterAssets = async () => {
 
   const fontsReady =
     "fonts" in document
-      ? (document as any).fonts.ready.catch(() => null)
+      ? document.fonts.ready.catch(() => null)
       : Promise.resolve(null);
 
   const imgs = Array.from(document.images || []);
@@ -185,7 +180,7 @@ onBeforeUnmount(() => {
     <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
-    <div class="bg-black relative z-10">
+    <div class="bg-black relative">
       <div>
         <div
           class="bg bg md:pt-[60px] pt-[30px] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat m]"
@@ -202,11 +197,11 @@ onBeforeUnmount(() => {
 
         <div class="md:px-30px px-[40px] containerr">
           <Locations />
-          <Form />
+          <div id="contact-request" class="scroll-mt-32"><Form /></div>
         </div>
       </div>
 
-      <Footer />
+      <MovementFooter />
     </div>
   </div>
 </template>
