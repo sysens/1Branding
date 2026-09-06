@@ -32,6 +32,10 @@ const ROW_COUNT = 5;
 const WHEEL_INERTIA = 0.06;
 const VELOCITY_LIMIT = 72;
 
+// Auto-scroll speed (pixels per frame at ~60fps) — diagonal: right + up
+const AUTO_SCROLL_X = 0.6;  // move right
+const AUTO_SCROLL_Y = -0.4; // move up
+
 const clamp = (value: number, minimum: number, maximum: number): number =>
   Math.min(maximum, Math.max(minimum, value));
 
@@ -100,17 +104,26 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
 
   const animate = (): void => {
     animationFrame = 0;
-    if (isDragging.value) return;
+    if (isDragging.value) {
+      // Keep the loop alive so it resumes immediately on pointer up
+      animationFrame = requestAnimationFrame(animate);
+      return;
+    }
 
+    // Continuous auto-scroll (marquee)
+    offsetX += AUTO_SCROLL_X;
+    offsetY += AUTO_SCROLL_Y;
+
+    // Blend in any residual user velocity from drag / wheel
     offsetX += velocityX;
     offsetY += velocityY;
     velocityX *= 0.88;
     velocityY *= 0.88;
-    render();
+    if (Math.abs(velocityX) < 0.05) velocityX = 0;
+    if (Math.abs(velocityY) < 0.05) velocityY = 0;
 
-    if (Math.abs(velocityX) > 0.05 || Math.abs(velocityY) > 0.05) {
-      animationFrame = requestAnimationFrame(animate);
-    }
+    render();
+    animationFrame = requestAnimationFrame(animate);
   };
 
   const startAnimation = (): void => {
@@ -206,6 +219,7 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
     resizeObserver = new ResizeObserver(resize);
     if (containerRef.value) resizeObserver.observe(containerRef.value);
     resize();
+    startAnimation(); // begin continuous marquee
   });
 
   onBeforeUnmount(() => {

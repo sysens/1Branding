@@ -196,7 +196,7 @@ const updateMaskPosition = (event: PointerEvent) => {
   fill: transparent;
   vector-effect: non-scaling-stroke;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 318px;
+  font-size: 480px;
   font-weight: 700;
   letter-spacing: -0.08em;
 }

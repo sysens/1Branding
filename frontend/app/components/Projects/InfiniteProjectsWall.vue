@@ -108,7 +108,7 @@ useHead(() => ({
   overflow: hidden;
   width: 100%;
   height: 100dvh;
-  background: #ffffff;
+  background: #000000;
   cursor: grab;
   overscroll-behavior: none;
   touch-action: none;
@@ -176,7 +176,8 @@ useHead(() => ({
   overflow: hidden;
   width: 100%;
   height: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
   background: #0a0a0a;
   transform: translateZ(0);
   transition: transform 260ms ease, box-shadow 260ms ease;

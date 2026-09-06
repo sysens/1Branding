@@ -250,7 +250,7 @@ onMounted(async () => {
           </div>
 
           <h1
-            class="fresh-projects-title pb-20 text-center text-[40px] font-normal tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
+            class="fresh-projects-title pb-20 mt-20 text-center text-[40px] font-normal tracking-normal text-white md:text-[3.875rem] md:leading-[100%] md:tracking-[0]"
           >
             <span class="fresh-projects-title__green">
               {{ freshProjectsTitleParts.first }}
@@ -259,7 +259,6 @@ onMounted(async () => {
               {{ " " + freshProjectsTitleParts.rest }}
             </span>
           </h1>
-
           <ThreeLayerSlug />
         </div>
 
