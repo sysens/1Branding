@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import MarqueeMedia from "./MarqueeMedia.vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
+import { isInitialCollageImage } from "~/utils/collageMedia";
 import {
   buildBrandCollageRowsConfig,
   getLocalBrandCollageRows,
@@ -38,8 +39,14 @@ const shouldShowButton = computed(() => props.showButton && hasButtonText.value)
 
 const fallbackRowSets = computed(() => getLocalBrandCollageRows());
 
-const PRELOAD_IMAGE_LIMIT = 4;
-const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
+const { targetRef, isActive } = useViewportActivity({ rootMargin: "1200px 0px" });
+const hasApproached = ref(false);
+const settledSources = ref(new Set<string>());
+watch(isActive, active => { if (active) hasApproached.value = true; });
+
+function markSettled(src: string): void {
+  settledSources.value.add(src);
+}
 
 const rowsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
@@ -53,35 +60,6 @@ const rowsConfig = computed(() => {
   });
 });
 
-const preloadImageSources = computed(() => {
-  const firstRowImages = rowsConfig.value[0]?.duplicatedImages ?? [];
-  const seen = new Set<string>();
-  const sources: string[] = [];
-
-  for (const image of firstRowImages) {
-    if (seen.has(image.src)) {
-      continue;
-    }
-
-    seen.add(image.src);
-    sources.push(image.src);
-
-    if (sources.length >= PRELOAD_IMAGE_LIMIT) {
-      break;
-    }
-  }
-
-  return sources;
-});
-
-useHead(() => ({
-  link: preloadImageSources.value.map((src) => ({
-    rel: "preload",
-    as: "image",
-    href: src,
-    fetchpriority: "high",
-  })),
-}));
 </script>
 
 <template>
@@ -96,7 +74,7 @@ useHead(() => ({
           v-for="row in rowsConfig"
           :key="row.key"
           class="marquee-row flex w-max"
-          :class="row.animClass"
+          :class="[row.animClass, { 'marquee-row--waiting': !row.duplicatedImages.every(image => settledSources.has(image.src)) }]"
           :style="{ '--marquee-duration': marqueeDuration }"
         >
           <component
@@ -106,9 +84,11 @@ useHead(() => ({
           >
             <MarqueeMedia
               v-for="(image, i) in row.duplicatedImages"
-              :key="row.key + '-' + i"
+              :key="row.key + '-' + i + '-' + image.src"
               :src="image.src"
-              :eager="row.key === 'row-0' && i < 4"
+              :eager="hasApproached || isInitialCollageImage(i, row.duplicatedImages.length / 2, row.animClass === 'animate-marquee-reverse')"
+              :priority="isInitialCollageImage(i, row.duplicatedImages.length / 2, row.animClass === 'animate-marquee-reverse') ? 'auto' : 'low'"
+              @settled="markSettled"
             />
           </component>
         </div>
@@ -161,6 +141,7 @@ useHead(() => ({
   animation: marquee var(--marquee-duration) linear infinite reverse;
 }
 
+.marquee-row--waiting,
 .brand-collage--paused .animate-marquee,
 .brand-collage--paused .animate-marquee-reverse {
   animation-play-state: paused;
@@ -169,5 +150,9 @@ useHead(() => ({
 .marquee-image-frame {
   transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-row { animation-play-state: paused; }
 }
 </style>

@@ -1,34 +1,65 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 type Props = {
   src: string;
   alt?: string;
   eager?: boolean;
+  priority?: "auto" | "low";
 };
 
 const props = withDefaults(defineProps<Props>(), {
   alt: "",
   eager: false,
+  priority: "auto",
 });
 
-const imageSrc = computed(() => props.src);
+const emit = defineEmits<{ settled: [src: string] }>();
+const useOriginal = ref(false);
 const loadingMode = computed(() => (props.eager ? "eager" : "lazy"));
-const fetchPriority = computed(() => (props.eager ? "high" : "low"));
+watch(() => props.src, () => { useOriginal.value = false; });
+
+function handleError(): void {
+  if (useOriginal.value) emit("settled", props.src);
+  else useOriginal.value = true;
+}
 </script>
 
 <template>
   <span
     class="marquee-image-frame relative block overflow-hidden bg-black md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
   >
-    <img
-      :src="imageSrc"
+    <NuxtImg
+      v-if="!useOriginal"
+      :src="src"
+      width="480"
+      height="270"
+      sizes="240px md:288px lg:360px xl:432px"
+      densities="1x 2x"
+      format="webp"
+      :quality="80"
       :alt="alt"
       decoding="async"
       :loading="loadingMode"
-      :fetchpriority="fetchPriority"
+      :fetchpriority="priority"
       class="absolute inset-0 h-full w-full object-cover"
       draggable="false"
+      @load="emit('settled', src)"
+      @error="handleError"
+    />
+    <img
+      v-else
+      :src="src"
+      width="480"
+      height="270"
+      :alt="alt"
+      decoding="async"
+      :loading="loadingMode"
+      :fetchpriority="priority"
+      class="absolute inset-0 h-full w-full object-cover"
+      draggable="false"
+      @load="emit('settled', src)"
+      @error="handleError"
     />
   </span>
 </template>

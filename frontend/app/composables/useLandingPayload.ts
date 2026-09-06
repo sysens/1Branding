@@ -32,9 +32,9 @@ const LANDING_PAYLOAD_QUERY = `
         partnersLogo { url }
       }
       brandCollage {
-        row1 { url }
-        row2 { url }
-        row3 { url }
+        row1 { url formats }
+        row2 { url formats }
+        row3 { url formats }
       }
       section5 {
         title

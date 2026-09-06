@@ -57,6 +57,10 @@ export default defineNuxtConfig({
     provider: "ipx",
     domains: imageDomains,
     format: ["webp"],
+    ipx: {
+      // CMS uploads carry a content hash; match the existing public image policy.
+      http: { maxAge: 31536000 },
+    },
   },
 
   routeRules: {

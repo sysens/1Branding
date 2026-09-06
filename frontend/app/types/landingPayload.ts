@@ -5,6 +5,11 @@ export type LandingMedia = {
   createdAt?: string | null;
   alternativeText?: string | null;
   caption?: string | null;
+  formats?: Partial<Record<"thumbnail" | "small" | "medium" | "large", {
+    url: string;
+    width: number;
+    height: number;
+  }>> | null;
 };
 
 export type LandingHeroSlogan = {

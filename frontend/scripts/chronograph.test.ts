@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
 import { LOOP_SECONDS, poseAt } from "../app/utils/chronograph/timeline";
+import { EMBLEM } from "../app/utils/chronograph/emblem";
+
+test("the original numeral's stem aligns with the hand pivot", () => {
+  expect(EMBLEM.left + EMBLEM.width * 158.5 / 222).toBeCloseTo(403, 6);
+  expect(EMBLEM.top + EMBLEM.height / 2).toBe(403);
+});
 
 test("the reference loop closes without an angular jump", () => {
   const start = poseAt(0), end = poseAt(LOOP_SECONDS);
@@ -25,4 +31,3 @@ test("the clock uses the One Branding palette", async () => {
   expect(PRIMARY_LIGHT).toEqual([3, 203, 0]);
   expect(SECONDARY_LIGHT[1]).toBeGreaterThan(SECONDARY_LIGHT[0]);
 });
-

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { EMBLEM_STYLE } from "~/utils/chronograph/emblem";
+
 const { targetRef, isActive } = useViewportActivity({ rootMargin: "0px" });
 const { canvasRef, ready, running } = useChronograph(isActive);
 </script>
@@ -14,7 +16,7 @@ const { canvasRef, ready, running } = useChronograph(isActive);
     </picture>
     <div ref="targetRef" class="movement-art__clock" :data-state="running ? 'playing' : ready ? 'paused' : 'loading'">
       <div v-if="!ready" class="movement-art__placeholder">
-        <img src="/General/logorobo.webp" width="222" height="493" alt="" />
+        <img src="/General/logorobo.webp" width="222" height="493" alt="" :style="EMBLEM_STYLE" />
       </div>
       <canvas ref="canvasRef" width="806" height="806" :class="{ 'is-ready': ready }" />
     </div>
@@ -36,7 +38,7 @@ const { canvasRef, ready, running } = useChronograph(isActive);
   width: 100%;
   height: 100%;
   max-width: none;
-  filter: grayscale(1);
+  filter: grayscale(1) sepia(1) saturate(4) hue-rotate(62deg) brightness(0.85);
   opacity: 0.78;
 }
 .movement-art__clock {
@@ -52,16 +54,12 @@ const { canvasRef, ready, running } = useChronograph(isActive);
 .movement-art__placeholder {
   position: absolute;
   inset: 0;
-  border: 8px solid #22272a;
+  box-shadow: inset 0 0 0 8px #22272a;
   border-radius: inherit;
   background: #0b0e0c;
 }
 .movement-art__placeholder img {
   position: absolute;
-  left: 42.18%;
-  top: 32.63%;
-  width: 15.63%;
-  height: 34.74%;
   opacity: 0.72;
 }
 canvas {

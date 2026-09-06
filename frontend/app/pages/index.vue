@@ -14,6 +14,8 @@ import RowShorteners from "~/components/home/rowShorteners.vue";
 import ProjectTabletShowcase from "~/components/home/ProjectTabletShowcase.vue";
 import ThreeLayerSlug from "~/components/home/threeLayerSlug.vue";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
+import { selectCollageSource } from "~/utils/collageMedia";
+import type { LandingMedia } from "~/types/landingPayload";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -37,10 +39,14 @@ const brandCollageRows = computed(() => {
 
   if (!collage) return [];
 
+  const mapCollageUrls = (items?: LandingMedia[] | null) => (items ?? [])
+    .map(item => resolveStrapiMediaUrl(selectCollageSource(item), GRAPHQL_URL))
+    .filter((url): url is string => Boolean(url));
+
   return [
-    mapMediaUrls(collage.row1),
-    mapMediaUrls(collage.row2),
-    mapMediaUrls(collage.row3),
+    mapCollageUrls(collage.row1),
+    mapCollageUrls(collage.row2),
+    mapCollageUrls(collage.row3),
   ];
 });
 

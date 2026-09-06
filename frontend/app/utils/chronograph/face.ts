@@ -1,3 +1,5 @@
+import { EMBLEM } from "./emblem";
+
 export const SIZE = 806;
 export const CENTER = SIZE / 2;
 export const radians = (degrees: number): number => (degrees - 90) * Math.PI / 180;
@@ -86,7 +88,6 @@ export function drawEmblem(ctx: CanvasRenderingContext2D, logo: CanvasImageSourc
   ctx.shadowColor = "#03cb0055";
   ctx.shadowBlur = 12;
   ctx.globalAlpha = 0.72;
-  ctx.drawImage(logo, 340, 263, 126, 280);
+  ctx.drawImage(logo, EMBLEM.left, EMBLEM.top, EMBLEM.width, EMBLEM.height);
   ctx.restore();
 }
-
