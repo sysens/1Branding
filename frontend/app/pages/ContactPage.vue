@@ -4,6 +4,7 @@ import Spinner from "~/components/Spinner.vue";
 import Form from "~/components/Contacts/Form.vue";
 import Locations from "~/components/Contacts/Locations.vue";
 import MovementFooter from "~/components/Contacts/MovementFooter.vue";
+import GlobePreviewSection from "~/components/Contacts/GlobePreviewSection.vue";
 
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import type { gsap } from "gsap";
@@ -202,6 +203,8 @@ onBeforeUnmount(() => {
       </div>
 
       <MovementFooter />
+      <!-- Temporary preview: remove this section without changing the footer. -->
+      <GlobePreviewSection />
     </div>
   </div>
 </template>
