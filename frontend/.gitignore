@@ -24,3 +24,5 @@ logs
 !.env.example
 
 pnpm-lock.yaml
+# Large binaries
+public/home/*.exe
