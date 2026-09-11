@@ -1,0 +1,159 @@
+.brand-identity-feature {
+  --identity-surface: #fff;
+  --identity-media-surface: #fff4df;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--identity-surface);
+}
+
+.info-stack,
+.info-block {
+  width: 100%;
+}
+
+.info-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(2.5rem, 5vw, 5rem);
+}
+
+.info-wordmark {
+  background: linear-gradient(
+    180deg,
+    #9ddd9f 0%,
+    #9ddd9f 38%,
+    rgba(157, 221, 159, 0.6) 65%,
+    rgba(157, 221, 159, 0) 94%
+  );
+  background-clip: text;
+  color: transparent;
+  /* The global body font reset is important; this wordmark needs its own face. */
+  font-family: "Oswald", sans-serif !important;
+  font-size: 20rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.info-copy {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin-top: -1.5rem;
+  padding: 0 1.25rem 3.5rem;
+  background: linear-gradient(180deg, #fff 0%, #fffaf1 64%, var(--identity-media-surface) 100%);
+  text-align: center;
+}
+
+.info-title {
+  max-width: 74rem;
+  margin: 0 auto;
+  color: #080a08;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(2.6rem, 4.8vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.info-title span {
+  display: block;
+}
+
+.info-title__accent {
+  color: #00b534;
+}
+
+.info-description {
+  max-width: 62rem;
+  margin: clamp(1.25rem, 2vw, 1.75rem) auto 0;
+  color: #555b57;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(0.875rem, 1.15vw, 1rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.info-image-frame {
+  position: relative;
+  width: 100%;
+  min-height: clamp(30rem, 66vw, 64rem);
+  margin-top: 0;
+  overflow: hidden;
+  background: var(--identity-media-surface);
+}
+
+.info-image-frame::before {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: clamp(4rem, 10vw, 9rem);
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--identity-media-surface) 0%,
+    rgba(255, 244, 223, 0) 100%
+  );
+}
+
+.info-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 767px) {
+  .info-block {
+    padding-top: 3.5rem;
+  }
+
+  .info-wordmark {
+    font-size: 13rem;
+  }
+
+  .info-copy {
+    width: 100%;
+    margin-top: -0.75rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .info-title {
+    font-size: clamp(2rem, 10.5vw, 3rem);
+    line-height: 1.04;
+  }
+
+  .info-description {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .info-image-frame {
+    min-height: 30rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .info-wordmark {
+    font-size: 11rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-wordmark,
+  .info-copy,
+  .info-image-frame {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

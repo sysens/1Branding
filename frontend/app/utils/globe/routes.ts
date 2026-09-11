@@ -6,6 +6,7 @@ import {
   Line,
   Mesh,
   MeshBasicMaterial,
+  Points,
   ShaderMaterial,
   SphereGeometry,
   Uniform,
@@ -20,7 +21,7 @@ export function createRoutes(): {
   const group = new Group();
   const markerGeometry = new SphereGeometry(0.008, 8, 8);
   const markerMaterial = new MeshBasicMaterial({
-    color: 0xff610a,
+    color: 0xcaffcc,
     toneMapped: false,
   });
   for (const location of LOCATIONS) {
@@ -28,6 +29,18 @@ export function createRoutes(): {
     marker.position.set(...globePoint(location.coordinate, 1.009));
     group.add(marker);
   }
+  const lights = new BufferGeometry();
+  lights.setAttribute("position", new Float32BufferAttribute(LOCATIONS.flatMap(location => [...globePoint(location.coordinate, 1.013)]), 3));
+  group.add(new Points(lights, new ShaderMaterial({
+    transparent: true, depthWrite: false, blending: AdditiveBlending,
+    vertexShader: `void main() { gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); gl_PointSize=25.0; }`,
+    fragmentShader: `void main() {
+      vec2 p=gl_PointCoord-.5;
+      float halo=exp(-length(p)*11.0);
+      float crossGlow=exp(-min(abs(p.x),abs(p.y))*100.0)*exp(-length(p)*9.0);
+      gl_FragColor=vec4(.2,1.0,.35,(halo+crossGlow)*.8);
+    }`,
+  })));
   const time = new Uniform(0);
   ROUTES.forEach(([from, to], index) => {
     const origin = LOCATIONS[from],
@@ -55,7 +68,7 @@ export function createRoutes(): {
           float head=fract(time*0.19+offset);
           float distance=mod(head-vProgress+1.0,1.0);
           float trail=1.0-smoothstep(0.0,0.24,distance);
-          gl_FragColor=vec4(mix(vec3(1.0,0.24,0.015),vec3(1.0,0.8,0.25),pow(trail,8.0)),0.07+trail*0.9);
+          gl_FragColor=vec4(mix(vec3(0.12,0.85,0.24),vec3(0.8,1.0,0.84),pow(trail,8.0)),0.2+trail*0.8);
         }`,
     });
     group.add(new Line(geometry, material));

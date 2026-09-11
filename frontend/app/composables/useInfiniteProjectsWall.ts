@@ -29,10 +29,13 @@ type InfiniteWall = {
 
 const COLUMN_COUNT = 4;
 const ROW_COUNT = 5;
-const WHEEL_INERTIA = 0.06;
-const VELOCITY_LIMIT = 72;
+const WHEEL_INERTIA = 0.0036; // wheel px → velocity kick, in px per ms
+const VELOCITY_LIMIT = 4.5; // px per ms
+const GLIDE_DECAY = 0.95; // momentum kept per 60fps frame after release
+const DRAG_PAUSE_MS = 90; // pointer still this long while held → momentum resets
+const POINTER_CAPTURE_THRESHOLD = 4; // px of drag before pointer capture engages
 
-// Auto-scroll speed (pixels per frame at ~60fps) — diagonal: right + up
+// Auto-scroll speed (pixels per 60fps frame) — diagonal: right + up
 const AUTO_SCROLL_X = 0.6;  // move right
 const AUTO_SCROLL_Y = -0.4; // move up
 
@@ -47,7 +50,7 @@ const wrap = (value: number, span: number): number => {
 const getMetrics = (width: number): WallMetrics => {
   const tileWidth = width <= 640 ? 285 : width <= 1024 ? 390 : 500;
   const tileHeight = tileWidth * (9 / 16);
-  const gap = 38;
+    const gap = 20;
 
   return {
     tileWidth,
@@ -66,13 +69,16 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
 
   let offsetX = 0;
   let offsetY = 0;
-  let velocityX = 0;
-  let velocityY = 0;
+  let velocityX = 0; // px per ms
+  let velocityY = 0; // px per ms
   let animationFrame = 0;
+  let lastFrameTime = 0;
+  let lastMoveTime = 0;
   let pointerId: number | null = null;
   let pointerX = 0;
   let pointerY = 0;
   let dragDistance = 0;
+  let capturedPointer = false;
   let suppressClickUntil = 0;
   let resizeObserver: ResizeObserver | null = null;
 
@@ -102,32 +108,39 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
     animationFrame = 0;
   };
 
-  const animate = (): void => {
+  const animate = (now: number): void => {
     animationFrame = 0;
+    const frameMs = lastFrameTime ? Math.min(64, now - lastFrameTime) : 16.7;
+    lastFrameTime = now;
+    const dt = frameMs / 16.7;
+
     if (isDragging.value) {
-      // Keep the loop alive so it resumes immediately on pointer up
+      // Held still: drop momentum so releasing later doesn't fling from a stale velocity
+      if (now - lastMoveTime > DRAG_PAUSE_MS) {
+        velocityX = 0;
+        velocityY = 0;
+      }
       animationFrame = requestAnimationFrame(animate);
       return;
     }
 
-    // Continuous auto-scroll (marquee)
-    offsetX += AUTO_SCROLL_X;
-    offsetY += AUTO_SCROLL_Y;
-
-    // Blend in any residual user velocity from drag / wheel
-    offsetX += velocityX;
-    offsetY += velocityY;
-    velocityX *= 0.88;
-    velocityY *= 0.88;
-    if (Math.abs(velocityX) < 0.05) velocityX = 0;
-    if (Math.abs(velocityY) < 0.05) velocityY = 0;
+    // Continuous auto-scroll (marquee) blended with residual drag/wheel momentum,
+    // so a release glides smoothly into the marquee drift instead of stopping first
+    offsetX += AUTO_SCROLL_X * dt + velocityX * frameMs;
+    offsetY += AUTO_SCROLL_Y * dt + velocityY * frameMs;
+    velocityX *= Math.pow(GLIDE_DECAY, dt);
+    velocityY *= Math.pow(GLIDE_DECAY, dt);
+    if (Math.abs(velocityX) < 0.003) velocityX = 0;
+    if (Math.abs(velocityY) < 0.003) velocityY = 0;
 
     render();
     animationFrame = requestAnimationFrame(animate);
   };
 
   const startAnimation = (): void => {
-    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
+    if (animationFrame) return;
+    lastFrameTime = 0;
+    animationFrame = requestAnimationFrame(animate);
   };
 
   const resize = (): void => {
@@ -173,36 +186,57 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
 
   const onPointerDown = (event: PointerEvent): void => {
     if (event.button !== 0) return;
-    stopAnimation();
     pointerId = event.pointerId;
     pointerX = event.clientX;
     pointerY = event.clientY;
     dragDistance = 0;
+    capturedPointer = false;
     velocityX = 0;
     velocityY = 0;
+    lastMoveTime = event.timeStamp;
     isDragging.value = true;
-    containerRef.value?.setPointerCapture(event.pointerId);
   };
 
   const onPointerMove = (event: PointerEvent): void => {
     if (!isDragging.value || event.pointerId !== pointerId) return;
+    const now = event.timeStamp;
+    const deltaMs = Math.max(1, now - lastMoveTime);
     const deltaX = event.clientX - pointerX;
     const deltaY = event.clientY - pointerY;
     pointerX = event.clientX;
     pointerY = event.clientY;
+    lastMoveTime = now;
     dragDistance += Math.hypot(deltaX, deltaY);
+    // Capture only once a real drag starts: capturing on pointerdown would
+    // retarget the tap's click to the wall and break card navigation
+    if (!capturedPointer && dragDistance > POINTER_CAPTURE_THRESHOLD) {
+      capturedPointer = true;
+      containerRef.value?.setPointerCapture(event.pointerId);
+    }
     offsetX += deltaX;
     offsetY += deltaY;
-    velocityX = deltaX * 0.72;
-    velocityY = deltaY * 0.72;
+    velocityX = clamp(
+      velocityX + (deltaX / deltaMs - velocityX) * 0.4,
+      -VELOCITY_LIMIT,
+      VELOCITY_LIMIT
+    );
+    velocityY = clamp(
+      velocityY + (deltaY / deltaMs - velocityY) * 0.4,
+      -VELOCITY_LIMIT,
+      VELOCITY_LIMIT
+    );
     render();
   };
 
   const onPointerUp = (event: PointerEvent): void => {
     if (event.pointerId !== pointerId) return;
-    if (containerRef.value?.hasPointerCapture(event.pointerId)) {
+    if (
+      capturedPointer &&
+      containerRef.value?.hasPointerCapture(event.pointerId)
+    ) {
       containerRef.value.releasePointerCapture(event.pointerId);
     }
+    capturedPointer = false;
     if (dragDistance > 8) suppressClickUntil = performance.now() + 250;
     pointerId = null;
     isDragging.value = false;

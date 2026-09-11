@@ -23,6 +23,7 @@ type InfoDisplayBlock = {
   description: string;
   mediaSrc: string;
   mediaKind: MediaKind;
+  mediaAlt: string;
 };
 
 const props = withDefaults(
@@ -126,6 +127,7 @@ const infoBlock = computed<InfoDisplayBlock>(() => {
     description: block.description ?? "",
     mediaSrc,
     mediaKind: getMediaKind(mediaSrc),
+    mediaAlt: block.image?.alternativeText?.trim() || block.title?.trim() || "",
   };
 });
 
@@ -141,14 +143,26 @@ const initGsap = async () => {
 
   await nextTick();
 
+  const el = root.value;
+  if (!el) {
+    inited = false;
+    return;
+  }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   const { gsap } = await import("gsap");
   const { ScrollTrigger } = await import("gsap/ScrollTrigger");
   gsap.registerPlugin(ScrollTrigger);
 
   ctx = gsap.context(() => {
-    const el = root.value!;
+    const wordmark = el.querySelector<HTMLElement>(".info-wordmark");
     const copyBlocks = el.querySelectorAll<HTMLElement>(".info-copy");
     const imageFrames = el.querySelectorAll<HTMLElement>(".info-image-frame");
+
+    if (wordmark) {
+      gsap.set(wordmark, { y: 54, opacity: 0 });
+    }
 
     copyBlocks.forEach((item) => {
       gsap.set(item, { y: 42, opacity: 0 });
@@ -167,6 +181,10 @@ const initGsap = async () => {
           defaults: { ease: "power3.out" },
         });
 
+        if (wordmark) {
+          tl.to(wordmark, { y: 0, opacity: 1, duration: 1.05 }, 0);
+        }
+
         copyBlocks.forEach((item, index) => {
           tl.to(
             item,
@@ -175,7 +193,7 @@ const initGsap = async () => {
               opacity: 1,
               duration: 0.9,
             },
-            index * 0.12
+            index * 0.12 + 0.08
           );
         });
 
@@ -188,7 +206,7 @@ const initGsap = async () => {
               scale: 1,
               duration: 0.9,
             },
-            index * 0.12 + 0.18
+            index * 0.12 + 0.24
           );
         });
       },
@@ -230,21 +248,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="root" class="relative">
-    <img
-      src="/General/Ellipse (3).png"
-      alt=""
-      class="absolute left-1/2 bottom-[250px] -translate-x-1/2 w-[900px] h-[900px] object-contain pointer-events-none select-none -z-10"
-    />
-
-    <img
-      src="/General/Ellipse (3).png"
-      alt=""
-      class="absolute right-[1200px] top-[280px] w-[900px] h-[900px] object-contain pointer-events-none select-none -z-10"
-    />
-
-    <div class="info-stack containerr">
+  <section ref="root" class="brand-identity-feature">
+    <div class="info-stack">
       <section class="info-block">
+        <div class="info-wordmark" aria-hidden="true">ONE</div>
+
         <div class="info-copy will-change-transform">
           <h2 class="info-title">
             <span v-if="infoBlock.titleParts.lead">
@@ -269,134 +277,20 @@ onBeforeUnmount(() => {
             muted
             loop
             playsinline
-            preload="metadata"
+            preload="auto"
           ></video>
 
-          <img v-else class="info-media" :src="infoBlock.mediaSrc" alt="" />
+          <img
+            v-else
+            class="info-media"
+            :src="infoBlock.mediaSrc"
+            :alt="infoBlock.mediaAlt"
+            decoding="async"
+          />
         </div>
       </section>
     </div>
-  </div>
+  </section>
 </template>
 
-<style scoped>
-.info-stack {
-  display: grid;
-  gap: clamp(4rem, 8vw, 7.5rem);
-  padding-inline: 0;
-  padding-top: clamp(2.5rem, 6vw, 5.5rem);
-  padding-bottom: clamp(3.5rem, 7vw, 6rem);
-}
-
-.info-block {
-  display: grid;
-  width: 100%;
-  justify-items: center;
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-}
-
-.info-copy {
-  max-width: 70rem;
-  padding-inline: 20px;
-  text-align: center;
-}
-
-.info-title {
-  color: #fff;
-  font-size: clamp(2.35rem, 5.3vw, 4.9rem);
-  font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.info-title span {
-  display: inline;
-}
-
-.info-title__accent {
-  color: #3bff28;
-  animation: info-accent-neon 2.8s ease-in-out infinite;
-  text-shadow:
-    0 0 0.2rem rgba(59, 255, 40, 0.95),
-    0 0 0.8rem rgba(59, 255, 40, 0.85),
-    0 0 1.6rem rgba(59, 255, 40, 0.55),
-    0 0 3rem rgba(59, 255, 40, 0.35);
-}
-
-.info-description {
-  max-width: 62rem;
-  margin: 1rem auto 0;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: clamp(0.875rem, 1.18vw, 1.05rem);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: 0;
-}
-
-.info-image-frame {
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 2.16 / 1;
-  overflow: hidden;
-  border-radius: clamp(1.4rem, 3vw, 2.25rem);
-  background: transparent;
-  box-shadow: none;
-}
-
-.info-media {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: scale(1.035);
-  transform-origin: center;
-}
-
-.info-media--video {
-  transform: scale(1.45);
-}
-
-@keyframes info-accent-neon {
-  0%,
-  100% {
-    text-shadow:
-      0 0 0.18rem rgba(59, 255, 40, 0.9),
-      0 0 0.75rem rgba(59, 255, 40, 0.82),
-      0 0 1.6rem rgba(59, 255, 40, 0.52),
-      0 0 3rem rgba(59, 255, 40, 0.34);
-  }
-
-  50% {
-    text-shadow:
-      0 0 0.35rem rgba(150, 255, 140, 1),
-      0 0 1.2rem rgba(59, 255, 40, 0.95),
-      0 0 2.4rem rgba(59, 255, 40, 0.68),
-      0 0 4.2rem rgba(59, 255, 40, 0.44);
-  }
-}
-
-@media (max-width: 767px) {
-  .info-stack {
-    gap: 4rem;
-    padding-top: 3rem;
-    padding-bottom: 4rem;
-  }
-
-  .info-title {
-    font-size: clamp(2rem, 12vw, 3.2rem);
-    line-height: 1.05;
-  }
-
-  .info-description {
-    font-size: 0.9rem;
-    line-height: 1.45;
-  }
-
-  .info-image-frame {
-    aspect-ratio: auto;
-    height: 18rem;
-    border-radius: 1.5rem;
-  }
-}
-</style>
+<style scoped src="./InfoOnPicture.css"></style>

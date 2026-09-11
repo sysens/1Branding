@@ -5,11 +5,13 @@ import Spinner from "~/components/Spinner.vue";
 
 import LeadingPage from "~/components/home/leadingPage.vue";
 import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
-import NdNumberText from "~/components/home/ndNumberText.vue";
 import FirstGlanceSections from "~/components/home/FirstGlanceSections.vue";
 import GridSection from "~/components/home/GridSection.vue";
 import EarthDives from "~/components/home/EarthDives.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
+import DigitalExperienceSection from "~/components/home/DigitalExperienceSection.vue";
+import ProjectMarqueeSection from "~/components/home/ProjectMarqueeSection.vue";
+import WorldSection from "~/components/home/WorldSection.vue";
 import RowShorteners from "~/components/home/rowShorteners.vue";
 import ProjectTabletShowcase from "~/components/home/ProjectTabletShowcase.vue";
 import ThreeLayerSlug from "~/components/home/threeLayerSlug.vue";
@@ -193,12 +195,11 @@ onMounted(async () => {
     <Spinner v-if="loading" :size="542" />
 
     <div class="home-page-frame">
-      <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
-      <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
-
       <div class="home-page-content relative">
         <HeroClientsReveal>
           <template #hero>
+            <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true"></div>
+            <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true"></div>
             <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
               <LogoMarquee
                 direction="vertical"
@@ -228,12 +229,17 @@ onMounted(async () => {
             </div>
         </HeroClientsReveal>
 
-        <div class="home-nd-number-text">
-          <div class="relative">
-            <NdNumberText :section="landingPage?.section5" />
-          </div>
+        <div class="home-info-picture">
+          <InfoOnPicture :section="landingPage?.section10" />
         </div>
 
+        <DigitalExperienceSection />
+        <ProjectMarqueeSection />
+        <WorldSection />
+
+        <div class="home-dark-sections">
+          <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true"></div>
+          <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true"></div>
         <div class="home-first-glance">
           <FirstGlanceSections />
         </div>
@@ -244,10 +250,6 @@ onMounted(async () => {
 
         <div class="home-earth">
           <EarthDives :section="oneGuaranteeSection4" />
-        </div>
-
-        <div class="home-info-picture">
-          <InfoOnPicture :section="landingPage?.section10" />
         </div>
 
         <div class="home-projects">
@@ -279,6 +281,7 @@ onMounted(async () => {
             :social-media="footerSocialMedia"
           />
         </div>
+        </div>
       </div>
     </div>
   </div>
@@ -302,15 +305,15 @@ onMounted(async () => {
   margin-top: clamp(-8rem, -7vw, -3rem);
 }
 
-.home-nd-number-text {
-  margin-bottom: clamp(-5rem, -5vw, -2rem);
+.home-dark-sections {
+  position: relative;
+  background: #000;
 }
 
 .home-info-picture {
   position: relative;
   z-index: 31;
-  padding-block: clamp(4rem, 7vw, 7rem);
-  background: #000;
+  background: #fff;
 }
 
 .home-projects {
@@ -351,13 +354,6 @@ onMounted(async () => {
     margin-top: clamp(-4rem, -10vw, -2rem);
   }
 
-  .home-nd-number-text {
-    margin-bottom: -2rem;
-  }
-
-  .home-info-picture {
-    padding-block: 4rem;
-  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

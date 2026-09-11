@@ -1,5 +1,6 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref } from "vue";
 import type { GlobeRenderer } from "~/utils/globe/renderer";
+import { loadGlobePositions } from "~/utils/globe/assets";
 
 export function useNetworkGlobe(active: Ref<boolean>) {
   const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -51,26 +52,17 @@ export function useNetworkGlobe(active: Ref<boolean>) {
       return;
     initializing = true;
     try {
-      const [module, response] = await Promise.all([
+      const [module, points, outlines] = await Promise.all([
         import("~/utils/globe/renderer"),
-        fetch("/globe/land-points.v1.bin", { signal: abort.signal }),
+        loadGlobePositions("/globe/land-points.v1.bin", abort.signal, 512_000),
+        loadGlobePositions("/globe/outlines.v1.bin", abort.signal, 512_000, 24),
       ]);
-      if (!response.ok) throw new Error("Globe map could not be loaded");
-      const buffer = await response.arrayBuffer();
-      if (
-        buffer.byteLength % 12 ||
-        buffer.byteLength === 0 ||
-        buffer.byteLength > 512_000
-      )
-        throw new Error("Invalid globe data");
-      const points = new Float32Array(buffer);
-      if (!points.every(Number.isFinite))
-        throw new Error("Invalid globe coordinates");
       if (disposed || !canvasRef.value || !labelsRef.value) return;
       renderer = module.createGlobeRenderer(
         canvasRef.value,
         labelsRef.value,
         points,
+        outlines,
       );
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(canvasRef.value);

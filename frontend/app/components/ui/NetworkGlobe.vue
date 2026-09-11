@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { Pause, Play, RotateCcw } from "lucide-vue-next";
+import { useNetworkGlobe } from "~/composables/useNetworkGlobe";
+import { useViewportActivity } from "~/composables/useViewportActivity";
+
+withDefaults(defineProps<{ showLabels?: boolean }>(), { showLabels: true });
 
 const { targetRef, isActive } = useViewportActivity({
   rootMargin: "400px 0px",
@@ -23,10 +27,10 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       aria-label="Rotating world globe with country markers and connecting routes"
       @keydown="onKeydown"
     />
-    <div ref="labelsRef" class="network-globe__labels" aria-hidden="true" />
+    <div v-show="showLabels" ref="labelsRef" class="network-globe__labels" aria-hidden="true" />
     <img
       v-if="status !== 'ready'"
-      :src="'/globe/preview.v1.webp'"
+      :src="'/globe/preview-green.v1.webp'"
       class="network-globe__fallback"
       alt="World globe with illuminated continents"
       width="800"
@@ -62,7 +66,7 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #040507;
+  background: transparent;
 }
 canvas {
   display: block;
@@ -75,7 +79,7 @@ canvas:active {
   cursor: grabbing;
 }
 canvas:focus-visible {
-  outline: 1px solid #a3b7cd;
+  outline: 1px solid #5dff86;
   outline-offset: -5px;
 }
 .network-globe__labels {
@@ -106,7 +110,11 @@ canvas:focus-visible {
   right: 28px;
   display: flex;
   gap: 8px;
+  opacity: 0;
+  transition: opacity 150ms;
 }
+.network-globe:hover .network-globe__controls,
+.network-globe:focus-within .network-globe__controls { opacity: 1; }
 button {
   width: 38px;
   height: 38px;
@@ -119,8 +127,8 @@ button {
 }
 button:hover,
 button:focus-visible {
-  border-color: #ff7a35;
-  color: #ffa471;
+  border-color: #00db35;
+  color: #95ffae;
   outline: none;
 }
 .network-globe__fallback {
@@ -136,4 +144,5 @@ button:focus-visible {
     bottom: 16px;
   }
 }
+@media (hover: none) { .network-globe__controls { opacity: 1; } }
 </style>

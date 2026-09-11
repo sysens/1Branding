@@ -1,6 +1,5 @@
 import {
   BufferGeometry,
-  Color,
   Float32BufferAttribute,
   Group,
   Line,
@@ -15,7 +14,8 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { atmosphereMaterial, dotMaterial, earthMaterial } from "./materials";
+import { atmosphereMaterial, earthMaterial } from "./materials";
+import { createWorldSurface } from "./surface";
 import { createRoutes } from "./routes";
 import { createLabels } from "./labels";
 
@@ -46,9 +46,9 @@ function createStars(): Points {
     geometry,
     new PointsMaterial({
       size: 0.014,
-      color: 0x8e8173,
+      color: 0x30ac4c,
       transparent: true,
-      opacity: 0.42,
+      opacity: 0.32,
       depthWrite: false,
     }),
   );
@@ -58,26 +58,24 @@ export function createGlobeRenderer(
   canvas: HTMLCanvasElement,
   labelLayer: HTMLElement,
   points: Float32Array,
+  outlines: Float32Array,
 ): GlobeRenderer {
   const renderer = new WebGLRenderer({
     canvas,
-    alpha: false,
+    alpha: true,
     antialias: true,
     powerPreference: "low-power",
   });
-  renderer.setClearColor(0x040507, 1);
+  renderer.setClearColor(0x000000, 0);
   const scene = new Scene();
-  scene.background = new Color(0x040507);
   const camera = new PerspectiveCamera(38, 1, 0.1, 50);
   const root = new Group();
-  root.rotation.set(0.06, -0.35, -0.12);
+  root.rotation.set(0.08, 0.45, -0.12);
   scene.add(root, createStars());
   root.add(new Mesh(new SphereGeometry(1, 96, 64), earthMaterial()));
   root.add(new Mesh(new SphereGeometry(1.12, 64, 48), atmosphereMaterial()));
   const pixelRatio = new Uniform(1);
-  const land = new BufferGeometry();
-  land.setAttribute("position", new Float32BufferAttribute(points, 3));
-  root.add(new Points(land, dotMaterial(pixelRatio)));
+  root.add(createWorldSurface(points, outlines, pixelRatio));
   const routes = createRoutes();
   root.add(routes.group);
   const labels = createLabels(labelLayer);
@@ -86,7 +84,7 @@ export function createGlobeRenderer(
   controls.enablePan = false;
   controls.enableDamping = true;
   controls.dampingFactor = 0.065;
-  controls.autoRotateSpeed = 0.55;
+  controls.autoRotateSpeed = 0.32;
   controls.minPolarAngle = Math.PI * 0.23;
   controls.maxPolarAngle = Math.PI * 0.77;
   canvas.style.touchAction = "pan-y";
@@ -105,7 +103,7 @@ export function createGlobeRenderer(
   };
   controls.addEventListener("change", change);
   const reset = () => {
-    root.rotation.set(0.06, -0.35, -0.12);
+    root.rotation.set(0.08, 0.45, -0.12);
     camera.position.set(0, 0, distance);
     controls.target.set(0, 0, 0);
     controls.update(0);

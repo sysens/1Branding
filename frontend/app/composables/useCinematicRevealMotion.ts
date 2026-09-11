@@ -6,7 +6,6 @@ type GsapContext = {
 
 type CinematicRevealMotionRefs = {
   copyRef: Ref<HTMLElement | null>;
-  logosRef: Ref<HTMLElement | null>;
   numberRef: Ref<HTMLElement | null>;
   rootRef: Ref<HTMLElement | null>;
   windowRef: Ref<HTMLElement | null>;
@@ -14,7 +13,6 @@ type CinematicRevealMotionRefs = {
 
 export const useCinematicRevealMotion = ({
   copyRef,
-  logosRef,
   numberRef,
   rootRef,
   windowRef,
@@ -27,7 +25,7 @@ export const useCinematicRevealMotion = ({
     const root = rootRef.value;
     const revealWindow = windowRef.value;
     const number = numberRef.value;
-    const targets = [logosRef.value, copyRef.value].filter(
+    const targets = [copyRef.value].filter(
       (element): element is HTMLElement => element !== null
     );
 

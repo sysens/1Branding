@@ -4,10 +4,12 @@ import { computed, ref, useId } from "vue";
 type Props = {
   text: string;
   duration?: number;
+  tone?: "dark" | "light";
 };
 
 const props = withDefaults(defineProps<Props>(), {
   duration: 0.12,
+  tone: "dark",
 });
 
 const svgRef = ref<SVGSVGElement | null>(null);
@@ -27,6 +29,17 @@ const revealMaskUrl = computed(() => `url(#${revealMaskId})`);
 const textMaskUrl = computed(() => `url(#${textMaskId})`);
 const hoverGlowFilterUrl = computed(() => `url(#${hoverGlowFilterId})`);
 const maskTransition = computed(() => `${props.duration}s ease-out`);
+const strokeColors = computed<readonly [string, string, string, string]>(() =>
+  props.tone === "light"
+    ? ["#009d2b", "#13bd45", "#83dfa0", "#ffffff"]
+    : ["#67ff55", "#03cb00", "#029300", "#015800"],
+);
+const strokeOpacities = computed<readonly [number, number, number, number]>(() =>
+  props.tone === "light" ? [0.98, 0.9, 0.46, 0] : [0.98, 0.9, 0.58, 0.22],
+);
+const strokeGradientEnd = computed(() =>
+  props.tone === "light" ? { x: "0%", y: "100%" } : { x: "100%", y: "92%" },
+);
 
 const updateMaskPosition = (event: PointerEvent) => {
   const svg = svgRef.value;
@@ -63,11 +76,17 @@ const updateMaskPosition = (event: PointerEvent) => {
     @pointermove="updateMaskPosition"
   >
     <defs>
-      <linearGradient :id="strokeGradientId" x1="0%" y1="8%" x2="100%" y2="92%">
-        <stop offset="0%" stop-color="#67ff55" stop-opacity="0.98" />
-        <stop offset="34%" stop-color="#03cb00" stop-opacity="0.9" />
-        <stop offset="70%" stop-color="#029300" stop-opacity="0.58" />
-        <stop offset="100%" stop-color="#015800" stop-opacity="0.22" />
+      <linearGradient
+        :id="strokeGradientId"
+        x1="0%"
+        y1="0%"
+        :x2="strokeGradientEnd.x"
+        :y2="strokeGradientEnd.y"
+      >
+        <stop offset="0%" :stop-color="strokeColors[0]" :stop-opacity="strokeOpacities[0]" />
+        <stop offset="40%" :stop-color="strokeColors[1]" :stop-opacity="strokeOpacities[1]" />
+        <stop offset="78%" :stop-color="strokeColors[2]" :stop-opacity="strokeOpacities[2]" />
+        <stop offset="100%" :stop-color="strokeColors[3]" :stop-opacity="strokeOpacities[3]" />
       </linearGradient>
 
       <linearGradient
@@ -107,7 +126,13 @@ const updateMaskPosition = (event: PointerEvent) => {
         width="1560"
         height="740"
       >
-        <rect x="-220" y="-220" width="1560" height="740" :fill="revealMaskUrl" />
+        <rect
+          x="-220"
+          y="-220"
+          width="1560"
+          height="740"
+          :fill="revealMaskUrl"
+        />
       </mask>
 
       <filter
@@ -157,7 +182,7 @@ const updateMaskPosition = (event: PointerEvent) => {
 
     <text
       x="50%"
-      y="56%"
+      y="70%"
       text-anchor="middle"
       dominant-baseline="middle"
       stroke-width="2.35"
@@ -169,7 +194,7 @@ const updateMaskPosition = (event: PointerEvent) => {
 
     <text
       x="50%"
-      y="56%"
+      y="70%"
       text-anchor="middle"
       dominant-baseline="middle"
       stroke-width="2.35"

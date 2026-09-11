@@ -82,6 +82,8 @@ useHead(() => ({
             class="projects-wall__card"
             :tabindex="copy.index === 4 ? 0 : -1"
             :aria-label="cell.item.title"
+            draggable="false"
+            @dragstart.prevent
           >
             <img
               :src="cell.item.image"
