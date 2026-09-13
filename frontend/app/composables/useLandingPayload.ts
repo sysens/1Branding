@@ -5,7 +5,6 @@ import type {
   LandingPageContent,
   LandingPayloadResponse,
   LandingSeo,
-  OneGuaranteeSection4,
 } from "~/types/landingPayload";
 
 const LANDING_PAYLOAD_QUERY = `
@@ -40,33 +39,15 @@ const LANDING_PAYLOAD_QUERY = `
         title
         subTitle
       }
-      section7 {
-        title
-        images { url createdAt }
-      }
       section10 {
         title
         description
         image { url }
       }
-      section11 {
-        title
-        AnswerQuestions { question answer }
-      }
       splineRobot {
         title
         description
         sceneUrl
-      }
-    }
-    oneGuarantee(locale: $locale) {
-      section4 {
-        title
-        cards {
-          title
-          description
-          icon { url }
-        }
       }
     }
     footer(locale: $locale) {
@@ -81,9 +62,37 @@ const LANDING_PAYLOAD_QUERY = `
 
 type LandingPayloadResult = {
   landingPage: ComputedRef<LandingPageContent | null>;
-  oneGuaranteeSection4: ComputedRef<OneGuaranteeSection4 | null>;
   seo: ComputedRef<LandingSeo | null>;
   footerSocialMedia: ComputedRef<FooterSocialMediaLinks | null>;
+};
+
+// Strapi GraphQL sekin javob beradi; bir xil so'rov 60 sekund davomida
+// xotiradan o'qiladi (SSR + client), TTFB barqaror bo'ladi
+const LANDING_PAYLOAD_TTL_MS = 60_000;
+const payloadCache = new Map<string, { expiresAt: number; payload: Promise<LandingPayloadResponse> }>();
+
+const fetchLandingPayloadCached = (graphqlUrl: string, gqlLocale: AppLocale) => {
+  const key = `${graphqlUrl}::${gqlLocale}`;
+  const now = Date.now();
+  const cached = payloadCache.get(key);
+
+  if (cached && cached.expiresAt > now) {
+    return cached.payload;
+  }
+
+  const payload = $fetch<LandingPayloadResponse>(graphqlUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: {
+      query: LANDING_PAYLOAD_QUERY,
+      variables: { locale: gqlLocale },
+    },
+  });
+
+  payload.catch(() => payloadCache.delete(key));
+
+  payloadCache.set(key, { expiresAt: now + LANDING_PAYLOAD_TTL_MS, payload });
+  return payload;
 };
 
 export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
@@ -98,23 +107,12 @@ export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
   const { data } = graphqlUrl
     ? await useAsyncData<LandingPayloadResponse>(
         () => `landing-payload-${gqlLocale.value}`,
-        async () =>
-          await $fetch<LandingPayloadResponse>(graphqlUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: {
-              query: LANDING_PAYLOAD_QUERY,
-              variables: { locale: gqlLocale.value },
-            },
-          })
+        () => fetchLandingPayloadCached(graphqlUrl, gqlLocale.value)
       )
     : { data: emptyData };
 
   return {
     landingPage: computed(() => data.value?.data?.landingPage ?? null),
-    oneGuaranteeSection4: computed(
-      () => data.value?.data?.oneGuarantee?.section4 ?? null
-    ),
     seo: computed(() => data.value?.data?.seo?.landingPage ?? null),
     footerSocialMedia: computed(
       () => data.value?.data?.footer?.socialMedia ?? null

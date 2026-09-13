@@ -5,6 +5,7 @@ import {
 } from "three";
 import { createTileFace, createTileShape } from "./geometry";
 import { ATLAS_HEIGHT, ATLAS_WIDTH, MARQUEE_ATLAS, MARQUEE_TILES, MARQUEE_TILT } from "./layout";
+import { marqueeLane, marqueeVerticalDirection, marqueeVerticalOffset } from "./motion";
 
 export interface MarqueeRenderer {
   resize: (width: number, height: number) => void;
@@ -45,6 +46,7 @@ export async function createMarqueeRenderer(canvas: HTMLCanvasElement, images: r
   const board = new Group();
   board.rotation.set(MARQUEE_TILT, 0, Math.PI / 4);
   scene.add(board);
+  const vertical = marqueeVerticalDirection();
   const backing = new Mesh(new PlaneGeometry(2800, 2000), new MeshBasicMaterial({ color: 0x101110 }));
   backing.position.z = -5;
   board.add(backing);
@@ -65,7 +67,7 @@ export async function createMarqueeRenderer(canvas: HTMLCanvasElement, images: r
     faces.push(face);
     group.add(body, face);
     board.add(group);
-    return { group, title: tile.title };
+    return { group, title: tile.title, hoverDepth: 0 };
   });
   const raycaster = new Raycaster();
   const pointer = new Vector2();
@@ -86,14 +88,15 @@ export async function createMarqueeRenderer(canvas: HTMLCanvasElement, images: r
       renderer.setSize(width, height, false);
     },
     render(time, delta, motionAllowed) {
-      // The notched neighbours move as one assembly, so their complementary gaps never split.
-      const drift = motionAllowed ? Math.sin(time * Math.PI / 12) : 0;
-      board.position.set(drift * 28, drift * 16, 0);
       let settling = false;
-      for (const { group } of tiles) {
+      for (const tile of tiles) {
+        const { group } = tile;
+        const offset = motionAllowed ? marqueeVerticalOffset(marqueeLane(group.name), time) : 0;
+        group.position.copy(vertical).multiplyScalar(offset);
         const target = motionAllowed && group.name === hovered ? 10 : 0;
-        group.position.z += (target - group.position.z) * (1 - Math.exp(-delta * 12));
-        if (Math.abs(target - group.position.z) > 0.01) settling = true;
+        tile.hoverDepth += (target - tile.hoverDepth) * (1 - Math.exp(-delta * 12));
+        group.position.z += tile.hoverDepth;
+        if (Math.abs(target - tile.hoverDepth) > 0.01) settling = true;
       }
       renderer.render(scene, camera);
       return settling;

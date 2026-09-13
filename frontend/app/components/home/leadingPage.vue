@@ -3,7 +3,6 @@ import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import type { LandingPageContent } from "~/types/landingPayload";
 
 const localePath = useLocalePath();
-const router = useRouter();
 
 const props = defineProps<{
   landingPage?: LandingPageContent | null;
@@ -85,38 +84,6 @@ const heroAriaLabel = computed(() =>
 
 let ctx: GsapContext | null = null;
 
-const isModifiedEvent = (event: MouseEvent) => {
-  return !!(
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey ||
-    event.button !== 0
-  );
-};
-
-const onContactFabClick = async (event: MouseEvent) => {
-  if (!process.client) return;
-  if (isModifiedEvent(event)) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  const target = localePath("/ContactPage");
-
-  try {
-    await navigateTo(target);
-    return;
-  } catch {
-    try {
-      await router.push(target);
-      return;
-    } catch {
-      window.location.href = target;
-    }
-  }
-};
-
 onMounted(async () => {
   await nextTick();
 
@@ -173,8 +140,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <NuxtLink
       :to="localePath('/ContactPage')"
-      class="contact-fab fixed right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[2147483646] group"
-      @click="onContactFabClick"
+      class="contact-fab fixed right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[9000] group"
     >
       <img
         src="/home/Frame 2147223311.png"

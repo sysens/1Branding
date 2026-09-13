@@ -1,18 +1,53 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { MacbookScroll } from "~/components/ui/macbook-scroll";
+
+const { t, te } = useI18n();
+
+const titleLines = computed<string[]>(() => {
+  return ["We build digital", "experiences that", "feel premium and", "work flawlessly"].map((fallback, index) => {
+    const key = `home.digitalExperience.titleLines.${index}`;
+    return te(key) ? t(key) : fallback;
+  });
+});
+
+const accentWords = computed<string>(() => {
+  const accent = t("home.digitalExperience.titleAccentWord");
+  return typeof accent === "string" && accent ? accent : "feel premium";
+});
+
+const description = computed<string>(() => {
+  const value = t("home.digitalExperience.description");
+  return typeof value === "string" ? value : "";
+});
+
+const renderLine = (line: string) => {
+  const accent = accentWords.value;
+  if (!accent) return [{ text: line, accent: false }];
+  return line
+    .split(accent)
+    .flatMap((part, index, parts) =>
+      index < parts.length - 1
+        ? [{ text: part, accent: false }, { text: accent, accent: true }]
+        : [{ text: part, accent: false }]
+    );
+};
 </script>
 
 <template>
   <section class="digital-experience" aria-labelledby="digital-experience-title">
     <header class="digital-experience__copy">
         <h2 id="digital-experience-title" class="digital-experience__title">
-          <span>We build digital</span>
-          <span>experiences that</span>
-          <span><strong>feel premium</strong> and</span>
-          <span>work flawlessly</span>
+          <span v-for="(line, index) in titleLines" :key="index">
+            <template v-for="(part, partIndex) in renderLine(line)" :key="partIndex">
+              <strong v-if="part.accent">{{ part.text }}</strong>
+              <template v-else>{{ part.text }}</template>
+            </template>
+          </span>
         </h2>
         <p class="digital-experience__description">
-          and turn every interaction into a stronger connection between the brand and its audience.
+          {{ description }}
         </p>
     </header>
     <MacbookScroll title="" src="/home/macbook-linear.webp" :show-gradient="false" alt="Linear project management interface on a MacBook" />

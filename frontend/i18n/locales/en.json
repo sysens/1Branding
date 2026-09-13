@@ -32,7 +32,7 @@
     "price": "Prices",
     "oneGuarantee": "OneGuarantee"
   },
- "common": {
+  "common": {
     "prev": "Previous",
     "next": "Next",
     "from": "from",
@@ -72,45 +72,6 @@
       "titleWhite": "CLIENTS",
       "desc": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
     },
-    "ndNumberText": {
-      "panels": [
-        {
-          "titleGreen": "HAPPY",
-          "titleWhite": "CLIENTS",
-          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
-        },
-        {
-          "titleGreen": "HAPPY",
-          "titleWhite": "CLIENTS",
-          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
-        },
-        {
-          "titleGreen": "HAPPY",
-          "titleWhite": "CLIENTS",
-          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
-        },
-        {
-          "titleGreen": "HAPPY",
-          "titleWhite": "CLIENTS",
-          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
-        },
-        {
-          "titleGreen": "HAPPY",
-          "titleWhite": "CLIENTS",
-          "text": "Each of our projects is the result of deep knowledge in marketing, a creative approach, and precise analysis. We create visual solutions that not only strengthen brands but also help achieve key business metrics. Careful analysis of the target audience, clear positioning, and a unique value proposition are the foundation of every project. We believe that design is more than just visuals."
-        },
-        {
-          "titleGreen": "STRONG",
-          "titleWhite": "DESIGN",
-          "text": "We build a visual system that sets the brand apart: structure, typography, identity, and details. Everything is aimed at recognition and growing trust. Design becomes a tool that works for results and sales."
-        },
-        {
-          "titleGreen": "SMART",
-          "titleWhite": "SOLUTIONS",
-          "text": "We combine analysis, creativity, and meaning: from idea to the final package. There is logic in every step so it is clear, beautiful, and convenient for the client. This helps make decisions faster and improves conversion."
-        }
-      ]
-    },
     "rowShorteners": {
       "title": "Frequently asked questions",
       "faqs": [
@@ -129,6 +90,62 @@
         {
           "title": "Do you work under contract?",
           "text": "Yes, all projects are carried out under contract with clear stages, timelines, and fixed pricing."
+        }
+      ]
+    },
+    "world": {
+      "eyebrow": "Building brands around the",
+      "word": "WORLD",
+      "lead": "We create strong and recognizable brands that meet",
+      "strong": "international standards",
+      "closing": "and stand out in any market."
+    },
+    "digitalExperience": {
+      "titleLines": [
+        "We build digital",
+        "experiences that",
+        "feel premium and",
+        "work flawlessly"
+      ],
+      "titleAccentWord": "feel premium",
+      "description": "and turn every interaction into a stronger connection between the brand and its audience."
+    },
+    "firstGlance": {
+      "sections": [
+        {
+          "titleLead": "You are chosen at",
+          "titleAccent": "first glance.",
+          "description": "Decisions are made in seconds. It is the design that determines whether people stay with you or move on."
+        },
+        {
+          "titleLead": "Before they read,",
+          "titleAccent": "they feel.",
+          "description": "Design creates the first impression and that impression decides everything."
+        }
+      ]
+    },
+    "awards": {
+      "year": "2026",
+      "title": "Awwward",
+      "subtitle": "built the best brands of Uzbekistan"
+    },
+    "brandStories": {
+      "ariaLabel": "Brand stories",
+      "stories": [
+        {
+          "title": "More than pizza\nThis is Apex.",
+          "description": "Apexpizza is built around one clear idea: bold taste, generous toppings and a strong identity. Every detail works as one system, from product to packaging, from experience to recognition.",
+          "alt": "Apex Pizza brand identity"
+        },
+        {
+          "title": "Small candy.\nBig feeling.",
+          "description": "Perfect Candy turns a little treat into a memorable moment. Expressive colors, distinctive packaging and a playful identity bring the same feeling to every part of the brand.",
+          "alt": "Perfect Candy identity with purple packaging and chocolate hearts"
+        },
+        {
+          "title": "A fresh direction.\nThis is GreenGo.",
+          "description": "GreenGo brings energy to everyday movement. A clear visual language, confident typography and a vivid green palette make the brand instantly recognizable, wherever the journey leads.",
+          "alt": "GreenGo electric mobility brand identity"
         }
       ]
     }

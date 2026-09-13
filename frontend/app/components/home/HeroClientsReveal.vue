@@ -27,8 +27,8 @@ onMounted(async () => {
     });
     timeline.fromTo(
       hero.value,
-      { scale: 1, y: 0, opacity: 1 },
-      { scale: 0.94, y: -64, opacity: 0, duration: 0.85, ease: "none" },
+      { opacity: 1 },
+      { opacity: 0, duration: 0.85, ease: "none" },
       0,
     );
     timeline.fromTo(
@@ -65,6 +65,7 @@ onBeforeUnmount(() => {
   isolation: isolate;
 }
 .home-hero-curtain {
+  background: #000;
   position: sticky;
   top: 0;
   z-index: 0;

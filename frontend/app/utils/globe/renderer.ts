@@ -1,13 +1,11 @@
 import {
   BufferGeometry,
-  Float32BufferAttribute,
   Group,
   Line,
   Material,
   Mesh,
   PerspectiveCamera,
   Points,
-  PointsMaterial,
   Scene,
   SphereGeometry,
   Uniform,
@@ -18,6 +16,8 @@ import { atmosphereMaterial, earthMaterial } from "./materials";
 import { createWorldSurface } from "./surface";
 import { createRoutes } from "./routes";
 import { createLabels } from "./labels";
+import { createOrbitalNetwork } from "./orbits";
+import { createStarField } from "./stars";
 
 export interface GlobeRenderer {
   resize: (width: number, height: number) => void;
@@ -25,33 +25,6 @@ export interface GlobeRenderer {
   rotate: (horizontal: number, vertical: number) => void;
   reset: () => void;
   dispose: (releaseContext?: boolean) => void;
-}
-
-function createStars(): Points {
-  const positions: number[] = [];
-  let seed = 704;
-  const random = () => {
-    seed = (1664525 * seed + 1013904223) >>> 0;
-    return seed / 4294967296;
-  };
-  for (let i = 0; i < 1500; i++)
-    positions.push(
-      (random() - 0.5) * 16,
-      (random() - 0.5) * 12,
-      -3 - random() * 5,
-    );
-  const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  return new Points(
-    geometry,
-    new PointsMaterial({
-      size: 0.014,
-      color: 0x30ac4c,
-      transparent: true,
-      opacity: 0.32,
-      depthWrite: false,
-    }),
-  );
 }
 
 export function createGlobeRenderer(
@@ -70,14 +43,17 @@ export function createGlobeRenderer(
   const scene = new Scene();
   const camera = new PerspectiveCamera(38, 1, 0.1, 50);
   const root = new Group();
-  root.rotation.set(0.08, 0.45, -0.12);
-  scene.add(root, createStars());
+  root.rotation.set(0.12, 0.42, -0.06);
+  const stars = createStarField();
+  scene.add(root, stars.points);
   root.add(new Mesh(new SphereGeometry(1, 96, 64), earthMaterial()));
   root.add(new Mesh(new SphereGeometry(1.12, 64, 48), atmosphereMaterial()));
   const pixelRatio = new Uniform(1);
   root.add(createWorldSurface(points, outlines, pixelRatio));
   const routes = createRoutes();
-  root.add(routes.group);
+  const orbits = createOrbitalNetwork();
+  orbits.update(0);
+  root.add(routes.group, orbits.group);
   const labels = createLabels(labelLayer);
   const controls = new OrbitControls(camera, canvas);
   controls.enableZoom = false;
@@ -103,7 +79,7 @@ export function createGlobeRenderer(
   };
   controls.addEventListener("change", change);
   const reset = () => {
-    root.rotation.set(0.08, 0.45, -0.12);
+    root.rotation.set(0.12, 0.42, -0.06);
     camera.position.set(0, 0, distance);
     controls.target.set(0, 0, 0);
     controls.update(0);
@@ -115,7 +91,7 @@ export function createGlobeRenderer(
       height = Math.max(1, nextHeight);
       camera.aspect = width / height;
       distance =
-        1.23 / (Math.tan((19 * Math.PI) / 180) * Math.min(1, camera.aspect));
+        1.25 / (Math.tan((19 * Math.PI) / 180) * Math.min(1, camera.aspect));
       camera.position.setLength(distance);
       if (!camera.position.length()) camera.position.set(0, 0, distance);
       camera.updateProjectionMatrix();
@@ -126,7 +102,9 @@ export function createGlobeRenderer(
       draw();
     },
     render(time, delta, moving) {
+      stars.update(time);
       routes.update(time);
+      orbits.update(time);
       controls.autoRotate = moving;
       controls.enableDamping = moving;
       updating = true;

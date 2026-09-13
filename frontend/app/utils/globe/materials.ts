@@ -67,7 +67,7 @@ export function atmosphereMaterial(): ShaderMaterial {
 
 export interface GlobeDotStyle { color: number; size: number; opacity: number }
 
-export function dotMaterial(pixelRatio: Uniform<number>, style: GlobeDotStyle = { color: 0x72ff8d, size: 1.6, opacity: .85 }): ShaderMaterial {
+export function dotMaterial(pixelRatio: Uniform<number>, style: GlobeDotStyle = { color: 0x95ffae, size: 1.9, opacity: .95 }): ShaderMaterial {
   return new ShaderMaterial({
     uniforms: { pixelRatio, color: new Uniform(new Color(style.color)), size: new Uniform(style.size), opacity: new Uniform(style.opacity) },
     transparent: true,

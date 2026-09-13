@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+
 type ProductStorySection = {
   titleLead: string;
   titleAccent: string;
@@ -8,7 +11,9 @@ type ProductStorySection = {
   variant: "image-left" | "image-right";
 };
 
-const sections: ProductStorySection[] = [
+const { t, te } = useI18n();
+
+const FALLBACK_SECTIONS: ProductStorySection[] = [
   {
     titleLead: "You are chosen at",
     titleAccent: "first glance.",
@@ -28,6 +33,21 @@ const sections: ProductStorySection[] = [
     variant: "image-right",
   },
 ];
+
+const sections = computed<ProductStorySection[]>(() => {
+  return FALLBACK_SECTIONS.map((fallback, index) => {
+    const text = (field: "titleLead" | "titleAccent" | "description") => {
+      const key = `home.firstGlance.sections.${index}.${field}`;
+      return te(key) ? t(key) : fallback[field];
+    };
+    return {
+      ...fallback,
+      titleLead: text("titleLead"),
+      titleAccent: text("titleAccent"),
+      description: text("description"),
+    } satisfies ProductStorySection;
+  });
+});
 </script>
 
 <template>

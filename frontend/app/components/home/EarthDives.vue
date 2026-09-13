@@ -9,7 +9,7 @@ const root = ref<HTMLElement | null>(null);
 const earthDivesVideo = ref<HTMLVideoElement | null>(null);
 const shouldLoadVideo = ref(false);
 const earthDivesVideoPoster = "/home/earth.webp";
-const earthDivesVideoSrc = encodeURI("/home/Новый Проект.mp4");
+const earthDivesVideoSrc = "/home/earth-dives.mp4";
 
 let observer: IntersectionObserver | null = null;
 let videoObserver: IntersectionObserver | null = null;

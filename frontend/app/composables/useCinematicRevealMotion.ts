@@ -60,17 +60,17 @@ export const useCinematicRevealMotion = ({
       if (targets.length) {
         gsap.fromTo(
           targets,
-          { y: 44, opacity: 0 },
+          { y: 16, opacity: 0 },
           {
             y: 0,
             opacity: 1,
             stagger: 0.12,
+            duration: .6,
             ease: "power3.out",
             scrollTrigger: {
               trigger: revealWindow,
-              start: "top 78%",
-              end: "bottom bottom",
-              scrub: 1,
+              start: "top 92%",
+              once: true,
             },
           }
         );

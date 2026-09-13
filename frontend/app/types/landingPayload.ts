@@ -32,25 +32,10 @@ export type LandingSection5Item = {
   subTitle?: string | null;
 };
 
-export type LandingSection7 = {
-  title?: string | null;
-  images?: LandingMedia[] | null;
-};
-
 export type LandingSection10Block = {
   title?: string | null;
   description?: string | null;
   image?: LandingMedia | null;
-};
-
-export type LandingFaqItem = {
-  question?: string | null;
-  answer?: string | null;
-};
-
-export type LandingSection11 = {
-  title?: string | null;
-  AnswerQuestions?: LandingFaqItem[] | null;
 };
 
 export type LandingBrandCollage = {
@@ -78,9 +63,7 @@ export type LandingPageContent = {
   section2?: LandingSection2 | null;
   section3?: LandingSection3 | null;
   section5?: Array<LandingSection5Item | null> | null;
-  section7?: LandingSection7 | null;
   section10?: LandingSection10Block | Array<LandingSection10Block | null> | null;
-  section11?: LandingSection11 | null;
   brandCollage?: LandingBrandCollage | null;
   splineRobot?: LandingSplineRobot | null;
 };
@@ -104,9 +87,6 @@ export type LandingSeo = {
 export type LandingPayloadResponse = {
   data?: {
     landingPage?: LandingPageContent | null;
-    oneGuarantee?: {
-      section4?: OneGuaranteeSection4 | null;
-    } | null;
     seo?: {
       landingPage?: LandingSeo | null;
     } | null;

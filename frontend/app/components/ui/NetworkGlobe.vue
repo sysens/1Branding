@@ -22,19 +22,21 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
   >
     <canvas
       ref="canvasRef"
-      tabindex="0"
+      :class="{ 'network-globe__canvas--hidden': status !== 'ready' }"
+      :tabindex="status === 'ready' ? 0 : -1"
+      :aria-hidden="status !== 'ready'"
       role="img"
       aria-label="Rotating world globe with country markers and connecting routes"
       @keydown="onKeydown"
     />
     <div v-show="showLabels" ref="labelsRef" class="network-globe__labels" aria-hidden="true" />
     <img
-      v-if="status !== 'ready'"
+      v-show="status !== 'ready'"
       :src="'/globe/preview-green.v1.webp'"
       class="network-globe__fallback"
       alt="World globe with illuminated continents"
-      width="800"
-      height="800"
+      width="1160"
+      height="760"
       loading="lazy"
       decoding="async"
     />
@@ -78,6 +80,7 @@ canvas {
 canvas:active {
   cursor: grabbing;
 }
+.network-globe__canvas--hidden { opacity: 0; }
 canvas:focus-visible {
   outline: 1px solid #5dff86;
   outline-offset: -5px;
@@ -136,7 +139,7 @@ button:focus-visible {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 @media (max-width: 767px) {
   .network-globe__controls {

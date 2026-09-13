@@ -1,22 +1,30 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import type { LandingSection10Block } from "~/types/landingPayload";
+import QuakerFrames from "./QuakerFrames.vue";
+import { splitIdentityTitle, type TitleParts } from "~/utils/identityTitle";
 
 type AppLocale = "ru" | "en";
 type GsapContext = { revert: () => void };
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const LOCAL_INFO_MEDIA_FALLBACK = "/home/quaker.mp4";
+
+const QUIAKER_FRAMES = [
+  "/home/Quaker.webp",
+  "/home/Quaker 2.webp",
+  "/home/Quaker 3.webp",
+  "/home/Quaker 4.webp",
+  "/home/Quaker 5.webp",
+  "/home/Quaker 6.webp",
+  "/home/Quaker 7.webp",
+  "/home/Quaker 8.webp",
+] as const;
 
 const i18n = useI18n();
 const locale = i18n.locale;
 
 type SectionBlock = LandingSection10Block;
-type TitleParts = {
-  lead: string;
-  accent: string;
-};
 type MediaKind = "image" | "video";
 type InfoDisplayBlock = {
   titleParts: TitleParts;
@@ -55,53 +63,20 @@ const fallbackBlock = computed<SectionBlock>(() =>
         title: "Фирменный стиль ключ к узнаваемости продукта.",
         description:
           "Именно единый визуальный язык формирует первое впечатление и закрепляется в памяти клиента. Когда бренд последователен в цветах, форме и подаче, его легко узнать среди сотен конкурентов.",
-        image: { url: LOCAL_INFO_MEDIA_FALLBACK },
+        image: { url: QUIAKER_FRAMES[0] },
       }
     : {
         title: "Brand identity is the key to product recognition.",
         description:
           "A consistent visual language creates the first impression and stays in the customer's memory. When a brand is consistent in colors, shapes, and presentation, it becomes easy to recognize among hundreds of competitors.",
-        image: { url: LOCAL_INFO_MEDIA_FALLBACK },
+        image: { url: QUIAKER_FRAMES[0] },
       }
 );
 
 const getMediaKind = (src: string): MediaKind =>
   /\.(mp4|webm|mov)(?:[?#].*)?$/i.test(src) ? "video" : "image";
 
-const splitTitle = (title?: string | null): TitleParts => {
-  const text = (title ?? "").trim();
-
-  if (!text) {
-    return { lead: "", accent: "" };
-  }
-
-  const lower = text.toLocaleLowerCase();
-  const markers = ["key to ", "ключ к "];
-
-  for (const marker of markers) {
-    const index = lower.indexOf(marker);
-
-    if (index >= 0) {
-      const accentStart = index + marker.length;
-
-      return {
-        lead: text.slice(0, accentStart).trim(),
-        accent: text.slice(accentStart).trim(),
-      };
-    }
-  }
-
-  const words = text.split(/\s+/);
-
-  if (words.length <= 2) {
-    return { lead: text, accent: "" };
-  }
-
-  return {
-    lead: words.slice(0, -2).join(" "),
-    accent: words.slice(-2).join(" "),
-  };
-};
+const isQuakerFrame = (src: string) => QUIAKER_FRAMES.some(frame => frame === src);
 
 const isVisibleSectionBlock = (
   block: SectionBlock | null
@@ -120,16 +95,18 @@ const s10 = computed<SectionBlock | null>(() => {
 
 const infoBlock = computed<InfoDisplayBlock>(() => {
   const block = isVisibleSectionBlock(s10.value) ? s10.value : fallbackBlock.value;
-  const mediaSrc = resolveMedia(block.image?.url) || LOCAL_INFO_MEDIA_FALLBACK;
+  const mediaSrc = resolveMedia(block.image?.url) || QUIAKER_FRAMES[0];
 
   return {
-    titleParts: splitTitle(block.title),
+    titleParts: splitIdentityTitle(block.title),
     description: block.description ?? "",
     mediaSrc,
     mediaKind: getMediaKind(mediaSrc),
     mediaAlt: block.image?.alternativeText?.trim() || block.title?.trim() || "",
   };
 });
+
+const usesQuakerFrames = computed(() => isQuakerFrame(infoBlock.value.mediaSrc));
 
 const root = ref<HTMLElement | null>(null);
 
@@ -269,8 +246,14 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-if="infoBlock.mediaSrc" class="info-image-frame will-change-transform">
+          <QuakerFrames
+            v-if="usesQuakerFrames"
+            :frames="QUIAKER_FRAMES"
+            :alt="infoBlock.mediaAlt"
+          />
+
           <video
-            v-if="infoBlock.mediaKind === 'video'"
+            v-else-if="infoBlock.mediaKind === 'video'"
             class="info-media info-media--video"
             :src="infoBlock.mediaSrc"
             autoplay
