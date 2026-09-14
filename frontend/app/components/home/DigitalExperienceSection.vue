@@ -57,7 +57,7 @@ const renderLine = (line: string) => {
 <style scoped>
 .digital-experience { position: relative; isolation: isolate; overflow: clip; background: #fff; padding-top: 16rem; }
 .digital-experience__copy { text-align: center; }
-.digital-experience :deep(.macbook-scroll) { padding-block: 5rem 0; }
+.digital-experience :deep(.macbook-scroll) { padding-block: 2rem 0; }
 .digital-experience__title {
   max-width: 54rem;
   margin: 0 auto;
@@ -77,7 +77,8 @@ const renderLine = (line: string) => {
   .digital-experience__title { font-size: 4rem; }
 }
 @media (max-width: 767px) {
-  .digital-experience { padding-top: 6rem; }
+  .digital-experience { padding-top: 4rem; }
+  .digital-experience :deep(.macbook-scroll) { padding-block: 2.5rem 1rem; }
   .digital-experience__title { font-size: 2.25rem; line-height: 1.18; }
   .digital-experience__description { font-size: 0.875rem; margin-top: 1.25rem; }
 }

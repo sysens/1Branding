@@ -1,18 +1,18 @@
+import { Vector3 } from "three";
+
 export function marqueeLane(id: string): number {
-  if (["red-bull", "apex-pizza", "dodo-kids", "poyqadam", "brono", "merhaba", "street-vibe"].includes(id)) return 0;
-  if (["onebranding", "makva"].includes(id)) return 1;
+  if (["poyqadam", "apex-pizza", "dodo-kids", "brono", "merhaba"].includes(id)) return 0;
+  if (["red-bull", "onebranding", "makva", "street-vibe", "hilal", "cleo", "luqman"].includes(id)) return 1;
   return 2;
 }
 
 export function marqueeVerticalOffset(lane: number, time: number): number {
-  // Opposing lanes share a 15px gap; preserve that space throughout the cycle.
-  return Math.sin(time * Math.PI / 4) * 6 * (lane === 1 ? -1 : 1);
+  const duration = lane % 2 === 0 ? 10 : 15;
+  const direction = lane % 2 === 0 ? 1 : -1;
+  return direction * 50 * (1 - Math.cos(Math.PI * time / duration));
 }
 
 export function marqueeVerticalDirection(): Vector3 {
-  // Project to screen Y while remaining in the board plane, above its backing.
-  const component = 1 / (Math.SQRT2 * Math.cos(MARQUEE_TILT));
-  return new Vector3(component, component, 0);
+  // Animate the column's local Y, exactly as the rotated React grid does.
+  return new Vector3(0, 1, 0);
 }
-import { Vector3 } from "three";
-import { MARQUEE_TILT } from "./layout";

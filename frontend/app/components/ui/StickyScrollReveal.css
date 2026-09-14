@@ -23,10 +23,11 @@
   .sticky-reveal__copy h2 { font-size: 48px; }
   .sticky-reveal__image--logo { width: 320px; }
 }
-@media (max-width: 767px) {
+@media (max-width: 767px), (orientation: portrait) {
   .sticky-reveal__layout { display: block; width: calc(100% - 48px); }
   .sticky-reveal__media-column { display: none; }
-  .sticky-reveal__panel { gap: 42px; min-height: max(100svh, 640px); padding-block: 130px 70px; }
+  .sticky-reveal__panel { gap: 32px; min-height: 0; padding-block: 64px; }
+  .sticky-reveal__panel:not(.is-active) { opacity: 0; visibility: hidden; pointer-events: none; }
   .sticky-reveal__mobile-image { display: block; align-self: center; width: 100%; max-width: 420px; height: auto; object-fit: contain; }
   .sticky-reveal__mobile-image.sticky-reveal__image--logo { width: 260px; max-width: 90%; }
   .sticky-reveal__copy { margin-inline: auto; }

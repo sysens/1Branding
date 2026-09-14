@@ -23,13 +23,11 @@ defineProps<{
         </svg>
       </div>
     </div>
-    <motion.div
+    <motion.img
+      v-if="src" :src="src" :alt="alt" width="512" height="384" decoding="async"
       class="macbook-scroll__screen"
-      :style="{ scaleX, scaleY, rotateX: rotate, translateY: translate, transformStyle: 'preserve-3d', transformOrigin: 'top' }"
-    >
-      <div class="macbook-lid__surface" />
-      <img v-if="src" :src="src" :alt="alt" width="1440" height="1080" decoding="async" />
-    </motion.div>
+      :style="{ scaleX, scaleY, rotateX: rotate, translateY: translate, transformStyle: 'flat', transformOrigin: 'top' }"
+    />
   </div>
 </template>
 
@@ -65,7 +63,8 @@ defineProps<{
   padding: 0.5rem;
   border-radius: 1rem;
   background: #010101;
+  display: block;
+  object-fit: cover;
+  object-position: left top;
 }
-.macbook-lid__surface { position: absolute; inset: 0; border-radius: 0.5rem; background: #272729; }
-.macbook-scroll__screen img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0.5rem; object-fit: cover; object-position: left top; }
 </style>

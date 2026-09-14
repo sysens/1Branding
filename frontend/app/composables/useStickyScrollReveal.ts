@@ -15,7 +15,9 @@ export function useStickyScrollReveal(root: Ref<HTMLElement | null>) {
       const rect = panel.getBoundingClientRect();
       return rect.top + rect.height / 2;
     });
-    active.value = closestScrollPanel(centers, window.innerHeight / 2);
+    const compact = window.matchMedia("(max-width: 767px), (orientation: portrait)").matches;
+    const activationLine = compact ? Math.min(window.innerHeight / 2, 320) : window.innerHeight / 2;
+    active.value = closestScrollPanel(centers, activationLine);
   };
   useMotionValueEvent(scrollYProgress, "change", update);
   let observer: ResizeObserver | undefined;

@@ -30,7 +30,7 @@ withDefaults(defineProps<{ direction?: "to-light" | "to-dark" }>(), { direction:
 .hero-light-transition__light {
   position: absolute; inset: 0;
   /* Keep the arc proportional to its width, with no opaque black fill over the hero. */
-  background: radial-gradient(ellipse 68% 64% at 50% calc(-4% + var(--light-shift, 0%)),
+  background: radial-gradient(ellipse var(--light-radius-x, 68%) var(--light-radius-y, 64%) at 50% calc(var(--light-center-y, -4%) + var(--light-shift, 0%)),
     rgb(0 95 31 / 0) 60%, rgb(0 95 31 / .1) 70%, rgb(0 118 38 / .4) 82%,
     rgb(0 131 43 / .7) 92%, #04a446 104%, #52bc7e 116%,
     #a3e0c4 134%, #d5f6e8 143%, #fff 151%);

@@ -62,12 +62,12 @@ export async function createMarqueeRenderer(canvas: HTMLCanvasElement, images: r
     body.position.z = -4;
     const source = sources[index]!;
     const face = new Mesh(createTileFace(shape, source === MARQUEE_ATLAS), new MeshBasicMaterial({ map: textureMap.get(source)! }));
-    face.name = tile.id;
+    face.name = group.name;
     face.position.z = 0.1;
     faces.push(face);
     group.add(body, face);
     board.add(group);
-    return { group, title: tile.title, hoverDepth: 0 };
+    return { group, title: tile.title, hoverDepth: 0, lane: marqueeLane(tile.id) };
   });
   const raycaster = new Raycaster();
   const pointer = new Vector2();
@@ -91,8 +91,10 @@ export async function createMarqueeRenderer(canvas: HTMLCanvasElement, images: r
       let settling = false;
       for (const tile of tiles) {
         const { group } = tile;
-        const offset = motionAllowed ? marqueeVerticalOffset(marqueeLane(group.name), time) : 0;
+        const offset = motionAllowed ? marqueeVerticalOffset(tile.lane, time) : 0;
         group.position.copy(vertical).multiplyScalar(offset);
+        // Tiny, stable depth separation prevents coplanar flicker as adjacent columns pass.
+        group.position.z = tile.lane * 0.2;
         const target = motionAllowed && group.name === hovered ? 10 : 0;
         tile.hoverDepth += (target - tile.hoverDepth) * (1 - Math.exp(-delta * 12));
         group.position.z += tile.hoverDepth;

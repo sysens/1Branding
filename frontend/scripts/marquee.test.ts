@@ -2,6 +2,14 @@ import { expect, test } from "bun:test";
 import { DoubleSide, Mesh, MeshBasicMaterial, Raycaster, Vector3 } from "three";
 import { createTileFace, createTileShape, toPlane } from "../app/utils/marquee/geometry";
 import { ATLAS_HEIGHT, ATLAS_WIDTH, MARQUEE_TILES, MARQUEE_TILT, type MarqueePoint } from "../app/utils/marquee/layout";
+import { marqueeLane, marqueeVerticalOffset } from "../app/utils/marquee/motion";
+
+test("original mosaic columns start in place and preserve adjoining notches", () => {
+  for (const tile of MARQUEE_TILES) expect(marqueeVerticalOffset(marqueeLane(tile.id), 0)).toBeCloseTo(0);
+  expect(marqueeLane("hilal")).toBe(marqueeLane("cleo"));
+  expect(marqueeLane("cleo")).toBe(marqueeLane("luqman"));
+  expect(marqueeLane("brono")).toBe(marqueeLane("merhaba"));
+});
 
 test("projected tile vertices match the design's source coordinates", () => {
   for (const tile of MARQUEE_TILES) {

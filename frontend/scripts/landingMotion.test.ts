@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { createCursorTrails, stepCursorTrails } from "../app/utils/cursorTrails";
 import { Euler } from "three";
 import { MARQUEE_TILT } from "../app/utils/marquee/layout";
-import { marqueeLane, marqueeVerticalDirection, marqueeVerticalOffset } from "../app/utils/marquee/motion";
+import { marqueeVerticalDirection, marqueeVerticalOffset } from "../app/utils/marquee/motion";
 import { createStarField } from "../app/utils/globe/stars";
 
 test("cursor spring trails stay finite and settle at the actual pointer", () => {
@@ -15,17 +15,16 @@ test("cursor spring trails stay finite and settle at the actual pointer", () => 
     expect(node.y).toBeCloseTo(360, 1);
   }
 });
-test("marquee lanes alternate vertically and preserve notched neighbours", () => {
+test("marquee columns travel 100px and reverse over the React reference durations", () => {
   expect(marqueeVerticalOffset(0, 2)).toBeGreaterThan(0);
   expect(marqueeVerticalOffset(1, 2)).toBeLessThan(0);
   expect(marqueeVerticalOffset(2, 2)).toBe(marqueeVerticalOffset(0, 2));
-  expect(marqueeLane("hilal")).toBe(marqueeLane("cleo"));
-  expect(marqueeLane("cleo")).toBe(marqueeLane("luqman"));
-  expect(marqueeLane("brono")).toBe(marqueeLane("merhaba"));
-  expect(marqueeLane("merhaba")).toBe(marqueeLane("street-vibe"));
-  expect(marqueeVerticalOffset(0, 8)).toBeCloseTo(0);
+  expect(marqueeVerticalOffset(0, 10)).toBe(100);
+  expect(marqueeVerticalOffset(1, 15)).toBe(-100);
+  expect(marqueeVerticalOffset(0, 20)).toBeCloseTo(0);
+  expect(marqueeVerticalOffset(1, 30)).toBeCloseTo(0);
 });
-test("marquee motion stays above the backing and projects only vertically", () => {
+test("marquee motion follows local column Y and never falls below its backing", () => {
   const direction = marqueeVerticalDirection();
   const rotation = new Euler(MARQUEE_TILT, 0, Math.PI / 4);
   for (let time = 0; time <= 36; time += .25) for (const lane of [0, 1, 2]) {
@@ -33,8 +32,8 @@ test("marquee motion stays above the backing and projects only vertically", () =
     const position = direction.clone().multiplyScalar(offset);
     expect(position.z).toBeCloseTo(0, 8);
     position.applyEuler(rotation);
-    expect(position.x).toBeCloseTo(0, 8);
-    expect(position.y).toBeCloseTo(offset, 8);
+    expect(position.x).toBeCloseTo(-offset / Math.SQRT2, 8);
+    expect(position.y).toBeCloseTo(offset * Math.cos(MARQUEE_TILT) / Math.SQRT2, 8);
   }
 });
 test("world star field contains bright stars outside the globe and animated light", () => {

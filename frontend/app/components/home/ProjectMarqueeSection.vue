@@ -32,10 +32,20 @@ onBeforeUnmount(() => { disposed = true; cleanup?.(); });
 <style scoped>
 .project-marquee-section { position: relative; isolation: isolate; background: #000; }
 .project-marquee-section__transition { position: relative; z-index: 1; pointer-events: none; }
-.project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(32rem, 95svh, 58rem); }
-.project-marquee-section :deep(.three-d-marquee) { margin-top: -12rem; }
-@media (max-width: 767px) {
-  .project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(26rem, 78svh, 40rem); }
-  .project-marquee-section :deep(.three-d-marquee) { margin-top: -8rem; }
+.project-marquee-section__transition {
+  --light-radius-x: 94%;
+  --light-radius-y: 78%;
+  --light-center-y: -20%;
+}
+.project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(26rem, 72svh, 44rem); }
+.project-marquee-section :deep(.three-d-marquee) { margin-top: -8rem; }
+@media (max-width: 767px), (orientation: portrait) {
+  .project-marquee-section__transition {
+    --light-radius-x: 125%;
+    --light-radius-y: 88%;
+    --light-center-y: -34%;
+  }
+  .project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(10rem, 28vw, 16rem); min-height: 10rem; aspect-ratio: auto; }
+  .project-marquee-section :deep(.three-d-marquee) { margin-top: -4rem; }
 }
 </style>

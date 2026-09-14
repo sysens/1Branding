@@ -21,17 +21,21 @@ export function useThreeDMarquee(
   let time = 0;
 
   const requestRender = () => {
-    if (!frame && renderer && !disposed) frame = requestAnimationFrame(tick);
+    if (!frame && renderer && !disposed) {
+      last = performance.now();
+      frame = requestAnimationFrame(tick);
+    }
   };
   const tick = (now: number) => {
     frame = 0;
     if (!renderer || disposed) return;
-    const delta = Math.min((now - last) / 1000 || 1 / 60, 0.05);
+    const elapsed = Math.max(0, (now - last) / 1000);
+    const delta = Math.min(elapsed, 0.05);
     last = now;
     const moving = visible && !document.hidden && !paused.value && !reduced;
-    if (moving) time += delta;
+    if (moving) time += elapsed;
     const settling = renderer.render(time, delta, !reduced);
-    if (visible && !document.hidden && (moving || settling)) requestRender();
+    if (visible && !document.hidden && (moving || settling)) frame = requestAnimationFrame(tick);
   };
   const resize = () => {
     if (!root.value || !renderer) return;
