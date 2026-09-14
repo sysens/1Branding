@@ -75,22 +75,22 @@ const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, 
 const canonical = computed(() => (siteUrl ? siteUrl + route.path : ""));
 
 useSeoMeta({
-  title: seoTitle.value,
-  description: seoDescription.value,
+  title: () => seoTitle.value,
+  description: () => seoDescription.value,
 
-  ogTitle: seoTitle.value,
-  ogDescription: seoDescription.value,
+  ogTitle: () => seoTitle.value,
+  ogDescription: () => seoDescription.value,
   ogType: "website",
-  ogUrl: canonical.value || undefined,
+  ogUrl: () => canonical.value || undefined,
 
   twitterCard: "summary",
-  twitterTitle: seoTitle.value,
-  twitterDescription: seoDescription.value,
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
 });
 
-useHead({
+useHead(() => ({
   link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-});
+}));
 
 const getLenis = () => {
   const nuxtApp = useNuxtApp() as LenisAwareNuxtApp;

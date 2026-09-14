@@ -190,6 +190,25 @@ const pageDesc = computed(
   () => category.value?.description || t("productSlug.descFallback")
 );
 
+const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
+const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+
+useSeoMeta({
+  title: () => pageTitle.value,
+  description: () => pageDesc.value,
+  ogTitle: () => pageTitle.value,
+  ogDescription: () => pageDesc.value,
+  ogType: "website",
+  ogUrl: () => canonical.value || undefined,
+  twitterCard: "summary_large_image",
+  twitterTitle: () => pageTitle.value,
+  twitterDescription: () => pageDesc.value,
+});
+
+useHead(() => ({
+  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
+}));
+
 const projectsFromApi = computed(() => {
   const nodes = category.value?.projects_connection?.nodes ?? [];
   return nodes

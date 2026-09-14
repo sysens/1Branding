@@ -1,7 +1,33 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import NewsHero from "~/components/Newsslug/NewsHero.vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
-import { onMounted, onBeforeUnmount, nextTick } from "vue";
+
+const { t } = useI18n();
+const route = useRoute();
+const runtimeConfig = useRuntimeConfig();
+
+const seoTitle = computed(() => t("seo.news"));
+const seoDescription = computed(() => t("seo.description"));
+const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
+const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+
+useSeoMeta({
+  title: () => seoTitle.value,
+  description: () => seoDescription.value,
+  ogTitle: () => seoTitle.value,
+  ogDescription: () => seoDescription.value,
+  ogType: "article",
+  ogUrl: () => canonical.value || undefined,
+  twitterCard: "summary",
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
+});
+
+useHead(() => ({
+  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
+}));
+
 let ctx: any = null;
 
 onMounted(async () => {

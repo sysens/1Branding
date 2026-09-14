@@ -70,7 +70,7 @@
 .clients-section__number {
   position: relative;
   left: 50%;
-  z-index: 1;
+  z-index: 0;
   width: min(112vw, 66rem);
   aspect-ratio: 1120 / 300;
   margin-top: 3rem;

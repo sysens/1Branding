@@ -40,6 +40,18 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      title: "OneBranding",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          name: "description",
+          content:
+            "OneBranding — брендинговое агентство. Создаем сильные бренды, айдентику, упаковку, презентации и digital-опыт.",
+        },
+        { property: "og:site_name", content: "OneBranding" },
+        { property: "og:type", content: "website" },
+      ],
       link: [
         { rel: "icon", type: "image/png", href: "/General/favicon.svg" },
         { rel: "apple-touch-icon", href: "/General/apple-touch-icon.png" },

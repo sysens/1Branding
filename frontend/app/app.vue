@@ -11,6 +11,13 @@ import GradualBlur from "./components/GradualBlur.vue";
 import BrandCursor from "./components/ui/BrandCursor.vue";
 
 const route = useRoute();
+
+useHead({
+  titleTemplate: (titleChunk) => {
+    if (!titleChunk) return "OneBranding";
+    return titleChunk.includes("OneBranding") ? titleChunk : `${titleChunk} · OneBranding`;
+  },
+});
 const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/Projects"));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/ContactPage")

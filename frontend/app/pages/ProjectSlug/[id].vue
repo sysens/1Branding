@@ -182,6 +182,27 @@ const section1 = computed(() => page.value?.section1 ?? null);
 const section2 = computed(() => page.value?.section2 ?? null);
 const section3 = computed(() => page.value?.section3 ?? null);
 
+const seoTitle = computed(() => section1.value?.projectTitle?.trim() || "Project");
+const seoDescription = computed(() => section1.value?.text?.trim() || "");
+const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
+const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+
+useSeoMeta({
+  title: () => seoTitle.value,
+  description: () => seoDescription.value,
+  ogTitle: () => seoTitle.value,
+  ogDescription: () => seoDescription.value,
+  ogType: "article",
+  ogUrl: () => canonical.value || undefined,
+  twitterCard: "summary_large_image",
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
+});
+
+useHead(() => ({
+  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
+}));
+
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 
 const resolveMedia = (url?: string | null) => {

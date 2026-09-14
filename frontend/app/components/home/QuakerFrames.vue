@@ -17,7 +17,7 @@ const sync = () => {
   timer = window.setInterval(() => {
     previous.value = active.value;
     active.value = ready[(ready.indexOf(active.value) + 1) % ready.length] ?? active.value;
-  }, 800);
+  }, 1000);
 };
 onMounted(async () => {
   await nextTick();
