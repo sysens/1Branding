@@ -44,6 +44,19 @@ const hasApproached = ref(false);
 const settledSources = ref(new Set<string>());
 watch(isActive, active => { if (active) hasApproached.value = true; });
 
+// The images are not in the server HTML. Once the collage is near, they are
+// switched on one row per task: rendering all ~60 NuxtImg (srcset for every
+// width and density) at once was a single ~90ms main-thread task.
+const readyRows = ref(0);
+watch(hasApproached, (approached) => {
+  if (!approached) return;
+  const enableNextRow = () => {
+    readyRows.value += 1;
+    if (readyRows.value < rowsConfig.value.length) setTimeout(enableNextRow, 0);
+  };
+  enableNextRow();
+});
+
 function markSettled(src: string): void {
   settledSources.value.add(src);
 }
@@ -71,7 +84,7 @@ const rowsConfig = computed(() => {
     <div class="w-full">
       <div class="w-full overflow-hidden space-y-4">
         <div
-          v-for="row in rowsConfig"
+          v-for="(row, rowIndex) in rowsConfig"
           :key="row.key"
           class="marquee-row flex w-max"
           :class="[row.animClass, { 'marquee-row--waiting': !row.duplicatedImages.every(image => settledSources.has(image.src)) }]"
@@ -86,8 +99,8 @@ const rowsConfig = computed(() => {
               v-for="(image, i) in row.duplicatedImages"
               :key="row.key + '-' + i + '-' + image.src"
               :src="image.src"
-              :eager="hasApproached"
-              :deferred="!hasApproached"
+              :eager="rowIndex < readyRows"
+              :deferred="rowIndex >= readyRows"
               :priority="isInitialCollageImage(i, row.duplicatedImages.length / 2, row.animClass === 'animate-marquee-reverse') ? 'auto' : 'low'"
               @settled="markSettled"
             />

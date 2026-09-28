@@ -36,8 +36,19 @@ const cleanPath = (path: string) => {
 /**
  * One place for every page's search/social metadata: title, description,
  * canonical, hreflang, Open Graph/Twitter cards, robots and JSON-LD.
+ *
+ * Only the title is kept up to date in the browser (tab name on client-side
+ * navigation). Everything else is read by crawlers and link previews from the
+ * server HTML of each URL, and computing it again during hydration (i18n,
+ * JSON-LD, ~20 reactive head entries) was a measurable part of that task.
  */
 export const usePageSeo = (input: PageSeoInput) => {
+  const title = computed(() => toValue(input.title)?.trim() || "");
+  if (import.meta.client) {
+    useHead({ title: () => title.value });
+    return;
+  }
+
   const route = useRoute();
   const { locale, t } = useI18n();
   const switchLocalePath = useSwitchLocalePath();
@@ -45,7 +56,6 @@ export const usePageSeo = (input: PageSeoInput) => {
   const origin = useSiteOrigin();
 
   const lang = computed<SeoLocale>(() => (locale.value === "en" ? "en" : "ru"));
-  const title = computed(() => toValue(input.title)?.trim() || "");
   const fullTitle = computed(() => withSiteName(title.value));
   const description = computed(() => toMetaDescription(toValue(input.description)) || t("seo.description"));
   const canonical = computed(() => `${origin}${cleanPath(route.path)}`);
@@ -87,7 +97,7 @@ export const usePageSeo = (input: PageSeoInput) => {
       : "";
   });
 
-  useSeoMeta({
+  useServerSeoMeta({
     title: () => title.value,
     description: () => description.value,
     robots: () => indexable.value
@@ -110,7 +120,7 @@ export const usePageSeo = (input: PageSeoInput) => {
     twitterImage: () => image.value,
   });
 
-  useHead(() => ({
+  useServerHead(() => ({
     link: [
       ...(indexable.value ? [{ rel: "canonical", href: canonical.value, key: "canonical" }] : []),
       ...alternates.value,
@@ -119,6 +129,4 @@ export const usePageSeo = (input: PageSeoInput) => {
       ? [{ type: "application/ld+json", key: "page-jsonld", innerHTML: jsonLd.value }]
       : [],
   }));
-
-  return { canonical, fullTitle, description };
 };

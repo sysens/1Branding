@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
 
 type Props = {
@@ -70,18 +70,35 @@ const staticLogos = [
 ];
 
 const MAX_LOGOS_PER_COLUMN = 16;
-// The second (loop) copy of each column is added after hydration, which keeps
-// the SSR markup at one copy. The columns only start moving once it exists: at
-// that moment a reversed column jumps to -50% of its doubled height, which shows
-// exactly the tiles it showed at 0, so the hand-over is invisible. It is added
-// in an idle period, as its own task instead of lengthening the hydration one.
-const loopCopyReady = ref(false);
-onMounted(() => {
-  const ready = () => { loopCopyReady.value = true; };
-  if ("requestIdleCallback" in window) window.requestIdleCallback(ready, { timeout: 1500 });
-  else window.setTimeout(ready, 200);
-});
 const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
+// The second (loop) copy of each column is added after hydration, which keeps
+// the SSR markup at one copy. A column only starts moving once its copy exists:
+// at that moment a reversed column jumps to -50% of its doubled height, which
+// shows exactly the tiles it showed at 0, so the hand-over is invisible. Copies
+// are added one column per task, from an idle period, and only for columns the
+// CSS below shows at this width: all at once was one ~200ms main-thread task.
+const loopCopies = ref(0);
+let adding = false;
+const shownColumns = () => Array.from(targetRef.value?.querySelectorAll<HTMLElement>(".logo-marquee__col") ?? [])
+  .filter((col) => getComputedStyle(col).display !== "none").length;
+const addCopies = () => {
+  if (adding) return;
+  adding = true;
+  const addNext = () => {
+    if (loopCopies.value >= shownColumns()) { adding = false; return; }
+    loopCopies.value += 1;
+    window.setTimeout(addNext, 0);
+  };
+  addNext();
+};
+// A wider window can reveal more columns; they get their copy then.
+const onResize = () => addCopies();
+onMounted(() => {
+  if ("requestIdleCallback" in window) window.requestIdleCallback(addCopies, { timeout: 1500 });
+  else window.setTimeout(addCopies, 200);
+  window.addEventListener("resize", onResize, { passive: true });
+});
+onBeforeUnmount(() => window.removeEventListener("resize", onResize));
 
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
@@ -112,7 +129,19 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number) => {
     arr[i] = arr[j];
     arr[j] = tmp;
   }
-  return arr.slice(0, MAX_LOGOS_PER_COLUMN).map((src) => ({ src, srcset: tileSrcset(src) }));
+  return arr.slice(0, MAX_LOGOS_PER_COLUMN);
+};
+
+// The tiles are static, decorative markup, so each column is one HTML string
+// (v-html): hydration does not walk the ~500 tile elements, and the loop copy is
+// created by the browser's HTML parser instead of Vue. Logo URLs may come from
+// the CMS, hence the attribute escaping.
+const escapeAttr = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const tileHtml = (src: string) => {
+  const srcset = tileSrcset(src);
+  const responsive = srcset ? ` srcset="${escapeAttr(srcset)}" sizes="(min-width: 768px) 200px, 100px"` : "";
+  return `<div class="logo-marquee__tile"><img class="logo-marquee__img" src="${escapeAttr(src)}"${responsive} alt="" width="200" height="100" loading="lazy" decoding="async" fetchpriority="low" draggable="false"></div>`;
 };
 
 const columnsConfig = computed(() => {
@@ -122,7 +151,7 @@ const columnsConfig = computed(() => {
   return Array.from({ length: total }, (_, idx) => ({
     idx,
     key: `col-${idx}`,
-    tiles: shuffledForColumn(logos, idx),
+    html: shuffledForColumn(logos, idx).map(tileHtml).join(""),
     isReverse: idx % 2 === 1,
     withLink: !props.asBackground && idx === 0,
   }));
@@ -134,9 +163,12 @@ const rootClass = computed(() =>
     : "relative z-10 bg-black w-full overflow-hidden flex items-center justify-center"
 );
 
+// md:scale-[1.25] (was 1.3): at 1.3 a tilted desktop tile (48,250 px2) was a
+// hair larger than the hero's biggest text (47,511 px2), so a lazily loaded
+// tile, not the text painted with the HTML, became the Largest Contentful Paint.
 const innerWrapClass = computed(() =>
   props.asBackground
-    ? "absolute inset-0 bottom-[-90px] md:-top-0 w-[160%] md:-left-[2%] md:scale-[1.3] scale-[1.4]"
+    ? "absolute inset-0 bottom-[-90px] md:-top-0 w-[160%] md:-left-[2%] md:scale-[1.25] scale-[1.4]"
     : "w-full h-full flex justify-center"
 );
 
@@ -155,7 +187,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   <section
     ref="targetRef"
     class="logo-marquee"
-    :class="[rootClass, { 'logo-marquee--ready': loopCopyReady, 'logo-marquee--paused': !isActive }]"
+    :class="[rootClass, { 'logo-marquee--paused': !isActive }]"
     :aria-hidden="props.asBackground ? 'true' : undefined"
   >
     <div :class="innerWrapClass">
@@ -165,33 +197,21 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
             v-for="col in columnsConfig"
             :key="col.key"
             class="logo-marquee__col flex flex-col h-max"
-            :class="col.isReverse ? 'logo-marquee__col--up' : 'logo-marquee__col--down'"
+            :class="[col.isReverse ? 'logo-marquee__col--up' : 'logo-marquee__col--down', { 'is-looping': col.idx < loopCopies }]"
             :style="{ '--marquee-duration': marqueeDuration }"
           >
-            <component
-              :is="col.withLink ? 'NuxtLink' : 'div'"
-              v-for="copy in (loopCopyReady ? 2 : 1)"
-              :key="copy"
-              :to="col.withLink ? props.linkTo : undefined"
-              class="flex flex-col items-center"
-              :class="[colGapClass, colPadClass]"
-              :aria-hidden="copy === 2 ? 'true' : undefined"
-            >
-              <div v-for="(tile, i) in col.tiles" :key="i" class="logo-marquee__tile">
-                <img
-                  class="logo-marquee__img"
-                  :src="tile.src"
-                  :srcset="tile.srcset"
-                  :sizes="tile.srcset ? '(min-width: 768px) 200px, 100px' : undefined"
-                  alt=""
-                  width="200"
-                  height="100"
-                  loading="lazy"
-                  decoding="async"
-                  draggable="false"
-                />
-              </div>
-            </component>
+            <template v-for="copy in (col.idx < loopCopies ? 2 : 1)" :key="copy">
+              <NuxtLink v-if="col.withLink" :to="props.linkTo" :aria-hidden="copy === 2 ? 'true' : undefined">
+                <div class="flex flex-col items-center" :class="[colGapClass, colPadClass]" v-html="col.html" />
+              </NuxtLink>
+              <div
+                v-else
+                class="flex flex-col items-center"
+                :class="[colGapClass, colPadClass]"
+                :aria-hidden="copy === 2 ? 'true' : undefined"
+                v-html="col.html"
+              />
+            </template>
           </div>
         </div>
       </div>
@@ -236,15 +256,15 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   }
 }
 
-.logo-marquee--ready .logo-marquee__col {
+.logo-marquee__col.is-looping {
   will-change: transform;
 }
 
-.logo-marquee--ready .logo-marquee__col--down {
+.logo-marquee__col--down.is-looping {
   animation: logo-marquee-scroll var(--marquee-duration) linear infinite;
 }
 
-.logo-marquee--ready .logo-marquee__col--up {
+.logo-marquee__col--up.is-looping {
   animation: logo-marquee-scroll var(--marquee-duration) linear infinite reverse;
 }
 

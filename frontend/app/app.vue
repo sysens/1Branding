@@ -35,8 +35,13 @@ const organizationJsonLd = computed(() => JSON.stringify({
 useHead({
   titleTemplate: (titleChunk) => withSiteName(titleChunk || ""),
   htmlAttrs: { lang: () => seoLocale.value, dir: "ltr" },
-  script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
 });
+// Crawlers read it from the server HTML; no need to rebuild it while hydrating.
+if (import.meta.server) {
+  useServerHead({
+    script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
+  });
+}
 const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/Projects"));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/ContactPage")
