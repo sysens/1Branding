@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import Spinner from "~/components/Spinner.vue";
-
 import Form from "~/components/Contacts/Form.vue";
 import Locations from "~/components/Contacts/Locations.vue";
 import MovementFooter from "~/components/Contacts/MovementFooter.vue";
 
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
-import type { gsap } from "gsap";
+import { computed, onMounted, nextTick } from "vue";
 
 const { t } = useI18n();
-
-const loading = ref(true);
 
 const cmsSeo = await useCmsSeo("contactsPage");
 const localePath = useLocalePath();
@@ -20,11 +15,7 @@ usePageSeo({
   breadcrumbs: computed(() => [{ name: t("nav.contacts"), path: localePath("/ContactPage") }]),
 });
 
-let ctx: gsap.Context | null = null;
 const nuxtApp = useNuxtApp();
-
-const rootRef = ref<HTMLElement | null>(null);
-const titleRef = ref<HTMLElement | null>(null);
 
 const getLenis = () => {
   return nuxtApp.$lenis;
@@ -72,58 +63,18 @@ const stabilizeAfterAssets = async () => {
   await refreshLenis();
 };
 
+// The title slide-in is the CSS .intro-slide-in class; only Lenis needs to
+// re-measure once fonts and images have settled.
 onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  if (!rootRef.value) {
-    loading.value = false;
-    await nextTick();
-    await raf2();
-    await refreshLenis();
-    await stabilizeAfterAssets();
-    return;
-  }
-
-  ctx = gsap.context(() => {
-    if (!titleRef.value) return;
-
-    gsap.fromTo(
-      titleRef.value,
-      { x: -160, opacity: 0 },
-      {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        delay: 0.6,
-        ease: "power3.out",
-      }
-    );
-  }, rootRef);
-
-  loading.value = false;
-
   await nextTick();
   await raf2();
   await refreshLenis();
   await stabilizeAfterAssets();
 });
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>
-  <div ref="rootRef" class="relative overflow-x-hidden overscroll-y-none">
-    <Spinner
-      v-if="loading"
-      :size="542"
-      class="fixed inset-0 z-[9999] pointer-events-none"
-    />
-
+  <div class="relative overflow-x-hidden overscroll-y-none">
     <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
 
@@ -135,8 +86,7 @@ onBeforeUnmount(() => {
           <Header />
 
           <h1
-            ref="titleRef"
-            class="products font-normal text-[#FFFFFF] md:text-[62px] md:pt-[105px] pt-[118px] md:pb-[83px] pb-[54px] md:leading-[1] md:tracking-normal text-center text-[40px] leading-[100%] tracking-[0%]"
+            class="products intro-slide-in font-normal text-[#FFFFFF] md:text-[62px] md:pt-[105px] pt-[118px] md:pb-[83px] pb-[54px] md:leading-[1] md:tracking-normal text-center text-[40px] leading-[100%] tracking-[0%]"
           >
             {{ $t("contacts.title") }}
           </h1>

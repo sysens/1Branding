@@ -22,10 +22,18 @@ const imageDomains = [
 const longTermImageCacheHeaders = {
   "cache-control": "public, max-age=31536000, immutable",
 };
-// /public files keep stable (unhashed) names: cache for a day and revalidate in
-// the background for a week, so a replaced image shows up within a day.
+// /public files are cached for a year like hashed assets (a day was flagged by
+// Lighthouse and made repeat visits re-download ~1 MB). Their names are not
+// hashed, so a changed image must be saved under a NEW file name.
 const publicAssetCacheHeaders = {
-  "cache-control": "public, max-age=86400, stale-while-revalidate=604800",
+  "cache-control": "public, max-age=31536000",
+};
+const securityHeaders = {
+  "strict-transport-security": "max-age=31536000",
+  "x-frame-options": "SAMEORIGIN",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "cross-origin-opener-policy": "same-origin",
 };
 const noIndexHeaders = { "x-robots-tag": "noindex, nofollow" };
 // Leftover prototype routes: reachable but must never compete with the real pages.
@@ -43,7 +51,8 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
     "nuxt-marquee",
-    "nuxt-swiper",
+    // nuxt-swiper was removed: nothing uses Swiper, yet its client plugin loaded
+    // and registered swiper/element (~185 KB of JS) on every page.
     "nuxt-keen-slider",
   ],
 
@@ -106,6 +115,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    "/**": { headers: securityHeaders },
     ...Object.fromEntries(isrPages.flatMap((path) => [
       [path, { isr: 300 }],
       [path === "/" ? "/en" : `/en${path}`, { isr: 300 }],
@@ -182,15 +192,22 @@ export default defineNuxtConfig({
     defaultLocale: "ru",
     strategy: "prefix_except_default",
 
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      redirectOn: "root",
-      alwaysRedirect: false,
-      fallbackLocale: "ru",
-    },
+    // No Accept-Language redirect: "/" always serves Russian and "/en" English.
+    // The redirect cost every English-language visitor (and Lighthouse/PageSpeed,
+    // which browse as en-US) an extra round trip of ~1s on mobile, and Google
+    // advises against locale redirects; hreflang and the switcher cover it.
+    detectBrowserLanguage: false,
 
     vueI18n: "../i18n.config.ts",
+  },
+
+  hooks: {
+    // No <link rel="prefetch"> for lazily imported chunks: the browser fetched
+    // them (~150 KB: GSAP, 3D scenes, sliders) while the first screen was still
+    // loading. They are requested when a section actually needs them.
+    "build:manifest": (manifest) => {
+      for (const resource of Object.values(manifest)) resource.prefetch = false;
+    },
   },
 
   compatibilityDate: "2024-04-03",

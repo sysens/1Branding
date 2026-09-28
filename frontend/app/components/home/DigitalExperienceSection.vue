@@ -73,7 +73,8 @@ const renderLine = (line: string) => {
   letter-spacing: 0;
 }
 .digital-experience__title > span { display: block; }
-.digital-experience__title strong { color: #00b534; font-weight: inherit; }
+/* #00aa30 instead of #00b534: same green, but 3.1:1 on white (WCAG AA large text). */
+.digital-experience__title strong { color: #00aa30; font-weight: inherit; }
 .digital-experience__description { max-width: 58rem; margin: 1.75rem auto 0; padding-inline: 1.25rem; color: #666b67; font-family: var(--app-font-sans); font-size: 1rem; font-weight: 400; line-height: 1.4; letter-spacing: 0; }
 @media (min-width: 768px) and (max-width: 1023px) {
   .digital-experience { padding-top: 10rem; }

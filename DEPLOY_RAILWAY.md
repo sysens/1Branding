@@ -110,6 +110,9 @@ NUXT_PUBLIC_ORG_SAME_AS=https://www.instagram.com/...,https://t.me/...,https://w
 - `IS_PROXIED` Railway'da avtomatik yoqiladi (`RAILWAY_SERVICE_ID` orqali); boshqa hostingda qo'lda `IS_PROXIED=true` qo'ying.
 - Public roldan qat'i nazar, anonim foydalanuvchilar uchun `/api/upload/files*`, `/api/users*`, `/api/users-permissions/*` va ro'yxatdan o'tish yopiq; ochiq ro'yxatdan o'tish har ishga tushishda o'chiriladi.
 - `backend/bun.lock` va `frontend/bun.lock` Docker build uchun kerak — ularni o'chirmang (Railway har bir servisni o'z papkasidan build qiladi).
+- Backend builder `node:24-alpine` ustida (bun binary shu image'ga ko'chiriladi): `oven/bun` image'ida Node yo'qligi uchun bun 1.4+ native modullarni (better-sqlite3) Node 26 uchun build qilib, build yiqilardi.
+- `frontend/public` fayllari (rasmlar, shriftlar) 1 yilga keshlanadi. Rasmni almashtirsangiz, uni **yangi nom** bilan saqlang, eski nomdagi fayl brauzer va Cloudflare keshida qolib ketadi.
+- Frontend deploy'dan keyin Cloudflare'da **Caching → Purge Everything** qiling: aks holda edge eski rasm/`robots.txt` versiyalarini bir necha soat berishi mumkin.
 
 - Postgres uchun `pg` package kerak, package.json ga qo'shildi.
 - Strapi Docker ichida ishlagani uchun `DATABASE_POOL_MIN=0` tavsiya etiladi.

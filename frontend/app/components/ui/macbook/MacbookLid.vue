@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { motion, type MotionValue } from "motion-v";
+import { w1280Srcset } from "~/utils/responsiveImage";
 
 defineProps<{
   src?: string;
@@ -9,6 +11,11 @@ defineProps<{
   rotate: MotionValue<number>;
   translate: MotionValue<number>;
 }>();
+
+// The screenshot is added after hydration (the section hydrates as it nears the
+// viewport), keeping it out of the requests made for the first screen.
+const mounted = ref(false);
+onMounted(() => { mounted.value = true; });
 </script>
 
 <template>
@@ -24,7 +31,9 @@ defineProps<{
       </div>
     </div>
     <motion.img
-      v-if="src" :src="src" :alt="alt" width="512" height="384" loading="lazy" decoding="async"
+      v-if="src && mounted" :src="src" :alt="alt" width="512" height="384" loading="lazy" decoding="async"
+      :srcset="w1280Srcset(src)"
+      :sizes="w1280Srcset(src) ? '(max-width: 767px) 700px, 2560px' : undefined"
       class="macbook-scroll__screen"
       :style="{ scaleX, scaleY, rotateX: rotate, translateY: translate, transformStyle: 'flat', transformOrigin: 'top' }"
     />

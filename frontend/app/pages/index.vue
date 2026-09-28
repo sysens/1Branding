@@ -1,28 +1,25 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useSectionTitleReveal } from "~/composables/useSectionTitleReveal";
-import Spinner from "~/components/Spinner.vue";
 import LeadingPage from "~/components/home/leadingPage.vue";
 import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
-import FirstGlanceSections from "~/components/home/FirstGlanceSections.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
-import DigitalExperienceSection from "~/components/home/DigitalExperienceSection.vue";
-import ProjectMarqueeSection from "~/components/home/ProjectMarqueeSection.vue";
-import WorldSection from "~/components/home/WorldSection.vue";
-import AwardsSection from "~/components/home/AwardsSection.vue";
-import BrandStoriesSection from "~/components/home/BrandStoriesSection.vue";
-import AirwaysSceneSection from "~/components/home/AirwaysSceneSection.vue";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 import { selectCollageSource } from "~/utils/collageMedia";
 import { cmsSeoText } from "~/utils/seo";
 import type { LandingMedia } from "~/types/landingPayload";
+
+// Sections below the first screen hydrate (and download their JS) only when
+// they come within 600px of the viewport; their server HTML is visible from the
+// start. Hydrating the whole page up front was one ~340ms main-thread task.
+const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = String(runtimeConfig.public.graphqlUrl || "");
 const { t, locale } = useI18n();
 const route = useRoute();
 const { landingPage, seo: landingSeo, footerSocialMedia } = await useLandingPayload();
-const { loading } = useHomePageReady();
+useHomePageReady();
 const pageRoot = ref<HTMLElement | null>(null);
 useSectionTitleReveal(pageRoot);
 
@@ -61,7 +58,6 @@ usePageSeo({
 
 <template>
   <div ref="pageRoot" class="home-page-root relative min-h-screen bg-black">
-    <Spinner v-if="loading" :size="542" />
     <div class="home-page-frame">
       <div class="home-page-content relative">
         <HeroClientsReveal>
@@ -83,17 +79,17 @@ usePageSeo({
           </div>
         </HeroClientsReveal>
         <div class="home-info-picture"><InfoOnPicture :section="landingPage?.section10" /></div>
-        <DigitalExperienceSection />
-        <ProjectMarqueeSection />
-        <WorldSection />
+        <LazyHomeDigitalExperienceSection :hydrate-on-visible="LAZY_HYDRATION" />
+        <LazyHomeProjectMarqueeSection :hydrate-on-visible="LAZY_HYDRATION" />
+        <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" />
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
-          <div class="home-first-glance"><FirstGlanceSections /></div>
-          <AwardsSection :logos="partnerLogos" />
-          <BrandStoriesSection />
-          <AirwaysSceneSection />
-          <Footer use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
+          <div class="home-first-glance"><LazyHomeFirstGlanceSections :hydrate-on-visible="LAZY_HYDRATION" /></div>
+          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :logos="partnerLogos" />
+          <LazyHomeBrandStoriesSection :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyFooter :hydrate-on-visible="LAZY_HYDRATION" use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
         </div>
       </div>
     </div>

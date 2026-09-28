@@ -48,7 +48,7 @@ useHead(() => ({
 </script>
 
 <template>
-  <main
+  <section
     ref="containerRef"
     class="projects-wall"
     :class="{ 'projects-wall--dragging': isDragging }"
@@ -99,7 +99,7 @@ useHead(() => ({
     </div>
 
     <p v-else class="projects-wall__empty">Projects are unavailable.</p>
-  </main>
+  </section>
 </template>
 
 <style scoped>

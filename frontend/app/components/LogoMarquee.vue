@@ -69,16 +69,29 @@ const staticLogos = [
   "/logoss/thumbs/yana.webp",
 ];
 
-const MAX_LOGOS_PER_COLUMN = 18;
-// The second (loop) copy of each column only scrolls into view after ~60s of the
-// 120s animation, so it is added after hydration: this halves the SSR markup
-// (~270 fewer <img> nodes in the home page HTML).
+const MAX_LOGOS_PER_COLUMN = 16;
+// The second (loop) copy of each column is added after hydration, which keeps
+// the SSR markup at one copy. The columns only start moving once it exists: at
+// that moment a reversed column jumps to -50% of its doubled height, which shows
+// exactly the tiles it showed at 0, so the hand-over is invisible. It is added
+// in an idle period, as its own task instead of lengthening the hydration one.
 const loopCopyReady = ref(false);
-onMounted(() => { loopCopyReady.value = true; });
+onMounted(() => {
+  const ready = () => { loopCopyReady.value = true; };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(ready, { timeout: 1500 });
+  else window.setTimeout(ready, 200);
+});
 const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
 
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
+
+// 200x100 copies of the bundled thumbnails for the 100px mobile tiles.
+const THUMB_DIR = "/logoss/thumbs/";
+const tileSrcset = (src: string) =>
+  src.startsWith(THUMB_DIR)
+    ? `${src.replace(THUMB_DIR, "/logoss/thumbs-sm/")} 200w, ${src} 400w`
+    : undefined;
 
 const mulberry32 = (seed: number) => {
   let t = seed >>> 0;
@@ -99,29 +112,25 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number) => {
     arr[i] = arr[j];
     arr[j] = tmp;
   }
-  return arr.slice(0, MAX_LOGOS_PER_COLUMN);
+  return arr.slice(0, MAX_LOGOS_PER_COLUMN).map((src) => ({ src, srcset: tileSrcset(src) }));
 };
 
 const columnsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0);
   const logos = baseLogos.value;
 
-  return Array.from({ length: total }, (_, idx) => {
-    const isReverse = idx % 2 === 1;
-    return {
-      idx,
-      key: `col-${idx}`,
-      logos: shuffledForColumn(logos, idx),
-      isReverse,
-      imgOpacityClass: "opacity-100",
-      withLink: !props.asBackground && idx === 0,
-    };
-  });
+  return Array.from({ length: total }, (_, idx) => ({
+    idx,
+    key: `col-${idx}`,
+    tiles: shuffledForColumn(logos, idx),
+    isReverse: idx % 2 === 1,
+    withLink: !props.asBackground && idx === 0,
+  }));
 });
 
 const rootClass = computed(() =>
   props.asBackground
-    ? "relative w-full h-full min-h-[900px] overflow-hidden"
+    ? "logo-marquee--background relative w-full h-full min-h-[900px] overflow-hidden"
     : "relative z-10 bg-black w-full overflow-hidden flex items-center justify-center"
 );
 
@@ -137,12 +146,6 @@ const trackClass = computed(() =>
     : "flex h-[900px] items-start justify-center"
 );
 
-const imgWrapperClass =
-  "relative md:h-[100px] h-[50px] md:w-[200px] w-[100px] shrink-0 overflow-hidden rounded-[8px] md:rounded-[10px] select-none pointer-events-none";
-
-const imgClass =
-  "absolute inset-0 origin-center w-full h-full object-cover select-none pointer-events-none";
-
 const colPadClass = computed(() => (props.asBackground ? "py-[2px]" : "py-[1px]"));
 const colGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2px]"));
 const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2px]"));
@@ -151,7 +154,8 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 <template>
   <section
     ref="targetRef"
-    :class="[rootClass, { 'logo-marquee--paused': !isActive }]"
+    class="logo-marquee"
+    :class="[rootClass, { 'logo-marquee--ready': loopCopyReady, 'logo-marquee--paused': !isActive }]"
     :aria-hidden="props.asBackground ? 'true' : undefined"
   >
     <div :class="innerWrapClass">
@@ -160,57 +164,30 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
           <div
             v-for="col in columnsConfig"
             :key="col.key"
-            class="flex flex-col h-max will-change-transform"
-            :class="col.isReverse ? 'marqueeVerticalReverse' : 'marqueeVertical'"
+            class="logo-marquee__col flex flex-col h-max"
+            :class="col.isReverse ? 'logo-marquee__col--up' : 'logo-marquee__col--down'"
             :style="{ '--marquee-duration': marqueeDuration }"
           >
             <component
               :is="col.withLink ? 'NuxtLink' : 'div'"
+              v-for="copy in (loopCopyReady ? 2 : 1)"
+              :key="copy"
               :to="col.withLink ? props.linkTo : undefined"
               class="flex flex-col items-center"
               :class="[colGapClass, colPadClass]"
+              :aria-hidden="copy === 2 ? 'true' : undefined"
             >
-              <div
-                v-for="(src, i) in col.logos"
-                :key="col.key + '-a-' + i"
-                :class="[imgWrapperClass, col.imgOpacityClass]"
-              >
+              <div v-for="(tile, i) in col.tiles" :key="i" class="logo-marquee__tile">
                 <img
-                  :src="src"
+                  class="logo-marquee__img"
+                  :src="tile.src"
+                  :srcset="tile.srcset"
+                  :sizes="tile.srcset ? '(min-width: 768px) 200px, 100px' : undefined"
                   alt=""
                   width="200"
                   height="100"
-                  :class="imgClass"
                   loading="lazy"
                   decoding="async"
-                  fetchpriority="low"
-                  draggable="false"
-                />
-              </div>
-            </component>
-
-            <component
-              :is="col.withLink ? 'NuxtLink' : 'div'"
-              v-if="loopCopyReady"
-              :to="col.withLink ? props.linkTo : undefined"
-              class="flex flex-col items-center"
-              :class="[colGapClass, colPadClass]"
-              aria-hidden="true"
-            >
-              <div
-                v-for="(src, i) in col.logos"
-                :key="col.key + '-b-' + i"
-                :class="[imgWrapperClass, col.imgOpacityClass]"
-              >
-                <img
-                  :src="src"
-                  alt=""
-                  width="200"
-                  height="100"
-                  :class="imgClass"
-                  loading="lazy"
-                  decoding="async"
-                  fetchpriority="low"
                   draggable="false"
                 />
               </div>
@@ -227,26 +204,90 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   </section>
 </template>
 
-<style scoped>
-.marqueeVertical {
-  animation: marqueeVertical var(--marquee-duration) linear infinite;
+<!-- Not scoped: a scope attribute on each of the ~500 tiles would add ~15 KB to
+     the home page HTML, so the classes are namespaced instead. -->
+<style>
+.logo-marquee__tile {
+  position: relative;
+  flex-shrink: 0;
+  width: 100px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 8px;
+  user-select: none;
+  pointer-events: none;
 }
 
-.marqueeVerticalReverse {
-  animation: marqueeVertical var(--marquee-duration) linear infinite reverse;
+.logo-marquee__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
 }
 
-.logo-marquee--paused .marqueeVertical,
-.logo-marquee--paused .marqueeVerticalReverse {
+@media (min-width: 768px) {
+  .logo-marquee__tile {
+    width: 200px;
+    height: 100px;
+    border-radius: 10px;
+  }
+}
+
+.logo-marquee--ready .logo-marquee__col {
+  will-change: transform;
+}
+
+.logo-marquee--ready .logo-marquee__col--down {
+  animation: logo-marquee-scroll var(--marquee-duration) linear infinite;
+}
+
+.logo-marquee--ready .logo-marquee__col--up {
+  animation: logo-marquee-scroll var(--marquee-duration) linear infinite reverse;
+}
+
+.logo-marquee--paused .logo-marquee__col {
   animation-play-state: paused;
 }
 
-@keyframes marqueeVertical {
-  0% {
+@keyframes logo-marquee-scroll {
+  from {
     transform: translateY(0);
   }
-  100% {
+  to {
     transform: translateY(-50%);
+  }
+}
+
+/* Hero background: the tilted, scaled track is about twice as wide as the
+   screen, so columns that never cross the viewport (measured at every point of
+   the animation, plus a spare) are skipped: no layout, paint or image requests
+   for them. */
+@media (max-width: 479px) {
+  .logo-marquee--background .logo-marquee__col:nth-child(n + 8) { display: none; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .logo-marquee--background .logo-marquee__col:nth-child(n + 10) { display: none; }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .logo-marquee--background .logo-marquee__col:nth-child(n + 9) { display: none; }
+}
+
+@media (min-width: 1280px) and (max-width: 1919px) {
+  .logo-marquee--background .logo-marquee__col:nth-child(n + 12) { display: none; }
+}
+
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .logo-marquee--background .logo-marquee__col:nth-child(n + 15) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee__col {
+    animation: none !important;
   }
 }
 </style>

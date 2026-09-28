@@ -5,12 +5,15 @@ type Props = {
   src: string;
   alt?: string;
   eager?: boolean;
+  /** Render only the frame: the image is left out of the server HTML until needed. */
+  deferred?: boolean;
   priority?: "auto" | "low";
 };
 
 const props = withDefaults(defineProps<Props>(), {
   alt: "",
   eager: false,
+  deferred: false,
   priority: "auto",
 });
 
@@ -30,7 +33,7 @@ function handleError(): void {
     class="marquee-image-frame relative block overflow-hidden bg-black md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
   >
     <NuxtImg
-      v-if="!useOriginal"
+      v-if="!deferred && !useOriginal"
       :src="src"
       width="480"
       height="270"
@@ -48,7 +51,7 @@ function handleError(): void {
       @error="handleError"
     />
     <img
-      v-else
+      v-else-if="!deferred"
       :src="src"
       width="480"
       height="270"

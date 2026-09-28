@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import Spinner from "~/components/Spinner.vue";
-
 import EarthDives from "~/components/home/EarthDives.vue";
 import BigPhotoo from "~/components/OneGuarantee/BigPhotoo.vue";
 import GuaranteeMarquee from "~/components/OneGuarantee/GuaranteeMarquee.vue";
 import InfoSection from "~/components/OneGuarantee/InfoSection.vue";
 import Reasons from "~/components/OneGuarantee/Reasons.vue";
-import { ref, computed, onMounted, nextTick } from "vue";
+import { computed, onMounted, nextTick } from "vue";
 
 interface LenisController {
   start?: () => void;
@@ -24,7 +22,6 @@ interface LenisAwareNuxtApp extends ReturnType<typeof useNuxtApp> {
 
 const { t } = useI18n();
 
-const loading = ref(true);
 const oneGuaranteeVideoPoster = "/OneGuarantee/image95.png";
 const oneGuaranteeVideoSrc = "/OneGuarantee/Img%205714.mp4";
 
@@ -82,10 +79,6 @@ const stabilizeAfterAssets = async () => {
 
 onMounted(async () => {
   await nextTick();
-
-  loading.value = false;
-
-  await nextTick();
   await refreshLenis();
   await stabilizeAfterAssets();
 });
@@ -93,12 +86,6 @@ onMounted(async () => {
 
 <template>
   <div class="bg-black relative overflow-x-hidden">
-    <Spinner
-      v-if="loading"
-      :size="542"
-      class="fixed inset-0 z-[9999]"
-    />
-
     <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
 

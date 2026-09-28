@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import ThreeDMarquee from "~/components/ui/ThreeDMarquee.vue";
+
+// The section hydrates when it nears the viewport (index.vue); the light image
+// is attached then, so the CSS background is not fetched with the first screen.
+const lit = ref(false);
+onMounted(() => { lit.value = true; });
 </script>
 
 <template>
@@ -7,7 +13,7 @@ import ThreeDMarquee from "~/components/ui/ThreeDMarquee.vue";
     <!-- Design light (public/home/marquee/light.webp): built from colours measured
          on the design file - white, cream, lime, olive centre, vivid green sides
          and a dark dome whose veil lets the cards drift inside the light. -->
-    <div class="project-marquee-section__light" aria-hidden="true" />
+    <div class="project-marquee-section__light" :class="{ 'is-lit': lit }" aria-hidden="true" />
     <ThreeDMarquee class="project-marquee-section__marquee" />
   </section>
 </template>
@@ -34,11 +40,15 @@ import ThreeDMarquee from "~/components/ui/ThreeDMarquee.vue";
   z-index: 2;
   height: calc(var(--overlap) + var(--frame-h));
   pointer-events: none;
+  background: linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 2px) no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
+}
+
+.project-marquee-section__light.is-lit {
   background:
     url("/home/marquee/light.webp") center bottom / 100% var(--frame-h) no-repeat,
     linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 2px) no-repeat;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
-  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
 }
 
 .project-marquee-section__marquee {

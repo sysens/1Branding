@@ -207,3 +207,38 @@
                 rgba(0, 0, 0, 0) 100%);
     }
 }
+
+/*
+ * Entrance motion for the header and page titles. It used to be a GSAP tween
+ * started after hydration, which hid server-rendered text for 1-2s (and 4s+ on
+ * slow phones). As CSS it starts with the first paint and needs no JavaScript.
+ * Titles only slide (no fade): text that starts at opacity 0 is not counted as
+ * painted, which made a small logo tile the page's Largest Contentful Paint.
+ */
+@keyframes intro-slide-in {
+    from {
+        transform: translate3d(-160px, 0, 0);
+    }
+}
+
+@keyframes intro-drop-in {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -80px, 0);
+    }
+}
+
+.intro-slide-in {
+    animation: intro-slide-in 0.9s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s both;
+}
+
+.intro-drop-in {
+    animation: intro-drop-in 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro-slide-in,
+    .intro-drop-in {
+        animation: none;
+    }
+}

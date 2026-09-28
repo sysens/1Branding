@@ -16,7 +16,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
 
 <template>
   <section id="awards" class="awards-section" aria-labelledby="awards-title">
-    <div class="awards-section__brands" aria-label="Our clients">
+    <div class="awards-section__brands" role="group" aria-label="Our clients">
       <Brands :logos="logos.length ? logos : fallbackLogos" :duration-seconds="160" />
     </div>
     <header class="awards-section__heading">

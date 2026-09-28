@@ -75,9 +75,11 @@ watch(
   <div class="app-shell min-h-screen overscroll-y-none">
     <ClientOnly><BrandCursor /></ClientOnly>
     <NuxtLoadingIndicator color="#03cb00" :height="4" />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <main id="main-content">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </main>
 
     <GradualBlur
       v-if="showBottomBlur"

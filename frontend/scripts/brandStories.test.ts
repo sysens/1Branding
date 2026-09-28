@@ -17,15 +17,15 @@ describe("brand stories", () => {
   });
   test("stories, airways scene and the preserved robot footer follow awards", async () => {
     const source = await home.text();
-    const tail = source.slice(source.indexOf("<AwardsSection"));
-    expect(tail.indexOf("<BrandStoriesSection")).toBeGreaterThan(0);
-    expect(tail.indexOf("<AirwaysSceneSection")).toBeGreaterThan(tail.indexOf("<BrandStoriesSection"));
-    expect(tail.indexOf("<Footer")).toBeGreaterThan(tail.indexOf("<AirwaysSceneSection"));
+    const tail = source.slice(source.indexOf("<LazyHomeAwardsSection"));
+    expect(tail.indexOf("<LazyHomeBrandStoriesSection")).toBeGreaterThan(0);
+    expect(tail.indexOf("<LazyHomeAirwaysSceneSection")).toBeGreaterThan(tail.indexOf("<LazyHomeBrandStoriesSection"));
+    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeAirwaysSceneSection"));
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);
     expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('url("/home/scene.jpg")');
     for (const removed of ["GridSection", "EarthDives", "ProjectTabletShowcase", "ThreeLayerSlug", "RowShorteners"]) expect(source).not.toContain(removed);
-    expect(source).toContain("<WorldSection");
-    expect(source).toContain("<FirstGlanceSections");
+    expect(source).toContain("<LazyHomeWorldSection");
+    expect(source).toContain("<LazyHomeFirstGlanceSections");
     expect(source).toContain(':landing-page="landingPage" :social-media="footerSocialMedia"');
   });
   test("landing request no longer fetches removed sections or shared guarantee content", async () => {

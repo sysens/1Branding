@@ -53,6 +53,8 @@ const marqueeDuration = computed(() => {
             :src="src"
             alt=""
             class="h-[27px] w-auto max-w-[150px] md:max-w-[250px] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
+            loading="lazy"
+            decoding="async"
             draggable="false"
           />
         </div>
@@ -64,6 +66,8 @@ const marqueeDuration = computed(() => {
             :src="src"
             alt=""
             class="h-[27px] w-auto max-w-[150px] md:max-w-[250px] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
+            loading="lazy"
+            decoding="async"
             draggable="false"
           />
         </div>

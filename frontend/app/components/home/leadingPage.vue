@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { computed } from "vue";
 import type { LandingPageContent } from "~/types/landingPayload";
 
 const localePath = useLocalePath();
@@ -7,8 +7,6 @@ const localePath = useLocalePath();
 const props = defineProps<{
   landingPage?: LandingPageContent | null;
 }>();
-
-type GsapContext = { revert: () => void };
 
 type HeroCopy = {
   mutedLines: string[];
@@ -77,30 +75,6 @@ const heroCopy = computed<HeroCopy>(() => {
 
   return DEFAULT_HERO_COPY;
 });
-
-let ctx: GsapContext | null = null;
-
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
-    const main = document.querySelector<HTMLElement>(".products");
-    if (!main) return;
-
-    gsap.fromTo(
-      main,
-      { x: -160, opacity: 0 },
-      { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
-    );
-  });
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>
@@ -108,7 +82,7 @@ onBeforeUnmount(() => {
     <div class="pt-[41px]"></div>
 
     <div class="leading-copy-position relative">
-      <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products">
+      <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products intro-slide-in">
         <h1
           class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
         >

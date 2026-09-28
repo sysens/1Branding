@@ -1,4 +1,4 @@
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 
 interface HomeLenis {
   scrollTo: (target: Element, options: { offset: number; duration: number; immediate: boolean; lock: boolean }) => void;
@@ -7,7 +7,6 @@ interface HomeLenis {
 export function useHomePageReady() {
   const route = useRoute();
   const nuxtApp = useNuxtApp() as ReturnType<typeof useNuxtApp> & { $lenis?: HomeLenis };
-  const loading = ref(true);
   let disposed = false;
   let hashScrollDone = false;
   let frame = 0;
@@ -37,12 +36,10 @@ export function useHomePageReady() {
   onMounted(async () => {
     await nextTick();
     if (disposed) return;
-    loading.value = false;
     if (route.hash && !hashScrollDone) { await scrollToHash(); hashScrollDone = true; }
   });
   onBeforeUnmount(() => {
     disposed = true;
     cancelAnimationFrame(frame);
   });
-  return { loading };
 }

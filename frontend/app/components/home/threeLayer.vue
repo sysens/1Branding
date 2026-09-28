@@ -86,7 +86,8 @@ const rowsConfig = computed(() => {
               v-for="(image, i) in row.duplicatedImages"
               :key="row.key + '-' + i + '-' + image.src"
               :src="image.src"
-              :eager="hasApproached || isInitialCollageImage(i, row.duplicatedImages.length / 2, row.animClass === 'animate-marquee-reverse')"
+              :eager="hasApproached"
+              :deferred="!hasApproached"
               :priority="isInitialCollageImage(i, row.duplicatedImages.length / 2, row.animClass === 'animate-marquee-reverse') ? 'auto' : 'low'"
               @settled="markSettled"
             />

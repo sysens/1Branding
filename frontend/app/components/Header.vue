@@ -3,7 +3,7 @@
     <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[1100px] mt-[20px] min-[950px]:mt-[0px] flex min-[950px]:mx-auto p-3 border h-[76px] min-[950px]:h-[66px] mx-[20px] min-[950px]:rounded-[60px] rounde-d-[50px] border-[#03CB00] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-none"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[1100px] mt-[20px] min-[950px]:mt-[0px] flex min-[950px]:mx-auto p-3 border h-[76px] min-[950px]:h-[66px] mx-[20px] min-[950px]:rounded-[60px] rounde-d-[50px] border-[#03CB00] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-none"
       >
         <div class="logoImg p-[18px] flex items-center">
           <a
@@ -12,11 +12,11 @@
             @click.prevent="goTo(localePath('/'))"
           >
             <img
-              class="w-[72px] h-[44px] pt-1 scale-125 block"
-              src="/home/logoNewwwwwwwwww.png"
+              class="w-[72px] h-[44px] pt-1 scale-125 block object-contain"
+              src="/header/logo.webp"
               alt="OneBranding"
-              width="72"
-              height="44"
+              width="216"
+              height="140"
               fetchpriority="high"
             />
           </a>
@@ -147,7 +147,12 @@
               @click="isMobileMenuOpen = true"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
             >
-              <img class="w-[24px] h-auto" src="/header/Vector (13).png" alt="" />
+              <!-- Vector, so the 21px bitmap no longer blurs on high-DPI screens. -->
+              <svg class="w-[24px] h-auto" viewBox="0 0 21 21" width="24" height="24" fill="#00EA00" aria-hidden="true">
+                <rect width="21" height="3.5" rx="1.75" />
+                <rect y="8.75" width="21" height="3.5" rx="1.75" />
+                <rect y="17.5" width="21" height="3.5" rx="1.75" />
+              </svg>
             </button>
           </div>
         </div>
@@ -313,7 +318,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { watch, onBeforeUnmount, nextTick, computed } from "vue";
 
 type AppLocale = "ru" | "en";
 
@@ -429,30 +434,9 @@ const removeAfterEach = router.afterEach(() => {
   closeMobileMenu();
 });
 
-let ctx: any = null;
-
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
-    const header = document.querySelector(".site-header");
-    if (!header) return;
-
-    gsap.fromTo(
-      header,
-      { y: -80, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, delay: 0.5, ease: "power3.out" }
-    );
-  });
-});
-
 onBeforeUnmount(() => {
   unlockBodyScroll();
   removeAfterEach?.();
-  ctx?.revert();
-  ctx = null;
 });
 </script>
 
