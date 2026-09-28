@@ -36,7 +36,13 @@ export default ({ env }: { env: StrapiEnv }) => [
     },
   },
   "strapi::poweredBy",
+  // gzip/brotli for GraphQL JSON and admin assets; images/video are skipped as
+  // non-compressible by koa-compress.
+  "strapi::compression",
   "strapi::query",
+  // Anonymous access to file listings, users/roles and sign-up is closed here,
+  // whatever the Public role allows in the admin panel.
+  "global::public-api-guard",
   { name: "global::contact-protection", config: { phase: "pre" } },
   {
     name: "strapi::body",
@@ -54,7 +60,7 @@ export default ({ env }: { env: StrapiEnv }) => [
   {
     name: "strapi::favicon",
     config: {
-      path: "public/favicon.ico",
+      path: "favicon.png",
     },
   },
   "strapi::public",

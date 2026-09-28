@@ -14,3 +14,4 @@ build/
 data/
 public/uploads/*
 !public/uploads/.gitkeep
+.codex-tmp/

@@ -25,6 +25,11 @@ interface UploadSecurityMiddlewareConfig {
 interface LocalUploadConfig {
   config: {
     sizeLimit: number;
+    providerOptions: {
+      localServer: {
+        maxage: number;
+      };
+    };
   };
 }
 
@@ -68,6 +73,14 @@ export const buildUploadConfig = (env: StrapiEnv): UploadConfig => {
   return {
     config: {
       sizeLimit,
+      // Cache-Control for GET /uploads/* (koa-static `maxage`, in ms). Strapi's
+      // default is 0 (no caching). Not `immutable`: "Replace media" in the admin
+      // keeps the same URL, so keep this bounded.
+      providerOptions: {
+        localServer: {
+          maxage: env.int("UPLOAD_CACHE_MAX_AGE_SECONDS", 86400) * 1000,
+        },
+      },
     },
   };
 };

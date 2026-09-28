@@ -566,7 +566,7 @@ export interface SeoPricePage extends Struct.ComponentSchema {
 }
 
 declare module '@strapi/strapi' {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       'about-page.core-idea': AboutPageCoreIdea;
       'about-page.creators': AboutPageCreators;

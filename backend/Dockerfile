@@ -11,7 +11,8 @@ COPY . .
 RUN bun run build
 
 
-FROM node:20-alpine3.21 AS runner
+# Node 20 reached end-of-life in April 2026; Strapi 5.52 supports Node 20-26.
+FROM node:24-alpine AS runner
 
 ENV NODE_ENV=production
 RUN apk add --no-cache vips

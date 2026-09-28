@@ -132,3 +132,9 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+############################
+# Local tool scratch
+############################
+
+.codex-tmp/

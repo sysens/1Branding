@@ -1,4 +1,8 @@
+import { readFile, stat } from 'node:fs/promises';
+import { resolve, sep } from 'node:path';
+
 const MAX_DOCUMENT_BYTES = 10 * 1024 * 1024;
+const UPLOAD_PATH = /^\/uploads\/[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/;
 const REQUEST_TIMEOUT_MS = 12_000;
 
 export const escapeTelegramHtml = (value: unknown): string =>
@@ -27,7 +31,7 @@ const credentials = () => {
 const telegramUrl = (botToken: string, action: 'sendMessage' | 'sendDocument') =>
   `https://api.telegram.org/bot${botToken}/${action}`;
 
-const telegramPost = async (url: string, body: BodyInit, contentType?: string) => {
+const telegramPost = async (url: string, body: string | FormData, contentType?: string) => {
   const response = await fetch(url, {
     method: 'POST',
     headers: contentType ? { 'Content-Type': contentType } : undefined,
@@ -64,7 +68,7 @@ const checkedUploadUrl = (fileUrl: string): URL => {
   const isLocalDev = process.env.NODE_ENV !== 'production' &&
     ['localhost', '127.0.0.1', '[::1]'].includes(expected.hostname);
   if (url.origin !== expected.origin || url.username || url.password ||
-      url.search || url.hash || !/^\/uploads\/[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/.test(url.pathname) ||
+      url.search || url.hash || !UPLOAD_PATH.test(url.pathname) ||
       !(url.protocol === 'https:' || (isLocalDev && url.protocol === 'http:'))) {
     throw new Error('Attachment URL is not an approved upload');
   }
@@ -113,11 +117,44 @@ const fetchBoundedFile = async (fileUrl: string): Promise<Uint8Array> => {
   return output;
 };
 
-export async function sendTelegramDocumentBuffer(fileUrl: string, fileName = 'file') {
+/**
+ * Reads a local-provider upload (`/uploads/<name>.<ext>`) straight from the
+ * public directory. Returns null when the file is not on this instance's disk.
+ */
+const readLocalUpload = async (urlPath: string): Promise<Uint8Array | null> => {
+  if (!UPLOAD_PATH.test(urlPath)) return null;
+  const root = resolve(strapi.dirs.static.public);
+  const target = resolve(root, `.${urlPath}`);
+  if (!target.startsWith(root + sep)) return null;
+  try {
+    const info = await stat(target);
+    if (!info.isFile()) return null;
+    if (info.size === 0) throw new Error('Attachment is empty');
+    if (info.size > MAX_DOCUMENT_BYTES) throw new Error('Attachment exceeds the size limit');
+    return new Uint8Array(await readFile(target));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') return null;
+    throw error;
+  }
+};
+
+/**
+ * Sends an uploaded contact attachment to Telegram. The file is read from disk
+ * when it lives on this instance (no dependency on PUBLIC_BASE_URL being
+ * reachable from inside the container); otherwise it is downloaded from
+ * PUBLIC_BASE_URL with the same origin and size checks as before.
+ */
+export async function sendTelegramDocument(fileUrl: string, fileName = 'file') {
   const auth = credentials();
   if (!auth) return;
 
-  const bytes = await fetchBoundedFile(fileUrl);
+  let bytes = await readLocalUpload(fileUrl);
+  if (!bytes) {
+    const baseUrl = process.env.PUBLIC_BASE_URL;
+    if (!baseUrl) throw new Error('Attachment base URL is not configured');
+    bytes = await fetchBoundedFile(new URL(fileUrl, baseUrl).href);
+  }
+
   const safeFileName = fileName.replace(/[^\p{L}\p{N}._ -]/gu, '_').slice(0, 150) || 'file';
   const formData = new FormData();
   formData.append('chat_id', auth.chatId);

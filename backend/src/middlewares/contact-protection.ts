@@ -1,4 +1,4 @@
-import { open } from 'node:fs/promises';
+import { open, rm } from 'node:fs/promises';
 import { extname } from 'node:path';
 
 const UPLOAD_PATH = '/api/upload';
@@ -28,26 +28,23 @@ const isAllowedFileType = (name: string, mime: string): boolean => {
   return Boolean(expected && expected.includes(mime.toLowerCase()));
 };
 
-const validSignature = (name: string, bytes: Uint8Array): boolean => {
+// Magic-number check on the first bytes of the upload. Compared as hex strings
+// so it type-checks with both the project's TypeScript and Strapi's (5.9) build.
+const validSignature = (name: string, header: string): boolean => {
   const extension = extname(name).toLowerCase();
-  if (extension === '.pdf') return Buffer.from(bytes.subarray(0, 5)).toString('ascii') === '%PDF-';
-  if (extension === '.jpg' || extension === '.jpeg')
-    return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
-  if (extension === '.png')
-    return Buffer.from(bytes.subarray(0, 8)).toString('hex') === '89504e470d0a1a0a';
-  if (extension === '.webp')
-    return bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
-  if (extension === '.doc')
-    return bytes.subarray(0, 8).equals(Buffer.from('d0cf11e0a1b11ae1', 'hex'));
-  if (extension === '.docx')
-    return bytes.subarray(0, 4).equals(Buffer.from('504b0304', 'hex'));
+  const ascii = (from: number, to: number) => Buffer.from(header.slice(from * 2, to * 2), 'hex').toString('latin1');
+  if (extension === '.pdf') return ascii(0, 5) === '%PDF-';
+  if (extension === '.jpg' || extension === '.jpeg') return header.startsWith('ffd8ff');
+  if (extension === '.png') return header.startsWith('89504e470d0a1a0a');
+  if (extension === '.webp') return ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP';
+  if (extension === '.doc') return header.startsWith('d0cf11e0a1b11ae1');
+  if (extension === '.docx') return header.startsWith('504b0304');
   if (extension === '.heic' || extension === '.heif')
-    return bytes.toString('ascii', 4, 8) === 'ftyp' &&
-      /^(heic|heix|hevc|hevx|mif1|msf1)$/.test(bytes.toString('ascii', 8, 12));
+    return ascii(4, 8) === 'ftyp' && /^(heic|heix|hevc|hevx|mif1|msf1)$/.test(ascii(8, 12));
   return false;
 };
 
-const reject = (ctx: any, message: string): never => ctx.throw(400, message);
+const reject = (ctx: any, message: string): never => ctx.throw(400, message) as never;
 
 const limitRequests = (ctx: any, kind: 'upload' | 'submission') => {
   const now = Date.now();
@@ -83,10 +80,33 @@ const fields: Record<string, number> = {
   email: 254,
 };
 
+// Bot traps sent by the website form alongside `data`: a hidden "website"
+// field real visitors never fill, and how long the form was open. Scripts that
+// fill every input or post instantly are refused; `meta` never reaches Strapi.
+// `meta` is optional so a frontend deployed before this backend keeps working.
+const MIN_FILL_MS = 3_000;
+const MAX_FILL_MS = 24 * 60 * 60 * 1000;
+
+const checkBotTraps = (ctx: any, body: Record<string, unknown>) => {
+  const meta = body.meta;
+  if (!isRecord(meta) || Object.keys(meta).length !== 2) reject(ctx, 'Invalid contact submission');
+  const { website, elapsedMs } = meta as Record<string, unknown>;
+  if (website !== '' || typeof elapsedMs !== 'number' || !Number.isFinite(elapsedMs) ||
+      elapsedMs < MIN_FILL_MS || elapsedMs > MAX_FILL_MS) {
+    reject(ctx, 'Invalid contact submission');
+  }
+  delete body.meta;
+};
+
 const validateSubmission = async (ctx: any, strapi: any) => {
   const body = ctx.request.body;
   const data = body?.data;
-  if (!isRecord(body) || Object.keys(body).length !== 1 || !isRecord(data) ||
+  if (!isRecord(body) || !('data' in body) ||
+      Object.keys(body).some((key) => key !== 'data' && key !== 'meta')) {
+    reject(ctx, 'Invalid contact submission');
+  }
+  if ('meta' in body) checkBotTraps(ctx, body);
+  if (!isRecord(data) ||
       Object.keys(data).length !== Object.keys(fields).length + 1 ||
       Object.keys(data).some((key) => key !== 'requestedServicesMessageFile' && !(key in fields))) {
     reject(ctx, 'Invalid contact submission');
@@ -138,14 +158,26 @@ const validateUpload = async (ctx: any) => {
 
   const handle = await open(filepath, 'r');
   try {
-    const bytes = Buffer.alloc(32);
+    const bytes = new Uint8Array(32);
     const { bytesRead } = await handle.read(bytes, 0, bytes.length, 0);
-    if (!validSignature(originalFilename, bytes.subarray(0, bytesRead))) {
+    const header = Array.from(bytes.subarray(0, bytesRead), (byte) => byte.toString(16).padStart(2, '0')).join('');
+    if (!validSignature(originalFilename, header)) {
       reject(ctx, 'Invalid contact file');
     }
   } finally {
     await handle.close();
   }
+};
+
+// strapi::body only deletes formidable temp files when the downstream chain
+// succeeds; on a thrown error they would stay in the OS temp dir forever.
+const removeTempFiles = async (ctx: any) => {
+  const groups = Object.values(ctx.request?.files ?? {});
+  const paths = groups
+    .flatMap((group) => (Array.isArray(group) ? group : [group]))
+    .map((file: any) => file?.filepath)
+    .filter((filepath): filepath is string => typeof filepath === 'string');
+  await Promise.all(paths.map((filepath) => rm(filepath, { force: true }).catch(() => {})));
 };
 
 // Two passes: before body parsing (cheap rate/size checks) and after parsing
@@ -158,6 +190,9 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
 
     if (config.phase === 'pre') {
       const isUpload = ctx.path === UPLOAD_PATH;
+      // `POST /api/upload?id=<n>` makes Strapi replace (or re-describe) an
+      // existing media file. The public contact flow never sends a query string.
+      if (ctx.querystring) reject(ctx, 'Unexpected query parameters');
       const contentType = ctx.get('Content-Type').toLowerCase();
       if (!(isUpload ? contentType.startsWith('multipart/form-data;') :
         contentType.startsWith('application/json'))) {
@@ -167,7 +202,13 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
       if (Number(ctx.get('Content-Length')) > maxLength) ctx.throw(413, 'Request too large');
       limitRequests(ctx, isUpload ? 'upload' : 'submission');
     } else if (ctx.path === UPLOAD_PATH) {
-      await validateUpload(ctx);
+      try {
+        await validateUpload(ctx);
+        return await next();
+      } catch (error) {
+        await removeTempFiles(ctx);
+        throw error;
+      }
     } else {
       await validateSubmission(ctx, strapi);
     }
