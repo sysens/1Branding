@@ -1,5 +1,12 @@
 import Lenis from "lenis"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+// ScrollTrigger is loaded on demand: a static import here pulled GSAP and
+// ScrollTrigger (~40 KB compressed) into the entry chunk, i.e. into the
+// critical path of every page, while the sections using them import it lazily.
+// Until it has loaded there are no triggers to update or refresh.
+type ScrollTriggerApi = typeof import("gsap/ScrollTrigger").ScrollTrigger
+let scrollTrigger: ScrollTriggerApi | null = null
+const loadScrollTrigger = () => import("gsap/ScrollTrigger").then((module) => { scrollTrigger = module.ScrollTrigger })
 
 export default defineNuxtPlugin((nuxtApp) => {
   if (import.meta.server) return
@@ -15,7 +22,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   let rafId = 0
   let prevFullPath = ""
-  const updateScrollTrigger = () => ScrollTrigger.update()
+  const updateScrollTrigger = () => scrollTrigger?.update()
+  void loadScrollTrigger()
 
   lenis.on("scroll", updateScrollTrigger)
 
@@ -41,7 +49,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         prevFullPath = route.fullPath
         lenis.resize()
-        ScrollTrigger.refresh()
+        scrollTrigger?.refresh()
       })
     })
   }

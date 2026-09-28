@@ -21,7 +21,7 @@ const UNICODES = [
   "U+2190-2199", "U+2212", "U+2248", "U+2260", "U+2264-2265",
 ].join(",");
 
-const dir = resolve("public/fonts");
+const dir = resolve("public/fonts/v2");
 for (const name of (await readdir(dir)).filter((file) => file.endsWith(".woff2"))) {
   const path = resolve(dir, name);
   const result = spawnSync("pyftsubset", [

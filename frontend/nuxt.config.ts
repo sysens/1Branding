@@ -84,8 +84,8 @@ export default defineNuxtConfig({
         { rel: "apple-touch-icon", sizes: "180x180", href: "/General/apple-touch-icon.png" },
         { rel: "manifest", href: "/site.webmanifest" },
         // Body copy and headline faces used above the fold (~40 KB each).
-        { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/SF-Pro-Text-Regular.woff2", crossorigin: "" },
-        { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/SF-Pro-Display-Regular.woff2", crossorigin: "" },
+        { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Text-Regular.woff2", crossorigin: "" },
+        { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Display-Regular.woff2", crossorigin: "" },
       ],
     },
   },
@@ -109,7 +109,11 @@ export default defineNuxtConfig({
     domains: imageDomains,
     format: ["webp"],
     ipx: {
-      // CMS uploads carry a content hash; match the existing public image policy.
+      // IPX writes its own cache-control (60s by default for local files),
+      // which overrode the /_ipx route rule. CMS uploads carry a content hash and
+      // /public images follow the rename-on-change rule, so a year is safe.
+      maxAge: 31536000,
+      fs: { maxAge: 31536000 },
       http: { maxAge: 31536000 },
     },
   },

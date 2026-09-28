@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 /* ================== SF PRO ==================
- * Latin + Latin Extended-A + Cyrillic subsets in WOFF2 (~40 KB each instead of
- * ~330 KB OTF). `body * { font-family: inherit !important }` below means these
- * two families are the only faces the site ever renders.
+ * Latin + Cyrillic subsets in WOFF2 (~30 KB each instead of ~330 KB OTF).
+ * `body * { font-family: inherit !important }` below means these two families
+ * are the only faces the site ever renders. Text 500 and Display 600 are only
+ * used below the first screen, so they are registered after the first paint
+ * (plugins/01.deferred-fonts.client.ts); until then 400 / 700 stand in.
  */
 @font-face {
     font-family: "SF Pro Text";
-    src: url("/fonts/SF-Pro-Text-Regular.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Text-Regular.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -17,15 +19,7 @@
 
 @font-face {
     font-family: "SF Pro Text";
-    src: url("/fonts/SF-Pro-Text-Medium.woff2") format("woff2");
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "SF Pro Text";
-    src: url("/fonts/SF-Pro-Text-Semibold.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Text-Semibold.woff2") format("woff2");
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -33,7 +27,7 @@
 
 @font-face {
     font-family: "SF Pro Text";
-    src: url("/fonts/SF-Pro-Text-Bold.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Text-Bold.woff2") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -41,7 +35,7 @@
 
 @font-face {
     font-family: "SF Pro Display";
-    src: url("/fonts/SF-Pro-Display-Regular.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Display-Regular.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -49,7 +43,7 @@
 
 @font-face {
     font-family: "SF Pro Display";
-    src: url("/fonts/SF-Pro-Display-Medium.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Display-Medium.woff2") format("woff2");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -57,15 +51,7 @@
 
 @font-face {
     font-family: "SF Pro Display";
-    src: url("/fonts/SF-Pro-Display-Semibold.woff2") format("woff2");
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "SF Pro Display";
-    src: url("/fonts/SF-Pro-Display-Bold.woff2") format("woff2");
+    src: url("/fonts/v2/SF-Pro-Display-Bold.woff2") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
