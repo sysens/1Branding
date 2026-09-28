@@ -144,9 +144,8 @@ const query = `
 const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query, variables: { locale: gqlLocale.value } },
-  server: false,
-  key: `one-guarantee-section5-${gqlLocale.value}`,
+  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
+  key: computed(() => `one-guarantee-section5-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -172,11 +171,11 @@ const resolveImg = (url?: string | null) => {
     class="div max-w-[746px] pt-[100px] md:mb-[377px] mb-[175px] mx-auto md:px-0 md:[40px]"
   >
     <div class="eff-head will-change-transform">
-      <h1
+      <h2
         class="font-normal md:text-[62px] md:leading-[100%] md:tracking-tighter text-[#FFFFFF] mb-[80px] text-[40px] leading-[120%] tracking-normal text-center font-['Inter']"
       >
         {{ title }}
-      </h1>
+      </h2>
     </div>
 
     <div class="eff-list will-change-transform">
@@ -195,11 +194,11 @@ const resolveImg = (url?: string | null) => {
           </div>
 
           <div>
-            <h1
+            <p
               class="font-light md:text-[24px] md:leading-[28px] tracking-normal text-[#FFFFFF] text-[14px] leading-[120%] font-['Inter']"
             >
               {{ item.text }}
-            </h1>
+            </p>
           </div>
         </div>
       </div>

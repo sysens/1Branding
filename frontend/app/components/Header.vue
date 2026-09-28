@@ -14,7 +14,7 @@
             <img
               class="w-[72px] h-[44px] pt-1 scale-125 block"
               src="/home/logoNewwwwwwwwww.png"
-              alt=""
+              alt="OneBranding"
             />
           </a>
         </div>
@@ -139,6 +139,8 @@
 
           <div class="toggleButton oneGuarantee relative flex z-[111] justify-end">
             <button
+              type="button"
+              :aria-label="lang === 'ru' ? 'Открыть меню' : 'Open menu'"
               @click="isMobileMenuOpen = true"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
             >
@@ -168,10 +170,12 @@
         <div class="relative h-full overflow-y-auto overscroll-contain z-[2147483647]">
           <div class="flex items-center justify-between px-[32px] pt-[40px] pb-[72px]">
             <a :href="localePath('/')" @click.prevent="goTo(localePath('/'))">
-              <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="" />
+              <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" />
             </a>
 
             <button
+              type="button"
+              :aria-label="lang === 'ru' ? 'Закрыть меню' : 'Close menu'"
               @click="closeMobileMenu"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
             >
@@ -213,12 +217,12 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/OneGuarantee')"
-              @click.prevent="goTo(localePath('/OneGuarantee'))"
+              :href="localePath('/Oneguarantee')"
+              @click.prevent="goTo(localePath('/Oneguarantee'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
-              {{ $t("brand.one") }}
-              <span class="text-[#03CB00]">{{ $t("brand.oneGuaranteeSuffix") }}</span>
+              <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
+              {{ $t("brand.oneGuaranteeSuffix") }}
             </a>
 
             <div class="h-px bg-white/10"></div>

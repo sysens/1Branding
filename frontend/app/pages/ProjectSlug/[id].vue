@@ -7,6 +7,7 @@ import ProjectBigPic from "~/components/ProjectSlug/ProjectBigPic.vue";
 import ProjectGrid from "~/components/ProjectSlug/ProjectGrid.vue";
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 type AppLocale = "ru" | "en";
 
@@ -57,7 +58,15 @@ const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 
 const route = useRoute();
-const documentId = computed(() => String(route.params.id || ""));
+const documentId = computed(() => String(route.params.id || "").trim());
+
+definePageMeta({ key: (route) => route.fullPath });
+if (!documentId.value) {
+  throw createError({ statusCode: 404, statusMessage: "Project not found" });
+}
+if (!GRAPHQL_URL) {
+  throw createError({ statusCode: 503, statusMessage: "Project content is unavailable" });
+}
 
 type Media = { url: string | null; documentId?: string | null };
 
@@ -178,30 +187,37 @@ const page = computed(
     null
 );
 
+if (error.value || (!page.value && (data.value?.errors?.length || !data.value?.data))) {
+  throw createError({ statusCode: 502, statusMessage: "Unable to load project" });
+}
+if (!page.value) {
+  throw createError({ statusCode: 404, statusMessage: "Project not found" });
+}
+
 const section1 = computed(() => page.value?.section1 ?? null);
 const section2 = computed(() => page.value?.section2 ?? null);
 const section3 = computed(() => page.value?.section3 ?? null);
 
 const seoTitle = computed(() => section1.value?.projectTitle?.trim() || "Project");
-const seoDescription = computed(() => section1.value?.text?.trim() || "");
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+const seoDescription = computed(() =>
+  (section1.value?.text || section2.value?.text || "")
+    .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)
+);
+const seoImage = computed(() => resolveStrapiMediaUrl(
+  section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url,
+  GRAPHQL_URL
+));
 
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "article",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary_large_image",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
+usePageSeo({
+  title: seoTitle,
+  description: seoDescription,
+  type: "website",
+  image: seoImage,
+  indexable: computed(() =>
+    !("preview" in route.query || "draft" in route.query) &&
+    !!data.value?.data?.projectsPage
+  ),
 });
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 

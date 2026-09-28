@@ -690,12 +690,6 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
-    section11: Schema.Attribute.Component<'landing-page.faq', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     section2: Schema.Attribute.Component<'landing-page.stats', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -718,12 +712,6 @@ export interface ApiLandingPageLandingPage extends Struct.SingleTypeSchema {
         };
       }>;
     section6: Schema.Attribute.Component<'landing-page.info', false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    section7: Schema.Attribute.Component<'landing-page.what-we-do', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
-import { useI18n } from "vue-i18n";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 let ctx: any = null;
 
@@ -25,116 +25,28 @@ onBeforeUnmount(() => {
   ctx = null;
 });
 
-type AppLocale = "ru" | "en";
-
-const { locale } = useI18n();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-const fallbackLocale: AppLocale = "en";
-
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const route = useRoute();
-
-const documentId = computed(() => {
-  const p: any = route.params;
-  const v =
-    typeof p?.id === "string"
-      ? p.id
-      : typeof p?.documentId === "string"
-      ? p.documentId
-      : "";
-  return v || "";
-});
-
-type Media = { url: string | null };
-
+type Media = { url?: string | null };
 type NewsItem = {
-  documentId?: string | null;
   title?: string | null;
   createdAt?: string | null;
   publishedAt?: string | null;
   updatedAt?: string | null;
   image?: Media | null;
   text?: string | null;
-  images_connection?: { nodes: Media[] } | null;
+  images_connection?: { nodes?: Media[] | null } | null;
 };
 
-type GqlRes = {
-  data?: {
-    newsPage?: NewsItem | null;
-    fallbackNewsPage?: NewsItem | null;
-  };
-  errors?: Array<{ message: string }>;
-};
+const props = defineProps<{ news: NewsItem | null }>();
+const graphqlUrl = String(useRuntimeConfig().public.graphqlUrl || "");
+const resolveImage = (url?: string | null) => resolveStrapiMediaUrl(url, graphqlUrl);
 
-const query = `
-  query NewsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
-    newsPage(documentId: $documentId, locale: $locale) {
-      documentId
-      title
-      createdAt
-      publishedAt
-      updatedAt
-      image { url }
-      text
-      images_connection {
-        nodes { url }
-      }
-    }
-    fallbackNewsPage: newsPage(documentId: $documentId, locale: $fallbackLocale) {
-      documentId
-      title
-      createdAt
-      publishedAt
-      updatedAt
-      image { url }
-      text
-      images_connection {
-        nodes { url }
-      }
-    }
-  }
-`;
-
-const { data, error } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: {
-      documentId: documentId.value,
-      locale: gqlLocale.value,
-      fallbackLocale,
-    },
-  })),
-  key: computed(() => `news-page-${documentId.value}-${String(gqlLocale.value)}`),
-  watch: [documentId, gqlLocale],
-});
-
-const news = computed(
-  () => data.value?.data?.newsPage ?? data.value?.data?.fallbackNewsPage ?? null
-);
-
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveImage = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  const base = apiBase.value;
-  if (url.startsWith("/")) return base + url;
-  return base + "/" + url;
-};
-
-const title = computed(() => (news.value?.title ?? "").toString());
-const text = computed(() => (news.value?.text ?? "").toString());
-const heroImageSrc = computed(() => resolveImage(news.value?.image?.url));
+const title = computed(() => (props.news?.title ?? "").toString());
+const text = computed(() => (props.news?.text ?? "").toString());
+const heroImageSrc = computed(() => resolveImage(props.news?.image?.url));
 
 const createdAt = computed(() => {
   const raw =
-    news.value?.createdAt || news.value?.publishedAt || news.value?.updatedAt || "";
+    props.news?.createdAt || props.news?.publishedAt || props.news?.updatedAt || "";
 
   if (!raw) return "";
 
@@ -148,13 +60,9 @@ const createdAt = computed(() => {
   return `${day}.${month}.${year}`;
 });
 
-const images = computed(() => news.value?.images_connection?.nodes ?? []);
+const images = computed(() => props.news?.images_connection?.nodes ?? []);
 const leftImg = computed(() => resolveImage(images.value?.[0]?.url));
 const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
-
-const gqlErrors = computed(
-  () => data.value?.errors?.map((e) => e.message).join(" | ") || ""
-);
 </script>
 
 <template>
@@ -207,16 +115,6 @@ const gqlErrors = computed(
             class="rightSide rightImg w-full h-full object-cover md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px]"
           />
         </div>
-      </div>
-
-      <div v-if="!GRAPHQL_URL" class="mt-6 text-white">
-        {{ $t("common.graphqlUrlEmpty") }}
-      </div>
-      <div v-else-if="error" class="mt-6 text-white break-all">
-        {{ (error as any)?.message || error }}
-      </div>
-      <div v-else-if="gqlErrors" class="mt-6 text-white break-all">
-        {{ gqlErrors }}
       </div>
     </div>
   </div>

@@ -2,31 +2,109 @@
 import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import NewsHero from "~/components/Newsslug/NewsHero.vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
-const { t } = useI18n();
+type AppLocale = "ru" | "en";
+type Media = { url?: string | null };
+type NewsItem = {
+  documentId?: string | null;
+  title?: string | null;
+  text?: string | null;
+  createdAt?: string | null;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+  image?: Media | null;
+  images_connection?: { nodes?: Media[] | null } | null;
+};
+type NewsResponse = {
+  data?: { newsPage?: NewsItem | null; fallbackNewsPage?: NewsItem | null };
+  errors?: Array<{ message: string }>;
+};
+
+const { t, locale } = useI18n();
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
+const graphqlUrl = String(runtimeConfig.public.graphqlUrl || "");
+const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/+$/, "");
+const documentId = computed(() => String(route.params.id || "").trim());
+const gqlLocale = computed<AppLocale>(() => locale.value === "en" ? "en" : "ru");
 
-const seoTitle = computed(() => t("seo.news"));
-const seoDescription = computed(() => t("seo.description"));
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+// A new route instance avoids stale content (and stale SEO) on client-side ID changes.
+definePageMeta({ key: (route) => route.fullPath });
 
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "article",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
+if (!documentId.value) {
+  throw createError({ statusCode: 404, statusMessage: "News article not found" });
+}
+if (!graphqlUrl) {
+  throw createError({ statusCode: 503, statusMessage: "News content is unavailable" });
+}
+
+const query = `
+  query NewsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+    newsPage(documentId: $documentId, locale: $locale) {
+      documentId title text createdAt publishedAt updatedAt
+      image { url }
+      images_connection { nodes { url } }
+    }
+    fallbackNewsPage: newsPage(documentId: $documentId, locale: $fallbackLocale) {
+      documentId title text createdAt publishedAt updatedAt
+      image { url }
+      images_connection { nodes { url } }
+    }
+  }
+`;
+
+// One SSR request supplies both the rendered article and its metadata.
+const { data, error } = await useFetch<NewsResponse>(graphqlUrl, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: computed(() => ({
+    query,
+    variables: { documentId: documentId.value, locale: gqlLocale.value, fallbackLocale: "en" },
+  })),
+  key: computed(() => `news-page-${documentId.value}-${gqlLocale.value}`),
+  watch: [documentId, gqlLocale],
 });
+const news = computed(() => data.value?.data?.newsPage ?? data.value?.data?.fallbackNewsPage ?? null);
 
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
+if (error.value || (!news.value && (data.value?.errors?.length || !data.value?.data))) {
+  throw createError({ statusCode: 502, statusMessage: "Unable to load news article" });
+}
+if (!news.value) {
+  throw createError({ statusCode: 404, statusMessage: "News article not found" });
+}
+
+const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news"));
+const seoDescription = computed(() =>
+  (news.value?.text || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) || t("seo.description")
+);
+const seoImage = computed(() => resolveStrapiMediaUrl(news.value?.image?.url, graphqlUrl));
+const canonical = computed(() => siteUrl ? `${siteUrl}${route.path}` : "");
+const validDate = (value?: string | null) => value && !Number.isNaN(Date.parse(value)) ? new Date(value).toISOString() : undefined;
+const structuredData = computed(() => ({
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: seoTitle.value,
+  description: seoDescription.value,
+  ...(seoImage.value ? { image: [seoImage.value] } : {}),
+  ...(validDate(news.value?.publishedAt || news.value?.createdAt) ? { datePublished: validDate(news.value?.publishedAt || news.value?.createdAt) } : {}),
+  ...(validDate(news.value?.updatedAt) ? { dateModified: validDate(news.value?.updatedAt) } : {}),
+  ...(canonical.value ? { mainEntityOfPage: canonical.value } : {}),
+  inLanguage: data.value?.data?.newsPage ? gqlLocale.value : "en",
+  publisher: { "@type": "Organization", name: "OneBranding" },
 }));
+
+usePageSeo({
+  title: seoTitle,
+  description: seoDescription,
+  type: "article",
+  image: seoImage,
+  structuredData,
+  indexable: computed(() =>
+    !("preview" in route.query || "draft" in route.query) &&
+    !!data.value?.data?.newsPage
+  ),
+});
 
 let ctx: any = null;
 
@@ -70,7 +148,7 @@ onBeforeUnmount(() => {
         <Header />
 
         <div class="containerr">
-          <NewsHero />
+          <NewsHero :news="news" />
         </div>
       </div>
 

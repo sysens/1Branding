@@ -3,6 +3,7 @@ import Spinner from "~/components/Spinner.vue";
 import ProductsMain from "~/components/Products/Productsmain.vue";
 import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 type AppLocale = "ru" | "en";
 
@@ -103,8 +104,16 @@ type GqlRes = {
   errors?: Array<{ message: string }>;
 };
 
-const categoryId = computed(() => String(route.params.id || ""));
+const categoryId = computed(() => String(route.params.id || "").trim());
 const fallbackLocale: AppLocale = "en";
+
+definePageMeta({ key: (route) => route.fullPath });
+if (!categoryId.value) {
+  throw createError({ statusCode: 404, statusMessage: "Category not found" });
+}
+if (!GRAPHQL_URL) {
+  throw createError({ statusCode: 503, statusMessage: "Category content is unavailable" });
+}
 
 const query = `
   query CategoryById($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
@@ -182,6 +191,13 @@ const category = computed(
   () => gqlData.value?.data?.category ?? gqlData.value?.data?.fallbackCategory ?? null
 );
 
+if (error.value || (!category.value && (gqlData.value?.errors?.length || !gqlData.value?.data))) {
+  throw createError({ statusCode: 502, statusMessage: "Unable to load category" });
+}
+if (!category.value) {
+  throw createError({ statusCode: 404, statusMessage: "Category not found" });
+}
+
 const pageTitle = computed(
   () => category.value?.categoryName || t("productSlug.titleFallback")
 );
@@ -190,24 +206,23 @@ const pageDesc = computed(
   () => category.value?.description || t("productSlug.descFallback")
 );
 
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
+const seoImage = computed(() => resolveStrapiMediaUrl(
+  category.value?.projects_connection?.nodes?.find(
+    (project) => project?.section1?.images?.some((media) => !!media?.url)
+  )?.section1?.images?.find((media) => !!media?.url)?.url,
+  GRAPHQL_URL
+));
 
-useSeoMeta({
-  title: () => pageTitle.value,
-  description: () => pageDesc.value,
-  ogTitle: () => pageTitle.value,
-  ogDescription: () => pageDesc.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary_large_image",
-  twitterTitle: () => pageTitle.value,
-  twitterDescription: () => pageDesc.value,
+usePageSeo({
+  title: pageTitle,
+  description: computed(() => pageDesc.value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)),
+  type: "website",
+  image: seoImage,
+  indexable: computed(() =>
+    !("preview" in route.query || "draft" in route.query) &&
+    !!gqlData.value?.data?.category
+  ),
 });
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 const projectsFromApi = computed(() => {
   const nodes = category.value?.projects_connection?.nodes ?? [];

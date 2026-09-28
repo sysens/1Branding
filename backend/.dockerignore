@@ -1,6 +1,11 @@
 .tmp/
 .git/
 .env
+.env.*
+!.env.example
+!.env.railway.example
+**/.env
+**/.env.*
 **/node_modules/
 build/
 **/dist/

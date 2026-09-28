@@ -139,7 +139,7 @@ onBeforeUnmount(() => {
       >
         <NuxtImg
           :src="firstImage(item)"
-          alt="image"
+          :alt="safeTitle(item)"
           class="w-full md:h-full h-[120px] block object-cover md:rounded-[20px] rounded-[10px]"
         />
 
@@ -150,11 +150,11 @@ onBeforeUnmount(() => {
             {{ yearOnly(item.createdAt) }}
           </p>
 
-          <h1
+          <h2
             class="font-['Inter'] font-medium md:text-[40px] line-clamp-1 md:leading-[31.29px] md:tracking-[0] text-[20px] leading-[22.93px] tracking-normal transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
           >
             {{ safeTitle(item) }}
-          </h1>
+          </h2>
         </div>
       </NuxtLink>
     </div>

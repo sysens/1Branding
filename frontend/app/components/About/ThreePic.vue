@@ -159,7 +159,7 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
-type ImageType = { url: string | null };
+type ImageType = { url: string | null; alternativeText?: string | null };
 
 type Section3 = {
   title: string;
@@ -181,7 +181,7 @@ const query = `
       section3 {
         title
         subTitle
-        creatorsImages { url }
+        creatorsImages { url alternativeText }
       }
     }
   }
@@ -194,7 +194,7 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
     query,
     variables: { locale: gqlLocale.value },
   })),
-  server: false,
+  key: computed(() => `about-creators-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -211,17 +211,16 @@ const resolveImage = (url?: string | null) => {
 
 const section3Images = computed(() =>
   (section3.value?.creatorsImages ?? [])
-    .map((img) => resolveImage(img.url))
-    .filter(Boolean)
+    .map((img) => ({ src: resolveImage(img.url), alt: img.alternativeText?.trim() || section3.value?.title || "" }))
+    .filter((img) => Boolean(img.src))
 );
 
 const lastThree = computed(() => {
-  const arr = section3Images.value;
-  const last = arr.slice(-3);
+  const last = section3Images.value.slice(-3);
   return {
-    left: last[0] ?? "",
-    center: last[1] ?? "",
-    right: last[2] ?? "",
+    left: last[0],
+    center: last[1],
+    right: last[2],
   };
 });
 </script>
@@ -231,39 +230,42 @@ const lastThree = computed(() => {
     <div class="md:pt-[130px] pt-[80px] md:pb-[60px]">
       <div v-if="section3" class="containerr">
         <div>
-          <h1
+          <h2
             class="team-heading text-[#FFFFFF] font-normal md:text-[50px] text-[40px] leading-[100%] tracking-[0] text-center"
           >
             {{ section3.title }}
-          </h1>
+          </h2>
 
-          <h2
+          <p
             class="team-text font-normal text-[#FFFFFFCC]/80 pt-[20px] pb-[60px] md:text-[20px] md:leading-[31px] text-[14px] leading-[120%] tracking-[0] text-center font-['Poppins','Inter',sans-serif]"
           >
             {{ section3.subTitle }}
-          </h2>
+          </p>
 
           <div class="md:h-[531px] h-full md:flex block gap-[10px]">
             <div class="flex-1 h-full">
               <NuxtImg
-                :src="lastThree.left"
-                alt="image"
+                v-if="lastThree.left"
+                :src="lastThree.left.src"
+                :alt="lastThree.left.alt"
                 class="img-left w-full md:h-full h-[300px] object-cover pb-[10px] md:pb-0 block md:rounded-l-[30px] rounded-t-[20px] md:rounded-t-[0px] md:rounded-tl-[20px] will-change-transform"
               />
             </div>
 
             <div class="flex-1 h-full">
               <NuxtImg
-                :src="lastThree.center"
-                alt="image"
+                v-if="lastThree.center"
+                :src="lastThree.center.src"
+                :alt="lastThree.center.alt"
                 class="img-center w-full md:h-full h-[300px] pb-[10px] md:pb-0 object-cover block will-change-transform"
               />
             </div>
 
             <div class="flex-1 h-full">
               <NuxtImg
-                :src="lastThree.right"
-                alt="image"
+                v-if="lastThree.right"
+                :src="lastThree.right.src"
+                :alt="lastThree.right.alt"
                 class="img-right w-full md:h-full h-[300px] object-cover block md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px] md:rounded-br-[20px] will-change-transform"
               />
             </div>

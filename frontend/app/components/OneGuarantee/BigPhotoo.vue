@@ -178,9 +178,8 @@ const query = `
 const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query, variables: { locale: gqlLocale.value } },
-  server: false,
-  key: `one-guarantee-section6-${gqlLocale.value}`,
+  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
+  key: computed(() => `one-guarantee-section6-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -253,11 +252,11 @@ const onCtaClick = async (event: MouseEvent) => {
       </div>
 
       <div>
-        <h1
+        <h2
           class="cta-title will-change-transform font-normal text-[#FFFFFF] md:text-[62px] text-[40px] leading-[120%] tracking-normal text-center"
         >
           {{ section6.title }}
-        </h1>
+        </h2>
 
         <p
           class="cta-text will-change-transform font-light text-[#FFFFFF] text-[20px] leading-[120%] py-[45px] tracking-normal text-center font-['Poppins','Inter',sans-serif]"

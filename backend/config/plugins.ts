@@ -7,12 +7,16 @@ export default ({ env }: { env: StrapiEnv }) => ({
     config: {
       endpoint: "/graphql",
       shadowCRUD: true,
-      playgroundAlways: true,
+      landingPage: env.bool("GRAPHQL_PLAYGROUND", false),
       depthLimit: 10,
-      amountLimit: 100,
+      defaultLimit: 25,
+      maxLimit: 100,
       apolloServer: {
-        tracing: false,
-        introspection: true,
+        cors: false, // The global origin allowlist also applies to /graphql.
+        introspection: env.bool(
+          "GRAPHQL_INTROSPECTION",
+          env("NODE_ENV", "development") !== "production"
+        ),
       },
     },
   },

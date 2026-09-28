@@ -9,23 +9,11 @@ let observer: IntersectionObserver | null = null;
 let ctx: any = null;
 let inited = false;
 
-type ContactsRequestsGql = {
+type ContactsPageGql = {
   data?: {
-    contactsRequests?: Array<{
-      topic?: { title?: string; input?: string };
-      requestedServicesMessage?: {
-        title?: string;
-        input?: string;
-        file?: { url?: string };
-      };
-      contactsInputs?: {
-        fullName?: string;
-        jobTitle?: string;
-        company?: string;
-        phoneNumber?: string;
-        email?: string;
-      };
-    }>;
+    contactsPage?: {
+      section2?: { title?: string | null; text?: string | null } | null;
+    } | null;
   };
 };
 
@@ -37,70 +25,39 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
-const CONTACTS_REQUESTS_QUERY = `
-query ContactsRequests($locale: I18NLocaleCode) {
-  contactsRequests(locale: $locale) {
-    topic { title input }
-    requestedServicesMessage {
-      title
-      input
-      file { url }
-    }
-    contactsInputs {
-      fullName
-      jobTitle
-      company
-      phoneNumber
-      email
-    }
+const CONTACTS_PAGE_QUERY = `
+query ContactFormCopy($locale: I18NLocaleCode) {
+  contactsPage(locale: $locale) {
+    section2 { title text }
   }
 }
 `;
 
-const { data: gqlRes } = await useAsyncData<ContactsRequestsGql>(
-  () => `contacts-requests-${gqlLocale.value}`,
+const { data: gqlRes } = await useAsyncData<ContactsPageGql>(
+  () => `contact-form-copy-${gqlLocale.value}`,
   async () => {
     if (!GRAPHQL_URL) return {};
     return await $fetch(GRAPHQL_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: { query: CONTACTS_REQUESTS_QUERY, variables: { locale: gqlLocale.value } },
+      body: { query: CONTACTS_PAGE_QUERY, variables: { locale: gqlLocale.value } },
     });
   },
   { watch: [gqlLocale] }
 );
 
-const req0 = computed(() => gqlRes.value?.data?.contactsRequests?.[0]);
-
-const topicTitle = computed(
-  () => req0.value?.topic?.title || t("contacts.form.topicTitle")
-);
-const topicInput = computed(
-  () => req0.value?.topic?.input || t("contacts.form.topicInput")
-);
-
-const servicesTitle = computed(
-  () => req0.value?.requestedServicesMessage?.title || t("contacts.form.servicesTitle")
-);
-const servicesInput = computed(
-  () => req0.value?.requestedServicesMessage?.input || t("contacts.form.servicesInput")
-);
-
-const fullNamePh = computed(
-  () => req0.value?.contactsInputs?.fullName || t("contacts.form.fullName")
-);
-const jobTitlePh = computed(
-  () => req0.value?.contactsInputs?.jobTitle || t("contacts.form.jobTitle")
-);
-const companyPh = computed(
-  () => req0.value?.contactsInputs?.company || t("contacts.form.company")
-);
-const phonePh = computed(
-  () => req0.value?.contactsInputs?.phoneNumber || t("contacts.form.phone")
-);
-const emailPh = computed(
-  () => req0.value?.contactsInputs?.email || t("contacts.form.email")
-);
+const formCopy = computed(() => gqlRes.value?.data?.contactsPage?.section2);
+const formTitle = computed(() => formCopy.value?.title || t("contacts.form.title"));
+const formDescription = computed(() => formCopy.value?.text || t("contacts.form.description"));
+const topicTitle = computed(() => t("contacts.form.topicTitle"));
+const topicInput = computed(() => t("contacts.form.topicInput"));
+const servicesTitle = computed(() => t("contacts.form.servicesTitle"));
+const servicesInput = computed(() => t("contacts.form.servicesInput"));
+const fullNamePh = computed(() => t("contacts.form.fullName"));
+const jobTitlePh = computed(() => t("contacts.form.jobTitle"));
+const companyPh = computed(() => t("contacts.form.company"));
+const phonePh = computed(() => t("contacts.form.phone"));
+const emailPh = computed(() => t("contacts.form.email"));
 
 const getOrigin = (url: string) => {
   try {
@@ -109,13 +66,6 @@ const getOrigin = (url: string) => {
     return "";
   }
 };
-
-const fileUrl = computed(() => {
-  const url = req0.value?.requestedServicesMessage?.file?.url;
-  if (!url) return "";
-  const origin = getOrigin(GRAPHQL_URL);
-  return url.startsWith("http") ? url : origin ? `${origin}${url}` : url;
-});
 
 const fileInputRef = ref<HTMLInputElement | null>(null);
 const selectedFile = ref<File | null>(null);
@@ -160,7 +110,7 @@ const onFileChange = (e: Event) => {
   selectedFile.value = f;
 };
 
-const uploadFileToStrapi = async (file: File) => {
+const uploadFileToStrapi = async (file: File): Promise<number> => {
   const origin = getOrigin(GRAPHQL_URL);
   const uploadUrl = origin ? `${origin}/api/upload` : "/api/upload";
 
@@ -190,17 +140,27 @@ const uploadFileToStrapi = async (file: File) => {
     throw new Error("Invalid upload response");
   }
 
-  const uploaded = Array.isArray(parsed) ? parsed[0] : null;
-  const id = uploaded?.id ?? null;
-  const url = uploaded?.url ?? "";
-
-  return { id, url };
+  const id = Array.isArray(parsed) ? parsed[0]?.id : null;
+  if (typeof id !== "number" || !Number.isInteger(id) || id <= 0) {
+    throw new Error(t("common.fileUploadFailed"));
+  }
+  return id;
 };
 
-const submitContactRequestRest = async (dataPayload: any) => {
+type ContactRequestPayload = {
+  TopicInput: string;
+  requestedServicesMessageInput: string;
+  requestedServicesMessageFile: number;
+  FullName: string;
+  JobTitle: string;
+  Company: string;
+  PhoneNumber: string;
+  email: string;
+};
+
+const submitContactRequestRest = async (dataPayload: ContactRequestPayload) => {
   const origin = getOrigin(GRAPHQL_URL);
-  const base = origin ? `${origin}/api/contacts-requests` : "/api/contacts-requests";
-  const url = `${base}?locale=${encodeURIComponent(gqlLocale.value)}`;
+  const url = origin ? `${origin}/api/contacts-requests` : "/api/contacts-requests";
 
   return await $fetch(url, {
     method: "POST",
@@ -218,6 +178,17 @@ const phoneVal = ref("");
 const emailVal = ref("");
 
 const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+const isValidPhone = (val: string) => /^\+?[0-9\s().-]{7,32}$/.test(val.trim()) && val.replace(/\D/g, "").length >= 7;
+
+const fieldLimits = {
+  topic: 200,
+  services: 5000,
+  fullName: 150,
+  jobTitle: 150,
+  company: 150,
+  phone: 32,
+  email: 254,
+} as const;
 
 const normalizeBackendError = (e: any) => {
   const data = e?.data;
@@ -248,20 +219,25 @@ const onSend = async () => {
   if (!phoneVal.value.trim()) return showToast(t("common.requiredField"), "error");
   if (!emailVal.value.trim()) return showToast(t("common.requiredField"), "error");
   if (!isValidEmail(emailVal.value)) return showToast(t("common.invalidEmail"), "error");
+  if (!isValidPhone(phoneVal.value)) return showToast(t("common.error"), "error");
+  if (
+    topicVal.value.trim().length > fieldLimits.topic ||
+    servicesVal.value.trim().length > fieldLimits.services ||
+    fullNameVal.value.trim().length > fieldLimits.fullName ||
+    jobTitleVal.value.trim().length > fieldLimits.jobTitle ||
+    companyVal.value.trim().length > fieldLimits.company ||
+    phoneVal.value.trim().length > fieldLimits.phone ||
+    emailVal.value.trim().length > fieldLimits.email
+  ) return showToast(t("common.error"), "error");
   if (!selectedFile.value) return showToast(t("common.fileRequired"), "error");
 
   sending.value = true;
 
   try {
-    const up = await uploadFileToStrapi(selectedFile.value);
-    const uploadedFileId = (up?.id as number) ?? null;
+    // The current public Strapi contract uploads media first, then links its ID on create.
+    const uploadedFileId = await uploadFileToStrapi(selectedFile.value);
 
-    if (!uploadedFileId) {
-      showToast(t("common.fileUploadFailed"), "error");
-      return;
-    }
-
-    const dataPayload: any = {
+    const dataPayload: ContactRequestPayload = {
       TopicInput: topicVal.value.trim(),
       requestedServicesMessageInput: servicesVal.value.trim(),
       FullName: fullNameVal.value.trim(),
@@ -405,10 +381,12 @@ onBeforeUnmount(() => {
   <div ref="root">
     <div v-if="toastOpen" class="fixed top-36 left-1/2 -translate-x-1/2 z-[99999] px-4">
       <div
+        role="status"
+        aria-live="polite"
         class="w-[92vw] max-w-[560px] rounded-xl border border-white/10 px-4 py-3 backdrop-blur-md shadow-lg"
         :class="toastType === 'success' ? 'bg-green-500/20' : 'bg-black/50'"
       >
-        <p class="text-red-500 text-[24px] md:text-[16px] leading-[120%]">
+        <p class="text-[24px] md:text-[16px] leading-[120%]" :class="toastType === 'success' ? 'text-green-400' : 'text-red-500'">
           {{ toastMsg }}
         </p>
       </div>
@@ -416,19 +394,19 @@ onBeforeUnmount(() => {
 
     <section class="w-full bg-black pt-10">
       <div class="mx-auto">
-        <h1
+        <h2
           class="form-title will-change-transform font-['Inter'] font-normal text-[20px] leading-[100%] tracking-[0%] text-center text-[#FFFFFF] pb-[30px] md:text-[36px]"
         >
-          {{ $t("contacts.form.title") }}
-        </h1>
+          {{ formTitle }}
+        </h2>
 
         <p
           class="form-desc will-change-transform font-['Inter'] font-light text-[14px] leading-[120%] tracking-normal md:pb-[60px] pb-[88px] text-[#FFFFFF] md:font-normal md:text-[20px]"
         >
-          {{ $t("contacts.form.description") }}
+          {{ formDescription }}
         </p>
 
-        <form class="grid grid-cols-1 gap-10 md:grid-cols-2" @submit.prevent>
+        <form id="contact-request-form" class="grid grid-cols-1 gap-10 md:grid-cols-2" novalidate @submit.prevent="onSend">
           <div class="form-left will-change-transform">
             <h3
               class="font-normal md:text-[24px] md:pb-[30px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
@@ -443,6 +421,8 @@ onBeforeUnmount(() => {
               autocapitalize="sentences"
               autocomplete="off"
               :placeholder="topicInput"
+              :aria-label="topicInput"
+              :maxlength="fieldLimits.topic"
               class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
             />
 
@@ -459,6 +439,8 @@ onBeforeUnmount(() => {
               autocapitalize="sentences"
               autocomplete="off"
               :placeholder="servicesInput"
+              :aria-label="servicesTitle"
+              :maxlength="fieldLimits.services"
               class="w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
             />
 
@@ -469,7 +451,7 @@ onBeforeUnmount(() => {
                   type="file"
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic,.heif"
                   class="hidden"
-                  required
+                  :aria-label="$t('common.addFile')"
                   @change="onFileChange"
                 />
                 <button
@@ -482,11 +464,11 @@ onBeforeUnmount(() => {
               </div>
 
               <div class="w-full">
-                <h1
+                <p
                   class="font-inter text-[#FFFFFF] font-normal md:text-[20px] md:leading-[20px] md:tracking-normal text-[14px] leading-[100%] tracking-[0%]"
                 >
                   {{ $t("common.maxFileSize") }}
-                </h1>
+                </p>
 
                 <div v-if="selectedFile" class="mt-2 flex items-center gap-3">
                   <p
@@ -518,6 +500,8 @@ onBeforeUnmount(() => {
                 autocapitalize="words"
                 autocomplete="name"
                 :placeholder="fullNamePh"
+                :aria-label="fullNamePh"
+                :maxlength="fieldLimits.fullName"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
               />
 
@@ -528,6 +512,8 @@ onBeforeUnmount(() => {
                 autocapitalize="words"
                 autocomplete="organization-title"
                 :placeholder="jobTitlePh"
+                :aria-label="jobTitlePh"
+                :maxlength="fieldLimits.jobTitle"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
               />
 
@@ -538,6 +524,8 @@ onBeforeUnmount(() => {
                 autocapitalize="words"
                 autocomplete="organization"
                 :placeholder="companyPh"
+                :aria-label="companyPh"
+                :maxlength="fieldLimits.company"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
               />
 
@@ -548,6 +536,8 @@ onBeforeUnmount(() => {
                 inputmode="tel"
                 autocomplete="tel"
                 :placeholder="phonePh"
+                :aria-label="phonePh"
+                :maxlength="fieldLimits.phone"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
               />
 
@@ -559,21 +549,23 @@ onBeforeUnmount(() => {
                 autocapitalize="off"
                 autocomplete="email"
                 :placeholder="emailPh"
+                :aria-label="emailPh"
+                :maxlength="fieldLimits.email"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
               />
             </div>
           </div>
         </form>
 
-        <h1
+        <p
           class="form-agree will-change-transform font-inter text-[#FFFFFF] font-normal md:text-[20px] md:leading-[20px] mb-[29px] mt-[48px] md:tracking-normal text-[14px] leading-[100%] tracking-[0%]"
         >
           {{ $t("contacts.form.agreement") }}
-        </h1>
+        </p>
 
         <button
-          type="button"
-          @click="onSend"
+          type="submit"
+          form="contact-request-form"
           :disabled="sending"
           class="form-send will-change-transform capitalize md:w-[236px] w-[197px] mb-[6px] text-[#FFFFFF] md:h-[60px] h-[50px] rounded-[32px] font-font1 font-normal md:text-[19.57px] leading-[19.57px] tracking-normal text-center align-middle disabled:opacity-60 disabled:cursor-not-allowed font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] text-[16px] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
         >

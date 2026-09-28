@@ -103,16 +103,6 @@
       "component": "landing-page.info",
       "repeatable": false
     },
-    "section7": {
-      "type": "component",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "landing-page.what-we-do",
-      "repeatable": false
-    },
     "splineRobot": {
       "type": "component",
       "pluginOptions": {
@@ -131,16 +121,6 @@
         }
       },
       "component": "landing-page.section9",
-      "repeatable": false
-    },
-    "section11": {
-      "type": "component",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "landing-page.faq",
       "repeatable": false
     }
   }

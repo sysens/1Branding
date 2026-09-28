@@ -27,6 +27,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const root = ref<HTMLElement | null>(null);
+const { locale } = useI18n();
+const imageAlt = (position: number) =>
+  `${locale.value === "ru" ? "Галерея проекта, изображение" : "Project gallery image"} ${position}`;
 
 let observer: IntersectionObserver | null = null;
 let ctx: any = null;
@@ -279,7 +282,7 @@ onBeforeUnmount(() => {
                 <img
                   class="top-img w-full object-cover pb-[5px] md:pb-0 md:h-[700px] h-[542px] md:rounded-t-[30px] rounded-t-[20px] will-change-transform"
                   :src="b.top"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 1)"
                 />
               </div>
 
@@ -289,12 +292,12 @@ onBeforeUnmount(() => {
                 <img
                   class="bottom-left object-cover md:w-[33%] md:h-[531px] h-[400px] md:rounded-bl-[30px] will-change-transform"
                   :src="b.left"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 2)"
                 />
                 <img
                   class="bottom-right object-cover w-full md:h-[531px] md:max-w-[66.5%] h-[400px] md:rounded-br-[30px] rounded-b-[20px] md:rounded-b-[0px] will-change-transform"
                   :src="b.right"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 3)"
                 />
               </div>
             </template>
@@ -304,7 +307,7 @@ onBeforeUnmount(() => {
                 <img
                   class="single-img w-full object-cover md:h-[700px] h-[542px] md:rounded-[30px] rounded-[20px] will-change-transform"
                   :src="b.src"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 1)"
                 />
               </div>
             </template>
@@ -314,12 +317,12 @@ onBeforeUnmount(() => {
                 <img
                   class="double-left object-cover w-full md:w-1/2 md:h-[531px] h-[400px] md:rounded-bl-[30px] md:rounded-tl-[30px] rounded-t-[20px] will-change-transform"
                   :src="b.left"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 1)"
                 />
                 <img
                   class="double-right object-cover w-full md:w-1/2 md:h-[531px] h-[400px] md:rounded-br-[30px] md:rounded-tr-[30px] rounded-b-[20px] will-change-transform"
                   :src="b.right"
-                  alt=""
+                  :alt="imageAlt(i * 3 + 2)"
                 />
               </div>
             </template>

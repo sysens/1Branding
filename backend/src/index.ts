@@ -36,7 +36,12 @@ const ensureDefaultSingleTypeDocuments = async (
 };
 
 export default {
-  register() {},
+  register({ strapi }: { strapi: Core.Strapi }) {
+    // Do not generate GraphQL queries or mutations for private submissions.
+    strapi.plugin('graphql')?.service('extension')?.shadowCRUD(
+      'api::contacts-request.contacts-request'
+    ).disable();
+  },
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureDefaultSingleTypeDocuments(strapi);

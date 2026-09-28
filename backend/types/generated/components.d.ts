@@ -194,17 +194,6 @@ export interface FooterSocialMediaLinks extends Struct.ComponentSchema {
   };
 }
 
-export interface LandingPageAnswerQuestion extends Struct.ComponentSchema {
-  collectionName: 'components_landing_page_answer_questions';
-  info: {
-    displayName: 'AnswerQuestion';
-  };
-  attributes: {
-    answer: Schema.Attribute.Text;
-    question: Schema.Attribute.Text;
-  };
-}
-
 export interface LandingPageBrandCollage extends Struct.ComponentSchema {
   collectionName: 'components_landing_page_brand_collages';
   info: {
@@ -254,20 +243,6 @@ export interface LandingPageDesignElements extends Struct.ComponentSchema {
         },
         number
       >;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface LandingPageFaq extends Struct.ComponentSchema {
-  collectionName: 'components_landing_page_faqs';
-  info: {
-    displayName: 'FAQ';
-  };
-  attributes: {
-    AnswerQuestions: Schema.Attribute.Component<
-      'landing-page.answer-question',
-      true
-    >;
     title: Schema.Attribute.String;
   };
 }
@@ -371,20 +346,6 @@ export interface LandingPageTools extends Struct.ComponentSchema {
   attributes: {
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     name: Schema.Attribute.String;
-  };
-}
-
-export interface LandingPageWhatWeDo extends Struct.ComponentSchema {
-  collectionName: 'components_landing_page_what_we_dos';
-  info: {
-    displayName: 'WhatWeDo';
-  };
-  attributes: {
-    images: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    title: Schema.Attribute.String;
   };
 }
 
@@ -622,12 +583,10 @@ declare module '@strapi/strapi' {
       'contacts-page.working-hours': ContactsPageWorkingHours;
       'contacts-page.write-to-one-brending': ContactsPageWriteToOneBrending;
       'footer.social-media-links': FooterSocialMediaLinks;
-      'landing-page.answer-question': LandingPageAnswerQuestion;
       'landing-page.brand-collage': LandingPageBrandCollage;
       'landing-page.brand-positioning': LandingPageBrandPositioning;
       'landing-page.design-el-cards': LandingPageDesignElCards;
       'landing-page.design-elements': LandingPageDesignElements;
-      'landing-page.faq': LandingPageFaq;
       'landing-page.hero-slogan': LandingPageHeroSlogan;
       'landing-page.info': LandingPageInfo;
       'landing-page.partner': LandingPagePartner;
@@ -636,7 +595,6 @@ declare module '@strapi/strapi' {
       'landing-page.spline-robot': LandingPageSplineRobot;
       'landing-page.stats': LandingPageStats;
       'landing-page.tools': LandingPageTools;
-      'landing-page.what-we-do': LandingPageWhatWeDo;
       'one-guarantee-page.comments': OneGuaranteePageComments;
       'one-guarantee-page.comments-section': OneGuaranteePageCommentsSection;
       'one-guarantee-page.effective': OneGuaranteePageEffective;

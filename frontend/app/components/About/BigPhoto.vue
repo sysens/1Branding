@@ -50,7 +50,7 @@ const gqlLocale = computed<AppLocale>(() =>
 
 type AboutPage = {
   documentId: string;
-  section1: { id: string; title: string; image: { url: string | null } | null } | null;
+  section1: { id: string; title: string; image: { url: string | null; alternativeText?: string | null } | null } | null;
   section3: { title: string; subTitle: string } | null;
 };
 
@@ -63,7 +63,7 @@ const query = `
   query AboutPage($locale: I18NLocaleCode) {
     aboutPage(locale: $locale) {
       documentId
-      section1 { id title image { url } }
+      section1 { id title image { url alternativeText } }
       section3 { title subTitle }
     }
   }
@@ -76,7 +76,7 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
     query,
     variables: { locale: gqlLocale.value },
   })),
-  server: false,
+  key: computed(() => `about-team-photo-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -100,7 +100,7 @@ const imageSrc = computed(() => {
         <NuxtImg
           v-if="imageSrc"
           :src="imageSrc"
-          :alt="section1?.title || 'image'"
+          :alt="section1?.image?.alternativeText?.trim() || section1?.title || ''"
           class="mission-img w-full md:h-[700px] h-[366px] object-cover md:rounded-[30px] rounded-[20px]"
         />
       </div>

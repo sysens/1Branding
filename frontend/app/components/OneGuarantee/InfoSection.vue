@@ -224,9 +224,8 @@ const query = `
 const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query, variables: { locale: gqlLocale.value } },
-  server: false,
-  key: `one-guarantee-section2-${gqlLocale.value}`,
+  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
+  key: computed(() => `one-guarantee-section2-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -239,13 +238,18 @@ const s2Text3 = computed(() => s2.value?.text3 || t("oneGuarantee.section2.text3
 const s2Text4 = computed(() => s2.value?.text4 || t("oneGuarantee.section2.text4"));
 const s2Text5 = computed(() => s2.value?.text5 || t("oneGuarantee.section2.text5"));
 
-const highlightToken = computed(() => t("oneGuarantee.section2.highlightToken"));
-const highlightHtml = computed(() =>
-  (s2Text1.value || "").replace(
-    highlightToken.value,
-    `<span class="text-[#15FF00]">${highlightToken.value}</span>`
-  )
-);
+const highlightedText = computed(() => {
+  const text = s2Text1.value;
+  const token = t("oneGuarantee.section2.highlightToken");
+  const index = token ? text.toLocaleLowerCase(gqlLocale.value).indexOf(token.toLocaleLowerCase(gqlLocale.value)) : -1;
+  return index < 0
+    ? { before: text, highlight: "", after: "" }
+    : {
+        before: text.slice(0, index),
+        highlight: text.slice(index, index + token.length),
+        after: text.slice(index + token.length),
+      };
+});
 </script>
 
 <template>
@@ -267,11 +271,11 @@ const highlightHtml = computed(() =>
         </h1>
 
         <div class="mx-auto block">
-          <h3
+          <p
             class="og-subtitle will-change-transform text-center text-[#FFFFFF] w-full max-w-[398px] font-light pb-[110px] md:text-[24px] text-[16px] leading-[100%] md:tracking-normal mx-auto font-['Inter'] tracking-[0%]"
           >
-            <span v-html="highlightHtml"></span>
-          </h3>
+            {{ highlightedText.before }}<span v-if="highlightedText.highlight" class="text-[#15FF00]">{{ highlightedText.highlight }}</span>{{ highlightedText.after }}
+          </p>
         </div>
       </div>
 
@@ -284,11 +288,11 @@ const highlightHtml = computed(() =>
           class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2 font-family: Inter;"
         />
 
-        <h1
+        <p
           class="font-['Inter'] font-light md:text-[24px] text-[14px] leading-[100%] tracking-[0%] text-center"
         >
           {{ s2Text2 }}
-        </h1>
+        </p>
       </div>
 
       <div class="max-w-[801px]">

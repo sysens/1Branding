@@ -23,6 +23,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/favicon.png ./favicon.png
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/database/migrations ./database/migrations
 COPY --from=builder /app/dist ./dist
 
 RUN mkdir -p /app/public/uploads && chmod -R 777 /app/public/uploads

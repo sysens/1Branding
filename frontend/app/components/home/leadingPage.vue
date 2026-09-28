@@ -78,10 +78,6 @@ const heroCopy = computed<HeroCopy>(() => {
   return DEFAULT_HERO_COPY;
 });
 
-const heroAriaLabel = computed(() =>
-  [...heroCopy.value.mutedLines, heroCopy.value.mainText, heroCopy.value.accentText].join(" ")
-);
-
 let ctx: GsapContext | null = null;
 
 onMounted(async () => {
@@ -113,26 +109,25 @@ onBeforeUnmount(() => {
 
     <div class="leading-copy-position relative">
       <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products">
-        <div
+        <h1
           class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
-          :aria-label="heroAriaLabel"
         >
-          <div class="hero-slogan__muted" aria-hidden="true">
+          <span class="hero-slogan__muted">
             <span v-for="line in heroCopy.mutedLines" :key="line">
               {{ line }}
             </span>
-          </div>
+          </span>
 
-          <div class="hero-slogan__main" aria-hidden="true">
+          <span class="hero-slogan__main">
             {{ heroCopy.mainText }}
-          </div>
+          </span>
 
-          <div class="hero-slogan__accent-shell" aria-hidden="true">
-            <div class="hero-slogan__accent">
+          <span class="hero-slogan__accent-shell">
+            <span class="hero-slogan__accent">
               {{ heroCopy.accentText }}
-            </div>
-          </div>
-        </div>
+            </span>
+          </span>
+        </h1>
       </div>
     </div>
   </div>
@@ -140,6 +135,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <NuxtLink
       :to="localePath('/ContactPage')"
+      :aria-label="$t('nav.contacts')"
       class="contact-fab fixed right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[9000] group"
     >
       <img
@@ -181,6 +177,7 @@ onBeforeUnmount(() => {
 }
 
 .hero-slogan {
+  margin: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

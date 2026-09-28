@@ -125,6 +125,7 @@ const gqlLocale = computed<AppLocale>(() =>
 
 type ImageType = {
   url: string | null;
+  alternativeText?: string | null;
 };
 
 type Section1 = {
@@ -165,7 +166,7 @@ const query = `
       section2 {
         title
         text
-        image { url }
+        image { url alternativeText }
       }
     }
   }
@@ -178,7 +179,7 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
     query,
     variables: { locale: gqlLocale.value },
   })),
-  server: false,
+  key: computed(() => `about-core-ideas-${gqlLocale.value}`),
   watch: [gqlLocale],
 });
 
@@ -214,22 +215,22 @@ const section2WithImages = computed(() =>
           :class="i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'"
         >
           <div class="mission-text flex-1 will-change-transform">
-            <h1
+            <h2
               class="text-[#FFFFFF] font-normal md:pb-[60px] pb-[30px] text-[40px] leading-[100%] tracking-[0]"
             >
               {{ item.title }}
-            </h1>
-            <h2
+            </h2>
+            <p
               class="text-[#FFFFFF] pb-[80px] md:pb-0 font-normal text-[15px] leading-[28px] tracking-[0] font-['Poppins','Inter',sans-serif]"
             >
               {{ item.text }}
-            </h2>
+            </p>
           </div>
 
           <NuxtImg
             v-if="item.imageSrc"
             :src="item.imageSrc"
-            :alt="item.title"
+            :alt="item.image?.alternativeText?.trim() || item.title"
             class="mission-img flex-1 md:w-[50%] md:h-[500px] h-[234px] w-full rounded-[30px] will-change-transform"
           />
         </div>

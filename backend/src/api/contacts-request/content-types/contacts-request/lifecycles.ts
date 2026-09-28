@@ -1,4 +1,5 @@
 import {
+  escapeTelegramHtml,
   sendTelegramDocumentBuffer,
   sendTelegramMessage,
 } from "../../../../utils/send-telegram-message";
@@ -44,33 +45,26 @@ export default {
       const message = [
         "<b>Yangi Ariza keldi</b>",
         "",
-        `<b>Topic:</b> ${entry?.TopicInput ?? "-"}`,
-        `<b>Message:</b> ${entry?.requestedServicesMessageInput ?? "-"}`,
-        `<b>Full name:</b> ${entry?.FullName ?? "-"}`,
-        `<b>Job title:</b> ${entry?.JobTitle ?? "-"}`,
-        `<b>Company:</b> ${entry?.Company ?? "-"}`,
-        `<b>Phone:</b> ${entry?.PhoneNumber ?? "-"}`,
-        `<b>Email:</b> ${entry?.email ?? "-"}`,
+        `<b>Topic:</b> ${escapeTelegramHtml(entry?.TopicInput)}`,
+        `<b>Message:</b> ${escapeTelegramHtml(entry?.requestedServicesMessageInput)}`,
+        `<b>Full name:</b> ${escapeTelegramHtml(entry?.FullName)}`,
+        `<b>Job title:</b> ${escapeTelegramHtml(entry?.JobTitle)}`,
+        `<b>Company:</b> ${escapeTelegramHtml(entry?.Company)}`,
+        `<b>Phone:</b> ${escapeTelegramHtml(entry?.PhoneNumber)}`,
+        `<b>Email:</b> ${escapeTelegramHtml(entry?.email)}`, 
       ].join("\n");
 
       await sendTelegramMessage(message);
 
       if (file?.url) {
-        const baseUrl =
-          process.env.PUBLIC_BASE_URL ||
-          strapi.config.get("server.url") ||
-          "http://localhost:1337";
-
-        const fileUrl = file.url.startsWith("http")
-          ? file.url
-          : `${baseUrl}${file.url}`;
-
-        const fileName = file.name || "document";
-
-        await sendTelegramDocumentBuffer(fileUrl, fileName);
+        const baseUrl = process.env.PUBLIC_BASE_URL;
+        if (!baseUrl) throw new Error('Attachment base URL is not configured');
+        const fileUrl = new URL(file.url, baseUrl).href;
+        await sendTelegramDocumentBuffer(fileUrl, file.name || 'document');
       }
-    } catch (error) {
-      strapi.log.error("Telegram yuborishda xatolik:", error);
+    } catch {
+      // Never log provider responses, token URLs, file URLs, or applicant data.
+      strapi.log.error('Contact Telegram notification failed');
     }
   },
 };
