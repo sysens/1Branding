@@ -1,10 +1,15 @@
-FROM oven/bun:1-alpine AS builder
+# Build on the same Node as the runtime. Without a node binary, bun 1.4+ runs
+# install scripts as "Node 26", so better-sqlite3 was compiled against Node 26
+# headers and failed. With node on PATH, bun runs them with the real Node 24
+# and native modules match the runner's ABI.
+FROM node:24-alpine AS builder
 
+COPY --from=oven/bun:1-alpine /usr/local/bin/bun /usr/local/bin/bun
 RUN apk add --no-cache build-base python3 vips-dev
 WORKDIR /app
 
 COPY package.json bun.lock ./
-RUN bun install
+RUN bun install --frozen-lockfile
 
 COPY . .
 
