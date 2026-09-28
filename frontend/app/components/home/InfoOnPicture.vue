@@ -260,7 +260,7 @@ onBeforeUnmount(() => {
             muted
             loop
             playsinline
-            preload="auto"
+            preload="metadata"
           ></video>
 
           <img
@@ -268,6 +268,7 @@ onBeforeUnmount(() => {
             class="info-media"
             :src="infoBlock.mediaSrc"
             :alt="infoBlock.mediaAlt"
+            loading="lazy"
             decoding="async"
           />
         </div>

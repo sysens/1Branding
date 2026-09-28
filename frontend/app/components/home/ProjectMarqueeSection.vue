@@ -1,51 +1,56 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import HeroLightTransition from "./HeroLightTransition.vue";
 import ThreeDMarquee from "~/components/ui/ThreeDMarquee.vue";
-
-const transition = ref<HTMLElement | null>(null);
-let disposed = false;
-let cleanup: (() => void) | undefined;
-onMounted(async () => {
-  const [{ gsap }, { ScrollTrigger }] = await Promise.all([import("gsap"), import("gsap/ScrollTrigger")]);
-  if (disposed || !transition.value) return;
-  gsap.registerPlugin(ScrollTrigger);
-  const media = gsap.matchMedia();
-  media.add("(prefers-reduced-motion: no-preference)", () => {
-    gsap.fromTo(transition.value, { "--light-shift": "4%" }, {
-      "--light-shift": "-6%", ease: "none",
-      scrollTrigger: { trigger: transition.value, start: "top bottom", end: "bottom top", scrub: 0.5, invalidateOnRefresh: true },
-    });
-  });
-  cleanup = () => media.revert();
-});
-onBeforeUnmount(() => { disposed = true; cleanup?.(); });
 </script>
 
 <template>
   <section id="project-marquee" class="project-marquee-section" aria-label="Selected branding projects">
-    <div ref="transition" class="project-marquee-section__transition"><HeroLightTransition direction="to-dark" /></div>
-    <ThreeDMarquee />
+    <!-- Design light (public/home/marquee/light.webp): built from colours measured
+         on the design file - white, cream, lime, olive centre, vivid green sides
+         and a dark dome whose veil lets the cards drift inside the light. -->
+    <div class="project-marquee-section__light" aria-hidden="true" />
+    <ThreeDMarquee class="project-marquee-section__marquee" />
   </section>
 </template>
 
 <style scoped>
-.project-marquee-section { position: relative; isolation: isolate; background: #000; }
-.project-marquee-section__transition { position: relative; z-index: 1; pointer-events: none; }
-.project-marquee-section__transition {
-  --light-radius-x: 94%;
-  --light-radius-y: 78%;
-  --light-center-y: -20%;
+/*
+ * --overlap: how far the light reaches up over the MacBook section; it is
+ *            transparent there, so the white page and the sliding screen fade in.
+ * --frame-h: height of the measured light, kept at the design's 2.1:1 ratio.
+ * The marquee is pulled up under the light so its cards start at the dome.
+ */
+.project-marquee-section {
+  --overlap: clamp(9rem, 22svh, 16rem);
+  --frame-h: clamp(16rem, 47.5vw, 60rem);
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(var(--overlap) * -1);
+  padding-bottom: clamp(4rem, 9vw, 10rem);
+  background: linear-gradient(to bottom, transparent 0, transparent var(--overlap), #000 var(--overlap));
 }
-.project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(26rem, 72svh, 44rem); }
-.project-marquee-section :deep(.three-d-marquee) { margin-top: -8rem; }
+
+.project-marquee-section__light {
+  position: relative;
+  z-index: 2;
+  height: calc(var(--overlap) + var(--frame-h));
+  pointer-events: none;
+  background:
+    url("/home/marquee/light.webp") center bottom / 100% var(--frame-h) no-repeat,
+    linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 2px) no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
+}
+
+.project-marquee-section__marquee {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(var(--frame-h) * -0.42);
+}
+
 @media (max-width: 767px), (orientation: portrait) {
-  .project-marquee-section__transition {
-    --light-radius-x: 125%;
-    --light-radius-y: 88%;
-    --light-center-y: -34%;
+  .project-marquee-section {
+    --overlap: 4rem;
+    padding-bottom: 3rem;
   }
-  .project-marquee-section__transition :deep(.hero-light-transition) { height: clamp(10rem, 28vw, 16rem); min-height: 10rem; aspect-ratio: auto; }
-  .project-marquee-section :deep(.three-d-marquee) { margin-top: -4rem; }
 }
 </style>

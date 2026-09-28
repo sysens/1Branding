@@ -8,70 +8,17 @@ import MovementFooter from "~/components/Contacts/MovementFooter.vue";
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import type { gsap } from "gsap";
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 
 const loading = ref(true);
 
-type SeoRes = {
-  data?: {
-    seo?: {
-      contactsPage?: {
-        title?: string | null;
-        description?: string | null;
-      } | null;
-    } | null;
-  };
-};
-
-const seoQuery = `
-  query ContactsSeo {
-    seo {
-      contactsPage {
-        title
-        description
-      }
-    }
-  }
-`;
-
-const canFetchSeo = Boolean(GRAPHQL_URL);
-
-const { data: seoData } = canFetchSeo
-  ? await useFetch<SeoRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: seoQuery },
-      server: true,
-      key: "seo-contacts-page",
-    })
-  : { data: ref<SeoRes | null>(null) };
-
-const contactsSeo = computed(() => seoData.value?.data?.seo?.contactsPage ?? null);
-
-const seoTitle = computed(() => contactsSeo.value?.title?.trim() || t("seo.contacts"));
-const seoDescription = computed(() => contactsSeo.value?.description?.trim() || "");
-
-const route = useRoute();
-const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? siteUrl + route.path : ""));
-
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
+const cmsSeo = await useCmsSeo("contactsPage");
+const localePath = useLocalePath();
+usePageSeo({
+  title: computed(() => cmsSeo.title.value || t("seo.contacts.title")),
+  description: computed(() => cmsSeo.description.value || t("seo.contacts.description")),
+  breadcrumbs: computed(() => [{ name: t("nav.contacts"), path: localePath("/ContactPage") }]),
 });
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 let ctx: gsap.Context | null = null;
 const nuxtApp = useNuxtApp();

@@ -85,11 +85,11 @@ const text = computed(() => forCustomer.value?.text?.trim() || t("warning.text")
           </svg>
         </div>
         <div>
-          <h1
+          <h2
             class="text-[#808080]  font-normal text-[24px] leading-[25px] tracking-normal align-middle"
           >
             {{ title }}
-          </h1>
+          </h2>
         </div>
       </div>
       <p

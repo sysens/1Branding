@@ -55,7 +55,10 @@ const renderLine = (line: string) => {
 </template>
 
 <style scoped>
-.digital-experience { position: relative; isolation: isolate; overflow: clip; background: #fff; padding-top: 16rem; }
+/* Clip sideways only: the opened, 1.5x screen keeps sliding down past the section
+   edge and disappears under the green light of the next section (which overlaps
+   this one) instead of being cut by a hard line. */
+.digital-experience { position: relative; isolation: isolate; overflow-x: clip; overflow-y: visible; background: #fff; padding-top: 16rem; }
 .digital-experience__copy { text-align: center; }
 .digital-experience :deep(.macbook-scroll) { padding-block: 2rem 0; }
 .digital-experience__title {

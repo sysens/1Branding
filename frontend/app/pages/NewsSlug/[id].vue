@@ -25,7 +25,6 @@ const { t, locale } = useI18n();
 const route = useRoute();
 const runtimeConfig = useRuntimeConfig();
 const graphqlUrl = String(runtimeConfig.public.graphqlUrl || "");
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/+$/, "");
 const documentId = computed(() => String(route.params.id || "").trim());
 const gqlLocale = computed<AppLocale>(() => locale.value === "en" ? "en" : "ru");
 
@@ -74,12 +73,14 @@ if (!news.value) {
   throw createError({ statusCode: 404, statusMessage: "News article not found" });
 }
 
-const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news"));
+const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news.title"));
 const seoDescription = computed(() =>
-  (news.value?.text || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) || t("seo.description")
+  (news.value?.text || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) || t("seo.news.description")
 );
 const seoImage = computed(() => resolveStrapiMediaUrl(news.value?.image?.url, graphqlUrl));
-const canonical = computed(() => siteUrl ? `${siteUrl}${route.path}` : "");
+const origin = useSiteOrigin();
+const localePath = useLocalePath();
+const canonical = computed(() => `${origin}${route.path}`);
 const validDate = (value?: string | null) => value && !Number.isNaN(Date.parse(value)) ? new Date(value).toISOString() : undefined;
 const structuredData = computed(() => ({
   "@context": "https://schema.org",
@@ -91,7 +92,8 @@ const structuredData = computed(() => ({
   ...(validDate(news.value?.updatedAt) ? { dateModified: validDate(news.value?.updatedAt) } : {}),
   ...(canonical.value ? { mainEntityOfPage: canonical.value } : {}),
   inLanguage: data.value?.data?.newsPage ? gqlLocale.value : "en",
-  publisher: { "@type": "Organization", name: "OneBranding" },
+  author: { "@id": `${origin}/#organization` },
+  publisher: { "@id": `${origin}/#organization` },
 }));
 
 usePageSeo({
@@ -100,6 +102,10 @@ usePageSeo({
   type: "article",
   image: seoImage,
   structuredData,
+  breadcrumbs: computed(() => [
+    { name: t("nav.news"), path: localePath("/News") },
+    { name: seoTitle.value, path: route.path },
+  ]),
   indexable: computed(() =>
     !("preview" in route.query || "draft" in route.query) &&
     !!data.value?.data?.newsPage

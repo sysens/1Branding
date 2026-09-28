@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { isPlaceholderCopy } from "~/utils/seo";
 
 type AppLocale = "ru" | "en";
 
@@ -23,12 +24,12 @@ const props = withDefaults(defineProps<Props>(), {
   linkTo: "/",
 });
 
-const fallbackItems: MarqueeItem[] = Array.from({ length: 12 }, () => ({
-  text:
-    "Pellentesque vitae velit ex, vel interdum nisi. Nulla facilisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Suspendisse potenti. Mauris eu arcu sed urna tincidunt commodo. Sed auctor, sem nec vehicula sagittis, justo sapien ultrices mi, id fermentum dui odio euismod mauris. Duis rhoncus massa et felis facilisis, sed convallis nunc fermentum.",
-  author: "Javier Torres",
-  sub: "Pellentesque vitae velit ex",
-}));
+// Placeholder copy ("Lorem ipsum", "Pellentesque…") must never be shown as a
+// client review: made-up testimonials hurt trust and search rankings. Without
+// real reviews from the CMS the whole block (heading included) is hidden.
+const isRealReview = (item: MarqueeItem) =>
+  item.text.trim().length > 0 && item.author.trim().length > 0 &&
+  !isPlaceholderCopy(`${item.text} ${item.author} ${item.sub ?? ""}`);
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
@@ -89,11 +90,9 @@ const apiItems = computed<MarqueeItem[]>(() => {
     }));
 });
 
-const itemsToRender = computed(() => {
-  if (props.items?.length) return props.items;
-  if (apiItems.value.length) return apiItems.value;
-  return fallbackItems;
-});
+const itemsToRender = computed(() =>
+  (props.items?.length ? props.items : apiItems.value).filter(isRealReview)
+);
 
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
 
@@ -107,6 +106,8 @@ const rowsConfig = computed(() =>
 </script>
 
 <template>
+  <div v-if="itemsToRender.length">
+  <slot name="header" />
   <section class="relative w-full overflow-hidden bg-black py-20">
     <div
       class="pointer-events-none absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-black to-transparent z-20"
@@ -222,6 +223,7 @@ const rowsConfig = computed(() =>
       </div>
     </div>
   </section>
+  </div>
 </template>
 
 <style scoped>

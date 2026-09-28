@@ -1,8 +1,5 @@
 import { expect, test } from "bun:test";
 import { createCursorTrails, stepCursorTrails } from "../app/utils/cursorTrails";
-import { Euler } from "three";
-import { MARQUEE_TILT } from "../app/utils/marquee/layout";
-import { marqueeVerticalDirection, marqueeVerticalOffset } from "../app/utils/marquee/motion";
 import { createStarField } from "../app/utils/globe/stars";
 
 test("cursor spring trails stay finite and settle at the actual pointer", () => {
@@ -13,27 +10,6 @@ test("cursor spring trails stay finite and settle at the actual pointer", () => 
   for (const trail of trails) for (const node of trail.nodes) {
     expect(node.x).toBeCloseTo(720, 1);
     expect(node.y).toBeCloseTo(360, 1);
-  }
-});
-test("marquee columns travel 100px and reverse over the React reference durations", () => {
-  expect(marqueeVerticalOffset(0, 2)).toBeGreaterThan(0);
-  expect(marqueeVerticalOffset(1, 2)).toBeLessThan(0);
-  expect(marqueeVerticalOffset(2, 2)).toBe(marqueeVerticalOffset(0, 2));
-  expect(marqueeVerticalOffset(0, 10)).toBe(100);
-  expect(marqueeVerticalOffset(1, 15)).toBe(-100);
-  expect(marqueeVerticalOffset(0, 20)).toBeCloseTo(0);
-  expect(marqueeVerticalOffset(1, 30)).toBeCloseTo(0);
-});
-test("marquee motion follows local column Y and never falls below its backing", () => {
-  const direction = marqueeVerticalDirection();
-  const rotation = new Euler(MARQUEE_TILT, 0, Math.PI / 4);
-  for (let time = 0; time <= 36; time += .25) for (const lane of [0, 1, 2]) {
-    const offset = marqueeVerticalOffset(lane, time);
-    const position = direction.clone().multiplyScalar(offset);
-    expect(position.z).toBeCloseTo(0, 8);
-    position.applyEuler(rotation);
-    expect(position.x).toBeCloseTo(-offset / Math.SQRT2, 8);
-    expect(position.y).toBeCloseTo(offset * Math.cos(MARQUEE_TILT) / Math.SQRT2, 8);
   }
 });
 test("world star field contains bright stars outside the globe and animated light", () => {

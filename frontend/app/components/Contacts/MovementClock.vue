@@ -72,6 +72,18 @@ canvas {
 canvas.is-ready { opacity: 1; }
 @media (min-width: 1500px) {
   .movement-art { width: 1920px; transform: translateX(-54.6875%); }
+  /* From ~1830px wide the fixed 1920px artwork's edges come into view; fade them
+     into the footer background instead of showing a hard vertical cut. */
+  .movement-art__background {
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0, #000 14%, #000 84%, transparent 100%),
+      linear-gradient(180deg, #000 78%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0, #000 14%, #000 84%, transparent 100%),
+      linear-gradient(180deg, #000 78%, transparent 100%);
+    mask-composite: intersect;
+  }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
   .movement-art { width: 1430px; left: -255px; transform: none; }

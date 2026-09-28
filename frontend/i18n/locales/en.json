@@ -26,14 +26,43 @@
     "copyright": "OneBranding. All rights reserved."
   },
   "seo": {
-    "home": "Home",
-    "about": "About",
-    "contacts": "Contacts",
-    "price": "Prices",
-    "oneGuarantee": "OneGuarantee",
-    "projects": "Projects",
-    "news": "News",
-    "description": "OneBranding — creative branding agency. Brand strategy, identity, packaging, presentations, and digital experiences."
+    "description": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy, naming, logo design, visual identity, brand books and packaging.",
+    "heroEyebrow": "Branding agency in Tashkent, Uzbekistan",
+    "home": {
+      "title": "Branding Agency in Tashkent, Uzbekistan {'|'} OneBranding",
+      "description": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy, naming, logo design, visual identity, brand books and packaging."
+    },
+    "about": {
+      "title": "About OneBranding — Branding Team in Tashkent",
+      "description": "Meet OneBranding: strategists, designers and marketers building strong brands for businesses in Uzbekistan — from idea and naming to visual identity."
+    },
+    "projects": {
+      "title": "Branding & Identity Portfolio {'|'} OneBranding",
+      "description": "OneBranding case studies: logos, visual identity, packaging and brand books for Uzbek brands such as Makva, Luqman, Apex Pizza and Dodo Kids.",
+      "h1": "OneBranding branding agency portfolio"
+    },
+    "price": {
+      "title": "Branding & Logo Design Prices in Tashkent {'|'} OneBranding",
+      "description": "Branding prices in Tashkent: logo design, visual identity, brand books, naming and packaging design. Service packages, timelines and deliverables.",
+      "h1": "Branding, logo and visual identity prices in Tashkent"
+    },
+    "oneGuarantee": {
+      "title": "OneGuarantee — Branding Results Guarantee {'|'} OneBranding",
+      "description": "OneGuarantee by OneBranding: design your audience is guaranteed to like. We test our solutions with a live audience before your brand launches.",
+      "h1": "OneGuarantee — branding results guarantee"
+    },
+    "contacts": {
+      "title": "Contact Our Branding Agency in Tashkent {'|'} OneBranding",
+      "description": "Contact OneBranding: office at 18A Amir Temur St., Tashkent. Tell us about your project and get a proposal for branding, logo and packaging design."
+    },
+    "news": {
+      "title": "Branding Insights & Agency News {'|'} OneBranding",
+      "description": "Articles and news from OneBranding about branding, logo design, visual identity, packaging and marketing for businesses in Uzbekistan."
+    },
+    "project": "branding case study",
+    "projectDescription": "OneBranding case study: {title}. Brand strategy, logo, visual identity and design for a brand from Uzbekistan.",
+    "category": "Branding services",
+    "news_article": "News"
   },
   "common": {
     "prev": "Previous",

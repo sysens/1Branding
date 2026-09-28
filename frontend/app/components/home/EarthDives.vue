@@ -33,7 +33,7 @@ const initGsap = async () => {
   ctx = gsap.context(() => {
     const el = root.value!;
 
-    const titleEl = el.querySelector("h1");
+    const titleEl = el.querySelector("h2");
     const leftImg = el.querySelector(".left-earth");
     const items = el.querySelectorAll(".row-item");
 
@@ -275,11 +275,11 @@ const resolveMedia = (url?: string | null) => {
     />
 
     <div class="containerr relative z-1">
-      <h1
+      <h2
         class="font-normal md:text-[3.875rem] text-white md:leading-[7.5rem] text-center md:tracking-normal text-[40px] leading-[68px] tracking-[0%]"
       >
         {{ sectionTitle }}
-      </h1>
+      </h2>
 
       <div class="md:flex inline-block md:gap-7 gap-2 place-items-center">
         <div class="main flex-1 flex justify-center md:py-0 py-[40px]">
@@ -312,11 +312,11 @@ const resolveMedia = (url?: string | null) => {
               </div>
 
               <div>
-                <h1
+                <h2
                   class="text-[#FFFFFF] font-semibold md:text-[1.25rem] leading-[100%] md:tracking-wider text-[16px] tracking-[0%]"
                 >
                   {{ card.title }}
-                </h1>
+                </h2>
                 <p
                   class="text-[#808080] font-normal line-clamp-4 md:pt-[1.875rem] pt-[10px] md:text-[0.9375rem] leading-[120%] md:tracking-normal text-[13px] tracking-[0%]"
                 >

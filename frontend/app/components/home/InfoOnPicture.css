@@ -84,7 +84,11 @@
 .info-image-frame {
   position: relative;
   width: 100%;
-  min-height: clamp(30rem, 66vw, 64rem);
+  /* The Quaker frames are 3:2 with the pack ending at ~87% of their height;
+     following their ratio keeps the whole pack (incl. the quality badge) in view
+     on wide screens instead of cover-cropping the bottom off. */
+  aspect-ratio: 3 / 2;
+  min-height: 30rem;
   margin-top: 0;
   overflow: hidden;
   background: var(--identity-media-surface);

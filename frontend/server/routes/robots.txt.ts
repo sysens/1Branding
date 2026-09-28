@@ -1,17 +1,26 @@
-import { siteOrigin } from "../utils/seoSitemap";
+import { resolveSiteOrigin } from "../utils/requestOrigin";
+
+// Prototype routes kept in app/pages for reference; they also send X-Robots-Tag: noindex.
+const PROTOTYPE_ROUTES = ["/testPage", "/Newsslug", "/Projectslug", "/idProductSlugSecondVersion", "/ProjectSlug/Products"];
 
 export default defineEventHandler((event) => {
-  const config = useRuntimeConfig(event);
-  let origin = "";
-  try {
-    origin = siteOrigin(String(config.public.siteUrl || ""));
-  } catch {
-    // An unconfigured deployment should not be indexed under an accidental host.
-    setHeader(event, "Content-Type", "text/plain; charset=utf-8");
-    return "User-agent: *\nDisallow: /\n";
-  }
+  const origin = resolveSiteOrigin(event);
+  const disallow = [
+    "/api/",
+    "/__nuxt_error",
+    "/*?*preview",
+    "/*?*draft",
+    ...PROTOTYPE_ROUTES.flatMap((path) => [path, `/en${path}`]),
+  ];
 
   setHeader(event, "Content-Type", "text/plain; charset=utf-8");
-  setHeader(event, "Cache-Control", "public, max-age=300, s-maxage=300");
-  return `User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${origin}/sitemap.xml\n`;
+  setHeader(event, "Cache-Control", "public, max-age=3600, s-maxage=3600");
+  return [
+    "User-agent: *",
+    "Allow: /",
+    ...disallow.map((path) => `Disallow: ${path}`),
+    "",
+    `Sitemap: ${origin}/sitemap.xml`,
+    "",
+  ].join("\n");
 });

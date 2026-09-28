@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
 
 type Props = {
@@ -23,51 +23,58 @@ const props = withDefaults(defineProps<Props>(), {
   asBackground: false,
 });
 
+// 400x200 thumbnails of /logoss/* (the originals are 1710x962 artwork reused by
+// BrandStoriesSection); tiles render at 200x100 CSS px.
 const staticLogos = [
-  "/logoss/apexpizza.webp",
-  "/logoss/artAnor.webp",
-  "/logoss/asakabank.webp",
-  "/logoss/barberra.webp",
-  "/logoss/brono.webp",
-  "/logoss/burger.webp",
-  "/logoss/chizzago.webp",
-  "/logoss/clop.webp",
-  "/logoss/cybernat.webp",
-  "/logoss/daniel.webp",
-  "/logoss/Deco.webp",
-  "/logoss/delicco.webp",
-  "/logoss/dodokids.webp",
-  "/logoss/FmFood.webp",
-  "/logoss/GlossMaxx.webp",
-  "/logoss/grechno.webp",
-  "/logoss/GreenGo.webp",
-  "/logoss/hayaati.webp",
-  "/logoss/kebabHouse.webp",
-  "/logoss/Korean.webp",
-  "/logoss/Luqmam.webp",
-  "/logoss/luxion.webp",
-  "/logoss/Makva.webp",
-  "/logoss/marinno.webp",
-  "/logoss/merhaba.webp",
-  "/logoss/milka.webp",
-  "/logoss/nescafe.webp",
-  "/logoss/OMAF.webp",
-  "/logoss/perfectCandy.webp",
-  "/logoss/perfectCandy2.webp",
-  "/logoss/Poyqadam.webp",
-  "/logoss/Rafting.webp",
-  "/logoss/Raviosta.webp",
-  "/logoss/RedBull.webp",
-  "/logoss/silvera.webp",
-  "/logoss/streetvibe.webp",
-  "/logoss/st77.webp",
-  "/logoss/texnikach.webp",
-  "/logoss/websiteONEBRANDING.webp",
-  "/logoss/wok.webp",
-  "/logoss/yana.webp",
+  "/logoss/thumbs/apexpizza.webp",
+  "/logoss/thumbs/artAnor.webp",
+  "/logoss/thumbs/asakabank.webp",
+  "/logoss/thumbs/barberra.webp",
+  "/logoss/thumbs/brono.webp",
+  "/logoss/thumbs/burger.webp",
+  "/logoss/thumbs/chizzago.webp",
+  "/logoss/thumbs/clop.webp",
+  "/logoss/thumbs/cybernat.webp",
+  "/logoss/thumbs/daniel.webp",
+  "/logoss/thumbs/Deco.webp",
+  "/logoss/thumbs/delicco.webp",
+  "/logoss/thumbs/dodokids.webp",
+  "/logoss/thumbs/FmFood.webp",
+  "/logoss/thumbs/GlossMaxx.webp",
+  "/logoss/thumbs/grechno.webp",
+  "/logoss/thumbs/GreenGo.webp",
+  "/logoss/thumbs/hayaati.webp",
+  "/logoss/thumbs/kebabHouse.webp",
+  "/logoss/thumbs/Korean.webp",
+  "/logoss/thumbs/Luqmam.webp",
+  "/logoss/thumbs/luxion.webp",
+  "/logoss/thumbs/Makva.webp",
+  "/logoss/thumbs/marinno.webp",
+  "/logoss/thumbs/merhaba.webp",
+  "/logoss/thumbs/milka.webp",
+  "/logoss/thumbs/nescafe.webp",
+  "/logoss/thumbs/OMAF.webp",
+  "/logoss/thumbs/perfectCandy.webp",
+  "/logoss/thumbs/perfectCandy2.webp",
+  "/logoss/thumbs/Poyqadam.webp",
+  "/logoss/thumbs/Rafting.webp",
+  "/logoss/thumbs/Raviosta.webp",
+  "/logoss/thumbs/RedBull.webp",
+  "/logoss/thumbs/silvera.webp",
+  "/logoss/thumbs/streetvibe.webp",
+  "/logoss/thumbs/st77.webp",
+  "/logoss/thumbs/texnikach.webp",
+  "/logoss/thumbs/websiteONEBRANDING.webp",
+  "/logoss/thumbs/wok.webp",
+  "/logoss/thumbs/yana.webp",
 ];
 
 const MAX_LOGOS_PER_COLUMN = 18;
+// The second (loop) copy of each column only scrolls into view after ~60s of the
+// 120s animation, so it is added after hydration: this halves the SSR markup
+// (~270 fewer <img> nodes in the home page HTML).
+const loopCopyReady = ref(false);
+onMounted(() => { loopCopyReady.value = true; });
 const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" });
 
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
@@ -145,6 +152,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   <section
     ref="targetRef"
     :class="[rootClass, { 'logo-marquee--paused': !isActive }]"
+    :aria-hidden="props.asBackground ? 'true' : undefined"
   >
     <div :class="innerWrapClass">
       <div class="w-full h-full rotate-[10deg] overflow-hidden">
@@ -170,6 +178,8 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
                 <img
                   :src="src"
                   alt=""
+                  width="200"
+                  height="100"
                   :class="imgClass"
                   loading="lazy"
                   decoding="async"
@@ -181,6 +191,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 
             <component
               :is="col.withLink ? 'NuxtLink' : 'div'"
+              v-if="loopCopyReady"
               :to="col.withLink ? props.linkTo : undefined"
               class="flex flex-col items-center"
               :class="[colGapClass, colPadClass]"
@@ -194,6 +205,8 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
                 <img
                   :src="src"
                   alt=""
+                  width="200"
+                  height="100"
                   :class="imgClass"
                   loading="lazy"
                   decoding="async"

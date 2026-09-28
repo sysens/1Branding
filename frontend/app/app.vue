@@ -9,14 +9,33 @@ import {
 } from "vue";
 import GradualBlur from "./components/GradualBlur.vue";
 import BrandCursor from "./components/ui/BrandCursor.vue";
+import { organizationGraph, withSiteName, type SeoLocale } from "~/utils/seo";
 
 const route = useRoute();
+const { locale } = useI18n();
+const runtimeConfig = useRuntimeConfig();
+const siteOrigin = useSiteOrigin();
+const seoLocale = computed<SeoLocale>(() => (locale.value === "en" ? "en" : "ru"));
+
+const listFromEnv = (value: unknown) => String(value || "")
+  .split(",")
+  .map((item) => item.trim())
+  .filter((item) => /^https?:\/\//i.test(item));
+
+// Organization + WebSite graph on every page; page-level JSON-LD references it by @id.
+const organizationJsonLd = computed(() => JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": organizationGraph(siteOrigin, seoLocale.value, {
+    telephone: String(runtimeConfig.public.orgPhone || "").trim(),
+    email: String(runtimeConfig.public.orgEmail || "").trim(),
+    sameAs: listFromEnv(runtimeConfig.public.orgSameAs),
+  }),
+}).replace(/</g, "\\u003c"));
 
 useHead({
-  titleTemplate: (titleChunk) => {
-    if (!titleChunk) return "OneBranding";
-    return titleChunk.includes("OneBranding") ? titleChunk : `${titleChunk} · OneBranding`;
-  },
+  titleTemplate: (titleChunk) => withSiteName(titleChunk || ""),
+  htmlAttrs: { lang: () => seoLocale.value, dir: "ltr" },
+  script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
 });
 const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/Projects"));
 const showBottomBlur = computed(() =>

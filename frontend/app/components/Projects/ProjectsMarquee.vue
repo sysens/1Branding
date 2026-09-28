@@ -343,11 +343,11 @@ onBeforeUnmount(() => {
                 class="inline-block pointer-events-auto relative z-20"
                 @click.prevent="navigateSafely(cat.to)"
               >
-                <h1
+                <h2
                   class="md:text-white text-[#03CB00] text-center font-oswald font-normal md:text-[62px] md:leading-[100%] tracking-[0%] md:pt-[100px] md:pb-[63px] text-[40px] leading-[120%] pt-[50px] pb-[30px] transition-all duration-500 ease-out md:hover:text-[#03CB00] md:hover:[text-shadow:0_0_5px_#03CB00] md:hover:scale-[1.04] mx-auto"
                 >
                   {{ cat.title }}
-                </h1>
+                </h2>
               </a>
             </div>
 

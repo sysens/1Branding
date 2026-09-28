@@ -24,7 +24,7 @@ defineProps<{
       </div>
     </div>
     <motion.img
-      v-if="src" :src="src" :alt="alt" width="512" height="384" decoding="async"
+      v-if="src" :src="src" :alt="alt" width="512" height="384" loading="lazy" decoding="async"
       class="macbook-scroll__screen"
       :style="{ scaleX, scaleY, rotateX: rotate, translateY: translate, transformStyle: 'flat', transformOrigin: 'top' }"
     />

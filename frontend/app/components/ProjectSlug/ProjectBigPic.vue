@@ -144,11 +144,11 @@ const s2Image = computed(() => props.image ?? props.fallbackImage);
   <div ref="root">
     <div class="md:pt-[118px] pt-[100px]">
       <div v-if="section2" class="containerr">
-        <h1
+        <h2
           class="section-title text-[#FFFFFF] font-normal md:text-[62px] md:leading-[100%] md:tracking-[0] text-center text-[40px] leading-[120%] tracking-normal will-change-transform"
         >
           {{ section2.title }}
-        </h1>
+        </h2>
 
         <p
           class="section-text text-[#FFFFFF] pt-[60px] md:pb-[118px] pb-[100px] font-light md:text-[16px] md:leading-[28px] md:tracking-[0] text-[14px] leading-[12 0%] tracking-normal text-center will-change-transform font-['Poppins','Inter',sans-serif]"

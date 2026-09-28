@@ -213,11 +213,16 @@ const seoImage = computed(() => resolveStrapiMediaUrl(
   GRAPHQL_URL
 ));
 
+const localePath = useLocalePath();
 usePageSeo({
-  title: pageTitle,
+  title: computed(() => `${pageTitle.value} — ${t("seo.category")}`),
   description: computed(() => pageDesc.value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)),
   type: "website",
   image: seoImage,
+  breadcrumbs: computed(() => [
+    { name: t("nav.projects"), path: localePath("/Projects") },
+    { name: pageTitle.value, path: route.path },
+  ]),
   indexable: computed(() =>
     !("preview" in route.query || "draft" in route.query) &&
     !!gqlData.value?.data?.category

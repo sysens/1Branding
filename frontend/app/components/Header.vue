@@ -15,6 +15,9 @@
               class="w-[72px] h-[44px] pt-1 scale-125 block"
               src="/home/logoNewwwwwwwwww.png"
               alt="OneBranding"
+              width="72"
+              height="44"
+              fetchpriority="high"
             />
           </a>
         </div>
@@ -486,5 +489,33 @@ onBeforeUnmount(() => {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   will-change: transform;
+}
+
+/* Keep the header's laptop proportions on 1920px+ monitors (sizes are px). */
+@media (min-width: 1920px) {
+  .site-header {
+    max-width: clamp(1100px, 57.3vw, 1460px);
+    height: clamp(66px, 3.44vw, 86px);
+  }
+
+  .site-header .menuLink {
+    gap: clamp(40px, 2.08vw, 54px);
+  }
+
+  .site-header .menuLink a,
+  .site-header .menuLink button,
+  .site-header .OneGuarantee a span {
+    font-size: clamp(18px, 0.9375vw, 23px);
+  }
+
+  .site-header .OneGuarantee a {
+    width: clamp(190px, 9.9vw, 250px);
+    height: clamp(40px, 2.08vw, 52px);
+  }
+
+  .site-header .logoImg img {
+    width: clamp(72px, 3.75vw, 94px);
+    height: auto;
+  }
 }
 </style>

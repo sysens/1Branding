@@ -55,13 +55,19 @@ type AboutPage = {
 };
 
 type GqlRes = {
-  data?: { aboutPage?: AboutPage | null };
+  data?: { aboutPage?: AboutPage | null; fallbackAboutPage?: AboutPage | null };
   errors?: Array<{ message: string }>;
 };
 
 const query = `
   query AboutPage($locale: I18NLocaleCode) {
     aboutPage(locale: $locale) {
+      documentId
+      section1 { id title image { url alternativeText } }
+      section3 { title subTitle }
+    }
+    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
+    fallbackAboutPage: aboutPage(locale: "en") {
       documentId
       section1 { id title image { url alternativeText } }
       section3 { title subTitle }
@@ -80,7 +86,7 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
   watch: [gqlLocale],
 });
 
-const aboutPage = computed(() => data.value?.data?.aboutPage ?? null);
+const aboutPage = computed(() => data.value?.data?.aboutPage ?? data.value?.data?.fallbackAboutPage ?? null);
 const section1 = computed(() => aboutPage.value?.section1 ?? null);
 const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
 

@@ -1,10 +1,11 @@
 import { buildSitemap } from "../utils/seoSitemap";
+import { resolveSiteOrigin } from "../utils/requestOrigin";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
   try {
     const xml = await buildSitemap(
-      String(config.public.siteUrl || ""),
+      resolveSiteOrigin(event),
       String(config.public.graphqlUrl || ""),
       (url, options) => $fetch(url, options)
     );

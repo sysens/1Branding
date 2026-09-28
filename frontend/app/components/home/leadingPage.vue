@@ -112,6 +112,9 @@ onBeforeUnmount(() => {
         <h1
           class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
         >
+          <!-- Keyword line for search engines and people alike; absolutely placed so
+               the slogan block keeps its designed size. -->
+          <span class="hero-slogan__eyebrow">{{ $t("seo.heroEyebrow") }}</span>
           <span class="hero-slogan__muted">
             <span v-for="line in heroCopy.mutedLines" :key="line">
               {{ line }}
@@ -191,6 +194,18 @@ onBeforeUnmount(() => {
   transform: translate3d(0, 0, 0);
 }
 
+.hero-slogan__eyebrow {
+  position: absolute;
+  left: 2.4rem;
+  bottom: calc(100% + 0.75rem);
+  color: #03cb00;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
 .hero-slogan__muted {
   display: flex;
   flex-direction: column;
@@ -234,6 +249,12 @@ onBeforeUnmount(() => {
 @media (max-width: 767px) {
   .hero-slogan {
     padding-left: 0.4rem;
+  }
+
+  .hero-slogan__eyebrow {
+    left: 0.4rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
   }
 
   .hero-slogan__muted {

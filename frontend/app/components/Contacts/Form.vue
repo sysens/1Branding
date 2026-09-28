@@ -158,6 +158,11 @@ type ContactRequestPayload = {
   email: string;
 };
 
+// Bot traps checked by the backend: the hidden "website" field stays empty for
+// people, and a real visitor needs more than a few seconds to fill the form.
+const honeypotVal = ref("");
+let formOpenedAt = 0;
+
 const submitContactRequestRest = async (dataPayload: ContactRequestPayload) => {
   const origin = getOrigin(GRAPHQL_URL);
   const url = origin ? `${origin}/api/contacts-requests` : "/api/contacts-requests";
@@ -165,7 +170,10 @@ const submitContactRequestRest = async (dataPayload: ContactRequestPayload) => {
   return await $fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: { data: dataPayload },
+    body: {
+      data: dataPayload,
+      meta: { website: honeypotVal.value, elapsedMs: Date.now() - formOpenedAt },
+    },
   });
 };
 
@@ -258,6 +266,7 @@ const onSend = async () => {
     phoneVal.value = "";
     emailVal.value = "";
     selectedFile.value = null;
+    formOpenedAt = Date.now();
 
     if (fileInputRef.value) {
       fileInputRef.value.value = "";
@@ -347,6 +356,7 @@ const initGsap = async () => {
 };
 
 onMounted(() => {
+  formOpenedAt = Date.now();
   if (!root.value) return;
 
   const rect = root.value.getBoundingClientRect();
@@ -406,7 +416,17 @@ onBeforeUnmount(() => {
           {{ formDescription }}
         </p>
 
-        <form id="contact-request-form" class="grid grid-cols-1 gap-10 md:grid-cols-2" novalidate @submit.prevent="onSend">
+        <form id="contact-request-form" class="relative grid grid-cols-1 gap-10 md:grid-cols-2" novalidate @submit.prevent="onSend">
+          <!-- Honeypot: invisible to people and screen readers, filled by form bots. -->
+          <input
+            v-model="honeypotVal"
+            class="contact-hp"
+            type="text"
+            name="hp_c7x"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
           <div class="form-left will-change-transform">
             <h3
               class="font-normal md:text-[24px] md:pb-[30px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
@@ -575,3 +595,14 @@ onBeforeUnmount(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+.contact-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+</style>

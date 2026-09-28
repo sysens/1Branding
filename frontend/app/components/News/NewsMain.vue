@@ -212,11 +212,11 @@ const toNewsSlug = (id: string) => localePath({ path: `/NewsSlug/${id}` });
             </div>
 
             <div class="w-full">
-              <h1
+              <h2
                 class="md:pb-[50px] text-white md:text-[62px] leading-[120%] font-normal text-[18px] tracking-[0%] py-[8px]"
               >
                 {{ item.title }}
-              </h1>
+              </h2>
 
               <p
                 class="md:text-[16px] text-white line-clamp-5 font-light text-[14px] leading-[120%] tracking-[0%] font-['Poppins','Inter',sans-serif]"

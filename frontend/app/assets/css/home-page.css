@@ -1,11 +1,9 @@
 .home-page-root { overflow-x: clip; }
-.home-page-frame { position: relative; width: min(100%, 1728px); min-height: 100vh; margin-inline: auto; overflow: clip; background: #000; }
+/* Full-bleed on every screen: sections keep their own centred content widths, so
+   wide monitors get edge-to-edge backgrounds instead of a 1728px box with bars. */
+.home-page-frame { position: relative; width: 100%; min-height: 100vh; margin-inline: auto; overflow: clip; background: #000; }
 .home-dark-sections { position: relative; background: #000; }
 .home-info-picture { position: relative; z-index: 31; background: #fff; }
-
-@media (min-width: 1280px) and (min-height: 900px) {
-  .home-info-picture { margin-bottom: clamp(-7rem, -6vw, -3rem); }
-}
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .home-leading :deep(.products) { justify-content: center; }
@@ -15,5 +13,5 @@
   .home-info-picture :deep(.info-block) { padding-top: 3.5rem; }
   .home-info-picture :deep(.info-title) { font-size: 3rem; line-height: 1.05; }
   .home-info-picture :deep(.info-description) { font-size: 1rem; line-height: 1.5; }
-  .home-info-picture :deep(.info-image-frame) { width: 100%; max-width: 100%; aspect-ratio: 2.16 / 1; min-height: auto; }
+  .home-info-picture :deep(.info-image-frame) { width: 100%; max-width: 100%; aspect-ratio: 3 / 2; min-height: auto; }
 }

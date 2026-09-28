@@ -249,12 +249,12 @@ onBeforeUnmount(() => {
       <div
         class="bottom-text flex justify-center items-center text-center absolute z-[5] bottom-[23%] md:bottom-[18%] w-full"
       >
-        <h1
+        <h2
           class="font-normal tracking-[0%] text-[30px] leading-[120%] md:text-[45px] md:leading-[120%] w-[80%] md:w-[60%]"
         >
           <span class="text-[#19ff00]">{{ bottomParts.green }}</span>
           <span class="text-white break-words">{{ bottomParts.white }}</span>
-        </h1>
+        </h2>
       </div>
     </section>
   </div>

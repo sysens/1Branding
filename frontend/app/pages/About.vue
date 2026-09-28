@@ -8,70 +8,19 @@ import ThreePic from "~/components/About/ThreePic.vue";
 import TwoFlex from "~/components/About/TwoFlex.vue";
 import ThreeLayer from "~/components/home/threeLayerSlug.vue";
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
-const route = useRoute();
 
 const loading = ref(true);
 const rootRef = ref<HTMLElement | null>(null);
 const titleRef = ref<HTMLElement | null>(null);
 
-type SeoRes = {
-  data?: {
-    seo?: {
-      aboutPage?: {
-        title?: string | null;
-        description?: string | null;
-      } | null;
-    } | null;
-  };
-};
-
-const seoQuery = `
-  query AboutSeo {
-    seo {
-      aboutPage {
-        title
-        description
-      }
-    }
-  }
-`;
-
-const { data: seoData } = await useFetch<SeoRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: {
-    query: seoQuery,
-  },
-  server: true,
-  key: "seo-about-page",
+const cmsSeo = await useCmsSeo("aboutPage");
+const localePath = useLocalePath();
+usePageSeo({
+  title: computed(() => cmsSeo.title.value || t("seo.about.title")),
+  description: computed(() => cmsSeo.description.value || t("seo.about.description")),
+  breadcrumbs: computed(() => [{ name: t("nav.about"), path: localePath("/About") }]),
 });
-
-const aboutSeo = computed(() => seoData.value?.data?.seo?.aboutPage ?? null);
-const seoTitle = computed(() => aboutSeo.value?.title?.trim() || t("seo.about"));
-const seoDescription = computed(() => aboutSeo.value?.description?.trim() || "");
-const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
-
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
-});
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 let ctx: { revert: () => void } | null = null;
 
@@ -150,11 +99,11 @@ onBeforeUnmount(() => {
       <ThreePic />
     </div>
 
-    <h1
+    <h2
       class="px-4 pt-[100px] pb-[30px] text-center text-[40px] font-normal uppercase leading-[100%] tracking-[0] text-white md:pt-[130px] md:pb-20 md:text-[62px]"
     >
       {{ $t("home.freshProjects") }}
-    </h1>
+    </h2>
 
     <ThreeLayer />
 

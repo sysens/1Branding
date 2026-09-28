@@ -263,12 +263,12 @@ const highlightedText = computed(() => {
 
     <div class="max-w-[991px] mx-auto flex flex-col items-center text-center">
       <div>
-        <h1
+        <h2
           class="og-title will-change-transform text-[#FFFFFF] text-center pt-20 pb-[38px] font-normal md:text-[96px] md:leading-[120%] md:tracking-tighter text-[40px] leading-[100%] tracking-[0%]"
         >
           <span class="text-[#15FF00]">{{ $t("brand.one").toUpperCase() }}</span
           >{{ s2Title.replace(/^ONE/i, "") }}
-        </h1>
+        </h2>
 
         <div class="mx-auto block">
           <p

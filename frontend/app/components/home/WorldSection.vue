@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import NetworkGlobe from "~/components/ui/NetworkGlobe.vue";
+import WorldStarfield from "./WorldStarfield.vue";
 
 const { t } = useI18n();
 </script>
 
 <template>
   <section id="world" class="world-section" aria-labelledby="world-title">
+    <ClientOnly><WorldStarfield /></ClientOnly>
     <header class="world-section__heading">
       <h2 id="world-title">
         <span class="world-section__eyebrow">{{ t("home.world.eyebrow") }}</span>
@@ -25,7 +27,7 @@ const { t } = useI18n();
 
 <style scoped>
 .world-section { position: relative; isolation: isolate; width: 100%; padding: 48px 0 220px; overflow: clip; background: #000; color: #fff; text-align: center; }
-.world-section__heading { position: relative; z-index: 0; padding-inline: 20px; }
+.world-section__heading { position: relative; z-index: 1; padding-inline: 20px; }
 .world-section__heading h2 { margin: 0; font-weight: 700; letter-spacing: 0; }
 .world-section__eyebrow { display: block; font-size: 42px; line-height: 48px; font-weight: 600; }
 .world-section__word { display: block; margin-top: -12px; font-size: 268px; line-height: .9; background: linear-gradient(110deg, #00ed28 20%, #00b42c 58%, #008c29 85%); background-clip: text; color: transparent; }

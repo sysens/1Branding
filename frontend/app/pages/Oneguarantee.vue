@@ -22,75 +22,19 @@ interface LenisAwareNuxtApp extends ReturnType<typeof useNuxtApp> {
   $lenis?: LenisController;
 }
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 
 const loading = ref(true);
-const emptySeoData = ref<SeoRes | null>(null);
 const oneGuaranteeVideoPoster = "/OneGuarantee/image95.png";
 const oneGuaranteeVideoSrc = "/OneGuarantee/Img%205714.mp4";
 
-type SeoRes = {
-  data?: {
-    seo?: {
-      oneGuaranteePage?: {
-        title?: string | null;
-        description?: string | null;
-      } | null;
-    } | null;
-  };
-};
-
-const seoQuery = `
-  query OneGuaranteeSeo {
-    seo {
-      oneGuaranteePage {
-        title
-        description
-      }
-    }
-  }
-`;
-
-const canFetchSeo = Boolean(GRAPHQL_URL);
-
-const { data: seoData } = canFetchSeo
-  ? await useFetch<SeoRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: seoQuery },
-      server: true,
-      key: "seo-one-guarantee-page",
-    })
-  : { data: emptySeoData };
-
-const seo = computed(() => seoData.value?.data?.seo?.oneGuaranteePage ?? null);
-
-const seoTitle = computed(() => seo.value?.title?.trim() || t("seo.oneGuarantee"));
-const seoDescription = computed(() => seo.value?.description?.trim() || "");
-
-const route = useRoute();
-const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? siteUrl + route.path : ""));
-
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
+const cmsSeo = await useCmsSeo("oneGuaranteePage");
+const localePath = useLocalePath();
+usePageSeo({
+  title: computed(() => cmsSeo.title.value || t("seo.oneGuarantee.title")),
+  description: computed(() => cmsSeo.description.value || t("seo.oneGuarantee.description")),
+  breadcrumbs: computed(() => [{ name: "OneGuarantee", path: localePath("/Oneguarantee") }]),
 });
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 const getLenis = () => {
   const nuxtApp = useNuxtApp() as LenisAwareNuxtApp;
@@ -182,7 +126,7 @@ onMounted(async () => {
 
                 <h1
                   class="text-[#FFFFFF] font-normal md:text-[50px] md:leading-[100%] md:tracking-[0] md:pt-[127px] pt-[137px] md:pb-[60px] pb-[30px] text-[40px] leading-[100%] tracking-normal text-center products"
-                ></h1>
+                ><span class="sr-only">{{ $t("seo.oneGuarantee.h1") }}</span></h1>
               </div>
             </div>
           </div>
@@ -192,25 +136,26 @@ onMounted(async () => {
           <InfoSection />
         </div>
 
-        <div>
-          <div class="containerr">
-            <div class="md:px-0 px-[20px]">
-              <h1
-                class="text-[#FFFFFF] md:px-0 md:mt-[130px] text-center pb-[29px] font-normal md:text-[62px] leading-[100%] md:tracking-normal text-[40px] tracking-[0%]"
-              >
-                {{ $t("oneGuarantee.clientsTitle") }}
-              </h1>
+        <!-- Rendered only when the CMS has real client reviews. -->
+        <GuaranteeMarquee :rows="2" :showTitle="false" :showButton="false">
+          <template #header>
+            <div class="containerr">
+              <div class="md:px-0 px-[20px]">
+                <h2
+                  class="text-[#FFFFFF] md:px-0 md:mt-[130px] text-center pb-[29px] font-normal md:text-[62px] leading-[100%] md:tracking-normal text-[40px] tracking-[0%]"
+                >
+                  {{ $t("oneGuarantee.clientsTitle") }}
+                </h2>
 
-              <p
-                class="text-[#FFFFFF] font-light md:text-[16px] pb-[43px] md:leading-[28px] md:tracking-normal text-center text-[14px] leading-[120%] tracking-[0%] font-['Inter']"
-              >
-                {{ $t("oneGuarantee.clientsSubtitle") }}
-              </p>
+                <p
+                  class="text-[#FFFFFF] font-light md:text-[16px] pb-[43px] md:leading-[28px] md:tracking-normal text-center text-[14px] leading-[120%] tracking-[0%] font-['Inter']"
+                >
+                  {{ $t("oneGuarantee.clientsSubtitle") }}
+                </p>
+              </div>
             </div>
-          </div>
-
-          <GuaranteeMarquee :rows="2" :showTitle="false" :showButton="false" />
-        </div>
+          </template>
+        </GuaranteeMarquee>
 
         <div>
           <EarthDives />

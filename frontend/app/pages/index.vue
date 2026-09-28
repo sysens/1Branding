@@ -14,11 +14,12 @@ import BrandStoriesSection from "~/components/home/BrandStoriesSection.vue";
 import AirwaysSceneSection from "~/components/home/AirwaysSceneSection.vue";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 import { selectCollageSource } from "~/utils/collageMedia";
+import { cmsSeoText } from "~/utils/seo";
 import type { LandingMedia } from "~/types/landingPayload";
 
 const runtimeConfig = useRuntimeConfig();
 const GRAPHQL_URL = String(runtimeConfig.public.graphqlUrl || "");
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const { landingPage, seo: landingSeo, footerSocialMedia } = await useLandingPayload();
 const { loading } = useHomePageReady();
@@ -37,22 +38,25 @@ const partnerLogos = computed(() => (landingPage.value?.section3?.partnersLogo ?
   .map(item => resolveStrapiMediaUrl(item.url ?? null, GRAPHQL_URL))
   .filter((url): url is string => Boolean(url)));
 
-const seoTitle = computed(() => landingSeo.value?.title?.trim() || t("seo.home"));
-const seoDesc = computed(() => landingSeo.value?.description?.trim() || "");
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
-const canonical = computed(() => siteUrl ? siteUrl + route.path : "");
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDesc.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDesc.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDesc.value,
+// CMS copy wins once an editor fills it in; scaffolding placeholders fall back to i18n.
+const seoTitle = computed(() => cmsSeoText(landingSeo.value?.title, 15) || t("seo.home.title"));
+const seoDesc = computed(() => cmsSeoText(landingSeo.value?.description, 50) || t("seo.home.description"));
+const origin = useSiteOrigin();
+usePageSeo({
+  title: seoTitle,
+  description: seoDesc,
+  structuredData: computed(() => ({
+    "@type": "WebPage",
+    "@id": `${origin}${route.path}#webpage`,
+    url: `${origin}${route.path}`,
+    name: seoTitle.value,
+    description: seoDesc.value,
+    inLanguage: locale.value === "en" ? "en" : "ru",
+    isPartOf: { "@id": `${origin}/#website` },
+    about: { "@id": `${origin}/#organization` },
+    primaryImageOfPage: `${origin}/og-image.jpg`,
+  })),
 });
-useHead(() => ({ link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [] }));
 </script>
 
 <template>

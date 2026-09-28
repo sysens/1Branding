@@ -5,6 +5,9 @@ defineProps<{ frames: readonly string[]; alt: string }>();
 const root = ref<HTMLElement | null>(null);
 const active = ref(0);
 const previous = ref(-1);
+// Only the first frame is in the SSR markup (lazily loaded); the other seven
+// (~1.8 MB) are requested once the section approaches the viewport.
+const framesRequested = ref(false);
 const ready: number[] = [];
 let visible = false;
 let disposed = false;
@@ -19,15 +22,10 @@ const sync = () => {
     active.value = ready[(ready.indexOf(active.value) + 1) % ready.length] ?? active.value;
   }, 1000);
 };
-onMounted(async () => {
+const requestFrames = async () => {
+  framesRequested.value = true;
   await nextTick();
   if (!root.value || disposed) return;
-  observer = new IntersectionObserver(([entry]) => {
-    visible = entry?.isIntersecting ?? false;
-    sync();
-  }, { rootMargin: "100px" });
-  observer.observe(root.value);
-  document.addEventListener("visibilitychange", sync);
   const images = Array.from(root.value.querySelectorAll("img"));
   const decoded = await Promise.all(images.map(async (image, index) => {
     try { await image.decode(); return index; } catch { return -1; }
@@ -36,6 +34,17 @@ onMounted(async () => {
   ready.push(...decoded.filter(index => index >= 0));
   active.value = ready[0] ?? 0;
   sync();
+};
+onMounted(async () => {
+  await nextTick();
+  if (!root.value || disposed) return;
+  observer = new IntersectionObserver(([entry]) => {
+    visible = entry?.isIntersecting ?? false;
+    if (visible && !framesRequested.value) void requestFrames();
+    sync();
+  }, { rootMargin: "600px 0px" });
+  observer.observe(root.value);
+  document.addEventListener("visibilitychange", sync);
 });
 onBeforeUnmount(() => {
   disposed = true;
@@ -47,8 +56,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="root" class="info-media info-media--frames" role="img" :aria-label="alt">
-    <img v-for="(frame, index) in frames" :key="frame" :src="frame" alt="" decoding="async"
-      class="info-media__frame" :class="{ 'is-active': index === active, 'is-previous': index === previous }" />
+    <template v-for="(frame, index) in frames" :key="frame">
+      <img v-if="index === 0 || framesRequested" :src="frame" alt="" loading="lazy" decoding="async"
+        class="info-media__frame" :class="{ 'is-active': index === active, 'is-previous': index === previous }" />
+    </template>
   </div>
 </template>
 

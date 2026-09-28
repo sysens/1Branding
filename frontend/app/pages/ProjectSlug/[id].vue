@@ -8,10 +8,11 @@ import ProjectGrid from "~/components/ProjectSlug/ProjectGrid.vue";
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
+import { isPlaceholderCopy } from "~/utils/seo";
 
 type AppLocale = "ru" | "en";
 
-const { locale } = useI18n<{ message: any }, AppLocale>();
+const { t, locale } = useI18n<{ message: any }, AppLocale>();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
@@ -198,24 +199,46 @@ const section1 = computed(() => page.value?.section1 ?? null);
 const section2 = computed(() => page.value?.section2 ?? null);
 const section3 = computed(() => page.value?.section3 ?? null);
 
-const seoTitle = computed(() => section1.value?.projectTitle?.trim() || "Project");
+const projectName = computed(() => section1.value?.projectTitle?.trim() || "");
+const seoTitle = computed(() =>
+  projectName.value ? `${projectName.value} — ${t("seo.project")}` : t("seo.projects.title")
+);
 const seoDescription = computed(() =>
   (section1.value?.text || section2.value?.text || "")
-    .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)
+    .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
+  t("seo.projectDescription", { title: projectName.value || "OneBranding" })
 );
 const seoImage = computed(() => resolveStrapiMediaUrl(
   section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url,
   GRAPHQL_URL
 ));
 
+const localePath = useLocalePath();
+const origin = useSiteOrigin();
 usePageSeo({
   title: seoTitle,
   description: seoDescription,
   type: "website",
   image: seoImage,
+  imageAlt: projectName,
+  breadcrumbs: computed(() => [
+    { name: t("nav.projects"), path: localePath("/Projects") },
+    { name: projectName.value || t("seo.project"), path: route.path },
+  ]),
+  structuredData: computed(() => ({
+    "@type": "CreativeWork",
+    name: projectName.value || seoTitle.value,
+    description: seoDescription.value,
+    url: `${origin}${route.path}`,
+    ...(seoImage.value ? { image: seoImage.value } : {}),
+    inLanguage: gqlLocale.value,
+    creator: { "@id": `${origin}/#organization` },
+  })),
+  // Dummy case studies ("Lorem ipsum…") stay out of the index until filled in.
   indexable: computed(() =>
     !("preview" in route.query || "draft" in route.query) &&
-    !!data.value?.data?.projectsPage
+    !!data.value?.data?.projectsPage &&
+    !isPlaceholderCopy(`${projectName.value} ${seoDescription.value}`)
   ),
 });
 

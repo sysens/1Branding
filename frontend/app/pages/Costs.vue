@@ -3,72 +3,25 @@ import Spinner from "~/components/Spinner.vue";
 import Warning from "~/components/Costs/Warning.vue";
 import { ref, computed, onMounted, nextTick } from "vue";
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t } = useI18n();
 
 const loading = ref(true);
 
-type SeoRes = {
-  data?: {
-    seo?: {
-      pricePage?: {
-        title?: string | null;
-        description?: string | null;
-      } | null;
-    } | null;
-  };
-};
-
-const seoQuery = `
-  query PriceSeo {
-    seo {
-      pricePage {
-        title
-        description
-      }
-    }
-  }
-`;
-
-const { data: seoData } = await useFetch<SeoRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: { query: seoQuery },
-  server: true,
-  key: "seo-price-page",
+const cmsSeo = await useCmsSeo("pricePage");
+const localePath = useLocalePath();
+usePageSeo({
+  title: computed(() => cmsSeo.title.value || t("seo.price.title")),
+  description: computed(() => cmsSeo.description.value || t("seo.price.description")),
+  breadcrumbs: computed(() => [{ name: t("nav.prices"), path: localePath("/Costs") }]),
 });
-
-const seo = computed(() => seoData.value?.data?.seo?.pricePage ?? null);
-
-const seoTitle = computed(() => seo.value?.title?.trim() || t("seo.price"));
-const seoDescription = computed(() => seo.value?.description?.trim() || "");
-
-const route = useRoute();
-const siteUrl = ((runtimeConfig.public.siteUrl as string) || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? siteUrl + route.path : ""));
-
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
-});
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 
 onMounted(async () => {
   await nextTick();
-  setTimeout(() => {
-    loading.value = false;
-  }, 1500);
+  // Reveal once web fonts are ready (the slider measures text), capped so the
+  // loader never holds already-rendered content back (it used to wait 1.5s).
+  const fontsReady = "fonts" in document ? document.fonts.ready.catch(() => null) : Promise.resolve(null);
+  await Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 400))]);
+  loading.value = false;
 });
 </script>
 
@@ -82,6 +35,8 @@ onMounted(async () => {
     <div class="relative z-10">
       <div class="vg md:pt-[60px] pt-[30px]">
         <Header />
+
+        <h1 class="sr-only">{{ $t("seo.price.h1") }}</h1>
 
         <div class="mx-auto max-w-[1760px] touch-pan-y">
           <CostsSlider />

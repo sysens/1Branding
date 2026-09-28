@@ -9,7 +9,7 @@ import type {
 
 const LANDING_PAYLOAD_QUERY = `
   query LandingPayload($locale: I18NLocaleCode) {
-    seo {
+    seo(locale: $locale) {
       landingPage {
         title
         description

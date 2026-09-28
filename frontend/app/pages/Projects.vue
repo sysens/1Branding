@@ -4,29 +4,19 @@ import InfiniteProjectsWall from "~/components/Projects/InfiniteProjectsWall.vue
 import Header from "~/components/Header.vue";
 
 const { t } = useI18n();
-const route = useRoute();
-const runtimeConfig = useRuntimeConfig();
-
-const seoTitle = computed(() => t("seo.projects"));
-const seoDescription = computed(() => t("seo.description"));
-const siteUrl = String(runtimeConfig.public.siteUrl || "").replace(/\/$/, "");
-const canonical = computed(() => (siteUrl ? `${siteUrl}${route.path}` : ""));
-
-useSeoMeta({
-  title: () => seoTitle.value,
-  description: () => seoDescription.value,
-  ogTitle: () => seoTitle.value,
-  ogDescription: () => seoDescription.value,
-  ogType: "website",
-  ogUrl: () => canonical.value || undefined,
-  twitterCard: "summary",
-  twitterTitle: () => seoTitle.value,
-  twitterDescription: () => seoDescription.value,
+const localePath = useLocalePath();
+const origin = useSiteOrigin();
+usePageSeo({
+  title: computed(() => t("seo.projects.title")),
+  description: computed(() => t("seo.projects.description")),
+  breadcrumbs: computed(() => [{ name: t("nav.projects"), path: localePath("/Projects") }]),
+  structuredData: computed(() => ({
+    "@type": "CollectionPage",
+    name: t("seo.projects.title"),
+    description: t("seo.projects.description"),
+    isPartOf: { "@id": `${origin}/#website` },
+  })),
 });
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: "canonical", href: canonical.value }] : [],
-}));
 </script>
 
 <template>
@@ -36,6 +26,8 @@ useHead(() => ({
         <Header />
       </div>
     </nav>
+
+    <h1 class="sr-only">{{ $t("seo.projects.h1") }}</h1>
 
     <InfiniteProjectsWall />
   </div>

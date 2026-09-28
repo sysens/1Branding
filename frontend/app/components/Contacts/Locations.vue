@@ -201,22 +201,22 @@ onBeforeUnmount(() => {
     <div class="products">
       <div class="md:flex gap-[189px]">
         <div class="flex-1">
-          <h1
+          <h3
             class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
           >
             {{ addressTitle }}
-          </h1>
+          </h3>
           <p
             class="font-['Inter'] font-normal text-[#808080] md:pb-[80px] pb-[40px] text-[20px] leading-[1] tracking-normal"
           >
             {{ addressText }}
           </p>
 
-          <h1
+          <h3
             class="md:pb-[32px] pb-[20px] font-['Inter'] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
           >
             {{ contactInfoTitle }}
-          </h1>
+          </h3>
           <div class="flex gap-[10px] pb-[15px]">
             <img src="/Contacts/iconsax-call.png" alt="" />
             <h2
@@ -236,22 +236,22 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="flex-1">
-          <h1
+          <h3
             class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
           >
             {{ workTitle }}
-          </h1>
+          </h3>
           <h2
             class="font-['Inter'] md:pb-[80px] pb-[40px] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
           >
             {{ workHours }}
           </h2>
 
-          <h1
+          <h3
             class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
           >
             {{ $t("common.socials") }}
-          </h1>
+          </h3>
           <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
             <a
               class="telegram"
@@ -292,11 +292,11 @@ onBeforeUnmount(() => {
 
       <div class="md:flex gap-[189px]">
         <div class="flex-1">
-          <h1
+          <h3
             class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
           >
             {{ noteTitle }}
-          </h1>
+          </h3>
           <h2
             class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-0 pb-[40px]"
           >

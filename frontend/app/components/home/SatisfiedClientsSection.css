@@ -81,6 +81,9 @@
 
 .clients-section__gallery {
   position: relative;
+  /* Above .clients-reveal__window (z-index 1) so the outlined "2500" sits behind
+     the project collage instead of being drawn over the photos. */
+  z-index: 2;
   display: flow-root;
   isolation: isolate;
 }
@@ -106,7 +109,9 @@
   margin-top: -0.25rem;
   transform: translateX(-50%) rotate(-3deg) scale(1.04);
   transform-origin: center top;
-  background: #fff;
+  /* Transparent so the "2500" behind is hidden by the photos only, not cut by a
+     slanted white strip above them. */
+  background: transparent;
 }
 
 .clients-section__collage :deep(.marquee-image-frame) {

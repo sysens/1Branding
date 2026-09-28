@@ -3,6 +3,7 @@ import { computed } from "vue";
 import FooterBrandSparkles from "~/components/FooterBrandSparkles.vue";
 import FooterCopyBlock from "~/components/FooterCopyBlock.vue";
 import FooterRobotScene from "~/components/FooterRobotScene.vue";
+import { resolveBrandedRobotScene } from "~/utils/robotScene";
 import type {
   FooterSocialMediaLinks,
   LandingPageContent,
@@ -149,32 +150,24 @@ const sceneUrl = computed(
   }
 );
 
+// The robot renders the self-hosted branded copy of the default scene (see
+// utils/robotScene.ts) and loads it itself when the footer nears the viewport,
+// so the old <link rel="prefetch"> only pulled an unused 1.35 MB remote file on
+// every page. Keep a preconnect for genuinely remote CMS scenes only.
 const sceneOrigin = computed(() => {
+  const resolved = resolveBrandedRobotScene(sceneUrl.value);
+  if (!/^https?:\/\//i.test(resolved)) return "";
   try {
-    return new URL(sceneUrl.value).origin;
+    return new URL(resolved).origin;
   } catch {
     return "";
   }
 });
 
 useHead(() => ({
-  link: [
-    ...(sceneOrigin.value
-      ? [
-          {
-            rel: "preconnect" as const,
-            href: sceneOrigin.value,
-            crossorigin: "anonymous" as const,
-          },
-        ]
-      : []),
-    {
-      rel: "prefetch",
-      href: sceneUrl.value,
-      as: "fetch",
-      crossorigin: "anonymous",
-    },
-  ],
+  link: sceneOrigin.value
+    ? [{ rel: "preconnect" as const, href: sceneOrigin.value, crossorigin: "anonymous" as const }]
+    : [],
 }));
 
 const instagramLink = computed(

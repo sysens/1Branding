@@ -143,11 +143,11 @@ const colors = computed(() => props.colors ?? []);
   <div ref="root">
     <div class="containerr">
       <div class="w-full md:pt-[167px] pt-[100px]">
-        <h1
+        <h2
           class="cp-title text-white font-normal md:text-[62px] md:leading-[1] mb-[27px] md:px-0 px-[20px] text-[40px] leading-[100%] tracking-normal text-center will-change-transform"
         >
           {{ section3?.title || "Color palette" }}
-        </h1>
+        </h2>
 
         <div
           class="cp-cards md:flex md:justify-center md:mb-[130px] flex gap-6 mb-[100px] overflow-x-auto md:overflow-visible snap-x snap-mandatory [-webkit-overflow-scrolling:touch] will-change-transform"
@@ -162,11 +162,11 @@ const colors = computed(() => props.colors ?? []);
               :style="{ backgroundColor: c.HexColorCode || '#000' }"
             ></div>
 
-            <h1
+            <h2
               class="text-white font-medium md:text-[22px] md:leading-[31.29px] text-center text-[14.67px] leading-[20.86px] tracking-normal font-['Poppins','Inter',sans-serif]"
             >
               {{ c.HexColorCode || "" }}
-            </h1>
+            </h2>
           </div>
         </div>
       </div>

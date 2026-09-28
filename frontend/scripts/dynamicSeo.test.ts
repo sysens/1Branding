@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parse as parseVue } from "@vue/compiler-sfc";
+import { parse as parseVue } from "vue/compiler-sfc";
 import { parse as parseGraphql } from "graphql";
 
 const routeFiles = [
