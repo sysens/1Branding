@@ -2,6 +2,7 @@
 
 - `artwork/*.webp`: 30 individual, optimized project images sourced from `public/home/threeLayerLocal`. Regenerate with `bun scripts/prepare-awards-assets.ts` from the frontend workspace.
 - `stage.v1.webp`: a static render of the numeral and ceiling lights, displayed while WebGL initializes or when it is unavailable. It does not contain gallery cards.
+- `stage-ceiling.v1.webp`: the same render without the numeral, for stages shown with `:numeral="false"` (the landing).
 
 The gallery uses native HTML cards and images in seven independent rows, positioned by Three.js CSS3DRenderer. Each row has one uniform card size, a curved path, and an independent looping direction. CSS reflections and shadows stay attached to the cards. Only the beveled numeral and illuminated ceiling ribbons use WebGL. The reference images define the composition; card artwork comes from OneBranding's local projects, not the game covers in the reference.
 

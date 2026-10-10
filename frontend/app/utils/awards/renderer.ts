@@ -13,7 +13,7 @@ export interface AwardsRenderer {
   dispose: (releaseContext?: boolean) => void;
 }
 
-export function createAwardsRenderer(canvas: HTMLCanvasElement): AwardsRenderer {
+export function createAwardsRenderer(canvas: HTMLCanvasElement, { numeral = true } = {}): AwardsRenderer {
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "low-power" });
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = SRGBColorSpace;
@@ -26,7 +26,8 @@ export function createAwardsRenderer(canvas: HTMLCanvasElement): AwardsRenderer 
   key.position.set(-200, 500, 500);
   const rim = new DirectionalLight(0x5aff22, .6);
   rim.position.set(300, 80, -100);
-  scene.add(key, rim, createStageLights(), createAwardNumeral());
+  scene.add(key, rim, createStageLights());
+  if (numeral) scene.add(createAwardNumeral());
   return {
     resize(width, height) {
       if (width <= 0 || height <= 0) return;

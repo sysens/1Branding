@@ -1,7 +1,7 @@
 import { onBeforeUnmount, onMounted, ref, type Ref } from "vue";
 import type { AwardsRenderer } from "~/utils/awards/renderer";
 
-export function useAwardsStage(root: Ref<HTMLElement | null>, canvas: Ref<HTMLCanvasElement | null>) {
+export function useAwardsStage(root: Ref<HTMLElement | null>, canvas: Ref<HTMLCanvasElement | null>, { numeral = true } = {}) {
   const ready = ref(false);
   let renderer: AwardsRenderer | null = null;
   let pending: AbortController | null = null;
@@ -22,7 +22,7 @@ export function useAwardsStage(root: Ref<HTMLElement | null>, canvas: Ref<HTMLCa
     try {
       const { createAwardsRenderer } = await import("~/utils/awards/renderer");
       if (disposed || version !== generation || !canvas.value) return;
-      const next = createAwardsRenderer(canvas.value);
+      const next = createAwardsRenderer(canvas.value, { numeral });
       if (disposed || version !== generation) { next.dispose(false); return; }
       renderer = next;
       resize();

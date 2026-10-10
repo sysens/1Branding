@@ -6,9 +6,10 @@ import AwardsTransition from "~/components/home/awards/AwardsTransition.vue";
 
 const { t } = useI18n();
 
-// `transition` is the green-to-yellow glow under the stage that led into the
-// yellow brand stories; the landing no longer has them, other pages can.
-withDefaults(defineProps<{ logos?: string[]; transition?: boolean }>(), { logos: () => [], transition: true });
+// `numeral` is the green "1" in front of the stage's gallery; `transition` the
+// green-to-yellow glow under the stage that led into the yellow brand stories.
+// The landing leaves both out, other pages can keep them.
+withDefaults(defineProps<{ logos?: string[]; numeral?: boolean; transition?: boolean }>(), { logos: () => [], numeral: true, transition: true });
 const fallbackLogos = ["/home/arianespace.webp", "/home/hyperlooptt.webp", "/home/accor.webp", "/home/rakuten.png", "/home/lexus.webp", "/home/sorare.webp", "/home/Vector.webp"];
 
 const year = computed(() => t("home.awards.year") || "2026");
@@ -28,13 +29,15 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
       </h2>
       <p>{{ subtitle }}</p>
     </header>
-    <AwardsStage />
+    <AwardsStage :numeral="numeral" />
     <AwardsTransition v-if="transition" />
   </section>
 </template>
 
 <style scoped>
-.awards-section { position: relative; z-index: 30; isolation: isolate; background: #000; color: #fff; }
+/* flow-root: a trimmed stage pulls the section's own bottom up instead of
+   collapsing its negative margin through and sliding the next section under. */
+.awards-section { position: relative; z-index: 30; display: flow-root; isolation: isolate; background: #000; color: #fff; }
 .awards-section__brands { display: flex; align-items: center; height: 120px; overflow: clip; mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent); }
 .awards-section__brands :deep(img) { height: 28px; max-width: 135px; filter: grayscale(1); opacity: .64; }
 .awards-section__brands :deep(.spaceBetween) { min-height: 50px; }

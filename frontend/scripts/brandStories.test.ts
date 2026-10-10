@@ -33,6 +33,9 @@ describe("brand stories", () => {
     expect(await Bun.file("app/components/services/QuakerShowcase.vue").exists()).toBe(true);
     // The glow that led into the brand stories is switched off on the landing, not deleted.
     expect(source).toContain(':transition="false"');
+    // The awards gallery stays on the landing; only its green "1" is left out.
+    expect(source).toContain(':numeral="false"');
+    expect(await Bun.file("public/home/awards/stage-ceiling.v1.webp").exists()).toBe(true);
     expect(await Bun.file("app/components/home/awards/AwardsTransition.vue").exists()).toBe(true);
     expect(source).toContain(':landing-page="landingPage" :social-media="footerSocialMedia"');
   });
