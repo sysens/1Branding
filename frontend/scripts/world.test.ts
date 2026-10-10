@@ -48,13 +48,13 @@ test("orbital lights animate above the surface without changing their radius", (
   network.update(0);
   const lights: Points[] = [];
   network.group.traverse(child => { if (child instanceof Points) lights.push(child); });
-  expect(lights.length).toBe(3);
+  expect(lights.length).toBe(7);
   const before = lights.map(light => Array.from(light.geometry.getAttribute("position").array));
   network.update(3);
   lights.forEach((light, index) => {
     const positions = light.geometry.getAttribute("position");
     expect(Array.from(positions.array)).not.toEqual(before[index]);
     for (let i = 0; i < positions.count; i++)
-      expect(Math.hypot(positions.getX(i), positions.getY(i), positions.getZ(i))).toBeCloseTo(1.045 + index * .012, 5);
+      expect(Math.hypot(positions.getX(i), positions.getY(i), positions.getZ(i))).toBeCloseTo(1.04 + index * .011, 5);
   });
 });

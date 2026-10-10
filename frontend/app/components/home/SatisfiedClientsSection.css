@@ -8,81 +8,8 @@
   padding-bottom: clamp(3rem, 7vw, 8rem);
 }
 
-.clients-reveal__window {
-  position: relative;
-  z-index: 1;
-  overflow: visible;
-}
-
-.clients-section {
-  position: relative;
-  left: 50%;
-  width: min(100%, 1728px);
-  padding-top: 2.5rem;
-  overflow: visible;
-  background: transparent;
-  transform: translateX(-50%);
-}
-
-.clients-section__content {
-  position: relative;
-  z-index: 2;
-}
-
-.clients-section__copy {
-  position: relative;
-  z-index: 3;
-  width: min(92vw, 74rem);
-  margin-inline: auto;
-  text-align: center;
-}
-
-.clients-section__title {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.2em;
-  margin: 0;
-  color: #101310;
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: clamp(4.75rem, 8.1vw, 7rem);
-  font-weight: 700;
-  line-height: 0.93;
-  letter-spacing: 0;
-  text-wrap: balance;
-}
-
-.clients-section__title-highlight {
-  color: #00aa30; /* 3.1:1 on white (WCAG AA large text); #00ad32 was 2.98:1 */
-}
-
-.clients-section__description {
-  width: min(90vw, 62rem);
-  margin: 0 auto;
-  color: #353a37;
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: 0;
-}
-
-.clients-section__number {
-  position: relative;
-  left: 50%;
-  z-index: 0;
-  width: min(112vw, 66rem);
-  aspect-ratio: 1120 / 300;
-  margin-top: 3rem;
-  pointer-events: auto;
-  transform: translateX(-50%);
-  transform-origin: center bottom;
-}
-
 .clients-section__gallery {
   position: relative;
-  /* Above .clients-reveal__window (z-index 1) so the outlined "2500" sits behind
-     the project collage instead of being drawn over the photos. */
   z-index: 2;
   display: flow-root;
   isolation: isolate;
@@ -109,8 +36,6 @@
   margin-top: -0.25rem;
   transform: translateX(-50%) rotate(-3deg) scale(1.04);
   transform-origin: center top;
-  /* Transparent so the "2500" behind is hidden by the photos only, not cut by a
-     slanted white strip above them. */
   background: transparent;
 }
 
@@ -125,55 +50,7 @@
   display: none;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .clients-section {
-    padding-top: 2.5rem;
-  }
-
-  .clients-section__title {
-    font-size: clamp(3.5rem, 8vw, 5rem);
-  }
-
-  .clients-section__description {
-    width: min(88vw, 48rem);
-    font-size: 0.82rem;
-  }
-
-  .clients-section__number {
-    width: 108vw;
-  }
-}
-
 @media (max-width: 767px) {
-  .clients-section {
-    left: auto;
-    width: 100%;
-    padding-top: 2rem;
-    transform: none;
-  }
-
-  .clients-section__copy {
-    width: calc(100% - 2rem);
-  }
-
-  .clients-section__title {
-    gap: 0.13em;
-    font-size: clamp(2.5rem, 12vw, 4rem);
-    line-height: 0.96;
-  }
-
-  .clients-section__description {
-    width: min(100%, 34rem);
-    margin-top: 0.75rem;
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
-
-  .clients-section__number {
-    width: 118vw;
-    margin-top: 1.75rem;
-  }
-
   .clients-section__collage {
     width: 136%;
     margin-top: -1rem;
@@ -182,12 +59,5 @@
 
   .clients-section__collage :deep(.marquee-image-frame) {
     width: 15rem !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .clients-section__number,
-  .clients-section__copy {
-    opacity: 1 !important;
   }
 }

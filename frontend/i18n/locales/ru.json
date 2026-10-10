@@ -99,10 +99,43 @@
       "fallbackTitle": "Логотип и фирменный стиль",
       "fallbackDesc": "Мы создаем запоминающиеся визуальные идентичности, отражающие ценности вашего бренда."
     },
-    "numberText": {
-      "titleGreen": "ДОВОЛЬНЫХ",
-      "titleWhite": "КЛИЕНТОВ",
-      "desc": "Каждый наш проект - это результат глубоких знаний в области маркетинга, креативного подхода и точного анализа. Мы создаем визуальные решения, которые не только усиливают бренды, но и помогают достичь ключевых бизнес-метрик. Тщательный анализ целевой аудитории, четкое позиционирование и уникальное предложение - вот основа каждого нашего проекта. Мы верим, что дизайн - это больше, чем просто визуал."
+    "manifesto": {
+      "m1Line1": "We see the whole.",
+      "m1Line2": "ONE masters",
+      "m1Line2Accent": "every detail.",
+      "m2Line1": "The ONE makes your brand",
+      "m2Line2": "turn market leaders into followers",
+      "m3Line1": "we build brands that",
+      "m3Line2": "turn leaders into followers."
+    },
+    "identity": {
+      "headingLead": "The",
+      "headingAccent": "“One”",
+      "headingRest": "in OneBranding",
+      "headingSecond": "defines",
+      "headingSecondAccent": "how we work:",
+      "body": "one partner, one vision, and a complete solution from start to finish. We bring",
+      "bodyStrong": "strategy, naming, branding, design, photography, websites, and CRM & ERP",
+      "bodyRest": "systems together through one connected process. From the first idea to launch and beyond, we take care of every stage. Your identity, content, digital presence, and business systems are developed around the same vision, with precise attention to detail and consistently high standards of quality. Every element belongs to the bigger picture. Every solution strengthens the whole."
+    },
+    "gallery": {
+      "title": "Фирменный стиль — ключ к узнаваемости продукта.",
+      "description": "Именно единый визуальный язык формирует первое впечатление и закрепляется в памяти клиента. Когда бренд последователен в цветах, форме и подаче, его легко узнать среди сотен конкурентов.",
+      "hint": "↓ Прокручивайте — лента движется вбок"
+    },
+    "parts": {
+      "headlineFirst": "Every part.",
+      "headlineSecond": "Working as one.",
+      "lead": "A brand built to lead.",
+      "tagline": "One vision. Quality in every detail.",
+      "cards": {
+        "naming": "Naming",
+        "branding": "Branding",
+        "design": "Design",
+        "photography": "Photography",
+        "websites": "Websites",
+        "crm": "CRM & ERP"
+      }
     },
     "rowShorteners": {
       "title": "Часто задаваемые вопросы",
@@ -127,10 +160,7 @@
     },
     "world": {
       "eyebrow": "Создаем бренды по всему",
-      "word": "МИРУ",
-      "lead": "Мы создаем сильные и узнаваемые бренды, отвечающие",
-      "strong": "международным стандартам",
-      "closing": "и выделяющиеся на любом рынке."
+      "word": "МИРУ"
     },
     "digitalExperience": {
       "titleLines": [
@@ -180,6 +210,27 @@
           "alt": "Айдентика GreenGo: электротранспорт"
         }
       ]
+    },
+    "stats": {
+      "brandsValue": "2500+",
+      "brandsLabel": "Brands & Projects Created",
+      "yearsValue": "10+",
+      "yearsLabel": "Years - Branding expertise.",
+      "servicesValue": "25+",
+      "servicesLabel": "Creative services.",
+      "closingBefore": "Everything - ",
+      "closingAccent": "One",
+      "closingAfter": "System."
+    },
+    "airways": {
+      "strong": "strong",
+      "rest1": "product needs",
+      "rest2": "presentation."
+    },
+    "presentations": {
+      "titleLead": "Great products need ",
+      "titleAccent": "more than quality.",
+      "text": "A strong presentation should reflect the same level of quality, precision and ambition behind the product itself. At OneBranding, we transform information into a clear visual system where structure, typography, composition and storytelling work as one. Every detail is considered to communicate value with clarity, strengthen perception and present the brand at the level it deserves."
     }
   },
   "projectsPage": {

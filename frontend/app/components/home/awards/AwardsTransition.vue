@@ -6,8 +6,12 @@
 .awards-transition {
   position: relative;
   overflow: clip;
+  /* An explicit width keeps max-height from narrowing the light through the ratio. */
+  width: 100%;
   height: auto;
   aspect-ratio: 2.4 / 1;
+  /* Ultra-wide screens: keep the light within one screen instead of ~1.5. */
+  max-height: max(150px, 85svh);
   margin-top: -175px;
   margin-bottom: -1px;
   mask-image: linear-gradient(to bottom, transparent, #000 20%);

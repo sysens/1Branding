@@ -15,8 +15,14 @@ type WallMetrics = {
   tileWidth: number;
 };
 
+type GridCopies = {
+  columns: number;
+  rows: number;
+};
+
 type InfiniteWall = {
   containerRef: Ref<HTMLElement | null>;
+  gridCopies: Readonly<Ref<GridCopies>>;
   isDragging: Ref<boolean>;
   onClick: (event: MouseEvent) => void;
   onPointerDown: (event: PointerEvent) => void;
@@ -66,6 +72,10 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
   const planeRef = ref<HTMLElement | null>(null);
   const isDragging = ref(false);
   const metrics = ref<WallMetrics>(getMetrics(1280));
+  // The plane is drawn from one base grid left of and above the screen, so it
+  // needs enough copies of the grid to reach the far edges of wide or tall
+  // screens (3x3 covers up to one base grid, ~2080px).
+  const gridCopies = ref<GridCopies>({ columns: 3, rows: 3 });
 
   let offsetX = 0;
   let offsetY = 0;
@@ -90,6 +100,8 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
     "--project-wall-gap": `${metrics.value.gap}px`,
     "--project-grid-width": `${metrics.value.baseWidth - metrics.value.gap}px`,
     "--project-grid-height": `${metrics.value.baseHeight - metrics.value.gap}px`,
+    "--project-copy-columns": gridCopies.value.columns,
+    "--project-copy-rows": gridCopies.value.rows,
   }));
 
   const render = (): void => {
@@ -156,6 +168,10 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
       ? (offsetY / previous.baseHeight) * next.baseHeight
       : -next.tileHeight * 0.35;
     metrics.value = next;
+    gridCopies.value = {
+      columns: Math.max(3, Math.ceil(container.clientWidth / next.baseWidth) + 2),
+      rows: Math.max(3, Math.ceil(container.clientHeight / next.baseHeight) + 2),
+    };
     render();
   };
 
@@ -264,6 +280,7 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
 
   return {
     containerRef,
+    gridCopies,
     isDragging,
     onClick,
     onPointerDown,

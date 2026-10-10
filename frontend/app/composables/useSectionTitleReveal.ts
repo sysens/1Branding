@@ -34,7 +34,7 @@ export function useSectionTitleReveal(root: Ref<HTMLElement | null>): void {
         if (ambientSeen.has(surface)) return;
         ambientSeen.add(surface); ambientObserver.observe(surface);
       });
-      root.value?.querySelectorAll("h1,h2,.world-section__statement").forEach(title => {
+      root.value?.querySelectorAll("h1,h2").forEach(title => {
         if (seen.has(title)) return;
         seen.add(title); observer.observe(title);
       });

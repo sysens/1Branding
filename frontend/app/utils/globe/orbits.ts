@@ -13,11 +13,14 @@ export function createOrbitalNetwork(): { group: Group; update: (time: number) =
       gl_FragColor=vec4(.35,1.0,.45,halo+rays*.65);
     }`,
   });
-  const planes = [[.38, .25, -.18], [-.6, .45, .7], [.75, -.55, -.7]] as const;
+  const planes = [
+    [.38, .25, -.18], [-.6, .45, .7], [.75, -.55, -.7],
+    [1.15, .2, .35], [-.25, -.8, .15], [.1, .95, -1.05], [-1.05, -.3, -.4],
+  ] as const;
   const lights = planes.map((rotation, index) => {
     const orbit = new Group();
     orbit.rotation.set(rotation[0], rotation[1], rotation[2]);
-    const radius = 1.045 + index * .012;
+    const radius = 1.04 + index * .011;
     const coordinates: number[] = [], progress: number[] = [];
     for (let i = 0; i < 180; i++) {
       const angle = i / 180 * Math.PI * 2;
@@ -28,7 +31,7 @@ export function createOrbitalNetwork(): { group: Group; update: (time: number) =
     geometry.setAttribute("position", new Float32BufferAttribute(coordinates, 3));
     geometry.setAttribute("progress", new Float32BufferAttribute(progress, 1));
     orbit.add(new LineLoop(geometry, new ShaderMaterial({
-      uniforms: { time, offset: new Uniform(index / 3) }, transparent: true, depthWrite: false, blending: AdditiveBlending,
+      uniforms: { time, offset: new Uniform(index / planes.length) }, transparent: true, depthWrite: false, blending: AdditiveBlending,
       vertexShader: `attribute float progress; varying float vProgress;
         void main() { vProgress=progress; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
       fragmentShader: `uniform float time; uniform float offset; varying float vProgress;
@@ -44,7 +47,7 @@ export function createOrbitalNetwork(): { group: Group; update: (time: number) =
     points.frustumCulled = false;
     orbit.add(points);
     group.add(orbit);
-    return { positions, radius, offset: index / 3 };
+    return { positions, radius, offset: index / planes.length };
   });
   return {
     group,

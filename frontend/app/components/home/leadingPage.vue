@@ -8,18 +8,20 @@ const props = defineProps<{
   landingPage?: LandingPageContent | null;
 }>();
 
+// CMS heroSlogan fields map onto the three lines of the slogan:
+// mutedText -> outlined lead-in, mainText -> big headline, accentText -> tagline.
 type HeroCopy = {
-  mutedLines: string[];
+  leadText: string;
   mainText: string;
-  accentText: string;
+  taglineParts: string[];
 };
 
 const page = computed(() => props.landingPage ?? null);
 
 const DEFAULT_HERO_COPY: HeroCopy = {
-  mutedLines: ["DESIGN IS NOT", "JUST WHAT", "IT LOOKS LIKE", "AND FEELS LIKE."],
-  mainText: "DESIGN IS",
-  accentText: "HOW IT WORKS",
+  leadText: "WE MAKE",
+  mainText: "BRANDS",
+  taglineParts: ["LOOK BETTER.", "WORK SMARTER.", "GROW STRONGER."],
 };
 
 const splitTextLines = (value: string | null | undefined): string[] =>
@@ -27,6 +29,14 @@ const splitTextLines = (value: string | null | undefined): string[] =>
     .split(/\r?\n|\|/)
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
+
+// "LOOK BETTER. WORK SMARTER." -> one part per sentence, so the tagline wraps
+// between sentences on narrow screens instead of mid-sentence.
+const splitTagline = (value: string): string[] =>
+  value
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
 
 const firstTextValue = (values: Array<string | null | undefined>): string => {
   for (const value of values) {
@@ -51,15 +61,15 @@ const mediaText = computed(() =>
 
 const heroCopy = computed<HeroCopy>(() => {
   const heroSlogan = page.value?.heroSlogan;
-  const mutedLines = splitTextLines(heroSlogan?.mutedText);
+  const leadText = splitTextLines(heroSlogan?.mutedText).join(" ");
   const mainText = heroSlogan?.mainText?.trim();
-  const accentText = heroSlogan?.accentText?.trim();
+  const taglineParts = splitTagline(heroSlogan?.accentText?.trim() ?? "");
 
-  if (mutedLines.length || mainText || accentText) {
+  if (leadText || mainText || taglineParts.length) {
     return {
-      mutedLines: mutedLines.length ? mutedLines : DEFAULT_HERO_COPY.mutedLines,
+      leadText: leadText || DEFAULT_HERO_COPY.leadText,
       mainText: mainText || DEFAULT_HERO_COPY.mainText,
-      accentText: accentText || DEFAULT_HERO_COPY.accentText,
+      taglineParts: taglineParts.length ? taglineParts : DEFAULT_HERO_COPY.taglineParts,
     };
   }
 
@@ -67,9 +77,9 @@ const heroCopy = computed<HeroCopy>(() => {
 
   if (legacyLines.length >= 3) {
     return {
-      mutedLines: legacyLines.slice(0, -2),
+      leadText: legacyLines.slice(0, -2).join(" "),
       mainText: legacyLines[legacyLines.length - 2] || DEFAULT_HERO_COPY.mainText,
-      accentText: legacyLines[legacyLines.length - 1] || DEFAULT_HERO_COPY.accentText,
+      taglineParts: splitTagline(legacyLines[legacyLines.length - 1] ?? ""),
     };
   }
 
@@ -79,30 +89,22 @@ const heroCopy = computed<HeroCopy>(() => {
 
 <template>
   <div class="leading-page-shell overflow-hidden">
-    <div class="pt-[41px]"></div>
-
     <div class="leading-copy-position relative">
-      <div class="flex max-w-[1500px] mx-auto justify-center md:justify-start products intro-slide-in">
-        <h1
-          class="mainImg hero-slogan md:w-[41.5625rem] md:h-[19.5625rem] w-[363px] h-[187px]"
-        >
-          <!-- Keyword line for search engines and people alike; absolutely placed so
-               the slogan block keeps its designed size. -->
-          <span class="hero-slogan__eyebrow">{{ $t("seo.heroEyebrow") }}</span>
-          <span class="hero-slogan__muted">
-            <span v-for="line in heroCopy.mutedLines" :key="line">
-              {{ line }}
-            </span>
+      <div class="flex justify-center intro-slide-in">
+        <h1 class="hero-slogan">
+          <!-- The design has no visible keyword line; it stays in the heading for
+               search engines and screen readers. The interpolated trailing spaces
+               keep the lines apart in the heading's text (the template compiler
+               drops plain whitespace between tags); visually they collapse. -->
+          <span class="sr-only">{{ `${$t("seo.heroEyebrow")}. ` }}</span>
+          <span class="hero-slogan__lead">
+            <span class="hero-slogan__dash" aria-hidden="true" />{{ `${heroCopy.leadText} ` }}
           </span>
 
-          <span class="hero-slogan__main">
-            {{ heroCopy.mainText }}
-          </span>
+          <span class="hero-slogan__main">{{ `${heroCopy.mainText} ` }}</span>
 
-          <span class="hero-slogan__accent-shell">
-            <span class="hero-slogan__accent">
-              {{ heroCopy.accentText }}
-            </span>
+          <span class="hero-slogan__tagline">
+            <span v-for="part in heroCopy.taglineParts" :key="part">{{ `${part} ` }}</span>
           </span>
         </h1>
       </div>
@@ -131,21 +133,58 @@ const heroCopy = computed<HeroCopy>(() => {
   will-change: transform;
 }
 
+/* As in the design, the logo wall fills the first screen and the slogan starts
+   near its bottom edge; scrolling reveals the rest of it (HeroClientsReveal lets
+   the hero scroll until its end is in view). The padding is measured from the
+   page top: the header row above this shell is 30px tall (2.5rem from md). On
+   phones the slogan sits higher so the fixed contact button does not cover it.
+   The bottom padding lets the green light of the next section start right under
+   the tagline. */
 .leading-page-shell {
-  height: clamp(40rem, 108svh, 56rem);
+  padding-top: calc(64vh - 30px);
+  padding-top: calc(64svh - 30px);
+  padding-bottom: 8vh;
+  padding-bottom: 8svh;
 }
 
+/* z-index makes the slogan a layer above the logo wall, so its ::before can dim
+   the tiles right behind the text while the rest of the wall stays bright. */
 .leading-copy-position {
-  top: 30%;
+  /* The upper bound also follows the screen height, so on very large screens
+     (4K, zoomed-out windows) the slogan keeps the design's share of the view. */
+  --hero-main-size: clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20vh));
+  z-index: 0;
+}
+
+.leading-copy-position::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  width: 100vw;
+  top: calc(var(--hero-main-size) * -0.9);
+  bottom: calc(var(--hero-main-size) * -0.5);
+  transform: translateX(-50%);
+  /* Near-black under the text, tiles still faintly visible at the sides. The
+     ellipse ends inside the box so its top edge does not show as a line. */
+  background:
+    radial-gradient(ellipse 42% 60% at 50% 62%, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.9) 65%, rgb(0 0 0 / 0) 100%),
+    linear-gradient(to bottom, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 0.55) 25%, rgb(0 0 0 / 0.65) 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .leading-copy-position::before {
+    background:
+      radial-gradient(ellipse 62% 60% at 50% 62%, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.9) 65%, rgb(0 0 0 / 0) 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 0.55) 25%, rgb(0 0 0 / 0.65) 100%);
+  }
 }
 
 @media (min-width: 768px) {
   .leading-page-shell {
-    height: clamp(42rem, 112svh, 58rem);
-  }
-
-  .leading-copy-position {
-    top: 22%;
+    padding-top: calc(84vh - 2.5rem);
+    padding-top: calc(84svh - 2.5rem);
   }
 
   .contact-fab {
@@ -153,96 +192,79 @@ const heroCopy = computed<HeroCopy>(() => {
   }
 }
 
+/* Sizes follow the design (2000px-wide mockup): the lead-in is 0.7x and the
+   tagline 0.2x the headline (--hero-main-size, set on .leading-copy-position);
+   each grows fluidly with the viewport. */
 .hero-slogan {
+  --hero-lead-size: clamp(3rem, 1.7rem + 6.7vw, max(9.5rem, 14vh));
+  --hero-tagline-size: clamp(0.875rem, 0.5rem + 1.9vw, max(2.75rem, 4vh));
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  position: relative;
-  color: #ffffff;
-  font-family: var(--app-font-display, "SF Pro Display", "SF Pro Text", sans-serif);
+  align-items: center;
+  max-width: 100%;
+  padding-inline: 1rem;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0;
-  box-sizing: border-box;
-  padding-left: 2.4rem;
   transform: translate3d(0, 0, 0);
 }
 
-.hero-slogan__eyebrow {
-  position: absolute;
-  left: 2.4rem;
-  bottom: calc(100% + 0.75rem);
-  color: #03cb00;
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: 0.14em;
+.hero-slogan__lead {
+  display: block;
+  font-size: var(--hero-lead-size);
+  font-weight: 400;
+  line-height: 1;
   white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: max(1px, 0.02em) #20e848;
+  /* The outline fades out where it meets the headline. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, rgb(0 0 0 / 0.35) 100%);
+  mask-image: linear-gradient(to bottom, #000 55%, rgb(0 0 0 / 0.35) 100%);
 }
 
-.hero-slogan__muted {
-  display: flex;
-  flex-direction: column;
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 1.875rem;
-  font-weight: 300;
-  line-height: 0.94;
+/* The design's dash is a wide outlined bar, heavier than a dash glyph. */
+.hero-slogan__dash {
+  display: inline-block;
+  width: 0.48em;
+  height: 0.2em;
+  margin-right: 0.05em;
+  vertical-align: 0.2em;
+  border: max(1px, 0.02em) solid #20e848;
 }
 
 .hero-slogan__main {
-  margin-top: 0.5rem;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 4.4rem;
-  font-weight: 300;
-  line-height: 0.88;
-  white-space: nowrap;
-}
-
-.hero-slogan__accent-shell {
-  width: min(100%, 41.25rem);
-  transform: rotate(-2.2deg);
-  transform-origin: left center;
-}
-
-.hero-slogan__accent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 4.1rem;
-  border: 0.19rem solid #03cb00;
-  border-radius: 1.6rem;
-  color: #03cb00;
-  font-size: 3.3rem;
+  display: block;
+  margin-top: -0.18em;
+  font-size: var(--hero-main-size);
   font-weight: 700;
-  line-height: 0.95;
-  text-align: center;
-  text-shadow: 0 0 1.15rem rgba(3, 203, 0, 0.48);
+  line-height: 1;
   white-space: nowrap;
+  color: #e4e4e4;
 }
 
-@media (max-width: 767px) {
-  .hero-slogan {
-    padding-left: 0.4rem;
-  }
-
-  .hero-slogan__eyebrow {
-    left: 0.4rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-  }
-
-  .hero-slogan__muted {
-    font-size: 1.6rem;
-  }
-
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .hero-slogan__main {
-    font-size: 3.35rem;
+    color: transparent;
+    background-image: linear-gradient(172deg, #ffffff 10%, #dcdcdc 45%, #8f8f8f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
   }
+}
 
-  .hero-slogan__accent {
-    min-height: 3.25rem;
-    border-radius: 1.15rem;
-    font-size: 2.55rem;
-  }
+.hero-slogan__tagline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.6em;
+  margin-top: 0.1em;
+  color: #00f830;
+  font-size: var(--hero-tagline-size);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-slogan__tagline > span {
+  white-space: nowrap;
 }
 </style>

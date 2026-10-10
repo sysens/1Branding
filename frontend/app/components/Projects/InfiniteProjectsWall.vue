@@ -7,16 +7,12 @@ type WallCell = {
   item: ProjectWallItem;
 };
 
-const GRID_COPIES = Array.from({ length: 9 }, (_, index) => ({
-  column: index % 3,
-  index,
-  row: Math.floor(index / 3),
-}));
 const CELLS_PER_GRID = 20;
 
 const { projects } = await useProjectsWallData();
 const {
   containerRef,
+  gridCopies,
   isDragging,
   onClick,
   onPointerDown,
@@ -26,6 +22,24 @@ const {
   planeRef,
   wallStyle,
 } = useInfiniteProjectsWall();
+
+// Copy (1, 1) starts on screen: it is the one exposed to assistive technology and
+// loaded eagerly; the others are decorative repeats around it.
+const copies = computed(() => {
+  const { columns, rows } = gridCopies.value;
+  return Array.from({ length: columns * rows }, (_, index) => {
+    const column = index % columns;
+    const row = Math.floor(index / columns);
+    return {
+      index,
+      primary: column === 1 && row === 1,
+      style: {
+        left: `calc(var(--project-base-width) * ${column})`,
+        top: `calc(var(--project-base-height) * ${row})`,
+      },
+    };
+  });
+});
 
 const cells = computed<WallCell[]>(() => {
   if (!projects.value.length) return [];
@@ -63,14 +77,11 @@ useHead(() => ({
   >
     <div v-if="cells.length" ref="planeRef" class="projects-wall__plane">
       <div
-        v-for="copy in GRID_COPIES"
+        v-for="copy in copies"
         :key="copy.index"
         class="projects-wall__grid"
-        :class="[
-          `projects-wall__grid--column-${copy.column}`,
-          `projects-wall__grid--row-${copy.row}`,
-        ]"
-        :aria-hidden="copy.index === 4 ? undefined : true"
+        :style="copy.style"
+        :aria-hidden="copy.primary ? undefined : true"
       >
         <div
           v-for="cell in cells"
@@ -80,7 +91,7 @@ useHead(() => ({
           <NuxtLink
             :to="cell.item.to"
             class="projects-wall__card"
-            :tabindex="copy.index === 4 ? 0 : -1"
+            :tabindex="copy.primary ? 0 : -1"
             :aria-label="cell.item.title"
             draggable="false"
             @dragstart.prevent
@@ -88,8 +99,8 @@ useHead(() => ({
             <img
               :src="cell.item.image"
               :alt="cell.item.title"
-              :loading="copy.index === 4 ? 'eager' : 'lazy'"
-              :fetchpriority="copy.index === 4 && cell.index < 5 ? 'high' : 'auto'"
+              :loading="copy.primary ? 'eager' : 'lazy'"
+              :fetchpriority="copy.primary && cell.index < 5 ? 'high' : 'auto'"
               decoding="async"
               draggable="false"
             />
@@ -125,14 +136,8 @@ useHead(() => ({
   position: absolute;
   top: 0;
   left: 0;
-  width: calc(
-    var(--project-base-width) + var(--project-base-width) +
-      var(--project-base-width)
-  );
-  height: calc(
-    var(--project-base-height) + var(--project-base-height) +
-      var(--project-base-height)
-  );
+  width: calc(var(--project-base-width) * var(--project-copy-columns, 3));
+  height: calc(var(--project-base-height) * var(--project-copy-rows, 3));
   will-change: transform;
 }
 
@@ -144,22 +149,6 @@ useHead(() => ({
   gap: var(--project-wall-gap);
   width: var(--project-grid-width);
   height: var(--project-grid-height);
-}
-
-.projects-wall__grid--column-1 {
-  left: var(--project-base-width);
-}
-
-.projects-wall__grid--column-2 {
-  left: calc(var(--project-base-width) + var(--project-base-width));
-}
-
-.projects-wall__grid--row-1 {
-  top: var(--project-base-height);
-}
-
-.projects-wall__grid--row-2 {
-  top: calc(var(--project-base-height) + var(--project-base-height));
 }
 
 .projects-wall__tile {

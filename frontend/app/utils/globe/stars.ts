@@ -4,11 +4,11 @@ export function createStarField() {
   const positions: number[] = [], sizes: number[] = [], phases: number[] = [];
   let seed = 704;
   const random = () => { seed = (1664525 * seed + 1013904223) >>> 0; return seed / 4294967296; };
-  for (let i = 0; i < 5200; i++) {
+  for (let i = 0; i < 1300; i++) {
     const angle = random() * Math.PI * 2;
     const radius = 1.1 + Math.pow(random(), 1.7) * 2.8;
     positions.push(Math.cos(angle) * radius * 1.25, Math.sin(angle) * radius * .78, -1.5 - random() * 2);
-    sizes.push(i % 43 === 0 ? 5 + random() * 5 : .8 + random() * 1.5);
+    sizes.push(i % 61 === 0 ? 4 + random() * 4 : .7 + random() * 1.1);
     phases.push(random() * Math.PI * 2);
   }
   const geometry = new BufferGeometry();

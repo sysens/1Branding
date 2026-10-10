@@ -4,14 +4,17 @@
 .home-page-frame { position: relative; width: 100%; min-height: 100vh; margin-inline: auto; overflow: clip; background: #000; }
 .home-dark-sections { position: relative; background: #000; }
 .home-info-picture { position: relative; z-index: 31; background: #fff; }
+/* The design keeps the logo wall bright and only fades the rows under the header;
+   the dark band behind the slogan is in leadingPage.vue. */
+.home-hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0, rgb(0 0 0 / 0.55) 22vh, rgb(0 0 0 / 0) 38vh);
+}
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .home-leading :deep(.products) { justify-content: center; }
-  .home-leading :deep(.mainImg) { width: 31rem; height: 16rem; }
   .home-leading :deep(.contact-fab) { right: 3.5rem; bottom: 5rem; }
-  .home-leading :deep(.contact-fab img) { width: 5.75rem; height: 5.75rem; }
-  .home-info-picture :deep(.info-block) { padding-top: 3.5rem; }
-  .home-info-picture :deep(.info-title) { font-size: 3rem; line-height: 1.05; }
-  .home-info-picture :deep(.info-description) { font-size: 1rem; line-height: 1.5; }
-  .home-info-picture :deep(.info-image-frame) { width: 100%; max-width: 100%; aspect-ratio: 3 / 2; min-height: auto; }
+  .home-leading :deep(.contact-fab img) { width: 5.75rem; height: 5.75rem; }
 }

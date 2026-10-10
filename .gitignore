@@ -1,1 +1,9 @@
 /PENTEST-GUIDE.md
+# Security audit notes with exploit details: keep them out of the repo
+/AUDIT-*.md
+
+# Dependencies of every package in the repo (root, frontend, backend)
+node_modules/
+
+# Local Claude Code / dev-server config
+/.claude/

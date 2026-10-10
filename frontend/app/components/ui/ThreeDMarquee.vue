@@ -255,6 +255,16 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   .three-d-marquee__stage { transform: scale(1.45); }
 }
 
+/* Ultra-wide (21:9 and 32:9) monitors: the plane is tilted, so it needs to grow
+   further to reach the right edge of the band. */
+@media (min-width: 3200px) {
+  .three-d-marquee__stage { transform: scale(1.75); }
+}
+
+@media (min-width: 4200px) {
+  .three-d-marquee__stage { transform: scale(2.1); }
+}
+
 @media (max-width: 639px) {
   .three-d-marquee { height: 28rem; }
 }

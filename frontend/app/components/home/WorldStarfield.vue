@@ -70,29 +70,29 @@ const paintStatic = (section: HTMLElement) => {
     ctx.restore();
   }
 
-  // Faint background stars over the whole section.
-  const backgroundCount = Math.round((width * height) / 2600);
+  // Faint background stars over the whole section (sparse, as in the design).
+  const backgroundCount = Math.round((width * height) / 14000);
   for (let i = 0; i < backgroundCount; i++) {
     const x = random() * width;
     const y = random() * height;
-    const r = 0.3 + random() * 0.9;
-    const green = random() < 0.65;
-    ctx.fillStyle = green ? `rgba(120, 255, 160, ${0.12 + random() * 0.4})` : `rgba(255, 255, 255, ${0.1 + random() * 0.35})`;
+    const r = 0.3 + random() * 0.8;
+    const green = random() < 0.3;
+    ctx.fillStyle = green ? `rgba(120, 255, 160, ${0.1 + random() * 0.3})` : `rgba(255, 255, 255, ${0.12 + random() * 0.35})`;
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   }
 
   // Sparkle dust: a flattened ring around the globe, densest at its sides.
-  const dustCount = Math.round(Math.min(4200, 1800 + width * 1.1));
+  const dustCount = Math.round(Math.min(1200, 380 + width * 0.3));
   for (let placed = 0; placed < dustCount;) {
     const angle = random() * Math.PI * 2;
     if (random() > 0.25 + 0.75 * Math.abs(Math.cos(angle)) ** 0.7) continue;
     const distance = radius * (1.02 + Math.abs(gaussian(random)) * 0.5);
     const x = cx + Math.cos(angle) * distance * 1.55;
     const y = cy + Math.sin(angle) * distance * 0.82 + gaussian(random) * radius * 0.06;
-    const r = 0.35 + random() ** 2.2 * 1.5;
-    const alpha = 0.25 + random() * 0.7;
+    const r = 0.3 + random() ** 2.4 * 1.1;
+    const alpha = 0.12 + random() * 0.45;
     ctx.fillStyle = random() < 0.85 ? `rgba(60, 255, 120, ${alpha})` : `rgba(220, 255, 230, ${alpha})`;
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -101,7 +101,7 @@ const paintStatic = (section: HTMLElement) => {
   }
 
   // Flaring stars: mostly inside the dust band, a few scattered further out.
-  flares = Array.from({ length: Math.round(40 + width / 30) }, (_, index) => {
+  flares = Array.from({ length: Math.round(8 + width / 160) }, (_, index) => {
     const nearGlobe = index % 3 !== 0;
     const angle = random() * Math.PI * 2;
     const distance = radius * (nearGlobe ? 1.05 + random() * 0.7 : 1.4 + random() * 2.4);

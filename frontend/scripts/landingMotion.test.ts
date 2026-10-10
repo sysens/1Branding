@@ -15,13 +15,13 @@ test("cursor spring trails stay finite and settle at the actual pointer", () => 
 test("world star field contains bright stars outside the globe and animated light", () => {
   const field = createStarField();
   const positions = field.points.geometry.getAttribute("position");
-  expect(positions.count).toBe(5200);
+  expect(positions.count).toBe(1300);
   let exterior = 0;
   for (let i = 0; i < positions.count; i++) {
     expect(Number.isFinite(positions.getZ(i))).toBe(true);
     if (Math.hypot(positions.getX(i), positions.getY(i)) > 1.4) exterior++;
   }
-  expect(exterior).toBeGreaterThan(2000);
+  expect(exterior).toBeGreaterThan(500);
   field.update(5);
   expect(field.points.material.uniforms.time?.value).toBe(5);
   field.points.geometry.dispose(); field.points.material.dispose();

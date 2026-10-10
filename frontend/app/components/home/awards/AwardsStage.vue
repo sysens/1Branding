@@ -24,7 +24,9 @@ const { ready } = useAwardsStage(root, canvas);
 </template>
 
 <style scoped>
-.awards-stage { position: relative; z-index: 1; width: 100%; aspect-ratio: 1366 / 840; margin: 0; mask-image: linear-gradient(#000 72%, transparent); }
+/* max-height: on ultra-wide screens the stage stays one screen tall; the camera
+   then shows the whole stage with more black floor at the faded sides. */
+.awards-stage { position: relative; z-index: 1; width: 100%; aspect-ratio: 1366 / 840; max-height: 110svh; margin: 0; mask-image: linear-gradient(#000 72%, transparent); }
 .awards-stage__canvas, .awards-stage__preview { position: absolute; z-index: 2; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .awards-stage__canvas { opacity: 0; touch-action: pan-y; }
 .awards-stage__canvas.is-ready { opacity: 1; }

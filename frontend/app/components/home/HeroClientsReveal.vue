@@ -2,12 +2,33 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import HeroLightTransition from "./HeroLightTransition.vue";
 
+const curtain = ref<HTMLElement | null>(null);
 const hero = ref<HTMLElement | null>(null);
 const transition = ref<HTMLElement | null>(null);
 let cleanup: (() => void) | undefined;
+let stopStickyTop: (() => void) | undefined;
 let disposed = false;
 
+// The hero is taller than the screen (the slogan starts near the bottom of the
+// first view), so a sticky top of 0 would pin it before the slogan is fully
+// visible. A negative top lets it scroll until its end is in view, then pins it.
+const watchStickyTop = (element: HTMLElement) => {
+  const update = () => {
+    const overflow = element.offsetHeight - window.innerHeight;
+    element.style.setProperty("--hero-sticky-top", `${-Math.max(0, overflow)}px`);
+  };
+  update();
+  const observer = new ResizeObserver(update);
+  observer.observe(element);
+  window.addEventListener("resize", update, { passive: true });
+  return () => {
+    observer.disconnect();
+    window.removeEventListener("resize", update);
+  };
+};
+
 onMounted(async () => {
+  if (curtain.value) stopStickyTop = watchStickyTop(curtain.value);
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import("gsap"),
     import("gsap/ScrollTrigger"),
@@ -19,7 +40,9 @@ onMounted(async () => {
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: transition.value,
-        start: "top bottom",
+        // Starts once the light has risen past the slogan, so the slogan stays
+        // fully visible while it scrolls into view.
+        start: "top 55%",
         end: "bottom top",
         scrub: 0.5,
         invalidateOnRefresh: true,
@@ -44,12 +67,13 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   disposed = true;
   cleanup?.();
+  stopStickyTop?.();
 });
 </script>
 
 <template>
   <div class="home-reveal-stack">
-    <div class="home-hero-curtain">
+    <div ref="curtain" class="home-hero-curtain">
       <div ref="hero" class="home-hero-surface"><slot name="hero" /></div>
     </div>
     <section class="home-number-text">
@@ -67,7 +91,7 @@ onBeforeUnmount(() => {
 .home-hero-curtain {
   background: #000;
   position: sticky;
-  top: 0;
+  top: var(--hero-sticky-top, 0px);
   z-index: 0;
   min-height: 100svh;
   isolation: isolate;

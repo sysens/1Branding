@@ -62,11 +62,10 @@ usePageSeo({
       <div class="home-page-content relative">
         <HeroClientsReveal>
           <template #hero>
-            <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
-            <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
             <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
               <LogoMarquee direction="vertical" :rows="15" :duration-seconds="120" :as-background="true" />
             </div>
+            <div class="home-hero-shade" aria-hidden="true" />
             <div class="relative">
               <div class="pt-[30px] md:pt-10"><Header /></div>
               <section class="leading-target home-leading">
@@ -79,16 +78,20 @@ usePageSeo({
           </div>
         </HeroClientsReveal>
         <div class="home-info-picture"><InfoOnPicture :section="landingPage?.section10" /></div>
-        <LazyHomeDigitalExperienceSection :hydrate-on-visible="LAZY_HYDRATION" />
-        <LazyHomeProjectMarqueeSection :hydrate-on-visible="LAZY_HYDRATION" />
+        <!-- DigitalExperienceSection (MacBook), ProjectMarqueeSection (3D card
+             marquee) and FirstGlanceSections (Vivea / Starbucks) were taken off
+             the landing; their components stay for other pages. -->
+        <LazyHomeProjectSlideWall :hydrate-on-visible="LAZY_HYDRATION" />
         <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" />
+        <LazyHomeOneSystemStats :hydrate-on-visible="LAZY_HYDRATION" />
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
-          <div class="home-first-glance"><LazyHomeFirstGlanceSections :hydrate-on-visible="LAZY_HYDRATION" /></div>
-          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :logos="partnerLogos" />
-          <LazyHomeBrandStoriesSection :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :logos="partnerLogos" :transition="false" />
+          <!-- BrandStoriesSection (Apex / Perfect Candy / GreenGo) and the glow
+               that led into it were taken off the landing; they stay for other pages. -->
           <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomePresentationGallery :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyFooter :hydrate-on-visible="LAZY_HYDRATION" use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
         </div>
       </div>

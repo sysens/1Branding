@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
 
 type Props = {
@@ -91,11 +91,55 @@ const addCopies = () => {
   };
   addNext();
 };
+// Wide screens (1920px+) get bigger tiles over a wider and taller frame than the
+// server's markup (props.rows columns of MAX_LOGOS_PER_COLUMN tiles) covers. On
+// the client the background first lengthens every column to the frame's height
+// (on 4K or zoomed-out windows 16 tiles end mid-screen and leave gaps), then adds
+// columns until the last one starts past the right edge of the screen. The loop
+// copy later doubles a column downwards, which (tilted 10deg) reaches about 18%
+// of the column's height further left, hence the margin.
+const WIDE_SCREEN = "(min-width: 1920px)";
+const TILE_GAP = 4; // gap-[4px] between tiles
+const extraColumns = ref(0);
+const tilesPerColumn = ref(MAX_LOGOS_PER_COLUMN);
+let filling = false;
+const fitColumnLength = async () => {
+  const frame = targetRef.value?.querySelector<HTMLElement>(".logo-marquee__frame > div");
+  const tile = targetRef.value?.querySelector<HTMLElement>(".logo-marquee__tile");
+  if (!frame || !tile) return;
+  const needed = Math.ceil(frame.offsetHeight / (tile.offsetHeight + TILE_GAP)) + 2;
+  if (needed <= tilesPerColumn.value) return;
+  tilesPerColumn.value = needed;
+  await nextTick();
+};
+const fillWideScreen = async () => {
+  if (!props.asBackground || filling || !window.matchMedia(WIDE_SCREEN).matches) return;
+  filling = true;
+  try {
+    await fitColumnLength();
+    for (let guard = 0; guard < 40; guard++) {
+      const columns = targetRef.value?.querySelectorAll<HTMLElement>(".logo-marquee__col");
+      const last = columns?.[columns.length - 1];
+      if (!last) break;
+      const rect = last.getBoundingClientRect();
+      if (rect.left > window.innerWidth + rect.height * 0.18) break;
+      extraColumns.value += 1;
+      await nextTick();
+    }
+  } finally {
+    filling = false;
+  }
+};
+const fillAndLoop = async () => {
+  await fillWideScreen();
+  addCopies();
+};
 // A wider window can reveal more columns; they get their copy then.
-const onResize = () => addCopies();
+const onResize = () => { void fillAndLoop(); };
 onMounted(() => {
-  if ("requestIdleCallback" in window) window.requestIdleCallback(addCopies, { timeout: 1500 });
-  else window.setTimeout(addCopies, 200);
+  const start = () => { void fillAndLoop(); };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(start, { timeout: 1500 });
+  else window.setTimeout(start, 200);
   window.addEventListener("resize", onResize, { passive: true });
 });
 onBeforeUnmount(() => window.removeEventListener("resize", onResize));
@@ -120,7 +164,7 @@ const mulberry32 = (seed: number) => {
   };
 };
 
-const shuffledForColumn = (logos: readonly string[], colIdx: number) => {
+const shuffledForColumn = (logos: readonly string[], colIdx: number, count: number) => {
   const rand = mulberry32(123456 + colIdx * 99991);
   const arr = [...logos];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -129,7 +173,8 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number) => {
     arr[i] = arr[j];
     arr[j] = tmp;
   }
-  return arr.slice(0, MAX_LOGOS_PER_COLUMN);
+  // Columns longer than the logo list repeat it in the same shuffled order.
+  return Array.from({ length: count }, (_, i) => arr[i % arr.length]!);
 };
 
 // The tiles are static, decorative markup, so each column is one HTML string
@@ -140,18 +185,18 @@ const escapeAttr = (value: string) =>
   value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const tileHtml = (src: string) => {
   const srcset = tileSrcset(src);
-  const responsive = srcset ? ` srcset="${escapeAttr(srcset)}" sizes="(min-width: 768px) 200px, 100px"` : "";
+  const responsive = srcset ? ` srcset="${escapeAttr(srcset)}" sizes="(min-width: 1920px) and (min-height: 1100px) 400px, (min-width: 768px) 200px, 100px"` : "";
   return `<div class="logo-marquee__tile"><img class="logo-marquee__img" src="${escapeAttr(src)}"${responsive} alt="" width="200" height="100" loading="lazy" decoding="async" fetchpriority="low" draggable="false"></div>`;
 };
 
 const columnsConfig = computed(() => {
-  const total = Math.max(0, Number(props.rows) || 0);
+  const total = Math.max(0, Number(props.rows) || 0) + extraColumns.value;
   const logos = baseLogos.value;
 
   return Array.from({ length: total }, (_, idx) => ({
     idx,
     key: `col-${idx}`,
-    html: shuffledForColumn(logos, idx).map(tileHtml).join(""),
+    html: shuffledForColumn(logos, idx, tilesPerColumn.value).map(tileHtml).join(""),
     isReverse: idx % 2 === 1,
     withLink: !props.asBackground && idx === 0,
   }));
@@ -168,7 +213,7 @@ const rootClass = computed(() =>
 // tile, not the text painted with the HTML, became the Largest Contentful Paint.
 const innerWrapClass = computed(() =>
   props.asBackground
-    ? "absolute inset-0 bottom-[-90px] md:-top-0 w-[160%] md:-left-[2%] md:scale-[1.25] scale-[1.4]"
+    ? "logo-marquee__frame absolute inset-0 bottom-[-90px] md:-top-0 w-[160%] md:-left-[2%] md:scale-[1.25] scale-[1.4]"
     : "w-full h-full flex justify-center"
 );
 
@@ -216,11 +261,6 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
         </div>
       </div>
     </div>
-
-    <div
-      v-if="props.asBackground"
-      class="pointer-events-none absolute left-0 top-0 h-full md:w-[45%] w-[150px] md:bg-gradient-to-r from-black via-black/80 to-transparent"
-    ></div>
   </section>
 </template>
 
@@ -301,8 +341,22 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   .logo-marquee--background .logo-marquee__col:nth-child(n + 12) { display: none; }
 }
 
-@media (min-width: 1920px) and (max-width: 2559px) {
-  .logo-marquee--background .logo-marquee__col:nth-child(n + 15) { display: none; }
+/* Wide and ultra-wide screens (1920px+): tiles grow with the shorter side of the
+   screen (200px at 1920x1080, ~266px on 1440px-tall ultra-wides, 400px on 4K)
+   so the wall keeps its density, and the frame is taller so the tilted track
+   still reaches the bottom-left and top-right corners of a very wide hero. The
+   column count is topped up on the client (fillWideScreen). */
+@media (min-width: 1920px) {
+  .logo-marquee--background .logo-marquee__tile {
+    width: clamp(200px, min(10.42vw, 18.52vh), 400px);
+    height: auto;
+    aspect-ratio: 2 / 1;
+  }
+
+  .logo-marquee--background .logo-marquee__frame {
+    top: -12vw;
+    bottom: calc(-90px - 12vw);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

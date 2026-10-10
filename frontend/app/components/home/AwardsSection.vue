@@ -6,7 +6,9 @@ import AwardsTransition from "~/components/home/awards/AwardsTransition.vue";
 
 const { t } = useI18n();
 
-withDefaults(defineProps<{ logos?: string[] }>(), { logos: () => [] });
+// `transition` is the green-to-yellow glow under the stage that led into the
+// yellow brand stories; the landing no longer has them, other pages can.
+withDefaults(defineProps<{ logos?: string[]; transition?: boolean }>(), { logos: () => [], transition: true });
 const fallbackLogos = ["/home/arianespace.webp", "/home/hyperlooptt.webp", "/home/accor.webp", "/home/rakuten.png", "/home/lexus.webp", "/home/sorare.webp", "/home/Vector.webp"];
 
 const year = computed(() => t("home.awards.year") || "2026");
@@ -27,7 +29,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
       <p>{{ subtitle }}</p>
     </header>
     <AwardsStage />
-    <AwardsTransition />
+    <AwardsTransition v-if="transition" />
   </section>
 </template>
 

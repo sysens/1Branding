@@ -15,6 +15,8 @@ withDefaults(defineProps<{ direction?: "to-light" | "to-dark" }>(), { direction:
   height: auto;
   aspect-ratio: 2 / 1;
   min-height: 22rem;
+  /* Ultra-wide screens: at 2:1 the light would be two screens tall on 32:9. */
+  max-height: max(22rem, 100svh);
   margin-bottom: -1px;
   overflow: clip;
   pointer-events: none;
