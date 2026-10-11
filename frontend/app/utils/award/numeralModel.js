@@ -599,6 +599,13 @@ export const LOOK = {
   tone: "neutral", exposure: 1.0,
   // Mirror chrome; satin black (weak broad specular + a little diffuse so it reads deep, not grey).
   chrome: 0.97, chromeRough: 0.05, blackColor: 0.025, blackRough: 0.4, blackSpec: 1.0, blackF90: 0.3, rimSheen: 1.0, specAA: 2.0, specAAd: 0, // specAAd: weight of the screen-derivative term (it steps per 2x2 pixel quad and dots the seams)
+  // The bands' finish (they were fitted as satin black): blackColor may be a linear [r, g, b];
+  // blackMetal turns them metallic; satinMix is how much they reflect the satin studio (1) rather
+  // than the chrome's (0); bandOcclDiffuse lets the recessed channel darken their colour too.
+  blackMetal: 0, satinMix: 1, bandOcclDiffuse: 0,
+  // The other surfaces (fitted as mirror chrome): chrome may be a linear [r, g, b] too, and
+  // chromeMetal below 1 turns them into a glossy dielectric (e.g. black lacquer).
+  chromeMetal: 1,
   // Shading curvature: band rolls at seams, convex faces, barrel walls, a large round along the outline.
   edgeBend: 1.2, edgePow: 1.6, bulgeX: 0.75, bulgeY: 0.5,
   wallBulge: 0.6, wallZ0: 0.25, wallZ1: 0.6, outlineBend: 1.076, outlineR: 45, outlinePow: 2,
@@ -715,6 +722,7 @@ export function outlineDistance(THREE, opt, unitsPerTexel = 2, maxDist = 64) {
 export function createNumeral(canvas, THREE, o = {}) {
   const opt = { ...POSE, ...LOOK, ...o };
   const f = (v, d = 3) => Number(v).toFixed(d);
+  const vec3c = (v, d = 4) => (Array.isArray(v) ? `vec3(${v.map((x) => f(x, d)).join(", ")})` : `vec3(${f(v, d)})`);
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!o.preserveDrawingBuffer, powerPreference: o.powerPreference || "default" });
   renderer.setClearColor(0xffffff, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -766,7 +774,7 @@ float faceW = smoothstep(0.85, 0.98, abs(shapeN.z));
 // view distance and the viewing angle (smooth per pixel; screen derivatives would step per 2x2
 // quad and comb along the seams).
 float seamPx = max(vViewPosition.z * pxScale / max(abs(dot(normalize(vNormal), normalize(vViewPosition))), 0.25), 1e-3);
-diffuseColor.rgb = mix(vec3(${f(opt.chrome)}), ${opt.debug ? "vec3(1.0,0.0,0.0)" : `vec3(${f(opt.blackColor, 4)})`}, blackAmt);`)
+diffuseColor.rgb = mix(${vec3c(opt.chrome)}, ${opt.debug ? "vec3(1.0,0.0,0.0)" : `${vec3c(opt.blackColor)} * mix(1.0, bandOccl, ${f(opt.bandOcclDiffuse)})`}, blackAmt);`)
         .replace("#include <roughnessmap_fragment>", `#include <roughnessmap_fragment>
 roughnessFactor = mix(${f(opt.chromeRough)}, ${f(opt.blackRough)}, blackAmt);${opt.underRough > 0 ? `
 // The flag's underside sees the busy back of the studio; in the photo it is a smooth grey, so it
@@ -846,14 +854,14 @@ vec3 baseN; float rollRate;
 float rimT = clamp(seamAcc.t, 0.0, 1.0);
 material.specularColor *= mix(1.0, ${f(opt.blackSpec)} * (1.0 + ${f(opt.rimSheen)} * rimT * rimT), blackAmt) * bandOccl;
 material.specularF90 = mix(material.specularF90, ${f(opt.blackF90)}, blackAmt) * bandOccl;`)
-        .replace("#include <metalnessmap_fragment>", `#include <metalnessmap_fragment>\nmetalnessFactor = ${opt.debug ? '0.0' : 'mix(1.0, 0.0, blackAmt)'};`)
+        .replace("#include <metalnessmap_fragment>", `#include <metalnessmap_fragment>\nmetalnessFactor = ${opt.debug ? '0.0' : `mix(${f(opt.chromeMetal)}, ${f(opt.blackMetal)}, blackAmt)`};`)
         // The black reflects the satin studio instead of the chrome's.
         .replace("#include <lights_fragment_maps>", `#include <lights_fragment_maps>
 #if defined( USE_ENVMAP ) && defined( RE_IndirectSpecular )
 {
   vec3 rv = reflect(-geometryViewDir, geometryNormal);
   rv = inverseTransformDirection(normalize(mix(rv, geometryNormal, pow4(material.roughness))), viewMatrix);
-  radiance = mix(radiance, textureCubeUV(satinEnv, envMapRotation * rv, material.roughness).rgb * envMapIntensity, blackAmt);${opt.floorBounce > 0 ? `
+  radiance = mix(radiance, textureCubeUV(satinEnv, envMapRotation * rv, material.roughness).rgb * envMapIntensity, blackAmt * ${f(opt.satinMix)});${opt.floorBounce > 0 ? `
   // The base's bottom round reflects the white floor right beside it (bright), except in the
   // last few units where it meets its own contact shadow (a crisp dark line, as in the photo).
   float fbW = (1.0 - blackAmt) * smoothstep(-0.15, -0.5, shapeN.y) * (1.0 - smoothstep(${f(opt.floorBounceH[0], 1)}, ${f(opt.floorBounceH[1], 1)}, vShape.y));

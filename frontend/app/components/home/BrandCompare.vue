@@ -140,7 +140,7 @@ const go = (step: 1 | -1) => {
 
 .compare-section__compare {
   --compare-line: #00ff01;
-  --compare-line-width: calc(9 * var(--u));
+  --compare-line-width: max(2px, calc(3 * var(--u)));
   position: absolute;
   inset: 0;
 }
@@ -252,7 +252,7 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__compare {
-    --compare-line-width: 4px;
+    --compare-line-width: 2px;
   }
 
   .compare-section__arrow {

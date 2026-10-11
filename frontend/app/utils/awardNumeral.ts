@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { createNumeral } from "./award/numeralModel";
 
-// The Awwwards "1": a numeral one of rounded mirror-chrome and satin-black
+// The Awwwards "1": a numeral one of rounded black-chrome and green
 // bands twisting round the form, modelled and lit procedurally (no images).
 // The form, the band layout and the studio live in award/numeralModel.js; they
 // were fitted to the design render and its camera, so the numeral reads as in
@@ -14,7 +14,22 @@ export interface AwardNumeral {
 }
 
 export function createAwardNumeral(canvas: HTMLCanvasElement): AwardNumeral {
-  const model = createNumeral(canvas, THREE, { tone: "neutral", powerPreference: "low-power" });
+  const model = createNumeral(canvas, THREE, {
+    tone: "neutral",
+    powerPreference: "low-power",
+    // The bands that were satin black are a satin brand-green metal (#0cc23a, linear RGB),
+    // reflecting the chrome's studio; the recessed channel stays a deep green.
+    blackColor: [0.0037, 0.5395, 0.0423],
+    // The surfaces that were mirror chrome are black chrome: a dark mirror whose
+    // reflections still draw the rounded bands.
+    chrome: 0.035,
+    blackMetal: 1,
+    satinMix: 0,
+    blackRough: 0.3,
+    blackF90: 1,
+    rimSheen: 0,
+    bandOcclDiffuse: 0.8,
+  });
   return {
     resize(width, height) {
       if (width <= 0 || height <= 0) return;

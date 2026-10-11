@@ -33,6 +33,8 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 
 const row = ref<HTMLElement | null>(null);
+const pin = ref<HTMLElement | null>(null);
+const screen = ref<HTMLElement | null>(null);
 // 0..6 nodes lit (A, the four steps, B) and how far each link has filled.
 const lit = ref(0);
 const fills = ref<number[]>(LINKS.map(() => 0));
@@ -51,11 +53,18 @@ const render = () => {
   const box = row.value;
   if (!box) return;
   const rect = box.getBoundingClientRect();
-  // Phones stack the path vertically: it lights as the reading line (70% down
-  // the screen) passes down the list.
-  const progress = window.innerWidth < 768
-    ? clamp01((window.innerHeight * 0.7 - rect.top) / rect.height)
-    : clamp01((window.innerHeight * 0.85 - (rect.top + rect.height / 2)) / (window.innerHeight * 0.5));
+  // Desktop: the block is pinned (sticky at the top) and the path lights up as
+  // the page scrolls through the pin, finishing a little before it lets go.
+  // Phones stack the path vertically and do not pin: it lights as the reading
+  // line (70% down the screen) passes down the list.
+  const pinned = pin.value && screen.value && getComputedStyle(screen.value).position === "sticky";
+  let progress: number;
+  if (pinned) {
+    const distance = pin.value!.offsetHeight - screen.value!.offsetHeight;
+    progress = distance > 0 ? clamp01(-pin.value!.getBoundingClientRect().top / distance / 0.85) : 1;
+  } else {
+    progress = clamp01((window.innerHeight * 0.7 - rect.top) / rect.height);
+  }
   box.style.setProperty("--progress", progress.toFixed(4));
   const step = progress * LINKS.length;
   lit.value = progress <= 0 ? 0 : Math.min(LINKS.length + 1, Math.floor(step + 0.12) + 1);
@@ -102,6 +111,9 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
   <section id="audit" class="audit" lang="en" aria-labelledby="audit-title">
     <p class="audit__title">{{ t("home.audit.eyebrow") }}</p>
 
+    <!-- The path lights up while this block is pinned to the screen. -->
+    <div ref="pin" class="audit__pin">
+    <div ref="screen" class="audit__screen">
     <div class="audit__frame">
       <p class="audit__eyebrow">{{ t("home.audit.eyebrow") }}</p>
       <div class="audit__hero">
@@ -200,6 +212,8 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       {{ t("home.audit.cta") }}
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
     </NuxtLink>
+    </div>
+    </div>
   </section>
 </template>
 
@@ -233,9 +247,32 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
   text-transform: uppercase;
 }
 
+/* The pin: as tall as the screen plus the scroll the lighting takes. Inside
+   it the block sits on a sticky screen, scaled (--u) so it fits under the
+   fixed header. */
+.audit__pin {
+  position: relative;
+  width: 100%;
+  height: 260vh;
+  margin-top: calc(120 * var(--u));
+}
+
+.audit__screen {
+  --u: min(0.05vw, calc((100svh - 8rem) / 980));
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  height: 100svh;
+  padding-top: 5rem;
+  overflow: hidden;
+}
+
 .audit__frame {
   width: calc(2000 * var(--u));
-  margin-top: calc(300 * var(--u));
   padding-left: calc(277 * var(--u));
 }
 
@@ -534,6 +571,19 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 @media (max-width: 767px) {
   .audit {
     padding: 4.5rem 0 4.5rem;
+  }
+
+  .audit__pin {
+    height: auto;
+    margin-top: 0;
+  }
+
+  .audit__screen {
+    --u: 0.05vw;
+    position: static;
+    height: auto;
+    padding-top: 0;
+    overflow: visible;
   }
 
   .audit__title {

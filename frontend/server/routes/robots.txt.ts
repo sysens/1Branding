@@ -10,7 +10,7 @@ export default defineEventHandler((event) => {
     "/__nuxt_error",
     "/*?*preview",
     "/*?*draft",
-    ...PROTOTYPE_ROUTES.flatMap((path) => [path, `/en${path}`]),
+    ...PROTOTYPE_ROUTES.flatMap((path) => [path, `/ru${path}`]),
   ];
 
   setHeader(event, "Content-Type", "text/plain; charset=utf-8");

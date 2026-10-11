@@ -17,11 +17,13 @@ const { t } = useI18n();
 const heading = computed(() => splitIdentityTitle(props.title?.trim() || t("home.gallery.title")));
 const description = computed(() => props.description?.trim() || t("home.gallery.description"));
 
-// TEMPORARY artwork from the project collage until the packaging shots arrive.
-// Widths follow the design's rhythm (card width / height); a longer list simply
-// repeats it.
-const RATIOS = [1.22, 0.75, 1.18, 0.79, 0.75, 0.74, 0.79, 0.63, 1.21];
-const IMAGES = [11, 12, 13, 14, 15, 16, 17, 18, 19].map((id) => `/home/threeLayerLocal/${id}.webp`);
+// Packaging shots, in the design's order; each card's width follows its image.
+const WORK: Array<[string, number]> = [
+  ["chocoton", 1.22], ["lilbucks", 0.75], ["calliope", 1.22], ["puremagic", 0.79], ["mlinotest", 0.75],
+  ["mms", 0.75], ["knight", 0.79], ["barbican", 0.63], ["lollys", 1.22],
+];
+const RATIOS = WORK.map(([, ratio]) => ratio);
+const IMAGES = WORK.map(([name]) => `/home/identity/${name}.webp`);
 const cards = computed<Card[]>(() =>
   IMAGES.map((src, index) => ({
     src,

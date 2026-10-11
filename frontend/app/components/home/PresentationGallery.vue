@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
   font-size: clamp(1.9rem, 3.4vw, 4.75rem);
   font-weight: 700;
   line-height: 1.08;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
   text-wrap: balance;
 }
 
@@ -137,13 +137,14 @@ onBeforeUnmount(() => {
 }
 
 .pgallery__text {
-  max-width: 50em;
+  max-width: min(100%, 60em);
   margin: 0;
   color: #b8b8b8;
   font-size: clamp(1rem, 1.55vw, 2.1rem);
   font-weight: 400;
   line-height: 1.22;
-  text-wrap: balance;
+  /* Wide lines with a short last one, as in the design (not balanced). */
+  text-wrap: pretty;
 }
 
 /* A dark panel with the edges fading into the page, as in the design. */

@@ -88,6 +88,8 @@ onBeforeUnmount(() => {
      stays on top. */
   z-index: 30;
   overflow: clip;
+  /* Room above the card, so it does not sit right under the previous section. */
+  padding-top: calc(120 * var(--u));
   background: #fff;
   color: #0a0a0a;
   /* Outranks the global `body * { font-family: inherit !important }`. */

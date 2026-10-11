@@ -63,6 +63,9 @@ onBeforeUnmount(() => clearTimeout(closer));
     <!-- In <body>: the header is transformed and blurred, which would trap a
          fixed panel inside its own box. -->
     <Teleport to="body">
+    <Transition name="svc-scrim">
+      <div v-show="open" class="svc__scrim" aria-hidden="true" />
+    </Transition>
     <Transition name="svc-panel">
       <div v-show="open" id="services-menu" class="svc__panel" @mouseenter="show" @mouseleave="hideSoon">
         <div class="svc__picture" aria-hidden="true">
@@ -174,25 +177,42 @@ onBeforeUnmount(() => clearTimeout(closer));
   border-radius: 4px;
 }
 
-/* The panel hangs under the floating header, as wide as the screen allows. */
+/* The page behind is dimmed, as on slidor. */
+.svc__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgb(0 0 0 / 0.62);
+  pointer-events: none;
+}
+
+.svc-scrim-enter-active,
+.svc-scrim-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.svc-scrim-enter-from,
+.svc-scrim-leave-to {
+  opacity: 0;
+}
+
+/* The panel is the full width of the screen, flush under the header. */
 .svc__panel {
   position: fixed;
   z-index: 1001;
   top: calc(30px + var(--header-h, 66px) + 14px);
-  left: 50%;
+  left: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-  gap: 28px;
-  width: min(1500px, calc(100vw - 48px));
-  max-height: calc(100vh - 30px - var(--header-h, 66px) - 34px);
+  grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
+  gap: 3.2vw;
+  width: 100vw;
+  max-height: calc(100vh - 30px - var(--header-h, 66px) - 14px);
   overflow: auto;
-  padding: 22px;
-  border: 1px solid rgb(3 203 0 / 0.35);
-  border-radius: 28px;
-  background: rgb(6 6 6 / 0.94);
-  box-shadow: 0 30px 80px rgb(0 0 0 / 0.6), 0 0 40px rgb(3 203 0 / 0.12);
-  translate: -50% 0;
-  backdrop-filter: blur(18px);
+  padding: clamp(24px, 2.2vw, 44px) clamp(24px, 2.4vw, 48px);
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+  border-bottom: 1px solid rgb(3 203 0 / 0.4);
+  background: #000;
+  box-shadow: 0 40px 80px rgb(0 0 0 / 0.5);
   font-family: "Inter", sans-serif;
 }
 
@@ -205,19 +225,19 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc-panel-leave-to {
   opacity: 0;
   transform: translateY(-10px);
-  clip-path: inset(0 0 100% 0 round 28px);
+  clip-path: inset(0 0 100% 0);
 }
 
 .svc-panel-enter-to,
 .svc-panel-leave-from {
-  clip-path: inset(0 0 0 0 round 28px);
+  clip-path: inset(0 0 0 0);
 }
 
 .svc__picture {
   position: relative;
-  min-height: 420px;
+  min-height: clamp(360px, 33vw, 700px);
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 8px;
   background: #111;
 }
 
@@ -240,7 +260,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: start;
+  align-content: space-between;
   gap: 4px;
   margin: 0;
   padding: 0;
@@ -268,8 +288,8 @@ onBeforeUnmount(() => clearTimeout(closer));
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  padding: 18px 18px;
-  border-radius: 14px;
+  padding: clamp(18px, 1.5vw, 30px);
+  border-radius: 8px;
   color: #fff;
   text-decoration: none;
   transition: background-color 0.25s ease;
@@ -305,14 +325,14 @@ onBeforeUnmount(() => clearTimeout(closer));
 }
 
 .svc__name {
-  font-size: 17px;
+  font-size: clamp(17px, 0.98vw, 22px);
   font-weight: 600;
   line-height: 1.2;
 }
 
 .svc__desc {
   color: rgb(255 255 255 / 0.62);
-  font-size: 14px;
+  font-size: clamp(14px, 0.8vw, 18px);
   line-height: 1.35;
 }
 
@@ -344,6 +364,8 @@ onBeforeUnmount(() => clearTimeout(closer));
 @media (prefers-reduced-motion: reduce) {
   .svc-panel-enter-active,
   .svc-panel-leave-active,
+  .svc-scrim-enter-active,
+  .svc-scrim-leave-active,
   .svc__list li,
   .svc__picture img,
   .svc__label > span {

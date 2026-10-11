@@ -75,8 +75,8 @@ export const usePageSeo = (input: PageSeoInput) => {
       const path = switchLocalePath(code);
       return path ? { rel: "alternate", hreflang: code, href: `${origin}${cleanPath(path)}`, key: `hreflang-${code}` } : null;
     }).filter((link): link is NonNullable<typeof link> => !!link);
-    const ruLink = links.find((link) => link.hreflang === "ru");
-    if (ruLink) links.push({ ...ruLink, hreflang: "x-default", key: "hreflang-x-default" });
+    const defaultLink = links.find((link) => link.hreflang === "en");
+    if (defaultLink) links.push({ ...defaultLink, hreflang: "x-default", key: "hreflang-x-default" });
     return links;
   });
 

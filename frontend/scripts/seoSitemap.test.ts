@@ -32,16 +32,19 @@ describe("CMS sitemap", () => {
     expect(requests.map(({ locale, page }) => `${locale}:${page}`)).toEqual(["ru:1", "ru:2", "en:1", "en:2"]);
     expect(requests.every(({ pageSize, query }) => pageSize === 100 && query.includes("updatedAt") && query.includes("pageCount"))).toBe(true);
     const urls = capture(xml);
+    // English is the default language ("/"), Russian lives under "/ru".
     expect(urls).toContain("https://example.test/");
-    expect(urls).toContain("https://example.test/en");
+    expect(urls).toContain("https://example.test/ru");
     expect(urls).toContain("https://example.test/NewsSlug/shared%20%26%20one");
-    expect(urls).toContain("https://example.test/en/NewsSlug/shared%20%26%20one");
-    expect(urls).toContain("https://example.test/NewsSlug/ru-only");
-    expect(urls).not.toContain("https://example.test/en/NewsSlug/ru-only");
-    expect(urls).toContain("https://example.test/en/NewsSlug/en-only");
-    expect(urls).not.toContain("https://example.test/NewsSlug/en-only");
+    expect(urls).toContain("https://example.test/ru/NewsSlug/shared%20%26%20one");
+    expect(urls).toContain("https://example.test/ru/NewsSlug/ru-only");
+    expect(urls).not.toContain("https://example.test/NewsSlug/ru-only");
+    expect(urls).toContain("https://example.test/NewsSlug/en-only");
+    expect(urls).not.toContain("https://example.test/ru/NewsSlug/en-only");
     expect(urls).toContain("https://example.test/ProjectSlug/project");
     expect(urls).toContain("https://example.test/ProductSlug/category");
+    // x-default points at the English (default) page.
+    expect(xml).toContain('hreflang="x-default" href="https://example.test/"');
     expect(urls.length).toBe(new Set(urls).size);
     expect(xml).toContain('hreflang="ru"');
     expect(xml).toContain('hreflang="en"');
@@ -58,8 +61,8 @@ describe("CMS sitemap", () => {
         categories_connection: { nodes: [], pageInfo: { pageCount: 1 } },
       } };
     });
-    expect(xml).toMatch(/<loc>https:\/\/example\.test\/NewsSlug\/%22article%22<\/loc><lastmod>2026-01-01T00:00:00\.000Z<\/lastmod>/);
-    expect(xml).toMatch(/<loc>https:\/\/example\.test\/en\/NewsSlug\/%22article%22<\/loc><lastmod>2026-02-02T00:00:00\.000Z<\/lastmod>/);
+    expect(xml).toMatch(/<loc>https:\/\/example\.test\/ru\/NewsSlug\/%22article%22<\/loc><lastmod>2026-01-01T00:00:00\.000Z<\/lastmod>/);
+    expect(xml).toMatch(/<loc>https:\/\/example\.test\/NewsSlug\/%22article%22<\/loc><lastmod>2026-02-02T00:00:00\.000Z<\/lastmod>/);
     expect(xml).not.toContain('<loc>https://example.test/NewsSlug/"article"</loc>');
   });
 

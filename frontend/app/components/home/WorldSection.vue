@@ -21,7 +21,7 @@ const { t } = useI18n();
 </template>
 
 <style scoped>
-.world-section { position: relative; isolation: isolate; width: 100%; padding: 48px 0 0; overflow: clip; background: #000; color: #fff; text-align: center; }
+.world-section { position: relative; isolation: isolate; width: 100%; padding: 160px 0 0; overflow: clip; background: #000; color: #fff; text-align: center; }
 .world-section__heading { position: relative; z-index: 1; padding-inline: 20px; }
 .world-section__heading h2 { margin: 0; font-weight: 700; letter-spacing: 0; }
 .world-section__eyebrow { display: block; font-size: 42px; line-height: 48px; font-weight: 600; }
@@ -32,7 +32,7 @@ const { t } = useI18n();
   .world-section__globe { height: 650px; margin-top: -116px; }
 }
 @media (max-width: 767px) {
-  .world-section { padding: 40px 0 0; }
+  .world-section { padding: 96px 0 0; }
   .world-section__eyebrow { font-size: 24px; line-height: 32px; }
   .world-section__word { margin-top: 4px; font-size: 128px; }
   .world-section__globe { height: auto; aspect-ratio: 1; margin-top: -48px; }

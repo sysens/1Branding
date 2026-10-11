@@ -61,22 +61,26 @@ const copy = computed(() => String(locale.value) === "ru"
   font-family: var(--app-font-display) !important;
 }
 
-/* The robot stands on the wordmark: its base runs behind the letters. */
+/* The robot stands on the wordmark: its base runs behind the letters. The
+   Spline camera fits the smaller side of the canvas, so this box (1000 x 900)
+   sets the robot's size, with the robot centred in it. */
 .robot__scene {
   position: relative;
   z-index: 1;
-  width: min(100%, calc(1180 * var(--u)));
+  width: min(100%, calc(1000 * var(--u)));
+  /* The canvas starts above the section: its top is empty black, clipped. */
+  margin-top: calc(-126 * var(--u));
 }
 
 .robot__scene :deep(.footer-robot-scene) {
-  height: calc(700 * var(--u));
+  height: calc(900 * var(--u));
 }
 
 .robot__brand {
   position: relative;
   z-index: 2;
   width: 100%;
-  margin-top: calc(-60 * var(--u));
+  margin-top: calc(-143 * var(--u));
   pointer-events: none;
 }
 

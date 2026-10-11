@@ -60,7 +60,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      htmlAttrs: { lang: "ru" },
+      htmlAttrs: { lang: "en" },
       title: "OneBranding",
       meta: [
         { charset: "utf-8" },
@@ -120,19 +120,24 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/**": { headers: securityHeaders },
+    // English is the default language and lives at "/"; Russian is under "/ru".
+    // The English pages used to be under "/en": those links (indexed, shared)
+    // keep working through a permanent redirect.
+    "/en": { redirect: { to: "/", statusCode: 301 } },
+    "/en/**": { redirect: { to: "/**", statusCode: 301 } },
     ...Object.fromEntries(isrPages.flatMap((path) => [
       [path, { isr: 300 }],
-      [path === "/" ? "/en" : `/en${path}`, { isr: 300 }],
+      [path === "/" ? "/ru" : `/ru${path}`, { isr: 300 }],
     ])),
     "/ProductSlug/**": { isr: 300 },
-    "/en/ProductSlug/**": { isr: 300 },
+    "/ru/ProductSlug/**": { isr: 300 },
     "/ProjectSlug/**": { isr: 300 },
-    "/en/ProjectSlug/**": { isr: 300 },
+    "/ru/ProjectSlug/**": { isr: 300 },
     "/NewsSlug/**": { isr: 300 },
-    "/en/NewsSlug/**": { isr: 300 },
+    "/ru/NewsSlug/**": { isr: 300 },
     ...Object.fromEntries(prototypeRoutes.flatMap((path) => [
       [path, { headers: noIndexHeaders, isr: false }],
-      [`/en${path}`, { headers: noIndexHeaders, isr: false }],
+      [`/ru${path}`, { headers: noIndexHeaders, isr: false }],
     ])),
     "/_ipx/**": {
       headers: longTermImageCacheHeaders,
@@ -193,10 +198,10 @@ export default defineNuxtConfig({
       { code: "ru", language: "ru-RU", name: "Русский", file: "ru.json" },
       { code: "en", language: "en-US", name: "English", file: "en.json" },
     ],
-    defaultLocale: "ru",
+    defaultLocale: "en",
     strategy: "prefix_except_default",
 
-    // No Accept-Language redirect: "/" always serves Russian and "/en" English.
+    // No Accept-Language redirect: "/" always serves English and "/ru" Russian.
     // The redirect cost every English-language visitor (and Lighthouse/PageSpeed,
     // which browse as en-US) an extra round trip of ~1s on mobile, and Google
     // advises against locale redirects; hreflang and the switcher cover it.

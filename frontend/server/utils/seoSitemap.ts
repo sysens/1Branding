@@ -106,7 +106,8 @@ export async function buildSitemap(siteUrl: string, graphqlUrl: string, fetchCms
     } while (page <= lastPage);
   }
 
-  const absolute = (path: string, locale: Locale) => `${origin}${locale === "en" ? "/en" : ""}${path === "/" && locale === "en" ? "" : path}`;
+  // English is the default language ("/"), Russian lives under "/ru".
+  const absolute = (path: string, locale: Locale) => `${origin}${locale === "ru" ? "/ru" : ""}${path === "/" && locale === "ru" ? "" : path}`;
   const entries: string[] = [];
   for (const [path, entry] of pages) {
     for (const locale of ["ru", "en"] as const) {
@@ -114,7 +115,7 @@ export async function buildSitemap(siteUrl: string, graphqlUrl: string, fetchCms
       const links = entry.locales.size === 2
         ? (["ru", "en"] as const).map((language) =>
           `<xhtml:link rel="alternate" hreflang="${language}" href="${xmlEscape(absolute(path, language))}"/>`
-        ).concat(`<xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(absolute(path, "ru"))}"/>`)
+        ).concat(`<xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(absolute(path, "en"))}"/>`)
         : [];
       entries.push(`<url><loc>${xmlEscape(absolute(path, locale))}</loc>${entry.updatedAt[locale] ? `<lastmod>${entry.updatedAt[locale]}</lastmod>` : ""}${links.join("")}</url>`);
     }

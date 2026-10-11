@@ -93,7 +93,7 @@ const ORG_DESCRIPTION: Record<SeoLocale, string> = {
 /** Site-wide ProfessionalService + WebSite graph, referenced from pages by `@id`. */
 export const organizationGraph = (origin: string, locale: SeoLocale, contact: OrganizationContact) => {
   const orgId = `${origin}/#organization`;
-  const home = `${origin}${locale === "en" ? "/en" : "/"}`;
+  const home = `${origin}${locale === "ru" ? "/ru" : "/"}`;
   return [
     {
       "@type": "ProfessionalService",

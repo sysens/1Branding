@@ -164,11 +164,11 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   gap: clamp(1rem, 1.6vw, 2rem);
-  max-width: min(100%, 76rem);
+  max-width: min(100%, calc(1000 * var(--u)));
   margin: clamp(3rem, 6vw, 7.5rem) auto 0;
   padding-inline: 1.25rem;
-  font-size: clamp(1rem, 1.12vw, 1.6rem);
-  line-height: 1.22;
+  font-size: clamp(1rem, 1.35vw, 1.9rem);
+  line-height: 1.2;
   text-align: center;
 }
 
@@ -182,6 +182,11 @@ onBeforeUnmount(() => {
 .social__copy .social__lead {
   color: #fff;
   font-weight: 400;
+}
+
+/* The closing line is narrower than the paragraph above it. */
+.social__copy .social__lead {
+  max-width: calc(700 * var(--u));
 }
 
 /* The wall: five columns, the middle one centred, the outer two cut by the

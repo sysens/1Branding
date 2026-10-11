@@ -454,8 +454,8 @@ onBeforeUnmount(() => {
   left: 0;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
   background: var(--compare-line);
   color: #062b10;
@@ -467,14 +467,14 @@ onBeforeUnmount(() => {
 }
 
 .compare[data-dragging] .compare__handle {
-  width: 58px;
-  height: 38px;
+  width: 40px;
+  height: 26px;
   cursor: grabbing;
 }
 
 .compare__handle svg {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.4;
