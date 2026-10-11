@@ -92,6 +92,12 @@ usePageSeo({
                that led into it were taken off the landing; they stay for other pages. -->
           <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomePresentationGallery :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeSocialIdentity :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeOnePartnerServices :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAwardVision :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeBrandCompare :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyFooter :hydrate-on-visible="LAZY_HYDRATION" use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
         </div>
       </div>

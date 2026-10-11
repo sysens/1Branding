@@ -20,7 +20,13 @@ describe("brand stories", () => {
     const tail = source.slice(source.indexOf("<LazyHomeAwardsSection"));
     expect(tail.indexOf("<LazyHomeAirwaysSceneSection")).toBeGreaterThan(0);
     expect(tail.indexOf("<LazyHomePresentationGallery")).toBeGreaterThan(tail.indexOf("<LazyHomeAirwaysSceneSection"));
-    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomePresentationGallery"));
+    expect(tail.indexOf("<LazyHomeSocialIdentity")).toBeGreaterThan(tail.indexOf("<LazyHomePresentationGallery"));
+    expect(tail.indexOf("<LazyHomeOnePartnerServices")).toBeGreaterThan(tail.indexOf("<LazyHomeSocialIdentity"));
+    expect(tail.indexOf("<LazyHomeAwardVision")).toBeGreaterThan(tail.indexOf("<LazyHomeOnePartnerServices"));
+    expect(tail.indexOf("<LazyHomeBrandCompare")).toBeGreaterThan(tail.indexOf("<LazyHomeAwardVision"));
+    expect(tail.indexOf("<LazyHomeAuditStrategy")).toBeGreaterThan(tail.indexOf("<LazyHomeBrandCompare"));
+    expect(tail.indexOf("<LazyHomeClientsGrid")).toBeGreaterThan(tail.indexOf("<LazyHomeAuditStrategy"));
+    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeClientsGrid"));
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);
     expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('url("/home/scene.jpg")');
     for (const removed of ["GridSection", "EarthDives", "ProjectTabletShowcase", "ThreeLayerSlug", "RowShorteners"]) expect(source).not.toContain(removed);

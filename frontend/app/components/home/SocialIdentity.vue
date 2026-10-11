@@ -1,0 +1,246 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
+
+// "ONE BRAND. VISUAL LANGUAGE." with a wall of BRRGRR social posts, animated
+// like slidor.agency's "Expertise in all graphic styles" grid: while the wall
+// leaves the screen it zooms from 1 to 1.5 and its five columns glide up or
+// down by their own amounts (ease-in-out).
+
+type Post = "mazali-cap" | "mazali-burger" | "burger-bite" | "tishlaaa" | "fresh" | "bag";
+
+const { t } = useI18n();
+
+const COLUMNS: Post[][] = [
+  ["bag", "mazali-burger", "fresh", "tishlaaa"],
+  ["mazali-cap", "fresh", "burger-bite", "bag"],
+  ["mazali-burger", "tishlaaa", "mazali-cap", "burger-bite"],
+  ["burger-bite", "bag", "tishlaaa", "mazali-cap"],
+  ["tishlaaa", "mazali-cap", "bag", "mazali-burger"],
+];
+// Column travel over the scroll, in % of the column's height: slidor's
+// -10→3, 0→-5, -7→1, 0→-7, -3→3, applied as deltas so the wall starts out
+// staggered as in the design.
+const START = [-10, 0, -7, 0, -3];
+const END = [3, -5, 1, -7, 3];
+const postSrc = (post: Post) => `/home/social/brrgrr-${post}.webp`;
+
+const grid = ref<HTMLElement | null>(null);
+let frame = 0;
+let stop: (() => void) | undefined;
+
+const easeInOutQuart = (value: number) =>
+  value < 0.5 ? 8 * value ** 4 : 1 - (-2 * value + 2) ** 4 / 2;
+
+// 0 when the wall's top is a quarter down the screen, 1 when its bottom leaves
+// the top: scale grows linearly, the columns ease.
+const render = () => {
+  frame = 0;
+  const box = grid.value;
+  if (!box) return;
+  const rect = box.getBoundingClientRect();
+  const lead = window.innerHeight * 0.25;
+  const progress = Math.min(1, Math.max(0, (lead - rect.top) / (lead + rect.height)));
+  const eased = easeInOutQuart(progress);
+  box.style.transform = `scale(${(1 + 0.5 * progress).toFixed(4)})`;
+  box.querySelectorAll<HTMLElement>("[data-column]").forEach((column) => {
+    const index = Number(column.dataset.column);
+    const shift = (END[index]! - START[index]!) * eased;
+    column.style.setProperty("--shift", `${shift.toFixed(3)}%`);
+  });
+};
+
+const schedule = () => {
+  if (!frame) frame = requestAnimationFrame(render);
+};
+
+onMounted(() => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule, { passive: true });
+  stop = () => {
+    window.removeEventListener("scroll", schedule);
+    window.removeEventListener("resize", schedule);
+  };
+  render();
+});
+
+onBeforeUnmount(() => {
+  stop?.();
+  if (frame) cancelAnimationFrame(frame);
+});
+</script>
+
+<template>
+  <!-- The copy is English in both locales. -->
+  <section class="social" lang="en" aria-labelledby="social-title">
+    <h2 id="social-title" class="social__title">
+      <span class="social__one">{{ t("home.social.one") }}</span>
+      <span class="social__rest">
+        <span class="social__brand">{{ t("home.social.brand") }}</span>
+        <span class="social__language">{{ t("home.social.visual") }} <span class="social__accent">{{ t("home.social.language") }}</span></span>
+      </span>
+    </h2>
+    <div class="social__copy">
+      <p>{{ t("home.social.text") }} <strong>{{ t("home.social.textStrong") }}</strong></p>
+      <p class="social__lead">{{ t("home.social.text2") }}</p>
+    </div>
+    <div class="social__viewport">
+      <div ref="grid" class="social__grid" aria-hidden="true">
+        <div v-for="(column, index) in COLUMNS" :key="index" class="social__column" :class="{ 'social__column--low': index % 2 === 0 }" :data-column="index">
+          <div v-for="(post, row) in column" :key="row" class="social__post">
+            <img :src="postSrc(post)" alt="" width="544" height="680" loading="lazy" decoding="async" draggable="false">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+.social {
+  /* Column width and gutter of the design (2000px frame: 544px posts, 8px gaps). */
+  --col: 27.2vw;
+  --gap: 0.32vw;
+  position: relative;
+  overflow: clip;
+  padding-top: clamp(5rem, 11vw, 14rem);
+  background: #000;
+  color: #fff;
+  /* Outranks the global `body * { font-family: inherit !important }`. */
+  font-family: var(--app-font-display) !important;
+}
+
+/* ONE spans both lines; BRAND. on top, VISUAL LANGUAGE. under it. */
+.social__title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.035em;
+  margin: 0;
+  padding-inline: 1.25rem;
+  font-size: clamp(4.5rem, 12.2vw, 15rem);
+  font-weight: 700;
+  line-height: 0.74;
+  letter-spacing: -0.02em;
+}
+
+.social__one {
+  padding-block: 0.02em;
+  background: linear-gradient(100deg, #00c92f 0%, #00f83c 30%, #00d634 62%, #009b2c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.social__rest {
+  display: flex;
+  flex-direction: column;
+  gap: 0.075em;
+  padding-top: 0.005em;
+}
+
+.social__brand {
+  font-size: 0.6em;
+  line-height: 0.74;
+  letter-spacing: -0.01em;
+}
+
+.social__language {
+  font-size: 0.345em;
+  line-height: 0.8;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+}
+
+.social__accent {
+  background: linear-gradient(90deg, #00e536, #00b52e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.social__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 1.6vw, 2rem);
+  max-width: min(100%, 76rem);
+  margin: clamp(3rem, 6vw, 7.5rem) auto 0;
+  padding-inline: 1.25rem;
+  font-size: clamp(1rem, 1.12vw, 1.6rem);
+  line-height: 1.22;
+  text-align: center;
+}
+
+.social__copy p {
+  margin: 0;
+  color: #a3a3a3;
+  text-wrap: balance;
+}
+
+.social__copy strong,
+.social__copy .social__lead {
+  color: #fff;
+  font-weight: 400;
+}
+
+/* The wall: five columns, the middle one centred, the outer two cut by the
+   screen edges; the grid scales from its centre while it scrolls out. */
+.social__viewport {
+  margin-top: clamp(3.5rem, 6.5vw, 8rem);
+}
+
+.social__grid {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+  height: calc(var(--col) * 2.5);
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.social__column {
+  --shift: 0%;
+  --low: 0px;
+  display: flex;
+  flex: 0 0 var(--col);
+  flex-direction: column;
+  /* As tall as its posts (not stretched to the grid), so the posts keep 4:5. */
+  align-self: flex-start;
+  gap: var(--gap);
+  transform: translate3d(0, calc(var(--low) + var(--shift)), 0);
+  will-change: transform;
+}
+
+/* In the design the 1st, 3rd and 5th columns start about a quarter post lower. */
+.social__column--low {
+  --low: calc(var(--col) * 1.25 * 0.27);
+}
+
+.social__post {
+  flex: 0 0 auto;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #3a0606;
+}
+
+.social__post img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+@media (max-width: 767px) {
+  .social {
+    --col: 44vw;
+    --gap: 1.6vw;
+  }
+
+  .social__language {
+    white-space: normal;
+  }
+}
+</style>

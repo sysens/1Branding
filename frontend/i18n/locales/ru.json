@@ -230,7 +230,140 @@
     "presentations": {
       "titleLead": "Great products need ",
       "titleAccent": "more than quality.",
-      "text": "A strong presentation should reflect the same level of quality, precision and ambition behind the product itself. At OneBranding, we transform information into a clear visual system where structure, typography, composition and storytelling work as one. Every detail is considered to communicate value with clarity, strengthen perception and present the brand at the level it deserves."
+      "text": "A strong presentation should reflect the same level of quality, precision and ambition behind the product itself. At OneBranding, we transform information into a clear visual system where structure, typography, composition and storytelling work as one. Every detail is considered to communicate value with clarity, strengthen perception and present the brand at the level it deserves.",
+      "cta": "lets go!",
+      "more": "Learn more about Presentations"
+    },
+    "social": {
+      "one": "ONE",
+      "brand": "BRAND.",
+      "visual": "VISUAL",
+      "language": "LANGUAGE.",
+      "text": "Social media is one of the most important touchpoints between a brand and its audience. Every post, story, campaign and advertising creative should feel like part of one strong visual system. At OneBranding, we create Social Identity systems where typography, colors, photography, composition and graphic elements work together consistently across every format.",
+      "textStrong": "The result is more than a beautiful Instagram feed.",
+      "text2": "It is a distinctive visual language that strengthens recognition, builds trust and makes your brand look professional at every interaction."
+    },
+    "services": {
+      "one": "ONE",
+      "partner": "PARTNER.",
+      "every": "EVERY",
+      "solution": "SOLUTION.",
+      "subtitle": "Strategy, design, content and technology. Connected around one vision.",
+      "selected": "Selected service",
+      "explore": "Explore service",
+      "closingFirst": "Every part connected.",
+      "closingLead": "Working as ",
+      "closingAccent": "one.",
+      "items": {
+        "01": {
+          "name": "Brand Strategy & Naming",
+          "description": "Research, positioning and names with purpose.",
+          "tagline": "Clear strategy. A name that lasts."
+        },
+        "02": {
+          "name": "Branding & Rebranding",
+          "description": "Logos, identity systems and brand guidelines.",
+          "tagline": "One identity. Every touchpoint."
+        },
+        "03": {
+          "name": "Packaging Design",
+          "description": "Packaging built to stand out on the shelf.",
+          "tagline": "Designed to be picked up first."
+        },
+        "04": {
+          "name": "Graphic & Print Design",
+          "description": "Menus, catalogs and branded print materials.",
+          "tagline": "Every page in one visual language."
+        },
+        "05": {
+          "name": "Social Media & Campaigns",
+          "description": "Content systems and campaigns that connect.",
+          "tagline": "One voice across every feed."
+        },
+        "06": {
+          "name": "Photography & Retouching",
+          "description": "Premium brand and product imagery.",
+          "tagline": "Images that make the product sell."
+        },
+        "07": {
+          "name": "Video, 3D & Motion Design",
+          "description": "Visualization and animation that bring ideas to life.",
+          "tagline": "Ideas that move."
+        },
+        "08": {
+          "name": "Presentation Design",
+          "description": "Clear stories. Convincing presentations.",
+          "tagline": "Stories that win the room."
+        },
+        "09": {
+          "name": "Website Design & Development",
+          "description": "Custom websites built around your business.",
+          "tagline": "Your brand, live on the web."
+        },
+        "10": {
+          "name": "UI/UX & App Design",
+          "description": "Intuitive experiences for web and mobile.",
+          "tagline": "Simple to use. Hard to forget."
+        },
+        "11": {
+          "name": "CRM, ERP & Odoo Solutions",
+          "description": "Connected systems. Smarter operations.",
+          "tagline": "Every process in one system."
+        },
+        "12": {
+          "name": "Signage & Exhibition Design",
+          "description": "Your identity, brought into physical spaces.",
+          "tagline": "Your brand, life-size."
+        }
+      }
+    },
+    "vision": {
+      "brand": "OneBranding",
+      "lineFirst": "One vision.",
+      "lineSecond": "Every solution.",
+      "label": "Awwwards / Design concept",
+      "year": "2026",
+      "cta": "Learn more"
+    },
+    "compare": {
+      "titleFirst": "Make your brand look better",
+      "titleLead": "with ",
+      "titleAccent": "character identity",
+      "hint": "*slide",
+      "before": "Before",
+      "after": "After",
+      "label": "Before and after",
+      "prev": "Previous project",
+      "next": "Next project",
+      "cta": "view projects"
+    },
+    "audit": {
+      "eyebrow": "Business audit & strategy",
+      "lineFirst": "From problem",
+      "lineSecond": "to progress.",
+      "asideFirst": "A clear view of your business.",
+      "asideSecond": "A precise plan for what comes next.",
+      "current": "Current state",
+      "target": "Target state",
+      "steps": {
+        "audit": "Audit",
+        "analysis": "Analysis",
+        "strategy": "Strategy",
+        "action": "Action"
+      },
+      "planAccent": "One plan.",
+      "planRest": "Clear priorities. Measurable goals.",
+      "text": "We examine your business, identify what is holding it back, and map a clear path from point A to point B. Through audit and analysis, we turn data into precise priorities, practical solutions, and a strategy built around measurable goals. You get a roadmap that defines what to change, why it matters, and how to move forward.",
+      "cta": "Learn more"
+    },
+    "clients": {
+      "titleFirst": "More than",
+      "count": "3000",
+      "titleRest": "clients",
+      "text": "We are lucky to have produced presentation materials for all sectors of activity and sizes of companies, in all graphic worlds.",
+      "trustStrong": "200+ listed companies",
+      "trustRest": "have placed their trust in us.",
+      "showAll": "Show all {count} clients"
     }
   },
   "projectsPage": {

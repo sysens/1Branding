@@ -10,6 +10,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 type Slide = { src: string; ratio: number };
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 const wide = 2.6; // 16:9 project shots cropped to a banner
 const ROWS: Slide[][] = [
@@ -89,6 +90,12 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    <!-- No presentations page yet: the button leads to the projects. -->
+    <div class="pgallery__cta">
+      <NuxtLink :to="localePath('/Projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
+      <p class="pgallery__more">{{ t("home.presentations.more") }}</p>
+    </div>
+    <div class="pgallery__rule" aria-hidden="true" />
   </section>
 </template>
 
@@ -96,7 +103,7 @@ onBeforeUnmount(() => {
 /* --g is slidor's rem: 16px up to 1440px wide, then growing with the screen. */
 .pgallery {
   --g: 16px;
-  padding: clamp(2rem, 3.5vw, 4.5rem) 0 clamp(4rem, 7vw, 8rem);
+  padding: clamp(2rem, 3.5vw, 4.5rem) 0 clamp(1.5rem, 2.5vw, 3rem);
   background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */
@@ -197,6 +204,67 @@ onBeforeUnmount(() => {
   height: 100%;
   object-fit: cover;
   user-select: none;
+}
+
+/* "lets go!" pill, the caption under it and a green rule closing the section. */
+.pgallery__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 1.3vw, 1.6rem);
+  margin-top: clamp(2.75rem, 4.8vw, 6rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+
+.pgallery__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3em 1.05em 0.36em;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse 70% 60% at 70% 10%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 70%),
+    linear-gradient(100deg, #00b52b 0%, #00e536 45%, #00f83c 70%, #00cf31 100%);
+  box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35);
+  color: #062b10;
+  font-size: clamp(1.55rem, 2.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pgallery__button:hover,
+.pgallery__button:focus-visible {
+  transform: scale(1.04);
+  box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35), 0 0 2.2rem rgb(0 240 58 / 0.45);
+}
+
+.pgallery__button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.pgallery__more {
+  margin: 0;
+  background: linear-gradient(90deg, #8c8c8c 0%, #fff 22%, #fff 78%, #8c8c8c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.15rem, 1.7vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.pgallery__rule {
+  width: 86%;
+  height: 3px;
+  margin: clamp(2.5rem, 4.4vw, 5.5rem) auto 0;
+  background: linear-gradient(90deg, rgb(0 255 42 / 0) 0%, #00ff2a 14%, #00ff2a 86%, rgb(0 255 42 / 0) 100%);
+  filter: drop-shadow(0 0 5px rgb(0 255 42 / 0.55));
 }
 
 @media (min-width: 1441px) {
