@@ -26,7 +26,10 @@ describe("brand stories", () => {
     expect(tail.indexOf("<LazyHomeBrandCompare")).toBeGreaterThan(tail.indexOf("<LazyHomeAwardVision"));
     expect(tail.indexOf("<LazyHomeAuditStrategy")).toBeGreaterThan(tail.indexOf("<LazyHomeBrandCompare"));
     expect(tail.indexOf("<LazyHomeClientsGrid")).toBeGreaterThan(tail.indexOf("<LazyHomeAuditStrategy"));
-    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeClientsGrid"));
+    expect(tail.indexOf("<LazyHomeFreshProjects")).toBeGreaterThan(tail.indexOf("<LazyHomeClientsGrid"));
+    expect(tail.indexOf("<LazyHomeFaqAccordion")).toBeGreaterThan(tail.indexOf("<LazyHomeFreshProjects"));
+    expect(tail.indexOf("<LazyHomeRobotShowcase")).toBeGreaterThan(tail.indexOf("<LazyHomeFaqAccordion"));
+    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeRobotShowcase"));
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);
     expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('url("/home/scene.jpg")');
     for (const removed of ["GridSection", "EarthDives", "ProjectTabletShowcase", "ThreeLayerSlug", "RowShorteners"]) expect(source).not.toContain(removed);

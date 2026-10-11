@@ -98,6 +98,9 @@ usePageSeo({
           <LazyHomeBrandCompare :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeFaqAccordion :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
           <LazyFooter :hydrate-on-visible="LAZY_HYDRATION" use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
         </div>
       </div>

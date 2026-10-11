@@ -1,31 +1,16 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
 
 // "ONE PARTNER. EVERY SOLUTION." — the twelve services as a list; picking one
 // swaps the picture, name and line in the card beside it (the button stays).
-// The pictures are stand-ins from our own projects until real ones exist.
-
-// An array, not an object: object keys "10"-"12" would sort ahead of "01".
-const SERVICES = [
-  ["01", "/home/threeLayerLocal/15.webp"],
-  ["02", "/home/threeLayerLocal/14.webp"],
-  ["03", "/home/w1280/Quaker.webp"],
-  ["04", "/home/threeLayerLocal/36.webp"],
-  ["05", "/home/threeLayerLocal/33.webp"],
-  ["06", "/home/threeLayerLocal/22.webp"],
-  ["07", "/home/threeLayerLocal/12.webp"],
-  ["08", "/home/threeLayerLocal/19.webp"],
-  ["09", "/home/threeLayerLocal/28.webp"],
-  ["10", "/home/threeLayerLocal/39.webp"],
-  ["11", "/home/Frame331.jpg"],
-  ["12", "/home/scene.jpg"],
-] as const;
+// The list and its stand-in pictures come from utils/servicesCatalog.ts.
 
 const { t } = useI18n();
 const localePath = useLocalePath();
 const img = useImage();
 
-const services = computed(() => SERVICES.map(([id, image]) => ({
+const services = computed(() => SERVICE_CATALOG.map(({ id, image }) => ({
   id,
   name: t(`home.services.items.${id}.name`),
   description: t(`home.services.items.${id}.description`),
@@ -39,7 +24,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
 
 <template>
   <!-- The copy is English in both locales. -->
-  <section class="services" lang="en" aria-labelledby="services-title">
+  <section id="services" class="services" lang="en" aria-labelledby="services-title">
     <h2 id="services-title" class="services__title">
       <span class="services__one">{{ t("home.services.one") }}</span>
       <span class="services__rest">

@@ -99,7 +99,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 
 <template>
   <!-- The copy is English in both locales. -->
-  <section class="audit" lang="en" aria-labelledby="audit-title">
+  <section id="audit" class="audit" lang="en" aria-labelledby="audit-title">
     <p class="audit__title">{{ t("home.audit.eyebrow") }}</p>
 
     <div class="audit__frame">

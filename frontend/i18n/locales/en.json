@@ -9,7 +9,8 @@
     "projects": "Projects",
     "contacts": "Contacts",
     "prices": "Prices",
-    "news": "News"
+    "news": "News",
+    "services": "Services"
   },
   "brand": {
     "one": "One",
@@ -364,6 +365,49 @@
       "trustStrong": "200+ listed companies",
       "trustRest": "have placed their trust in us.",
       "showAll": "Show all {count} clients"
+    },
+    "faq": {
+      "titleLead": "Frequently asked",
+      "titleAccent": "questions",
+      "items": [
+        {
+          "q": "How does the project process work?",
+          "a": "Every project runs in clear stages: a brief and research into your market, strategy and concept, design, refinement with your feedback, and the final hand-over. You see progress at each step and approve it before we move on."
+        },
+        {
+          "q": "How long does it take to develop a brand?",
+          "a": "It depends on the scope. A focused identity usually takes 2 to 6 weeks; a full brand system with naming, packaging or a website takes longer. We agree on the timeline before we start and keep to it."
+        },
+        {
+          "q": "What does branding include?",
+          "a": "Strategy and positioning, naming if needed, the logo and identity system, colours, typography, graphic elements and a brand book with clear rules — plus the applications you need, from packaging to social media and the website."
+        },
+        {
+          "q": "Can changes be made during the process?",
+          "a": "Yes. Each stage includes rounds of revisions, and we work closely with you so the result reflects your goals. Larger changes in direction are discussed openly and planned in."
+        },
+        {
+          "q": "Do you work with international projects?",
+          "a": "Yes. We work with clients in Uzbekistan and abroad, remotely or on site, in Uzbek, Russian and English, and we design with international markets and standards in mind."
+        },
+        {
+          "q": "What is required to start?",
+          "a": "A short conversation about your business, goals and audience. We send you a brief, agree on scope, timeline and price, sign a contract — and start with research."
+        },
+        {
+          "q": "Why is the cost above average?",
+          "a": "Because you get a complete system rather than a single logo: research, strategy, a team of specialists and a brand that works across every touchpoint. It is an investment that keeps paying off as your business grows."
+        },
+        {
+          "q": "What materials will I receive at the end?",
+          "a": "All final files in the formats you need (vector, print and web), the brand book with usage rules, source files and the agreed applications — everything your team and partners need to use the brand correctly."
+        }
+      ]
+    },
+    "fresh": {
+      "accent": "Fresh",
+      "rest": "projects",
+      "more": "More"
     }
   },
   "projectsPage": {
@@ -449,5 +493,33 @@
       "email": "E-mail*",
       "agreement": "By submitting the request, you agree to the user agreement"
     }
+  },
+  "footerNew": {
+    "headlineFirst": "Let’s build",
+    "headlineLead": "what’s",
+    "headlineAccent": "next.",
+    "ready": "Ready to bring it all together?",
+    "pitchFirst": "Branding, design and technology.",
+    "pitchSecond": "One partner from idea to launch.",
+    "start": "Start your project",
+    "navLabel": "Footer",
+    "explore": "Explore",
+    "work": "Work",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "expertise": "Expertise",
+    "branding": "Branding",
+    "packaging": "Packaging",
+    "photography": "Photography",
+    "web": "Web & Systems",
+    "information": "Information",
+    "process": "Our process",
+    "guarantee": "One’s Guarantee",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "social": "Social",
+    "tagline": "One vision. Every solution.",
+    "rights": "All rights reserved."
   }
 }

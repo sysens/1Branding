@@ -25,6 +25,8 @@
         <div
           class="menuLink hidden min-[950px]:flex flex-1 items-center justify-center gap-5 min-[950px]:gap-[40px]"
         >
+          <HeaderServicesMenu />
+
           <a
             class="font-['Inter'] font-normal whitespace-nowrap text-white text-[18px] leading-[18px] tracking-[0] align-middle hover:text-[#03CB00]"
             :href="localePath('/About')"
@@ -197,6 +199,16 @@
 
           <div class="px-[20px]">
             <a
+              :href="`${localePath('/')}#services`"
+              @click.prevent="goTo(`${localePath('/')}#services`)"
+              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+            >
+              {{ $t("nav.services") }}
+            </a>
+
+            <div class="h-px bg-white/10"></div>
+
+            <a
               :href="localePath('/About')"
               @click.prevent="goTo(localePath('/About'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
@@ -319,6 +331,7 @@
 
 <script setup lang="ts">
 import { watch, onBeforeUnmount, nextTick, computed } from "vue";
+import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
 
 type AppLocale = "ru" | "en";
 
@@ -473,6 +486,13 @@ onBeforeUnmount(() => {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   will-change: transform;
+}
+
+/* Seven items (Services added): tighter gaps until the pill is roomy. */
+@media (min-width: 950px) and (max-width: 1199px) {
+  .site-header .menuLink {
+    gap: 24px;
+  }
 }
 
 /* Keep the header's laptop proportions on 1920px+ monitors (sizes are px). */
