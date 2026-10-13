@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { computed, ref } from "vue";
+import { optEntry } from "~/utils/optImage";
 import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
 
 // "ONE PARTNER. EVERY SOLUTION." — the twelve services as a list; picking one
@@ -8,15 +10,27 @@ import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const img = useImage();
 
-const services = computed(() => SERVICE_CATALOG.map(({ id, image }) => ({
-  id,
-  name: t(`home.services.items.${id}.name`),
-  description: t(`home.services.items.${id}.description`),
-  tagline: t(`home.services.items.${id}.tagline`),
-  image: img(image, { width: 1040, height: 780, fit: "cover", format: "webp", quality: 80 }),
-})));
+// The pictures fill a 4:3 box (object-fit: cover), so a wider source is drawn
+// wider than the box by `zoom`: `sizes` asks for that width. The card's box is
+// ~26vw (at most 460px); the phones' one under its row ~83vw.
+const coverZoom = (src: string) => {
+  const entry = optEntry(src);
+  return entry ? Math.max(1, entry.w / entry.h / (4 / 3)) : 1;
+};
+
+const services = computed(() => SERVICE_CATALOG.map(({ id, image }) => {
+  const zoom = coverZoom(image);
+  return {
+    id,
+    name: t(`home.services.items.${id}.name`),
+    description: t(`home.services.items.${id}.description`),
+    tagline: t(`home.services.items.${id}.tagline`),
+    image,
+    cardSizes: `min(${Math.ceil(26 * zoom)}vw, ${Math.ceil(460 * zoom)}px)`,
+    inlineSizes: `${Math.ceil(83 * zoom)}vw`,
+  };
+}));
 
 const selectedId = ref("02");
 const selected = computed(() => services.value.find((service) => service.id === selectedId.value)!);
@@ -45,7 +59,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
           </button>
           <!-- Phones: the picked service opens in place instead of in the card. -->
           <div v-if="service.id === selectedId" class="services__inline">
-            <img :src="service.image" alt="" width="1040" height="780" loading="lazy" decoding="async">
+            <OptImage :src="service.image" :sizes="service.inlineSizes" alt="" width="1040" height="780" loading="lazy" decoding="async" />
             <p>{{ service.tagline }}</p>
           </div>
         </li>
@@ -57,7 +71,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
           <Transition name="services-swap" mode="out-in">
             <div :key="selected.id" class="services__selected">
               <div class="services__picture">
-                <img :src="selected.image" :alt="selected.name" width="1040" height="780" loading="lazy" decoding="async">
+                <OptImage :src="selected.image" :sizes="selected.cardSizes" :alt="selected.name" width="1040" height="780" loading="lazy" decoding="async" />
               </div>
               <h3 class="services__card-title">{{ selected.name }}</h3>
               <p class="services__tagline">{{ selected.tagline }}</p>
@@ -290,7 +304,8 @@ const selected = computed(() => services.value.find((service) => service.id === 
   background: #151515;
 }
 
-.services__picture img {
+/* :deep: the <img> is inside OptImage's <picture>. */
+.services__picture :deep(img) {
   display: block;
   width: 100%;
   height: 100%;
@@ -406,7 +421,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
     padding: 0.5rem 0.75rem 1.1rem;
   }
 
-  .services__inline img {
+  .services__inline :deep(img) {
     display: block;
     width: 100%;
     height: auto;

@@ -117,10 +117,12 @@ onBeforeUnmount(() => clearTimeout(closer));
   padding: 0;
   border: 0;
   background: none;
-  color: #fff;
-  font-family: "Inter", sans-serif;
-  font-size: 18px;
-  line-height: 18px;
+  color: #efefef;
+  /* The header's link type (Header.vue sets --nav-size). */
+  font-size: var(--nav-size, 16px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -134,7 +136,8 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__label {
   position: relative;
   display: grid;
-  height: 18px;
+  height: 1.15em;
+  line-height: 1.15em;
   overflow: hidden;
 }
 
@@ -157,7 +160,9 @@ onBeforeUnmount(() => clearTimeout(closer));
   transform: translateY(0);
 }
 
+/* The design's "Services" has no arrow; the label still rolls on hover. */
 .svc__chevron {
+  display: none;
   width: 16px;
   height: 16px;
   fill: none;
@@ -200,7 +205,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__panel {
   position: fixed;
   z-index: 1001;
-  top: calc(30px + var(--header-h, 66px) + 14px);
+  top: calc(30px + var(--header-h, 64px) + 14px);
   left: 0;
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
@@ -337,17 +342,9 @@ onBeforeUnmount(() => clearTimeout(closer));
 }
 
 @media (min-width: 1920px) {
-  .svc__trigger {
-    font-size: clamp(18px, 0.9375vw, 23px);
-  }
-
-  .svc__label {
-    height: clamp(18px, 0.9375vw, 23px);
-    line-height: clamp(18px, 0.9375vw, 23px);
-  }
 
   .svc__panel {
-    --header-h: clamp(66px, 3.44vw, 86px);
+    --header-h: clamp(64px, 3.2vw, 84px);
   }
 }
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 // "ONE BRAND. VISUAL LANGUAGE." with a wall of BRRGRR social posts, animated
@@ -23,6 +24,9 @@ const COLUMNS: Post[][] = [
 const START = [-10, 0, -7, 0, -3];
 const END = [3, -5, 1, -7, 3];
 const postSrc = (post: Post) => `/home/social/brrgrr-${post}.webp`;
+// Posts are --col wide (27.2vw, 44vw on phones) and zoom up to 1.5x while the
+// wall scrolls out, so the copy is picked for the zoomed size.
+const POST_SIZES = "(max-width: 767px) 66vw, 41vw";
 
 const grid = ref<HTMLElement | null>(null);
 let frame = 0;
@@ -88,7 +92,7 @@ onBeforeUnmount(() => {
       <div ref="grid" class="social__grid" aria-hidden="true">
         <div v-for="(column, index) in COLUMNS" :key="index" class="social__column" :class="{ 'social__column--low': index % 2 === 0 }" :data-column="index">
           <div v-for="(post, row) in column" :key="row" class="social__post">
-            <img :src="postSrc(post)" alt="" width="544" height="680" loading="lazy" decoding="async" draggable="false">
+            <OptImage :src="postSrc(post)" :sizes="POST_SIZES" alt="" width="544" height="680" loading="lazy" decoding="async" draggable="false" />
           </div>
         </div>
       </div>
@@ -235,7 +239,8 @@ onBeforeUnmount(() => {
   background: #3a0606;
 }
 
-.social__post img {
+/* :deep: the <img> is rendered inside OptImage. */
+.social__post :deep(img) {
   display: block;
   width: 100%;
   height: 100%;

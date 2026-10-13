@@ -258,3 +258,9 @@
         translate: 0 0;
     }
 }
+
+/* OptImage / optPictureHtml: the <picture> takes no box of its own, so styles
+   written for the <img> (object-fit, absolute insets...) keep working. */
+.opt-picture {
+    display: contents;
+}

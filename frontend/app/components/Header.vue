@@ -3,89 +3,50 @@
     <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[1100px] mt-[20px] min-[950px]:mt-[0px] flex min-[950px]:mx-auto p-3 border h-[76px] min-[950px]:h-[66px] mx-[20px] min-[950px]:rounded-[60px] rounde-d-[50px] border-[#03CB00] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-none"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[34px] min-[950px]:pr-[14px] border h-[76px] min-[950px]:h-[64px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
-        <div class="logoImg p-[18px] flex items-center">
-          <a
-            :href="localePath('/')"
-            class="flex items-center"
-            @click.prevent="goTo(localePath('/'))"
-          >
-            <img
-              class="w-[72px] h-[44px] pt-1 scale-125 block object-contain"
-              src="/header/logo.webp"
-              alt="OneBranding"
-              width="216"
-              height="140"
-              fetchpriority="high"
-            />
-          </a>
-        </div>
-
-        <div
-          class="menuLink hidden min-[950px]:flex flex-1 items-center justify-center gap-5 min-[950px]:gap-[40px]"
+        <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
+        <a
+          :href="localePath('/')"
+          class="site-logo"
+          aria-label="OneBranding"
+          @click.prevent="goTo(localePath('/'))"
         >
-          <HeaderServicesMenu />
+          <span class="site-logo__one">{{ $t("brand.one") }}</span>Branding
+        </a>
 
-          <a
-            class="font-['Inter'] font-normal whitespace-nowrap text-white text-[18px] leading-[18px] tracking-[0] align-middle hover:text-[#03CB00]"
-            :href="localePath('/About')"
-            @click.prevent="goTo(localePath('/About'))"
-          >
+        <nav class="menuLink site-nav hidden min-[950px]:flex flex-1 items-center justify-center">
+          <a class="site-nav__link" :href="localePath('/About')" @click.prevent="goTo(localePath('/About'))">
             {{ $t("nav.about") }}
           </a>
-
-          <a
-            class="font-['Inter'] font-normal text-white text-[18px] leading-[18px] tracking-[0] align-middle transition-colors duration-300 hover:text-[#03CB00]"
-            :href="localePath('/Projects')"
-            @click.prevent="goTo(localePath('/Projects'))"
-          >
+          <a class="site-nav__link" :href="localePath('/Projects')" @click.prevent="goTo(localePath('/Projects'))">
             {{ $t("nav.projects") }}
           </a>
-
-          <a
-            class="font-['Inter'] font-normal text-white text-[18px] leading-[18px] tracking-[0] align-middle transition-colors duration-300 hover:text-[#03CB00]"
-            :href="localePath('/Costs')"
-            @click.prevent="goTo(localePath('/Costs'))"
-          >
+          <HeaderServicesMenu />
+          <a class="site-nav__link" :href="localePath('/Costs')" @click.prevent="goTo(localePath('/Costs'))">
             {{ $t("nav.prices") }}
           </a>
-
-          <a
-            class="font-['Inter'] font-normal text-white text-[18px] leading-[18px] tracking-[0] align-middle transition-colors duration-300 hover:text-[#03CB00]"
-            :href="localePath('/News')"
-            @click.prevent="goTo(localePath('/News'))"
-          >
-            {{ $t("nav.news") }}
-          </a>
-
-          <a
-            class="font-['Inter'] font-normal text-white text-[18px] leading-[18px] tracking-[0] align-middle transition-colors duration-300 hover:text-[#03CB00]"
-            :href="localePath('/ContactPage')"
-            @click.prevent="goTo(localePath('/ContactPage'))"
-          >
+          <a class="site-nav__link" :href="localePath('/ContactPage')" @click.prevent="goTo(localePath('/ContactPage'))">
             {{ $t("nav.contacts") }}
           </a>
 
+          <!-- Not in the design, but the only way to the Russian site on desktop. -->
           <div class="relative">
             <button
               type="button"
+              class="site-nav__link site-nav__lang"
+              :aria-expanded="isLangOpen"
               @click="isLangOpen = !isLangOpen"
-              class="font-['Inter'] font-normal text-[18px] leading-[18px] tracking-normal align-middle bg-transparent text-white cursor-pointer flex items-center gap-2 transition-colors duration-300 hover:text-[#03CB00]"
             >
               <span>{{ lang === "ru" ? "ru" : "en" }}</span>
               <svg
-                class="w-4 h-4 transition-transform duration-200"
+                class="w-3.5 h-3.5 transition-transform duration-200"
                 :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
                 viewBox="0 0 24 24"
                 fill="none"
+                aria-hidden="true"
               >
-                <path
-                  d="M6 9l6 6 6-6"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
               </svg>
             </button>
 
@@ -99,42 +60,23 @@
             >
               <div
                 v-if="isLangOpen"
-                class="absolute left-1/2 -translate-x-1/2 top-[48px] w-[65px] h-[106px] rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
+                class="absolute left-1/2 -translate-x-1/2 top-[44px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
               >
-                <button
-                  type="button"
-                  @click="pickLang('en')"
-                  class="w-full pt-7 text-center text-white font-['Inter'] transition font-normal text-[18px] leading-[18px] tracking-normal align-middle duration-300 hover:text-[#03CB00]"
-                >
-                  en
-                </button>
-                <button
-                  type="button"
-                  @click="pickLang('ru')"
-                  class="w-full pt-5 text-center text-white font-['Inter'] transition font-normal text-[18px] leading-[18px] tracking-normal align-middle duration-300 hover:text-[#03CB00]"
-                >
-                  ru
-                </button>
+                <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('en')">en</button>
+                <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('ru')">ru</button>
               </div>
             </transition>
           </div>
-        </div>
+        </nav>
 
-        <div
-          class="bg-[url('/header/Ellipse (2).png')] bg-center bg-cover hidden min-[950px]:block"
-        >
-          <div class="OneGuarantee flex justify-end">
-            <a
-              :href="localePath('/Oneguarantee')"
-              class="shake-btn w-[190px] h-[52px] min-[950px]:h-[40px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] text-white rounded-[40px]"
-              @click.prevent="goTo(localePath('/Oneguarantee'))"
-            >
-              <span class="font-['Inter'] font-normal text-[18px] leading-[120%]">
-                <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
-                {{ $t("brand.oneGuaranteeSuffix") }}
-              </span>
-            </a>
-          </div>
+        <div class="hidden min-[950px]:flex items-center">
+          <a
+            :href="localePath('/Oneguarantee')"
+            class="site-guarantee"
+            @click.prevent="goTo(localePath('/Oneguarantee'))"
+          >
+            <span class="site-guarantee__one">{{ $t("brand.one") }}</span>{{ $t("brand.oneGuaranteeSuffix") }}
+          </a>
         </div>
 
         <div class="flex-1 relative block min-[950px]:hidden">
@@ -454,6 +396,90 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
+/* Header type, after the design: a semibold, slightly tracked face for the
+   links and the button, the wordmark larger. The design's 2000px frame has
+   these px sizes; wider screens scale them up (see the 1920px block). */
+.site-header {
+  --nav-size: 15px;
+  --logo-size: 27px;
+}
+
+.site-logo {
+  flex-shrink: 0;
+  color: #fff;
+  font-size: var(--logo-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.site-logo__one {
+  color: #17c93b;
+}
+
+.site-nav {
+  gap: 22px;
+}
+
+.site-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #efefef;
+  font-size: var(--nav-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.site-nav__link:hover {
+  color: #03cb00;
+}
+
+.site-guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 168px;
+  height: 34px;
+  border: 1px solid rgb(64 140 52 / 0.85);
+  border-radius: 40px;
+  background: #000;
+  color: #fff;
+  font-size: var(--nav-size);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.site-guarantee:hover,
+.site-guarantee:focus-visible {
+  border-color: #03cb00;
+  box-shadow: 0 0 18px rgb(3 203 0 / 0.45);
+}
+
+.site-guarantee__one {
+  color: #36c536;
+}
+
+@media (max-width: 949px) {
+  .site-logo {
+    margin-left: 14px;
+    font-size: 26px;
+  }
+}
+
 .shake-btn {
   box-shadow: 0 0 15px #03cb00;
   animation: glowBlink 3s ease-in-out infinite;
@@ -488,38 +514,33 @@ onBeforeUnmount(() => {
   will-change: transform;
 }
 
-/* Seven items (Services added): tighter gaps until the pill is roomy. */
-@media (min-width: 950px) and (max-width: 1199px) {
-  .site-header .menuLink {
-    gap: 24px;
+/* Narrow desktops: the items close up. */
+@media (min-width: 950px) and (max-width: 1099px) {
+  .site-header {
+    --logo-size: 24px;
+  }
+
+  .site-header .site-nav {
+    gap: 16px;
   }
 }
 
 /* Keep the header's laptop proportions on 1920px+ monitors (sizes are px). */
 @media (min-width: 1920px) {
   .site-header {
-    max-width: clamp(1100px, 57.3vw, 1460px);
-    height: clamp(66px, 3.44vw, 86px);
+    --nav-size: clamp(15px, 0.75vw, 20px);
+    --logo-size: clamp(27px, 1.35vw, 36px);
+    max-width: clamp(980px, 49vw, 1300px);
+    height: clamp(64px, 3.2vw, 84px);
   }
 
-  .site-header .menuLink {
-    gap: clamp(40px, 2.08vw, 54px);
+  .site-header .site-nav {
+    gap: clamp(22px, 1.1vw, 30px);
   }
 
-  .site-header .menuLink a,
-  .site-header .menuLink button,
-  .site-header .OneGuarantee a span {
-    font-size: clamp(18px, 0.9375vw, 23px);
-  }
-
-  .site-header .OneGuarantee a {
-    width: clamp(190px, 9.9vw, 250px);
-    height: clamp(40px, 2.08vw, 52px);
-  }
-
-  .site-header .logoImg img {
-    width: clamp(72px, 3.75vw, 94px);
-    height: auto;
+  .site-guarantee {
+    width: clamp(168px, 8.4vw, 220px);
+    height: clamp(34px, 1.7vw, 45px);
   }
 }
 </style>

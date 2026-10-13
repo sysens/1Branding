@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
+
 // "Fresh projects": two endless rows of project cards, the top row running to
 // the right and the bottom one to the left. Each row holds its cards twice and
 // slides by exactly one set, so the loop has no seam. Hovering a row slows it.
@@ -12,9 +14,6 @@ const rows = [
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const img = useImage();
-const card = (src: string, width: number) => img(src, { width, height: Math.round((width * 285) / 505), fit: "cover", format: "webp", quality: 80 });
-const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, width)} ${width}w`).join(", ");
 </script>
 
 <template>
@@ -29,7 +28,7 @@ const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, widt
         <div class="fresh__track">
           <div v-for="copy in 2" :key="copy" class="fresh__set">
             <div v-for="src in row.cards" :key="`${copy}-${src}`" class="fresh__card">
-              <img :src="card(src, 640)" :srcset="srcset(src)" sizes="(max-width: 767px) 70vw, 25.25vw" alt="" width="505" height="285" loading="lazy" decoding="async" draggable="false">
+              <OptImage :src="src" sizes="(max-width: 767px) 70vw, 25.25vw" alt="" width="505" height="285" loading="lazy" decoding="async" draggable="false" />
             </div>
           </div>
         </div>
@@ -125,7 +124,9 @@ const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, widt
   background: #111;
 }
 
-.fresh__card img {
+/* The <img> sits inside OptImage, out of reach of a plain scoped selector;
+   cover trims the 16:9 copies to the 505:285 card. */
+.fresh__card :deep(img) {
   display: block;
   width: 100%;
   height: 100%;
@@ -134,7 +135,7 @@ const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, widt
   user-select: none;
 }
 
-.fresh__card:hover img {
+.fresh__card:hover :deep(img) {
   transform: scale(1.05);
 }
 

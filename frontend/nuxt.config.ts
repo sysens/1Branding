@@ -154,6 +154,8 @@ export default defineNuxtConfig({
     "/header/**": { headers: publicAssetCacheHeaders },
     "/footer/**": { headers: publicAssetCacheHeaders },
     "/globe/**": { headers: publicAssetCacheHeaders },
+    // Build-time image copies carry their content hash in the name.
+    "/opt/**": { headers: { "cache-control": "public, max-age=31536000, immutable" } },
     "/home/threeLayerLocal/**": {
       headers: longTermImageCacheHeaders,
     },

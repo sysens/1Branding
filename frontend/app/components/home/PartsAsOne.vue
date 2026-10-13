@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { optLargest } from "~/utils/optImage";
 
 // "Every part. Working as ONE." — the design's own render, cut into layers
 // (public/home/parts, made by scripts/parts-layers.py): the chrome tubes, the
@@ -96,6 +98,15 @@ const box = ([x, y, w, h]: Rect) => ({
   height: percent(h / ART_H),
 });
 const oneOrigin = `${percent((JOINT[0] - ONE[0]) / ONE[2])} ${percent((JOINT[1] - ONE[1]) / ONE[3])}`;
+
+// The layers are transparent, so OptImage serves each as a single full-size
+// copy (no smaller ones, no blurred preview). Their drawn width, for `sizes`:
+// --u is at most 0.05vw, and 0.4px on portrait phones; ONE starts 1.08× larger.
+const layerSizes = (width: number, scale = 1) => {
+  const art = width * ART_SCALE * scale;
+  return `(max-width: 767px) and (orientation: portrait) ${Math.ceil(art * 0.4)}px, ${Math.ceil(art * 0.05)}vw`;
+};
+const cardSrc = (key: CardKey) => `/home/parts/${key}.webp`;
 
 const root = ref<HTMLElement | null>(null);
 const screen = ref<HTMLElement | null>(null);
@@ -326,7 +337,7 @@ onBeforeUnmount(() => {
       <div ref="stage" class="parts__stage" aria-hidden="true">
         <div class="parts__art">
           <div ref="tubes" class="parts__layer parts__tubes" :style="box(TUBES)">
-            <img src="/home/parts/tubes.webp" alt="" :width="TUBES[2]" :height="TUBES[3]" loading="lazy" decoding="async" draggable="false">
+            <OptImage src="/home/parts/tubes.webp" :sizes="layerSizes(TUBES[2])" :preview="false" alt="" :width="TUBES[2]" :height="TUBES[3]" loading="lazy" decoding="async" draggable="false" />
           </div>
           <div
             v-for="(card, index) in CARDS"
@@ -335,21 +346,22 @@ onBeforeUnmount(() => {
             :data-card="index"
             :style="{ ...box(card.rect), zIndex: 2 + index }"
           >
-            <img :src="`/home/parts/${card.key}.webp`" alt="" :width="card.rect[2]" :height="card.rect[3]" loading="lazy" decoding="async" draggable="false">
-            <span class="parts__sheen" data-sheen :style="{ '--card-image': `url(/home/parts/${card.key}.webp)` }" />
+            <OptImage :src="cardSrc(card.key)" :sizes="layerSizes(card.rect[2])" :preview="false" alt="" :width="card.rect[2]" :height="card.rect[3]" loading="lazy" decoding="async" draggable="false" />
+            <!-- The mask is the same AVIF file the card's <img> shows. -->
+            <span class="parts__sheen" data-sheen :style="{ '--card-image': `url(${optLargest(cardSrc(card.key))})` }" />
           </div>
           <div ref="one" class="parts__layer parts__one" :style="{ ...box(ONE), transformOrigin: oneOrigin }">
-            <img src="/home/parts/one.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+            <OptImage src="/home/parts/one.webp" :sizes="layerSizes(ONE[2], ONE_SCALE)" :preview="false" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false" />
             <!-- The cracks: the dark overlay closes them, the glow and its flash light them. -->
             <div class="parts__seams">
               <div ref="seamDark" class="parts__seam parts__seam--dark">
-                <img src="/home/parts/one-seams-dark.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+                <OptImage src="/home/parts/one-seams-dark.webp" :sizes="layerSizes(ONE[2], ONE_SCALE)" :preview="false" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false" />
               </div>
               <div ref="seamGlow" class="parts__seam parts__seam--glow">
-                <img src="/home/parts/one-seams-glow.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+                <OptImage src="/home/parts/one-seams-glow.webp" :sizes="layerSizes(ONE[2], ONE_SCALE)" :preview="false" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false" />
               </div>
               <div ref="seamHot" class="parts__seam parts__seam--hot">
-                <img src="/home/parts/one-seams-glow.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+                <OptImage src="/home/parts/one-seams-glow.webp" :sizes="layerSizes(ONE[2], ONE_SCALE)" :preview="false" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false" />
               </div>
             </div>
           </div>
@@ -458,7 +470,8 @@ onBeforeUnmount(() => {
   will-change: transform, opacity;
 }
 
-.parts__layer img {
+/* :deep — the <img>s are OptImage's. */
+.parts__layer :deep(img) {
   display: block;
   width: 100%;
   height: 100%;
@@ -516,20 +529,20 @@ onBeforeUnmount(() => {
   visibility: hidden;
 }
 
-.parts__seam img {
+.parts__seam :deep(img) {
   position: absolute;
   inset: 0;
 }
 
 /* The glow's top edge is the image's (the first crack starts right below it). */
-.parts__seam--glow img {
+.parts__seam--glow :deep(img) {
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 4%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 4%);
   opacity: 0.72;
   animation: parts-seam-pulse 3.4s ease-in-out infinite;
 }
 
-.parts__seam--hot img {
+.parts__seam--hot :deep(img) {
   filter: brightness(1.6) saturate(1.15);
 }
 

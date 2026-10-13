@@ -5,10 +5,10 @@
   },
   "nav": {
     "home": "Home",
-    "about": "About",
+    "about": "About Us",
     "projects": "Projects",
-    "contacts": "Contacts",
-    "prices": "Prices",
+    "contacts": "Contact",
+    "prices": "PriceList",
     "news": "News",
     "services": "Services"
   },
@@ -161,7 +161,10 @@
     },
     "world": {
       "eyebrow": "Building brands around the",
-      "word": "WORLD"
+      "word": "WORLD",
+      "lead": "We create strong and recognizable brands that meet",
+      "strong": "standards",
+      "closing": "and stand out in any market."
     },
     "digitalExperience": {
       "titleLines": [

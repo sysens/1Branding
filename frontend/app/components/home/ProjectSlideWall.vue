@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 // A diagonal wall of project slides (after slidor.agency's home intro): five
@@ -12,11 +13,8 @@ const ROWS = [
   [36, 39, 17, 40, 199],
 ].map((row) => row.map((id) => `/home/threeLayerLocal/${id}.webp`));
 
-// A slide is 26vw wide (32vw on phones), so 400-1280px covers phones to 4K.
-const img = useImage();
-const slideUrl = (src: string, width: number) =>
-  img(src, { width, height: Math.round((width * 9) / 16), format: "webp", quality: 80 });
-const slideSrcset = (src: string) => [400, 640, 960, 1280].map((width) => `${slideUrl(src, width)} ${width}w`).join(", ");
+// A slide is 26vw wide (32vw on phones): the drawn width that picks its copy.
+const SLIDE_SIZES = "(max-width: 479px) 32vw, 26vw";
 
 const root = ref<HTMLElement | null>(null);
 let frame = 0;
@@ -62,17 +60,16 @@ onBeforeUnmount(() => {
     <div class="slide-wall__lines">
       <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" class="slide-wall__line">
         <div v-for="src in row" :key="src" class="slide-wall__slide">
-          <img
-            :src="slideUrl(src, 640)"
-            :srcset="slideSrcset(src)"
-            sizes="(max-width: 479px) 32vw, 26vw"
+          <OptImage
+            :src="src"
+            :sizes="SLIDE_SIZES"
             alt=""
             width="1600"
             height="900"
             loading="lazy"
             decoding="async"
             draggable="false"
-          >
+          />
         </div>
       </div>
     </div>
@@ -115,7 +112,8 @@ onBeforeUnmount(() => {
   background: #111;
 }
 
-.slide-wall__slide img {
+/* :deep: the <img> is rendered inside OptImage. */
+.slide-wall__slide :deep(img) {
   display: block;
   width: 100%;
   height: 100%;

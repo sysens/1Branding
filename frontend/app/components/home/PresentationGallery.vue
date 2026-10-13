@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 // "Great products need more than quality." and a three-row slide gallery
@@ -20,11 +21,9 @@ const ROWS: Slide[][] = [
 ].map((row) => row.map((slide) => ({ ...slide, src: slide.src.startsWith("/") ? slide.src : `/home/threeLayerLocal/${slide.src}.webp` })));
 
 // Slides are 15 "rem" tall (7rem on phones), so their width is that times the
-// ratio; serve 480-1600px crops of the right shape.
-const img = useImage();
-const slideUrl = ({ src, ratio }: Slide, width: number) =>
-  img(src, { width, height: Math.round(width / ratio), fit: "cover", format: "webp", quality: 80 });
-const slideSrcset = (slide: Slide) => [480, 800, 1200, 1600].map((width) => `${slideUrl(slide, width)} ${width}w`).join(", ");
+// ratio. No slide is narrower than its photo's shape, so object-fit: cover
+// draws the photo at the slide's width (cropping top and bottom of the banner
+// ones) and that width is what `sizes` gives.
 const slideSizes = ({ ratio }: Slide) =>
   `(max-width: 991px) ${Math.round(112 * ratio)}px, (max-width: 1440px) ${Math.round(240 * ratio)}px, calc((150px + 6.25vw) * ${ratio.toFixed(3)})`;
 
@@ -77,15 +76,14 @@ onBeforeUnmount(() => {
       <div ref="grid" class="pgallery__grid" aria-hidden="true">
         <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" class="pgallery__line" :class="rowIndex % 2 ? 'pgallery__line--odd' : 'pgallery__line--even'">
           <div v-for="slide in row" :key="slide.src" class="pgallery__slide" :style="{ aspectRatio: slide.ratio }">
-            <img
-              :src="slideUrl(slide, 800)"
-              :srcset="slideSrcset(slide)"
+            <OptImage
+              :src="slide.src"
               :sizes="slideSizes(slide)"
               alt=""
               loading="lazy"
               decoding="async"
               draggable="false"
-            >
+            />
           </div>
         </div>
       </div>
@@ -206,7 +204,8 @@ onBeforeUnmount(() => {
   background: #141414;
 }
 
-.pgallery__slide img {
+/* :deep: the <img> is OptImage's, out of reach of a scoped selector. */
+.pgallery__slide :deep(img) {
   display: block;
   width: 100%;
   height: 100%;

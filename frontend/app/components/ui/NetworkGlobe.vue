@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { Pause, Play, RotateCcw } from "lucide-vue-next";
 import { useNetworkGlobe } from "~/composables/useNetworkGlobe";
 import { useViewportActivity } from "~/composables/useViewportActivity";
@@ -31,9 +32,12 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       @keydown="onKeydown"
     />
     <div v-show="showLabels" ref="labelsRef" class="network-globe__labels" aria-hidden="true" />
-    <img
+    <!-- sizes: the cover-fitted width in the landing's globe box (square on phones). -->
+    <OptImage
       v-show="status !== 'ready'"
-      :src="'/globe/preview-green.v1.webp'"
+      src="/globe/preview-green.v1.webp"
+      sizes="(max-width: 767px) 153vw, 1160px"
+      :preview="false"
       class="network-globe__fallback"
       alt="World globe with illuminated continents"
       width="1160"
@@ -135,7 +139,8 @@ button:focus-visible {
   color: #95ffae;
   outline: none;
 }
-.network-globe__fallback {
+/* :deep: the fallback <img> is rendered inside OptImage. */
+.network-globe :deep(.network-globe__fallback) {
   position: absolute;
   inset: 0;
   width: 100%;

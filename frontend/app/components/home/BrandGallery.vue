@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { splitIdentityTitle } from "~/utils/identityTitle";
 
@@ -97,7 +98,14 @@ onBeforeUnmount(() => {
           class="gallery__card"
           :style="{ '--ratio': card.ratio }"
         >
-          <img :src="card.src" :alt="card.alt" loading="lazy" decoding="async" draggable="false" />
+          <OptImage
+            :src="card.src"
+            :alt="card.alt"
+            :sizes="`(max-width: 767px) ${Math.ceil(70 * card.ratio)}vw, ${Math.ceil(34 * card.ratio)}vw`"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          />
         </figure>
         <div class="gallery__spacer" aria-hidden="true" />
       </div>
@@ -192,7 +200,8 @@ onBeforeUnmount(() => {
   width: calc(var(--end-padding) - var(--card-h) * 0.015);
 }
 
-.gallery__card img {
+/* :deep: the <img> sits inside OptImage, past this component's scope. */
+.gallery__card :deep(img) {
   display: block;
   width: 100%;
   height: 100%;

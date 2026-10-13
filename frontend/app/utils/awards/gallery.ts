@@ -1,5 +1,6 @@
 import { PerspectiveCamera, Scene } from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRenderer.js";
+import { optPictureHtml } from "../optImage";
 import { AWARD_ROWS, CAMERA_DISTANCE, CARD_HEIGHT, CARD_WIDTH, STAGE_HEIGHT, STAGE_WIDTH, artworkSource, getCardPosition } from "./layout";
 
 export interface AwardsGallery {
@@ -8,25 +9,24 @@ export interface AwardsGallery {
   dispose: () => void;
 }
 
+// The browser rasterises a card at no less than its CSS size (CARD_WIDTH), however
+// small the 3D projection then draws it, and a copy close to that size comes out
+// soft: ask for 1.5x.
+const ARTWORK_SIZES = `${CARD_WIDTH * 1.5}px`;
+
+// The artwork is a <picture> of its AVIF/WebP copies; the reflection repeats it.
 function createCard(src: string, column: number): HTMLElement {
   const card = document.createElement("div");
   card.className = "awards-card";
   card.dataset.column = String(column);
+  const artwork = optPictureHtml(src, ARTWORK_SIZES, 'alt="" width="416" height="234" decoding="async" loading="lazy" draggable="false"');
   const face = document.createElement("div");
   face.className = "awards-card__face";
-  const image = document.createElement("img");
-  image.src = src;
-  image.alt = "";
-  image.width = 416;
-  image.height = 234;
-  image.decoding = "async";
-  image.loading = "lazy";
-  image.draggable = false;
-  face.append(image);
+  face.innerHTML = artwork;
   const reflection = document.createElement("div");
   reflection.className = "awards-card__reflection";
   reflection.setAttribute("aria-hidden", "true");
-  reflection.append(image.cloneNode());
+  reflection.innerHTML = artwork;
   card.append(face, reflection);
   return card;
 }

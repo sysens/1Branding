@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { ref } from "vue";
 import { Pause, Play } from "lucide-vue-next";
 import { useAwardsStage } from "~/composables/useAwardsStage";
@@ -15,7 +16,7 @@ const { ready } = useAwardsStage(root, canvas, { numeral: props.numeral });
 
 <template>
   <figure ref="root" class="awards-stage" :class="{ 'awards-stage--bare': !numeral }" :data-ready="ready" :aria-label="numeral ? 'OneBranding project gallery and number one' : 'OneBranding project gallery'">
-    <img v-show="!ready" :src="numeral ? AWARDS_PREVIEW : AWARDS_PREVIEW_CEILING" width="1366" height="840" loading="lazy" decoding="async" alt="" class="awards-stage__preview" />
+    <OptImage v-show="!ready" :src="numeral ? AWARDS_PREVIEW : AWARDS_PREVIEW_CEILING" sizes="100vw" :preview="false" width="1366" height="840" loading="lazy" decoding="async" alt="" class="awards-stage__preview" />
     <canvas ref="canvas" class="awards-stage__canvas" :class="{ 'is-ready': ready }" aria-hidden="true" />
     <AwardsGallery :paused="paused" />
     <button class="awards-stage__pause" type="button" :aria-pressed="paused" :aria-label="paused ? 'Play gallery animation' : 'Pause gallery animation'" :title="paused ? 'Play gallery animation' : 'Pause gallery animation'" @click="paused = !paused">
@@ -29,7 +30,8 @@ const { ready } = useAwardsStage(root, canvas, { numeral: props.numeral });
 /* max-height: on ultra-wide screens the stage stays one screen tall; the camera
    then shows the whole stage with more black floor at the faded sides. */
 .awards-stage { position: relative; z-index: 1; width: 100%; aspect-ratio: 1366 / 840; max-height: 110svh; margin: 0; mask-image: linear-gradient(#000 72%, transparent); }
-.awards-stage__canvas, .awards-stage__preview { position: absolute; z-index: 2; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+/* :deep: the preview <img> is rendered inside OptImage. */
+.awards-stage__canvas, .awards-stage :deep(.awards-stage__preview) { position: absolute; z-index: 2; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 .awards-stage__canvas { opacity: 0; touch-action: pan-y; }
 .awards-stage__canvas.is-ready { opacity: 1; }
 /* Without the numeral the floor under the gallery is empty: cut its lower 28%

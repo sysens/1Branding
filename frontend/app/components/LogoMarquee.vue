@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
+import { optPictureHtml } from "~/utils/optImage";
 
 type Props = {
   logos?: string[];
@@ -24,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 // 400x200 thumbnails of /logoss/* (the originals are 1710x962 artwork reused by
-// BrandStoriesSection); tiles render at 200x100 CSS px.
+// BrandStoriesSection), served from their AVIF/WebP copies (200 and 400 wide).
 const staticLogos = [
   "/logoss/thumbs/apexpizza.webp",
   "/logoss/thumbs/artAnor.webp",
@@ -147,12 +148,9 @@ onBeforeUnmount(() => window.removeEventListener("resize", onResize));
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
 
-// 200x100 copies of the bundled thumbnails for the 100px mobile tiles.
-const THUMB_DIR = "/logoss/thumbs/";
-const tileSrcset = (src: string) =>
-  src.startsWith(THUMB_DIR)
-    ? `${src.replace(THUMB_DIR, "/logoss/thumbs-sm/")} 200w, ${src} 400w`
-    : undefined;
+// Drawn tile width: 100px on phones and 200px from md (up to 400px on 1920px+
+// screens), times the frame's scale (1.4, md:1.25).
+const TILE_SIZES = "(min-width: 1920px) 500px, (min-width: 768px) 250px, 140px";
 
 const mulberry32 = (seed: number) => {
   let t = seed >>> 0;
@@ -179,15 +177,10 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number, count: numb
 
 // The tiles are static, decorative markup, so each column is one HTML string
 // (v-html): hydration does not walk the ~500 tile elements, and the loop copy is
-// created by the browser's HTML parser instead of Vue. Logo URLs may come from
-// the CMS, hence the attribute escaping.
-const escapeAttr = (value: string) =>
-  value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const tileHtml = (src: string) => {
-  const srcset = tileSrcset(src);
-  const responsive = srcset ? ` srcset="${escapeAttr(srcset)}" sizes="(min-width: 1920px) and (min-height: 1100px) 400px, (min-width: 768px) 200px, 100px"` : "";
-  return `<div class="logo-marquee__tile"><img class="logo-marquee__img" src="${escapeAttr(src)}"${responsive} alt="" width="200" height="100" loading="lazy" decoding="async" fetchpriority="low" draggable="false"></div>`;
-};
+// created by the browser's HTML parser instead of Vue. optPictureHtml escapes
+// the URL; CMS logos without build-time copies stay a plain <img>.
+const tileHtml = (src: string) =>
+  `<div class="logo-marquee__tile">${optPictureHtml(src, TILE_SIZES, `class="logo-marquee__img" alt="" width="200" height="100" loading="lazy" decoding="async" fetchpriority="low" draggable="false"`)}</div>`;
 
 const columnsConfig = computed(() => {
   const total = Math.max(0, Number(props.rows) || 0) + extraColumns.value;

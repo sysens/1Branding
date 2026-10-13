@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OptImage from "~/components/ui/OptImage.vue";
 import { computed, ref } from "vue";
 import ImageCompare from "~/components/ui/ImageCompare.vue";
 
@@ -17,10 +18,9 @@ const PAIRS: Pair[] = [
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const img = useImage();
-const photo = (src: string, width: number) => img(src, { width, height: Math.round((width * 696) / 1243), fit: "cover", format: "webp", quality: 82 });
-const srcset = (src: string) => [640, 960, 1280, 1600].map((width) => `${photo(src, width)} ${width}w`).join(", ");
-const SIZES = "(max-width: 767px) calc(100vw - 2.5rem), min(62vw, 1243px)";
+// The frame is 1243 of the 2000px design frame (62.15vw), the full width less
+// the gutters on phones; the 16:9 photos fill it (object-fit: cover).
+const SIZES = "(max-width: 767px) calc(100vw - 2.5rem), 63vw";
 
 const index = ref(0);
 const direction = ref<1 | -1>(1);
@@ -58,10 +58,10 @@ const go = (step: 1 | -1) => {
             :label="t('home.compare.label')"
           >
             <template #before>
-              <img :src="photo(pair.before, 1280)" :srcset="srcset(pair.before)" :sizes="SIZES" :alt="t('home.compare.before')" width="1243" height="696" decoding="async" loading="lazy" draggable="false">
+              <OptImage :src="pair.before" :sizes="SIZES" :alt="t('home.compare.before')" width="1243" height="696" decoding="async" loading="lazy" draggable="false" />
             </template>
             <template #after>
-              <img :src="photo(pair.after, 1280)" :srcset="srcset(pair.after)" :sizes="SIZES" :alt="t('home.compare.after')" width="1243" height="696" decoding="async" loading="lazy" draggable="false">
+              <OptImage :src="pair.after" :sizes="SIZES" :alt="t('home.compare.after')" width="1243" height="696" decoding="async" loading="lazy" draggable="false" />
             </template>
           </ImageCompare>
         </Transition>

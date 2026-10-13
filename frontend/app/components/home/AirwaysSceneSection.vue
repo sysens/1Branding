@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useViewportActivity } from "~/composables/useViewportActivity";
+import { optEntry, optUrl } from "~/utils/optImage";
 
 const { t } = useI18n();
 
@@ -9,6 +10,22 @@ const { t } = useI18n();
 const { targetRef, isActive } = useViewportActivity({ rootMargin: "1200px 0px" });
 const loaded = ref(false);
 watch(isActive, (active) => { if (active) loaded.value = true; });
+
+// The stage photo from the build-time copies (utils/optImage.ts): AVIF where
+// supported, WebP otherwise, at 1200 / 1600 / 2560px for phones, laptops and
+// larger or high-density screens (see the media queries in the CSS).
+const SCENE = "/home/scene.jpg";
+const sceneVars = computed(() => {
+  const entry = optEntry(SCENE);
+  const vars: Record<string, string> = {};
+  for (const [size, width] of [["sm", 1200], ["md", 1600], ["lg", Infinity]] as const) {
+    const pick = entry ? (entry.widths.find((w) => w >= width) ?? entry.w) : 0;
+    const url = (format: "avif" | "webp") => (entry ? optUrl(SCENE, entry, pick, format) : SCENE);
+    vars[`--scene-webp-${size}`] = `url("${url("webp")}")`;
+    vars[`--scene-${size}`] = `image-set(url("${url("avif")}") type("image/avif"), url("${url("webp")}") type("image/webp"))`;
+  }
+  return vars;
+});
 </script>
 
 <template>
@@ -25,6 +42,7 @@ watch(isActive, (active) => { if (active) loaded.value = true; });
       <div
         class="airways-scene__image"
         :class="{ 'is-loaded': loaded }"
+        :style="loaded ? sceneVars : undefined"
         role="img"
         aria-label="Uzbekistan Airways: New Horizons Together, aircraft branding displayed on a panoramic stage"
       />
@@ -86,8 +104,39 @@ watch(isActive, (active) => { if (active) loaded.value = true; });
   background: #000 center 30% / cover no-repeat;
 }
 
+/* WebP by screen size; browsers that take image-set() with type() get AVIF. */
 .airways-scene__image.is-loaded {
-  background-image: url("/home/scene.jpg");
+  background-image: var(--scene-webp-lg);
+}
+
+@media (max-width: 1440px) and (max-resolution: 1.4dppx) {
+  .airways-scene__image.is-loaded {
+    background-image: var(--scene-webp-md);
+  }
+}
+
+@media (max-width: 767px) {
+  .airways-scene__image.is-loaded {
+    background-image: var(--scene-webp-sm);
+  }
+}
+
+@supports (background-image: image-set(url("x.avif") type("image/avif"))) {
+  .airways-scene__image.is-loaded {
+    background-image: var(--scene-lg);
+  }
+
+  @media (max-width: 1440px) and (max-resolution: 1.4dppx) {
+    .airways-scene__image.is-loaded {
+      background-image: var(--scene-md);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .airways-scene__image.is-loaded {
+      background-image: var(--scene-sm);
+    }
+  }
 }
 
 /* Only the big screen stays lit: the ceiling, the side panels and the seats
