@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import NewsHero from "~/components/Newsslug/NewsHero.vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
@@ -113,14 +113,16 @@ usePageSeo({
 });
 
 let ctx: any = null;
+const pageRoot = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
   await nextTick();
 
   const { gsap } = await import("gsap");
 
+  if (!pageRoot.value) return;
   ctx = gsap.context(() => {
-    const main = document.querySelector<HTMLElement>(".products");
+    const main = pageRoot.value?.querySelector<HTMLElement>(".products");
     if (!main) return;
 
     gsap.fromTo(
@@ -144,12 +146,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="bg-black relative overflow-x-hidden">
+  <div ref="pageRoot" class="bg-black relative overflow-x-hidden">
     <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
     <div class="relative z-10">
       <div
-        class="bg bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat m]"
+        class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
       >
         <Header />
 

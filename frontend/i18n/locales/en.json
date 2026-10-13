@@ -86,7 +86,12 @@
     "fileRequired": "Please attach a file",
     "fileUploadFailed": "File upload failed",
     "sent": "Sent",
-    "error": "Error"
+    "error": "Error",
+    "skipToContent": "Skip to content",
+    "tooManyRequests": "Too many attempts. Please try again in a few minutes.",
+    "networkError": "No connection to the server. Check your internet and try again.",
+    "sendFailed": "The request could not be sent. Please try again.",
+    "invalidEmailOrPhone": "Please check the email and phone number."
   },
   "home": {
     "freshProjects": "fresh projects",
@@ -524,5 +529,12 @@
     "social": "Social",
     "tagline": "One vision. Every solution.",
     "rights": "All rights reserved."
+  },
+  "errorPage": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The page you are looking for does not exist or has moved.",
+    "title": "Something went wrong",
+    "text": "Please try again in a moment.",
+    "home": "Back to home"
   }
 }

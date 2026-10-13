@@ -41,8 +41,15 @@ export function useNetworkGlobe(active: Ref<boolean>) {
     const canvas = canvasRef.value;
     if (canvas) renderer?.resize(canvas.clientWidth, canvas.clientHeight);
   };
+  // Data-saving connections and low-memory phones keep the still preview image
+  // (status stays "loading", which is what shows it) instead of a WebGL globe.
+  const lightweight = () => {
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
+    return Boolean(nav.connection?.saveData) || (typeof nav.deviceMemory === "number" && nav.deviceMemory <= 2);
+  };
   const initialize = async () => {
     if (
+      lightweight() ||
       initializing ||
       renderer ||
       !active.value ||

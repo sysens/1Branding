@@ -94,12 +94,6 @@ type GqlRes = {
   data?: {
     category?: CategoryNode | null;
     fallbackCategory?: CategoryNode | null;
-    projectsPage?: {
-      projectColor?: string | null;
-    } | null;
-    fallbackProjectsPage?: {
-      projectColor?: string | null;
-    } | null;
   };
   errors?: Array<{ message: string }>;
 };
@@ -148,12 +142,6 @@ const query = `
       }
     }
 
-    projectsPage(documentId: $documentId, locale: $locale) {
-      projectColor
-    }
-    fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
-      projectColor
-    }
   }
 `;
 
@@ -251,27 +239,21 @@ const projectsFromApi = computed(() => {
     });
 });
 
-const projectColor = computed(
-  () =>
-    gqlData.value?.data?.projectsPage?.projectColor ||
-    gqlData.value?.data?.fallbackProjectsPage?.projectColor ||
-    ""
-);
+const pageRoot = ref<HTMLElement | null>(null);
 
-const pageStyle = computed(() =>
-  projectColor.value ? { backgroundColor: projectColor.value } : {}
-);
-
-const loading = computed(() => pending.value || !gqlData.value || !!gqlErrors.value);
+// A partial GraphQL error must not keep the full-screen spinner up forever.
+const loading = computed(() => pending.value || !gqlData.value);
 
 onMounted(async () => {
   await nextTick();
 
   const { gsap } = await import("gsap");
 
+  // Scoped to this page: a late callback must not animate the next page's nodes.
+  if (!pageRoot.value) return;
   ctx = gsap.context(() => {
-    const main = document.querySelector<HTMLElement>(".products");
-    const second = document.querySelector<HTMLElement>(".second");
+    const main = pageRoot.value?.querySelector<HTMLElement>(".products");
+    const second = pageRoot.value?.querySelector<HTMLElement>(".second");
     if (!main) return;
 
     gsap.fromTo(
@@ -316,7 +298,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="bg-black relative overflow-x-hidden" :style="pageStyle">
+  <div ref="pageRoot" class="bg-black relative overflow-x-hidden">
     <Spinner
       v-if="loading"
       :size="542"
@@ -328,13 +310,13 @@ onBeforeUnmount(() => {
 
     <div>
       <div class="relative z-10">
-        <div class="bg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat">
-          <div class="md:pt-[60px] pt-[30px] m]">
+        <div class="bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat">
+          <div class="md:pt-[60px] pt-[30px]">
             <Header />
           </div>
 
           <div class="px-[20px] md:px-0 containerr">
-            <div class="-ml-[20px] md:ml-0 px-[20px">
+            <div class="-ml-[20px] md:ml-0">
               <h1
                 class="font-normal text-center md:pt-[115px] mt-[80px] pt-[60px] text-[#FFFFFF] md:text-[62px] text-[40px] leading-[100%] tracking-[0] products"
               >

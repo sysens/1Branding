@@ -4,117 +4,93 @@
 
 Bu repo isolated monorepo:
 
-- `/backend` - Strapi 5 backend
-- `/frontend` - Nuxt 4 frontend
+- `/backend` — Strapi 5 (CMS, GraphQL, kontakt formasi)
+- `/frontend` — Nuxt 4 (SSR sayt)
 
-Railway ichida bitta project ichida 3 ta service kerak:
+Railway'dagi `dazzling-bravery` project'ida 3 ta service bor:
 
-1. `frontend`
-2. `backend`
-3. `Postgres`
+| Service | Root | Domen | Port |
+|---|---|---|---|
+| `frontend` | `/frontend` | onebrandingworld.com (Cloudflare orqali), onebranding.up.railway.app | 8080 |
+| `Backend` | `/backend` | onebrandingbackend.up.railway.app, ichki: `1branding.railway.internal` | 1337 |
+| `Postgres` | — | faqat ichki tarmoq | 5432 |
 
-Media fayllar serverning o'zidan beriladi. Railway'da uploadlar saqlanib qolishi uchun backend service'ga volume ulash tavsiya etiladi.
+Media fayllar (admin va kontakt formasi uploadlari) **Cloudflare R2** da saqlanadi
+(`1branding` bucket, `https://pub-156bce602951490e82e2418f1402419f.r2.dev/uploads/...`).
+Backend konteyneri disk saqlamaydi, shuning uchun volume kerak emas.
 
-## Railway ichida qaysi variantni tanlash kerak
-
-Yangi project yaratishda eng to'g'ri boshlanish:
-
-1. `GitHub Repository` ni tanlang
-2. reponi ulang
-3. avval birinchi service yaratilgach, keyin loyiha ichida yana `+ Create` orqali:
-   - ikkinchi GitHub service
-   - `Database -> PostgreSQL`
-
-Muqobil yo'l:
-
-1. `Empty Project` ni tanlang
-2. keyin `+ Create -> GitHub Repo` orqali `frontend`
-3. yana `+ Create -> GitHub Repo` orqali `backend`
-4. yana `+ Create -> Database -> PostgreSQL`
-
-Amalda ikkalasi ham ishlaydi. Bu repo uchun `Empty Project` bilan boshlash boshqarish jihatidan qulayroq.
-
-## Root directory
-
-Service sozlamalarida root directory larni alohida qo'ying:
-
-- `frontend` service: `/frontend`
-- `backend` service: `/backend`
-
-Har ikkala papkada ham `Dockerfile` bor, Railway shu Dockerfile lardan foydalanadi.
+Ikkala service ham `main` branch'dan avtomatik deploy bo'ladi va faqat o'z papkasi
+o'zgarganda qayta build qilinadi (watch patterns: `/backend/**`, `/frontend/**`).
+Har birida healthcheck bor (`/healthz`): yangi deploy javob bermasa, trafik eski
+deployda qoladi.
 
 ## Backend env
 
 Namuna: [`backend/.env.railway.example`](./backend/.env.railway.example)
 
-Majburiy minimum:
-
 ```env
-HOST=0.0.0.0
+HOST=::                      # ichki tarmoq IPv6 ham talab qilishi mumkin
 PORT=1337
-IS_PROXIED=true
-APP_KEYS=...
+CORS_ORIGINS=https://onebrandingworld.com,https://www.onebrandingworld.com,https://onebranding.up.railway.app
+APP_KEYS=...                 # tasodifiy qiymatlar; namuna qiymatlari bilan logda xato chiqadi
 API_TOKEN_SALT=...
 ADMIN_JWT_SECRET=...
 TRANSFER_TOKEN_SALT=...
 JWT_SECRET=...
 ENCRYPTION_KEY=...
-PUBLIC_BASE_URL=https://api.example.com
-DATABASE_CLIENT=postgres
-DATABASE_URL=${{Postgres.DATABASE_URL}}
+PUBLIC_BASE_URL=https://onebrandingbackend.up.railway.app
+DATABASE_URL=${{Postgres.DATABASE_URL}}   # bo'lsa client avtomatik postgres
 DATABASE_POOL_MIN=0
-UPLOAD_PROVIDER=local
-UPLOAD_MAX_FILE_SIZE_MB=128
+UPLOAD_PROVIDER=r2
+R2_ACCOUNT_ID=... / R2_ENDPOINT=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET=1branding
+R2_PUBLIC_URL=https://pub-....r2.dev
+R2_ROOT_PATH=uploads
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_ID=...         # arizalar Telegram'ga shu chatga keladi
 ```
+
+Deploydan keyin backend logida quyidagilar bo'lishi kerak:
+
+- `[upload] R2 bucket "1branding" reachable` — aks holda R2 kalitlari noto'g'ri;
+- `Insecure secrets` xatosi **bo'lmasligi** kerak.
 
 ## Frontend env
 
 Namuna: [`frontend/.env.railway.example`](./frontend/.env.railway.example)
 
 ```env
-NUXT_PUBLIC_GRAPHQL_URL=https://api.example.com/graphql
-# SEO uchun majburiy: canonical, hreflang, robots.txt va sitemap.xml shu domenni ishlatadi
-NUXT_PUBLIC_SITE_URL=https://onebranding.uz
-# Ixtiyoriy: Google uchun Organization JSON-LD kontaktlari (faqat haqiqiy ma'lumot)
-NUXT_PUBLIC_ORG_PHONE=+998 XX XXX XX XX
-NUXT_PUBLIC_ORG_EMAIL=hello@onebranding.uz
-NUXT_PUBLIC_ORG_SAME_AS=https://www.instagram.com/...,https://t.me/...,https://www.behance.net/...
+NUXT_PUBLIC_GRAPHQL_URL=https://onebrandingbackend.up.railway.app/graphql
+# Server render GraphQL'ni Railway ichki tarmog'i orqali so'raydi (tezroq);
+# ishlamasa avtomatik ochiq URL'ga o'tadi.
+NUXT_GRAPHQL_URL_INTERNAL=http://1branding.railway.internal:1337/graphql
+# SEO: canonical, hreflang, robots.txt va sitemap shu domenni ishlatadi.
+NUXT_PUBLIC_SITE_URL=https://onebrandingworld.com
 ```
 
-`NUXT_PUBLIC_SITE_URL` berilmasa sayt so'rov kelgan domenni ishlatadi — bu holda
-`*.up.railway.app` va asosiy domen alohida sayt sifatida indekslanib, dublikat kontent bo'ladi.
+## Kesh
 
-## Tavsiya etilgan domainlar
+- Sahifalar serverda 5 daqiqa keshlanadi (stale-while-revalidate): CMS'dagi o'zgarish
+  saytda 5 daqiqagacha kechikib ko'rinadi.
+- `frontend/public` fayllari 1 yilga keshlanadi. Rasmni almashtirsangiz **yangi nom**
+  bilan saqlang. Landing rasmlari `public/opt/` ga build vaqtida hash'li nom bilan
+  yoziladi (`node scripts/optimize-images.mjs`).
+- Cloudflare HTML'ni hozircha keshlamaydi. Tezlashtirish uchun Cloudflare'da
+  **Caching → Cache Rules** da `onebrandingworld.com` uchun "Eligible for cache" +
+  "Use cache-control header" qoidasini qo'shish mumkin (sayt `s-maxage=300` yuboradi).
 
-- `frontend`: `onebranding.uz`
-- `backend`: `api.onebranding.uz`
-- `media`: `media.onebranding.uz`
+## CI
 
-## Deploy tartibi
-
-1. `Postgres` service yarating.
-2. `backend` service yarating va `/backend` root directory qo'ying.
-3. `backend` env larni kiriting.
-4. `backend` uchun Railway domain generatsiya qiling.
-5. Strapi adminga kirib birinchi admin user yarating.
-6. Media uploadlar saqlanib qolishi uchun `backend` service'ga volume ulang.
-7. `frontend` service yarating va `/frontend` root directory qo'ying.
-8. `frontend` ga `NUXT_PUBLIC_GRAPHQL_URL` va `NUXT_PUBLIC_SITE_URL` kiriting.
-9. `frontend` uchun domain generatsiya qiling.
-10. Railway custom domain larini Cloudflare DNS ga ulang.
+GitHub Actions (`.github/workflows/ci.yml`) har push'da frontend testlari va build'ini,
+backend typecheck va build'ini tekshiradi. Railway deployi CI'ga bog'liq emas.
 
 ## Muhim izohlar
 
-- **Deploy tartibi:** avval `backend`, keyin `frontend`. Yangi frontend contact formasi spamga qarshi `meta` maydonini yuboradi; uni faqat yangi backend qabul qiladi (yangi backend esa eski frontend bilan ham ishlayveradi).
-- `backend` Node 24 LTS'da ishlaydi (Node 20 muddati 2026-yil aprelda tugagan).
-- `IS_PROXIED` Railway'da avtomatik yoqiladi (`RAILWAY_SERVICE_ID` orqali); boshqa hostingda qo'lda `IS_PROXIED=true` qo'ying.
-- Public roldan qat'i nazar, anonim foydalanuvchilar uchun `/api/upload/files*`, `/api/users*`, `/api/users-permissions/*` va ro'yxatdan o'tish yopiq; ochiq ro'yxatdan o'tish har ishga tushishda o'chiriladi.
-- `backend/bun.lock` va `frontend/bun.lock` Docker build uchun kerak — ularni o'chirmang (Railway har bir servisni o'z papkasidan build qiladi).
-- Backend builder `node:24-alpine` ustida (bun binary shu image'ga ko'chiriladi): `oven/bun` image'ida Node yo'qligi uchun bun 1.4+ native modullarni (better-sqlite3) Node 26 uchun build qilib, build yiqilardi.
-- `frontend/public` fayllari (rasmlar, shriftlar) 1 yilga keshlanadi. Rasmni almashtirsangiz, uni **yangi nom** bilan saqlang, eski nomdagi fayl brauzer va Cloudflare keshida qolib ketadi.
-- Frontend deploy'dan keyin Cloudflare'da **Caching → Purge Everything** qiling: aks holda edge eski rasm/`robots.txt` versiyalarini bir necha soat berishi mumkin.
-
-- Postgres uchun `pg` package kerak, package.json ga qo'shildi.
-- Strapi Docker ichida ishlagani uchun `DATABASE_POOL_MIN=0` tavsiya etiladi.
-- Frontend browserdan backendga ulanadi, shuning uchun `NUXT_PUBLIC_GRAPHQL_URL` public backend domain bo'lishi kerak.
-- Telegramga yuboriladigan media linklar `PUBLIC_BASE_URL` to'g'ri bo'lishiga bog'liq.
+- Backend Node 24 LTS'da, ikkala Dockerfile ham `node` (root emas) foydalanuvchi bilan ishlaydi; bun versiyasi qotirilgan (`oven/bun:1.4.3-alpine`).
+- `backend/bun.lock` va `frontend/bun.lock` Docker build uchun kerak — o'chirmang.
+- `IS_PROXIED` Railway'da avtomatik yoqiladi (`RAILWAY_SERVICE_ID` orqali).
+- Anonim foydalanuvchilar uchun `/api/upload/files*`, `/api/users*`, `/api/users-permissions/*` va ro'yxatdan o'tish yopiq.
+- Kontakt formasi faqat `CORS_ORIGINS` dagi domenlardan ishlaydi.
+- Railway'dagi "Redeploy" oxirgi *deploy qilingan* commit'ni qayta ishga tushiradi, yangi kodni olmaydi — yangi kod uchun `main` ga push qiling.

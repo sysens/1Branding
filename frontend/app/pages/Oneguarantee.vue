@@ -4,7 +4,7 @@ import BigPhotoo from "~/components/OneGuarantee/BigPhotoo.vue";
 import GuaranteeMarquee from "~/components/OneGuarantee/GuaranteeMarquee.vue";
 import InfoSection from "~/components/OneGuarantee/InfoSection.vue";
 import Reasons from "~/components/OneGuarantee/Reasons.vue";
-import { computed, onMounted, nextTick } from "vue";
+import { computed, onMounted, nextTick, ref } from "vue";
 
 interface LenisController {
   start?: () => void;
@@ -22,8 +22,23 @@ interface LenisAwareNuxtApp extends ReturnType<typeof useNuxtApp> {
 
 const { t } = useI18n();
 
-const oneGuaranteeVideoPoster = "/OneGuarantee/image95.png";
+// WebP copy of the 523 KB PNG poster (32 KB).
+const oneGuaranteeVideoPoster = "/OneGuarantee/image95.webp";
 const oneGuaranteeVideoSrc = "/OneGuarantee/Img%205714.mp4";
+
+// The background video (13 MB) is attached in the browser, and not at all on a
+// data-saving or slow connection: those visitors keep the poster.
+const heroVideo = ref<HTMLVideoElement | null>(null);
+const heroVideoSrc = ref("");
+const attachHeroVideo = async () => {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (connection?.saveData || /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "")) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  heroVideoSrc.value = oneGuaranteeVideoSrc;
+  await nextTick();
+  heroVideo.value?.load();
+  heroVideo.value?.play().catch(() => {});
+};
 
 const cmsSeo = await useCmsSeo("oneGuaranteePage");
 const localePath = useLocalePath();
@@ -78,6 +93,7 @@ const stabilizeAfterAssets = async () => {
 };
 
 onMounted(async () => {
+  void attachHeroVideo();
   await nextTick();
   await refreshLenis();
   await stabilizeAfterAssets();
@@ -95,19 +111,21 @@ onMounted(async () => {
           <div>
             <div class="videoBackground relative h-screen overflow-hidden">
               <video
+                ref="heroVideo"
                 class="absolute inset-0 w-full h-full object-cover"
                 autoplay
                 muted
                 loop
                 playsinline
                 preload="none"
+                aria-hidden="true"
                 :poster="oneGuaranteeVideoPoster"
               >
-                <source :src="oneGuaranteeVideoSrc" type="video/mp4" />
+                <source v-if="heroVideoSrc" :src="heroVideoSrc" type="video/mp4" />
               </video>
 
               <div
-                class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[60px] pt-[30px] m]"
+                class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[60px] pt-[30px]"
               >
                 <Header />
 

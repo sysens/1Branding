@@ -81,9 +81,10 @@ const showToast = (msg: string, type: "error" | "success" = "error") => {
   toastType.value = type;
   toastOpen.value = true;
   if (toastTimer) clearTimeout(toastTimer);
+  // Errors stay long enough to read; a success note can go sooner.
   toastTimer = setTimeout(() => {
     toastOpen.value = false;
-  }, 3000);
+  }, type === "error" ? 7000 : 4000);
 };
 
 const onPickFile = () => {
@@ -130,7 +131,7 @@ const uploadFileToStrapi = async (file: File): Promise<number> => {
     } catch {
       errorText = "";
     }
-    throw new Error(errorText || `Upload failed with status ${res.status}`);
+    throw Object.assign(new Error(errorText || `Upload failed with status ${res.status}`), { status: res.status });
   }
 
   let parsed: any = null;
@@ -198,19 +199,20 @@ const fieldLimits = {
   email: 254,
 } as const;
 
+// A short message in the visitor's language instead of the backend's raw text.
 const normalizeBackendError = (e: any) => {
-  const data = e?.data;
-  const msg = data?.error?.message || data?.message || e?.message || t("common.error");
-  const details = data?.error?.details;
-
-  if (details?.errors && Array.isArray(details.errors) && details.errors.length) {
-    const first = details.errors[0];
-    const m = first?.message;
-    return m ? String(m) : String(msg);
-  }
-
-  return String(msg);
+  const status = Number(e?.status ?? e?.statusCode ?? e?.response?.status ?? 0);
+  const message = String(e?.data?.error?.message || e?.message || "");
+  if (status === 429) return t("common.tooManyRequests");
+  if (status === 413 || /file/i.test(message)) return t("common.fileUploadFailed");
+  if (/email|phone/i.test(message)) return t("common.invalidEmailOrPhone");
+  if (!status || e instanceof TypeError) return t("common.networkError");
+  return t("common.sendFailed");
 };
+
+// The upload of the selected file, kept so a failed submit can be retried
+// without uploading the same file again.
+let uploaded: { file: File; id: number } | null = null;
 
 const onSend = async () => {
   if (sending.value) return;
@@ -227,7 +229,7 @@ const onSend = async () => {
   if (!phoneVal.value.trim()) return showToast(t("common.requiredField"), "error");
   if (!emailVal.value.trim()) return showToast(t("common.requiredField"), "error");
   if (!isValidEmail(emailVal.value)) return showToast(t("common.invalidEmail"), "error");
-  if (!isValidPhone(phoneVal.value)) return showToast(t("common.error"), "error");
+  if (!isValidPhone(phoneVal.value)) return showToast(t("common.invalidEmailOrPhone"), "error");
   if (
     topicVal.value.trim().length > fieldLimits.topic ||
     servicesVal.value.trim().length > fieldLimits.services ||
@@ -243,7 +245,9 @@ const onSend = async () => {
 
   try {
     // The current public Strapi contract uploads media first, then links its ID on create.
-    const uploadedFileId = await uploadFileToStrapi(selectedFile.value);
+    const file = selectedFile.value;
+    const uploadedFileId = uploaded?.file === file ? uploaded.id : await uploadFileToStrapi(file);
+    uploaded = { file, id: uploadedFileId };
 
     const dataPayload: ContactRequestPayload = {
       TopicInput: topicVal.value.trim(),
@@ -266,6 +270,7 @@ const onSend = async () => {
     phoneVal.value = "";
     emailVal.value = "";
     selectedFile.value = null;
+    uploaded = null;
     formOpenedAt = Date.now();
 
     if (fileInputRef.value) {
@@ -274,6 +279,9 @@ const onSend = async () => {
 
     showToast(t("common.sent"), "success");
   } catch (e: any) {
+    // The server refused the attached upload (expired, or the server restarted):
+    // the next try uploads the file again.
+    if (/file/i.test(String(e?.data?.error?.message || ""))) uploaded = null;
     showToast(normalizeBackendError(e), "error");
   } finally {
     sending.value = false;
@@ -300,6 +308,9 @@ const initGsap = async () => {
     const agree = el.querySelector<HTMLElement>(".form-agree");
     const sendBtn = el.querySelector<HTMLElement>(".form-send");
 
+    // Reduced motion: no slide-in, the form is simply there.
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const prepare = (node: HTMLElement | null, from: { x?: number; y?: number }) => {
       if (!node) return;
       gsap.set(node, { ...from, opacity: 0 });
@@ -312,7 +323,16 @@ const initGsap = async () => {
     prepare(agree, { y: 50 });
     prepare(sendBtn, { y: 50 });
 
-    ScrollTrigger.create({
+    // A keyboard user can tab into the fields before the scroll animation has
+    // run: show everything at once rather than letting focus land on invisible inputs.
+    const hidden = [title, desc, leftCol, rightCol, agree, sendBtn].filter(Boolean) as HTMLElement[];
+    const revealNow = () => {
+      reveal.kill();
+      gsap.set(hidden, { x: 0, y: 0, opacity: 1 });
+    };
+    el.addEventListener("focusin", revealNow, { once: true });
+
+    const reveal = ScrollTrigger.create({
       trigger: el,
       start: "top 40%",
       once: true,
@@ -443,7 +463,7 @@ onBeforeUnmount(() => {
               :placeholder="topicInput"
               :aria-label="topicInput"
               :maxlength="fieldLimits.topic"
-              class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+              class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
             />
 
             <h3
@@ -461,7 +481,7 @@ onBeforeUnmount(() => {
               :placeholder="servicesInput"
               :aria-label="servicesTitle"
               :maxlength="fieldLimits.services"
-              class="w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+              class="w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
             />
 
             <div class="flex mt-[18px] pb-[10px] md:pb-[110px] items-center gap-[36px]">
@@ -522,7 +542,7 @@ onBeforeUnmount(() => {
                 :placeholder="fullNamePh"
                 :aria-label="fullNamePh"
                 :maxlength="fieldLimits.fullName"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
               />
 
               <input
@@ -534,7 +554,7 @@ onBeforeUnmount(() => {
                 :placeholder="jobTitlePh"
                 :aria-label="jobTitlePh"
                 :maxlength="fieldLimits.jobTitle"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
               />
 
               <input
@@ -546,7 +566,7 @@ onBeforeUnmount(() => {
                 :placeholder="companyPh"
                 :aria-label="companyPh"
                 :maxlength="fieldLimits.company"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
               />
 
               <input
@@ -558,7 +578,7 @@ onBeforeUnmount(() => {
                 :placeholder="phonePh"
                 :aria-label="phonePh"
                 :maxlength="fieldLimits.phone"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
               />
 
               <input
@@ -571,7 +591,7 @@ onBeforeUnmount(() => {
                 :placeholder="emailPh"
                 :aria-label="emailPh"
                 :maxlength="fieldLimits.email"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/30 placeholder:font-['Inter'] outline-none transition focus:border-white/25 focus:ring-0"
+                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
               />
             </div>
           </div>

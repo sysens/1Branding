@@ -97,7 +97,13 @@ const fetchLandingPayloadCached = (graphqlUrl: string, gqlLocale: AppLocale) => 
     },
   });
 
-  payload.catch(() => payloadCache.delete(key));
+  // Neither a failed request nor a GraphQL error answer is kept for the next visitor.
+  payload.then(
+    (response) => {
+      if (response?.errors?.length) payloadCache.delete(key);
+    },
+    () => payloadCache.delete(key)
+  );
 
   payloadCache.set(key, { expiresAt: now + LANDING_PAYLOAD_TTL_MS, payload });
   return payload;

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
-import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
 
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -76,7 +75,7 @@ onBeforeUnmount(() => {
 
       <div class="relative z-10 bg-black">
         <div
-          class="bg bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat m]"
+          class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
         >
           <Header />
 
@@ -88,9 +87,6 @@ onBeforeUnmount(() => {
         </div>
 
         <NewsMain />
-        <div class="md:containerr">
-          <NewsSlider />
-        </div>
       </div>
       <Footer />
     </div>

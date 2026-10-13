@@ -88,7 +88,9 @@ onBeforeUnmount(() => cleanup?.());
 .brand-cursor { width: 32px; height: 32px; will-change: transform; }
 .brand-cursor-trails { width: 100%; height: 100%; }
 @media (hover: hover) and (pointer: fine) {
-  .brand-cursor-active, .brand-cursor-active * { cursor: none !important; }
+  .brand-cursor-active, .brand-cursor-active *:not(input):not(textarea):not(select) { cursor: none !important; }
+  /* Text fields keep the I-beam, so the caret position stays clear. */
+  .brand-cursor-active :is(input, textarea) { cursor: text !important; }
 }
 @media (hover: none), (pointer: coarse) { .brand-cursor, .brand-cursor-trails { display: none; } }
 </style>

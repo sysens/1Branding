@@ -4,7 +4,8 @@
 # and native modules match the runner's ABI.
 FROM node:24-alpine AS builder
 
-COPY --from=oven/bun:1-alpine /usr/local/bin/bun /usr/local/bin/bun
+# Pinned: a floating bun tag changed the build under us before.
+COPY --from=oven/bun:1.4.3-alpine /usr/local/bin/bun /usr/local/bin/bun
 RUN apk add --no-cache build-base python3 vips-dev
 WORKDIR /app
 
@@ -32,9 +33,13 @@ COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/database/migrations ./database/migrations
 COPY --from=builder /app/dist ./dist
 
-RUN mkdir -p /app/public/uploads && chmod -R 777 /app/public/uploads
+# Runs as the unprivileged "node" user; only the folders Strapi may write to
+# (local uploads when R2 is off, .tmp) belong to it.
+RUN mkdir -p /app/public/uploads /app/.tmp && chown -R node:node /app/public /app/.tmp
 
 # Custom Pluginlar uchun yoqib qo'yiladi 
 COPY --from=builder /app/src ./src
+
+USER node
 
 CMD ["node", "node_modules/@strapi/strapi/bin/strapi.js", "start"]

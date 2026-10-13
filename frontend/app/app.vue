@@ -47,6 +47,10 @@ const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/ContactPage")
 );
 
+// Each blur layer is a fixed backdrop-filter, which makes scrolling costly on
+// phones: touch screens get two layers instead of five.
+const blurLayers = ref(5);
+
 // Bottom blur must not sit over the footer once the page is scrolled to its end
 const isPageEnd = ref(false);
 
@@ -57,6 +61,7 @@ const updateIsPageEnd = () => {
 };
 
 onMounted(() => {
+  if (matchMedia("(pointer: coarse)").matches) blurLayers.value = 2;
   window.addEventListener("scroll", updateIsPageEnd, { passive: true });
   window.addEventListener("resize", updateIsPageEnd, { passive: true });
   updateIsPageEnd();
@@ -78,6 +83,7 @@ watch(
 
 <template>
   <div class="app-shell min-h-screen overscroll-y-none">
+    <a href="#main-content" class="skip-link">{{ $t("common.skipToContent") }}</a>
     <ClientOnly><BrandCursor /></ClientOnly>
     <NuxtLoadingIndicator color="#03cb00" :height="4" />
     <main id="main-content">
@@ -92,7 +98,7 @@ watch(
       position="bottom"
       height="6rem"
       :strength="2"
-      :divCount="5"
+      :divCount="blurLayers"
       curve="bezier"
       :exponential="true"
       :opacity="1"
@@ -106,7 +112,7 @@ watch(
       position="top"
       height="6rem"
       :strength="2"
-      :divCount="5"
+      :divCount="blurLayers"
       curve="bezier"
       :exponential="true"
       :opacity="1"

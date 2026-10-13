@@ -1,4 +1,4 @@
-FROM oven/bun:1-alpine AS builder
+FROM oven/bun:1.4.3-alpine AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=builder /app/.output ./.output
+COPY --from=builder --chown=node:node /app/.output ./.output
+
+USER node
 
 EXPOSE 3000
 

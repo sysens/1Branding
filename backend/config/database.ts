@@ -1,7 +1,13 @@
 import path from "path";
 
 export default ({ env }) => {
-  const client = env("DATABASE_CLIENT", "sqlite") || "sqlite";
+  // With DATABASE_URL set (Railway's Postgres) the client is postgres even if
+  // DATABASE_CLIENT is missing; SQLite only for local development.
+  const client =
+    env("DATABASE_CLIENT", "") || (env("DATABASE_URL", "") ? "postgres" : "sqlite");
+  if (client === "sqlite" && env("NODE_ENV", "development") === "production") {
+    console.error("[database] Production is running on SQLite: set DATABASE_URL / DATABASE_CLIENT");
+  }
 
   const connections = {
     mysql: {

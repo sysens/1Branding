@@ -30,7 +30,7 @@ Asosiy production env lar:
 
 ## Server Uploads
 
-Media fayllar Strapi serverining o'zidan `/uploads` orqali beriladi. Productionda media fayllar yo'qolmasligi uchun serverda doimiy disk yoki Railway volume ulang.
+Productionda media fayllar Cloudflare R2 da saqlanadi (`UPLOAD_PROVIDER=r2` va `R2_*` o'zgaruvchilari, qarang `.env.railway.example`). Lokal ishlab chiqishda (`UPLOAD_PROVIDER=local`) ular `public/uploads` ga yoziladi va `/uploads` orqali beriladi.
 
 Eslatma:
 

@@ -104,6 +104,8 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
           <img
             v-if="leftImg"
             :src="leftImg"
+            :alt="title"
+            loading="lazy"
             class="leftSide leftImg w-full h-full object-cover md:rounded-l-[30px] mb-[5px]"
           />
         </div>
@@ -112,6 +114,8 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
           <img
             v-if="rightImg"
             :src="rightImg"
+            :alt="title"
+            loading="lazy"
             class="rightSide rightImg w-full h-full object-cover md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px]"
           />
         </div>

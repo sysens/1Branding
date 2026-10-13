@@ -85,10 +85,10 @@ const query = `
 const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: { query, variables: { locale: gqlLocale.value } },
+  // Reactive, so switching language refetches with the new locale.
+  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
   server: false,
-  key: `one-guarantee-comments-${gqlLocale.value}`,
-  watch: [gqlLocale],
+  key: computed(() => `one-guarantee-comments-${gqlLocale.value}`),
 });
 
 const apiItems = computed<MarqueeItem[]>(() => {

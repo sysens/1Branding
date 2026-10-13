@@ -81,9 +81,11 @@
         }
     }
 
+    /* Vertical panning only (no sideways drift on phones), but pinch-zoom stays
+       available (WCAG 1.4.4). */
     html,
     body {
-        touch-action: pan-y;
+        touch-action: pan-y pinch-zoom;
         -webkit-overflow-scrolling: touch;
         font-family: var(--app-font-sans);
     }
@@ -109,9 +111,36 @@
         pointer-events: none;
     }
 
+    /* Text can be selected and copied (phone numbers, addresses); the drag
+       widgets (sliders, galleries, marquees) switch selection off themselves. */
     body {
         font-family: var(--app-font-sans);
-        user-select: none;
+    }
+
+    /* A visible keyboard focus everywhere, in the brand green. Mouse clicks do
+       not trigger :focus-visible, so pointer users see no change. */
+    :focus-visible {
+        outline: 2px solid #03cb00;
+        outline-offset: 3px;
+    }
+
+    /* "Skip to content": off screen until a keyboard user tabs to it. */
+    .skip-link {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 2147483001;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: #03cb00;
+        color: #000;
+        font-weight: 600;
+        transform: translateY(-200%);
+        transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus-visible {
+        transform: none;
     }
 
     body,

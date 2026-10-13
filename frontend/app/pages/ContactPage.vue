@@ -81,7 +81,7 @@ onMounted(async () => {
     <div class="bg-black relative">
       <div>
         <div
-          class="bg bg md:pt-[60px] pt-[30px] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat m]"
+          class="md:pt-[60px] pt-[30px] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat"
         >
           <Header />
 

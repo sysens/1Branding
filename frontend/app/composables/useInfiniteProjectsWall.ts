@@ -263,12 +263,26 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
     if (performance.now() < suppressClickUntil) event.preventDefault();
   };
 
+  // The marquee only runs while the wall is on screen and the tab is visible.
+  let inView = true;
+  let viewObserver: IntersectionObserver | null = null;
+  const runWhenVisible = (): void => {
+    if (inView && !document.hidden) startAnimation();
+    else stopAnimation();
+  };
+
   onMounted(() => {
     offsetX = -getMetrics(window.innerWidth).tileWidth * 0.42;
     offsetY = -getMetrics(window.innerWidth).tileHeight * 0.35;
     resizeObserver = new ResizeObserver(resize);
     if (containerRef.value) resizeObserver.observe(containerRef.value);
     resize();
+    viewObserver = new IntersectionObserver(([entry]) => {
+      inView = Boolean(entry?.isIntersecting);
+      runWhenVisible();
+    });
+    if (containerRef.value) viewObserver.observe(containerRef.value);
+    document.addEventListener("visibilitychange", runWhenVisible);
     startAnimation(); // begin continuous marquee
   });
 
@@ -276,6 +290,9 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
     stopAnimation();
     resizeObserver?.disconnect();
     resizeObserver = null;
+    viewObserver?.disconnect();
+    viewObserver = null;
+    document.removeEventListener("visibilitychange", runWhenVisible);
   });
 
   return {

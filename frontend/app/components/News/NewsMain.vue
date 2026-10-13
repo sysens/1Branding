@@ -109,9 +109,10 @@ const formatDate = (iso?: string | null) => {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
+  // UTC, so the server and the browser print the same day (no hydration mismatch).
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const yyyy = d.getUTCFullYear();
   return `${dd}.${mm}.${yyyy}`;
 };
 
@@ -135,34 +136,39 @@ const fetchPageByLocale = async (p: number, localeValue: AppLocale) => {
   return { nodes, pi };
 };
 
-const fetchPage = async (p: number) => {
-  const current = await fetchPageByLocale(p, gqlLocale.value);
-  let nodes = current.nodes ?? [];
-  let pi = current.pi ?? null;
+// The language the list is shown in: the page's own, or English when the CMS
+// has no news in it. Later pages keep that language, so the list never mixes.
+const listLocale = ref<AppLocale>(gqlLocale.value);
 
-  if (!nodes.length && gqlLocale.value !== fallbackLocale) {
-    const fallback = await fetchPageByLocale(p, fallbackLocale);
-    nodes = fallback.nodes ?? [];
-    pi = fallback.pi ?? null;
+const fetchFirstPage = async () => {
+  try {
+    const current = await fetchPageByLocale(1, gqlLocale.value);
+    if (current.nodes.length || gqlLocale.value === fallbackLocale) {
+      return { ...current, locale: gqlLocale.value };
+    }
+    return { ...(await fetchPageByLocale(1, fallbackLocale)), locale: fallbackLocale as AppLocale };
+  } catch {
+    // CMS down: an empty list rather than a 500 for the whole page.
+    return { nodes: [] as NewsNode[], pi: null as NewsConn["pageInfo"], locale: gqlLocale.value };
   }
-
-  pageInfo.value = pi;
-  return nodes;
 };
 
-const init = async () => {
-  page.value = 1;
-  const first = await fetchPage(1);
-  items.value = first;
-};
-
-await init();
+// Rendered on the server and reused by the browser (no second request).
+const { data: firstPage } = await useAsyncData(
+  () => `news-main-${gqlLocale.value}`,
+  fetchFirstPage,
+  { watch: [gqlLocale] }
+);
 
 watch(
-  () => locale.value,
-  async () => {
-    await init();
-  }
+  firstPage,
+  (value) => {
+    page.value = 1;
+    items.value = value?.nodes ?? [];
+    pageInfo.value = value?.pi ?? null;
+    listLocale.value = value?.locale ?? gqlLocale.value;
+  },
+  { immediate: true }
 );
 
 const canLoadMore = computed(() => {
@@ -181,11 +187,17 @@ const loadMore = async () => {
   if (!canLoadMore.value) return;
 
   loadingMore.value = true;
-  const next = page.value + 1;
-  const nextNodes = await fetchPage(next);
-  items.value = [...items.value, ...nextNodes];
-  page.value = next;
-  loadingMore.value = false;
+  try {
+    const next = page.value + 1;
+    const { nodes, pi } = await fetchPageByLocale(next, listLocale.value);
+    items.value = [...items.value, ...nodes];
+    pageInfo.value = pi;
+    page.value = next;
+  } catch {
+    // Keep the list as it is; the button stays usable for another try.
+  } finally {
+    loadingMore.value = false;
+  }
 };
 
 const toNewsSlug = (id: string) => localePath({ path: `/NewsSlug/${id}` });
@@ -199,7 +211,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/NewsSlug/${id}` });
           v-for="item in items"
           :key="item.documentId"
           :to="toNewsSlug(item.documentId)"
-          class="contents"
+          class="block"
         >
           <div class="Item flex items-center md:gap-[86px] gap-[15px]">
             <div class="shrink-0 w-[148px] h-[127px] md:shrink md:w-[668px] md:h-[360px]">

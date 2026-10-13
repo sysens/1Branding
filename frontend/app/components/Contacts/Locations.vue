@@ -156,13 +156,14 @@ const phoneNumber = computed(
   () =>
     section1.value?.contactInfo?.phoneNumber ||
     fallbackSection1.value?.contactInfo?.phoneNumber ||
-    "+998 (71) 200-12-34"
+    // Same number as the footer, rather than a placeholder.
+    "+998 93 560 80 00"
 );
 const websiteUrl = computed(
   () =>
     section1.value?.contactInfo?.websiteUrl ||
     fallbackSection1.value?.contactInfo?.websiteUrl ||
-    "onebranding.uz"
+    "onebrandingworld.com"
 );
 
 const noteTitle = computed(() => section1.value?.note?.title || t("contacts.noteTitle"));
@@ -299,6 +300,7 @@ onBeforeUnmount(() => {
           <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
             <a
               class="telegram"
+              aria-label="Telegram"
               :href="telegramLink || undefined"
               target="_blank"
               rel="noopener noreferrer"
@@ -307,6 +309,7 @@ onBeforeUnmount(() => {
             </a>
             <a
               class="instagream"
+              aria-label="Instagram"
               :href="instagramLink || undefined"
               target="_blank"
               rel="noopener noreferrer"
@@ -316,6 +319,7 @@ onBeforeUnmount(() => {
 
             <a
               class="be"
+              aria-label="Behance"
               :href="behanceLink || undefined"
               target="_blank"
               rel="noopener noreferrer"
@@ -324,6 +328,7 @@ onBeforeUnmount(() => {
             </a>
             <a
               class="linkedIn"
+              aria-label="LinkedIn"
               :href="linkedinLink || undefined"
               target="_blank"
               rel="noopener noreferrer"

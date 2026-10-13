@@ -10,23 +10,23 @@
           :href="localePath('/')"
           class="site-logo"
           aria-label="OneBranding"
-          @click.prevent="goTo(localePath('/'))"
+          @click="onNav($event, localePath('/'))"
         >
           <span class="site-logo__one">{{ $t("brand.one") }}</span>Branding
         </a>
 
         <nav class="menuLink site-nav hidden min-[950px]:flex flex-1 items-center justify-center">
-          <a class="site-nav__link" :href="localePath('/About')" @click.prevent="goTo(localePath('/About'))">
+          <a class="site-nav__link" :href="localePath('/About')" @click="onNav($event, localePath('/About'))">
             {{ $t("nav.about") }}
           </a>
-          <a class="site-nav__link" :href="localePath('/Projects')" @click.prevent="goTo(localePath('/Projects'))">
+          <a class="site-nav__link" :href="localePath('/Projects')" @click="onNav($event, localePath('/Projects'))">
             {{ $t("nav.projects") }}
           </a>
           <HeaderServicesMenu />
-          <a class="site-nav__link" :href="localePath('/Costs')" @click.prevent="goTo(localePath('/Costs'))">
+          <a class="site-nav__link" :href="localePath('/Costs')" @click="onNav($event, localePath('/Costs'))">
             {{ $t("nav.prices") }}
           </a>
-          <a class="site-nav__link" :href="localePath('/ContactPage')" @click.prevent="goTo(localePath('/ContactPage'))">
+          <a class="site-nav__link" :href="localePath('/ContactPage')" @click="onNav($event, localePath('/ContactPage'))">
             {{ $t("nav.contacts") }}
           </a>
 
@@ -73,21 +73,21 @@
           <a
             :href="localePath('/Oneguarantee')"
             class="site-guarantee"
-            @click.prevent="goTo(localePath('/Oneguarantee'))"
+            @click="onNav($event, localePath('/Oneguarantee'))"
           >
             <span class="site-guarantee__one">{{ $t("brand.one") }}</span>{{ $t("brand.oneGuaranteeSuffix") }}
           </a>
         </div>
 
         <div class="flex-1 relative block min-[950px]:hidden">
-          <div
-            class="absolute inset-0 bg-[url('/header/Ellipse (2).png')] bg-center bg-cover z-0"
-          ></div>
 
           <div class="toggleButton oneGuarantee relative flex z-[111] justify-end">
             <button
               type="button"
+              ref="menuOpenButton"
               :aria-label="lang === 'ru' ? 'Открыть меню' : 'Open menu'"
+              :aria-expanded="isMobileMenuOpen"
+              aria-controls="mobile-menu"
               @click="isMobileMenuOpen = true"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
             >
@@ -115,18 +115,25 @@
     >
       <div
         v-if="isMobileMenuOpen"
+        id="mobile-menu"
+        ref="mobileMenu"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="lang === 'ru' ? 'Меню' : 'Menu'"
+        @keydown="onMenuKeydown"
         class="fixed inset-0 z-[2147483647] min-[950px]:hidden bg-gradient-to-b from-black to-[#00EA00] h-[100dvh] overflow-hidden overscroll-none"
       >
-        <div class="absolute inset-0 bg-black/80" @click="closeMobileMenu"></div>
+        <div class="absolute inset-0 bg-black/80" aria-hidden="true" @click="closeMobileMenu"></div>
 
         <div class="relative h-full overflow-y-auto overscroll-contain z-[2147483647]">
           <div class="flex items-center justify-between px-[32px] pt-[40px] pb-[72px]">
-            <a :href="localePath('/')" @click.prevent="goTo(localePath('/'))">
+            <a :href="localePath('/')" @click="onNav($event, localePath('/'))">
               <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" />
             </a>
 
             <button
               type="button"
+              ref="menuCloseButton"
               :aria-label="lang === 'ru' ? 'Закрыть меню' : 'Close menu'"
               @click="closeMobileMenu"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
@@ -142,7 +149,7 @@
           <div class="px-[20px]">
             <a
               :href="`${localePath('/')}#services`"
-              @click.prevent="goTo(`${localePath('/')}#services`)"
+              @click="onNav($event, `${localePath('/')}#services`)"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.services") }}
@@ -152,7 +159,7 @@
 
             <a
               :href="localePath('/About')"
-              @click.prevent="goTo(localePath('/About'))"
+              @click="onNav($event, localePath('/About'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.about") }}
@@ -162,7 +169,7 @@
 
             <a
               :href="localePath('/Projects')"
-              @click.prevent="goTo(localePath('/Projects'))"
+              @click="onNav($event, localePath('/Projects'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.projects") }}
@@ -171,7 +178,7 @@
 
             <a
               :href="localePath('/ContactPage')"
-              @click.prevent="goTo(localePath('/ContactPage'))"
+              @click="onNav($event, localePath('/ContactPage'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.contacts") }}
@@ -180,7 +187,7 @@
 
             <a
               :href="localePath('/Oneguarantee')"
-              @click.prevent="goTo(localePath('/Oneguarantee'))"
+              @click="onNav($event, localePath('/Oneguarantee'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
@@ -191,7 +198,7 @@
 
             <a
               :href="localePath('/Costs')"
-              @click.prevent="goTo(localePath('/Costs'))"
+              @click="onNav($event, localePath('/Costs'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.prices") }}
@@ -200,7 +207,7 @@
 
             <a
               :href="localePath('/News')"
-              @click.prevent="goTo(localePath('/News'))"
+              @click="onNav($event, localePath('/News'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.news") }}
@@ -272,7 +279,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onBeforeUnmount, nextTick, computed } from "vue";
+import { watch, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
 
 type AppLocale = "ru" | "en";
@@ -338,13 +345,44 @@ const unlockBodyScroll = () => {
   document.body.style.touchAction = "";
 };
 
-watch(isMobileMenuOpen, (v) => {
+const menuOpenButton = ref<HTMLButtonElement | null>(null);
+const menuCloseButton = ref<HTMLButtonElement | null>(null);
+const mobileMenu = ref<HTMLElement | null>(null);
+
+// The open menu is a modal dialog: focus moves into it, Tab stays inside,
+// Escape closes it, and focus returns to the menu button afterwards.
+watch(isMobileMenuOpen, async (v) => {
   if (v) {
     lockBodyScroll();
+    await nextTick();
+    menuCloseButton.value?.focus();
   } else {
     unlockBodyScroll();
+    menuOpenButton.value?.focus();
   }
 });
+
+const onMenuKeydown = (event: KeyboardEvent) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+    closeMobileMenu();
+    return;
+  }
+  if (event.key !== "Tab" || !mobileMenu.value) return;
+  const focusable = Array.from(
+    mobileMenu.value.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")
+  ).filter((el) => el.offsetParent !== null);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+};
 
 watch(
   () => route.fullPath,
@@ -383,6 +421,14 @@ const navigateSafely = async (to: string, replace = false) => {
 
 const goTo = async (to: string) => {
   await navigateSafely(to, false);
+};
+
+// In-app navigation for plain left clicks only; modified or middle clicks keep
+// the browser's own behaviour (new tab, new window, download).
+const onNav = (event: MouseEvent, to: string) => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  void goTo(to);
 };
 
 const removeAfterEach = router.afterEach(() => {

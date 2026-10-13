@@ -34,7 +34,7 @@
             >
               <img
                 class="costs-card__badge"
-                src="/Costs/one.png"
+                src="/Costs/one.webp"
                 alt=""
                 aria-hidden="true"
                 loading="lazy"

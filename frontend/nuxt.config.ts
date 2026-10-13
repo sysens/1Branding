@@ -154,6 +154,9 @@ export default defineNuxtConfig({
     "/logoss/**": { headers: publicAssetCacheHeaders },
     "/General/**": { headers: publicAssetCacheHeaders },
     "/Contacts/**": { headers: publicAssetCacheHeaders },
+    // One segment only ("/Costs/*"): "/Costs/**" would also match the /Costs page.
+    "/Costs/*": { headers: publicAssetCacheHeaders },
+    "/News/*": { headers: publicAssetCacheHeaders },
     "/OneGuarantee/**": { headers: publicAssetCacheHeaders },
     "/header/**": { headers: publicAssetCacheHeaders },
     "/footer/**": { headers: publicAssetCacheHeaders },
@@ -183,8 +186,9 @@ export default defineNuxtConfig({
     },
   },
 
+  // Dev tools only in `nuxt dev`; never part of a production build.
   devtools: {
-    enabled: true,
+    enabled: process.env.NODE_ENV !== "production",
   },
 
   sourcemap: {

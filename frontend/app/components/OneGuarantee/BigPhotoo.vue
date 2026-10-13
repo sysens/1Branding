@@ -220,6 +220,8 @@ const isModifiedEvent = (event: MouseEvent) => {
 };
 
 const isExternalUrl = (url: string) => /^https?:\/\//i.test(url);
+// A CMS value that is neither http(s) nor a site path (e.g. "javascript:") is ignored.
+const isSitePath = (url: string) => url.startsWith("/") && !url.startsWith("//");
 
 const onCtaClick = async (event: MouseEvent) => {
   if (!process.client) return;
@@ -236,6 +238,7 @@ const onCtaClick = async (event: MouseEvent) => {
 
   event.preventDefault();
   event.stopPropagation();
+  if (!isSitePath(target)) return;
 
   const localizedTarget = localePath(target);
 
@@ -279,7 +282,7 @@ const onCtaClick = async (event: MouseEvent) => {
 
         <div class="flex justify-center">
           <NuxtLink
-            :to="isExternalUrl(buttonUrl) ? buttonUrl : localePath(buttonUrl || '/')"
+            :to="isExternalUrl(buttonUrl) ? buttonUrl : localePath(isSitePath(buttonUrl) ? buttonUrl : '/')"
             :external="isExternalUrl(buttonUrl)"
             class="cta-btn inline-flex items-center justify-center text-white bg-[url('/home/Component3.png')] bg-no-repeat w-[260px] h-[60px] rounded-[32px] bg-[length:120%] bg-[position:100%_50%] transition-all duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[length:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] text-[16px] font-['Inter']"
             @click="onCtaClick"

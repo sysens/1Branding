@@ -285,7 +285,8 @@ const headerGlowStyle = computed(() => {
   } as Record<string, string>;
 });
 
-const loading = computed(() => pending.value || !data.value || !!gqlErrors.value);
+// A partial GraphQL error must not keep the full-screen spinner up forever.
+const loading = computed(() => pending.value || !data.value);
 </script>
 
 <template>
@@ -296,7 +297,7 @@ const loading = computed(() => pending.value || !data.value || !!gqlErrors.value
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
 
     <div class="relative z-10">
-      <div class="bg bg-cover bg-center bg-no-repeat">
+      <div class="bg-cover bg-center bg-no-repeat">
         <div class="relative md:pt-[60px] pt-[30px]">
           <div
             class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 -z-10 h-[140px] w-[92%] max-w-[1400px] rounded-full"
@@ -315,7 +316,7 @@ const loading = computed(() => pending.value || !data.value || !!gqlErrors.value
         <div class="md:py-[115px] md:pt-[114px] pt-[20px]">
           <div
             v-if="section1"
-            class="md:flex nline-block containerr gap-[147px] mt-[120px] items-center justify-between"
+            class="md:flex containerr gap-[147px] mt-[120px] items-center justify-between"
           >
             <div class="flex-1">
               <h1
