@@ -38,20 +38,6 @@ export interface AboutPageTeamSection extends Struct.ComponentSchema {
   };
 }
 
-export interface ContactsPageContact extends Struct.ComponentSchema {
-  collectionName: 'components_contacts_page_contacts';
-  info: {
-    displayName: 'Contact';
-  };
-  attributes: {
-    company: Schema.Attribute.String;
-    email: Schema.Attribute.Email;
-    fullName: Schema.Attribute.String;
-    jobTitle: Schema.Attribute.String;
-    phoneNumber: Schema.Attribute.String;
-  };
-}
-
 export interface ContactsPageContactInfo extends Struct.ComponentSchema {
   collectionName: 'components_contacts_page_contact_infos';
   info: {
@@ -96,23 +82,11 @@ export interface ContactsPageNote extends Struct.ComponentSchema {
   };
 }
 
-export interface ContactsPageRequestedServicesMessage
-  extends Struct.ComponentSchema {
-  collectionName: 'components_contacts_page_requested_services_messages';
-  info: {
-    displayName: 'RequestedServicesMessage';
-  };
-  attributes: {
-    file: Schema.Attribute.Media<'files'>;
-    input: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
 export interface ContactsPageSection1 extends Struct.ComponentSchema {
   collectionName: 'components_contacts_page_section1s';
   info: {
-    displayName: 'Section1';
+    description: 'Address, hours, phone, website, note and the brief file.';
+    displayName: 'Contacts: Main info';
   };
   attributes: {
     contactInfo: Schema.Attribute.Component<
@@ -136,21 +110,11 @@ export interface ContactsPageSection1 extends Struct.ComponentSchema {
 export interface ContactsPageSection2 extends Struct.ComponentSchema {
   collectionName: 'components_contacts_page_section2s';
   info: {
-    displayName: 'Section2';
+    description: 'Title and text above the contact form.';
+    displayName: 'Contacts: Form heading';
   };
   attributes: {
     text: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface ContactsPageTopic extends Struct.ComponentSchema {
-  collectionName: 'components_contacts_page_topics';
-  info: {
-    displayName: 'Topic';
-  };
-  attributes: {
-    input: Schema.Attribute.Text;
     title: Schema.Attribute.String;
   };
 }
@@ -163,21 +127,6 @@ export interface ContactsPageWorkingHours extends Struct.ComponentSchema {
   attributes: {
     hour: Schema.Attribute.String;
     title: Schema.Attribute.String;
-  };
-}
-
-export interface ContactsPageWriteToOneBrending extends Struct.ComponentSchema {
-  collectionName: 'components_contacts_page_write_to_one_brendings';
-  info: {
-    displayName: 'WriteToOneBrending';
-  };
-  attributes: {
-    contactsInputs: Schema.Attribute.Component<'contacts-page.contact', false>;
-    requestedServicesMessage: Schema.Attribute.Component<
-      'contacts-page.requested-services-message',
-      false
-    >;
-    topic: Schema.Attribute.Component<'contacts-page.topic', false>;
   };
 }
 
@@ -287,23 +236,11 @@ export interface LandingPagePartner extends Struct.ComponentSchema {
   };
 }
 
-export interface LandingPageProjectsImages extends Struct.ComponentSchema {
-  collectionName: 'components_landing_page_projects_images';
-  info: {
-    displayName: 'ProjectsImages';
-  };
-  attributes: {
-    projectsImages: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-  };
-}
-
 export interface LandingPageSection9 extends Struct.ComponentSchema {
   collectionName: 'components_landing_page_section9s';
   info: {
-    displayName: 'Section9';
+    description: 'Not used by the current landing.';
+    displayName: 'Landing: Section 9 (not shown)';
   };
   attributes: {
     description: Schema.Attribute.Text;
@@ -327,7 +264,7 @@ export interface LandingPageSplineRobot extends Struct.ComponentSchema {
 export interface LandingPageStats extends Struct.ComponentSchema {
   collectionName: 'components_landing_page_stats';
   info: {
-    displayName: 'stats';
+    displayName: 'Stats';
   };
   attributes: {
     countImage: Schema.Attribute.Media<
@@ -338,21 +275,10 @@ export interface LandingPageStats extends Struct.ComponentSchema {
   };
 }
 
-export interface LandingPageTools extends Struct.ComponentSchema {
-  collectionName: 'components_landing_page_tools';
-  info: {
-    displayName: 'Tools';
-  };
-  attributes: {
-    icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    name: Schema.Attribute.String;
-  };
-}
-
 export interface OneGuaranteePageComments extends Struct.ComponentSchema {
   collectionName: 'components_one_guarantee_page_comments';
   info: {
-    displayName: 'comments';
+    displayName: 'Comment';
   };
   attributes: {
     authorFullName: Schema.Attribute.String;
@@ -406,7 +332,8 @@ export interface OneGuaranteePageGuarantee extends Struct.ComponentSchema {
 export interface OneGuaranteePageSection6 extends Struct.ComponentSchema {
   collectionName: 'components_one_guarantee_page_section6s';
   info: {
-    displayName: 'section6';
+    description: 'Title, text and button at the end of the One Guarantee page.';
+    displayName: 'Guarantee: Call to action';
   };
   attributes: {
     buttonText: Schema.Attribute.String;
@@ -476,7 +403,7 @@ export interface ProjectsPageColorPalette extends Struct.ComponentSchema {
 export interface ProjectsPageHeroSection extends Struct.ComponentSchema {
   collectionName: 'components_projects_page_hero_sections';
   info: {
-    displayName: 'heroSection';
+    displayName: 'Hero section';
   };
   attributes: {
     images: Schema.Attribute.Media<
@@ -491,7 +418,8 @@ export interface ProjectsPageHeroSection extends Struct.ComponentSchema {
 export interface ProjectsPageSection2 extends Struct.ComponentSchema {
   collectionName: 'components_projects_page_section2s';
   info: {
-    displayName: 'Section2';
+    description: 'Story block of a project page.';
+    displayName: 'Project: Text and image';
   };
   attributes: {
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
@@ -510,54 +438,11 @@ export interface ProjectsPageTag extends Struct.ComponentSchema {
   };
 }
 
-export interface SeoAboutPage extends Struct.ComponentSchema {
-  collectionName: 'components_seo_about_pages';
+export interface SharedSeo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_seos';
   info: {
-    displayName: 'AboutPage';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface SeoContactsPage extends Struct.ComponentSchema {
-  collectionName: 'components_seo_contacts_pages';
-  info: {
-    displayName: 'ContactsPage';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface SeoLandingPage extends Struct.ComponentSchema {
-  collectionName: 'components_seo_landing_pages';
-  info: {
-    displayName: 'LandingPage';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface SeoOneGuaranteePage extends Struct.ComponentSchema {
-  collectionName: 'components_seo_one_guarantee_pages';
-  info: {
-    displayName: 'OneGuaranteePage';
-  };
-  attributes: {
-    description: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
-  };
-}
-
-export interface SeoPricePage extends Struct.ComponentSchema {
-  collectionName: 'components_seo_price_pages';
-  info: {
-    displayName: 'PricePage';
+    description: "Page title and meta description. Short or placeholder text is ignored and the site's own copy is used.";
+    displayName: 'SEO';
   };
   attributes: {
     description: Schema.Attribute.Text;
@@ -571,17 +456,13 @@ declare module '@strapi/strapi' {
       'about-page.core-idea': AboutPageCoreIdea;
       'about-page.creators': AboutPageCreators;
       'about-page.team-section': AboutPageTeamSection;
-      'contacts-page.contact': ContactsPageContact;
       'contacts-page.contact-info': ContactsPageContactInfo;
       'contacts-page.download-brief': ContactsPageDownloadBrief;
       'contacts-page.location': ContactsPageLocation;
       'contacts-page.note': ContactsPageNote;
-      'contacts-page.requested-services-message': ContactsPageRequestedServicesMessage;
       'contacts-page.section1': ContactsPageSection1;
       'contacts-page.section2': ContactsPageSection2;
-      'contacts-page.topic': ContactsPageTopic;
       'contacts-page.working-hours': ContactsPageWorkingHours;
-      'contacts-page.write-to-one-brending': ContactsPageWriteToOneBrending;
       'footer.social-media-links': FooterSocialMediaLinks;
       'landing-page.brand-collage': LandingPageBrandCollage;
       'landing-page.brand-positioning': LandingPageBrandPositioning;
@@ -590,11 +471,9 @@ declare module '@strapi/strapi' {
       'landing-page.hero-slogan': LandingPageHeroSlogan;
       'landing-page.info': LandingPageInfo;
       'landing-page.partner': LandingPagePartner;
-      'landing-page.projects-images': LandingPageProjectsImages;
       'landing-page.section9': LandingPageSection9;
       'landing-page.spline-robot': LandingPageSplineRobot;
       'landing-page.stats': LandingPageStats;
-      'landing-page.tools': LandingPageTools;
       'one-guarantee-page.comments': OneGuaranteePageComments;
       'one-guarantee-page.comments-section': OneGuaranteePageCommentsSection;
       'one-guarantee-page.effective': OneGuaranteePageEffective;
@@ -608,11 +487,7 @@ declare module '@strapi/strapi' {
       'projects-page.hero-section': ProjectsPageHeroSection;
       'projects-page.section2': ProjectsPageSection2;
       'projects-page.tag': ProjectsPageTag;
-      'seo.about-page': SeoAboutPage;
-      'seo.contacts-page': SeoContactsPage;
-      'seo.landing-page': SeoLandingPage;
-      'seo.one-guarantee-page': SeoOneGuaranteePage;
-      'seo.price-page': SeoPricePage;
+      'shared.seo': SharedSeo;
     }
   }
 }

@@ -1,10 +1,9 @@
 import { computed } from "vue";
-import { cmsSeoText } from "~/utils/seo";
+import { cmsSeoText, type CmsSeo } from "~/utils/seo";
 
 export type CmsSeoPage = "landingPage" | "aboutPage" | "pricePage" | "oneGuaranteePage" | "contactsPage";
 
-type SeoEntry = { title?: string | null; description?: string | null } | null;
-type SeoResponse = { seo?: Partial<Record<CmsSeoPage, SeoEntry>> | null };
+type SeoResponse = { seo?: Partial<Record<CmsSeoPage, CmsSeo | null>> | null };
 
 const SEO_QUERY = `
   query Seo($locale: I18NLocaleCode) {

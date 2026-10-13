@@ -1,3 +1,5 @@
+import type { CmsSeo } from "~/utils/seo";
+
 export type AppLocale = "ru" | "en";
 
 export type LandingMedia = {
@@ -61,16 +63,11 @@ export type OneGuaranteeSection4 = {
   cards?: OneGuaranteeCard[] | null;
 };
 
-export type LandingSeo = {
-  title?: string | null;
-  description?: string | null;
-};
-
 export type LandingPayloadResponse = {
   data?: {
     landingPage?: LandingPageContent | null;
     seo?: {
-      landingPage?: LandingSeo | null;
+      landingPage?: CmsSeo | null;
     } | null;
     /** English copies, requested only for other locales (no entry there yet). */
     fallbackLandingPage?: LandingPageContent | null;

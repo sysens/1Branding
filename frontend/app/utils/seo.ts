@@ -19,6 +19,9 @@ export const toMetaDescription = (value: string | null | undefined, max = 160) =
   return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max - 20)).trimEnd()}…`;
 };
 
+/** One page's entry in the CMS "SEO" single type (the shared.seo component). */
+export type CmsSeo = { title?: string | null; description?: string | null };
+
 // The CMS "SEO" single type was seeded with scaffolding such as "HomePage",
 // "About Page  title" or "Contacts page  Description". Publishing those as the
 // page title would bury the site in search results, so such values fall back to

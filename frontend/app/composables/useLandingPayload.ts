@@ -1,9 +1,6 @@
 import { computed, type ComputedRef } from "vue";
-import type {
-  LandingPageContent,
-  LandingPayloadResponse,
-  LandingSeo,
-} from "~/types/landingPayload";
+import type { LandingPageContent, LandingPayloadResponse } from "~/types/landingPayload";
+import type { CmsSeo } from "~/utils/seo";
 
 const LANDING_PAYLOAD_QUERY = `
   query LandingPayload($locale: I18NLocaleCode, $withFallback: Boolean!) {
@@ -54,7 +51,7 @@ const LANDING_PAYLOAD_QUERY = `
 
 type LandingPayloadResult = {
   landingPage: ComputedRef<LandingPageContent | null>;
-  seo: ComputedRef<LandingSeo | null>;
+  seo: ComputedRef<CmsSeo | null>;
 };
 
 // The whole page is cached by the server (see pageCache in nuxt.config.ts),

@@ -1042,13 +1042,13 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
     };
   };
   attributes: {
-    aboutPage: Schema.Attribute.Component<'seo.about-page', false> &
+    aboutPage: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    contactsPage: Schema.Attribute.Component<'seo.contacts-page', false> &
+    contactsPage: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1057,7 +1057,7 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    landingPage: Schema.Attribute.Component<'seo.landing-page', false> &
+    landingPage: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1065,16 +1065,13 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
       }>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::seo.seo'>;
-    oneGuaranteePage: Schema.Attribute.Component<
-      'seo.one-guarantee-page',
-      false
-    > &
+    oneGuaranteePage: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    pricePage: Schema.Attribute.Component<'seo.price-page', false> &
+    pricePage: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
