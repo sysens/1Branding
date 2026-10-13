@@ -179,6 +179,8 @@ export const useContactForm = (notify: Notify) => {
   };
 
   return {
+    /** Max lengths, also used as the inputs' maxlength. */
+    fieldLimits: LIMITS,
     topicVal,
     servicesVal,
     fullNameVal,

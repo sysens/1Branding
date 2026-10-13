@@ -39,6 +39,7 @@ const showToast = (msg: string, type: "error" | "success" = "error") => {
 
 // Values, validation and sending live in useContactForm; this component is the markup.
 const {
+  fieldLimits,
   topicVal,
   servicesVal,
   fullNameVal,

@@ -100,6 +100,10 @@ try {
   res = await fetch(`${BASE}/news`, { headers });
   check("/news has the more-news slider", (await res.text()).includes("news-title"), "");
 
+  res = await fetch(`${BASE}/contact`, { headers });
+  const contact = await res.text();
+  check("/contact renders the form with its limits", contact.includes("form-send") && contact.includes('maxlength="200"'), "");
+
   // Private address down: pages still render through the public URL.
   await new Promise((r) => proxy.close(r));
   proxy.closeAllConnections?.();
