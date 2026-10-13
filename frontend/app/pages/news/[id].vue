@@ -129,8 +129,8 @@ useGsapContext(pageRoot, ({ gsap }) => {
 
 <template>
   <div ref="pageRoot" class="bg-black relative overflow-x-hidden">
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
     <div class="relative z-10">
       <div
         class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"

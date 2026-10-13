@@ -1,8 +1,9 @@
-import {
+import type {
   BufferGeometry,
+  Material} from "three";
+import {
   Group,
   Line,
-  Material,
   Mesh,
   PerspectiveCamera,
   Points,

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
 const GRAPHQL_URL = useGraphqlUrl();
@@ -98,14 +96,14 @@ const uploadFileToStrapi = async (file: File): Promise<number> => {
     throw Object.assign(new Error(errorText || `Upload failed with status ${res.status}`), { status: res.status });
   }
 
-  let parsed: any = null;
+  let parsed: unknown = null;
   try {
     parsed = await res.json();
   } catch {
     throw new Error("Invalid upload response");
   }
 
-  const id = Array.isArray(parsed) ? parsed[0]?.id : null;
+  const id = Array.isArray(parsed) ? (parsed[0] as { id?: unknown } | undefined)?.id : null;
   if (typeof id !== "number" || !Number.isInteger(id) || id <= 0) {
     throw new Error(t("common.fileUploadFailed"));
   }
@@ -163,8 +161,18 @@ const fieldLimits = {
   email: 254,
 } as const;
 
+// What a failed $fetch / upload error carries (all optional).
+type RequestError = {
+  status?: number;
+  statusCode?: number;
+  response?: { status?: number };
+  data?: { error?: { message?: string } };
+  message?: string;
+} | null | undefined;
+
 // A short message in the visitor's language instead of the backend's raw text.
-const normalizeBackendError = (e: any) => {
+const normalizeBackendError = (error: unknown) => {
+  const e = error as RequestError;
   const status = Number(e?.status ?? e?.statusCode ?? e?.response?.status ?? 0);
   const message = String(e?.data?.error?.message || e?.message || "");
   if (status === 429) return t("common.tooManyRequests");
@@ -242,10 +250,10 @@ const onSend = async () => {
     }
 
     showToast(t("common.sent"), "success");
-  } catch (e: any) {
+  } catch (e) {
     // The server refused the attached upload (expired, or the server restarted):
     // the next try uploads the file again.
-    if (/file/i.test(String(e?.data?.error?.message || ""))) uploaded = null;
+    if (/file/i.test(String((e as RequestError)?.data?.error?.message || ""))) uploaded = null;
     showToast(normalizeBackendError(e), "error");
   } finally {
     sending.value = false;
@@ -376,7 +384,7 @@ onBeforeUnmount(() => {
             tabindex="-1"
             autocomplete="off"
             aria-hidden="true"
-          />
+          >
           <div class="form-left will-change-transform">
             <h3
               class="font-normal md:text-[24px] md:pb-[30px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
@@ -394,7 +402,7 @@ onBeforeUnmount(() => {
               :aria-label="topicInput"
               :maxlength="fieldLimits.topic"
               class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-            />
+            >
 
             <h3
               class="font-normal md:text-[24px] md:pb-[30px] pt-[40px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
@@ -423,11 +431,11 @@ onBeforeUnmount(() => {
                   class="hidden"
                   :aria-label="$t('common.addFile')"
                   @change="onFileChange"
-                />
+                >
                 <button
                   type="button"
-                  @click="onPickFile"
                   class="capitalize md:w-[236px] text-[#FFFFFF] md:h-[60px] w-[219px] h-[50px] rounded-[32px] font-normal md:text-[19.57px] text-[16px] leading-[19.57px] tracking-normal text-center align-middle font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] md:text-[20px] hover:bg-[size:140%] hover:bg-[position:0%_50%] text-[16px] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
+                  @click="onPickFile"
                 >
                   {{ $t("common.addFile") }}
                 </button>
@@ -473,7 +481,7 @@ onBeforeUnmount(() => {
                 :aria-label="fullNamePh"
                 :maxlength="fieldLimits.fullName"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-              />
+              >
 
               <input
                 v-model="jobTitleVal"
@@ -485,7 +493,7 @@ onBeforeUnmount(() => {
                 :aria-label="jobTitlePh"
                 :maxlength="fieldLimits.jobTitle"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-              />
+              >
 
               <input
                 v-model="companyVal"
@@ -497,7 +505,7 @@ onBeforeUnmount(() => {
                 :aria-label="companyPh"
                 :maxlength="fieldLimits.company"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-              />
+              >
 
               <input
                 v-model="phoneVal"
@@ -509,7 +517,7 @@ onBeforeUnmount(() => {
                 :aria-label="phonePh"
                 :maxlength="fieldLimits.phone"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-              />
+              >
 
               <input
                 v-model="emailVal"
@@ -522,7 +530,7 @@ onBeforeUnmount(() => {
                 :aria-label="emailPh"
                 :maxlength="fieldLimits.email"
                 class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
-              />
+              >
             </div>
           </div>
         </form>

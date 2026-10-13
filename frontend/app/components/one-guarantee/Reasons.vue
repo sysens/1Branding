@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
 useGsapContext(root, ({ gsap, ScrollTrigger }) => {
@@ -60,7 +58,7 @@ useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     });
   }, { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } });
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 type WhyItem = NonNullable<NonNullable<OneGuaranteeEntry["section5"]>["whyItWorks"]>[number];
 
@@ -104,7 +102,7 @@ const resolveImg = useCmsMedia();
               class="w-[40px] h-[35px]"
               :src="resolveImg(item.checkMark?.url)"
               alt=""
-            />
+            >
           </div>
 
           <div>

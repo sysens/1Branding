@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Header from "~/components/Header.vue";
-import Footer from "~/components/Footer.vue";
 import BigPhoto from "~/components/about/BigPhoto.vue";
 import ThreePic from "~/components/about/ThreePic.vue";
 import TwoFlex from "~/components/about/TwoFlex.vue";

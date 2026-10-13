@@ -25,7 +25,7 @@ const { active } = useStickyScrollReveal(root);
         <div class="sticky-reveal__media-pin">
           <div v-for="(item, index) in content" :key="item.id" class="sticky-reveal__media" :class="{ 'is-active': active === index }">
             <slot name="media" :item="item" :index="index" :active="active === index">
-              <img :src="item.image.src" alt="" :width="item.image.width" :height="item.image.height" :class="`sticky-reveal__image--${item.image.variant}`" decoding="async" loading="lazy" />
+              <img :src="item.image.src" alt="" :width="item.image.width" :height="item.image.height" :class="`sticky-reveal__image--${item.image.variant}`" decoding="async" loading="lazy" >
             </slot>
           </div>
         </div>
@@ -36,7 +36,7 @@ const { active } = useStickyScrollReveal(root);
           class="sticky-reveal__panel" :class="{ 'is-active': active === index }"
           :style="{ color: item.foreground }" :aria-labelledby="`${instanceId}-${item.id}`"
         >
-          <img class="sticky-reveal__mobile-image" :class="`sticky-reveal__image--${item.image.variant}`" :src="item.image.src" :alt="item.image.alt" :width="item.image.width" :height="item.image.height" loading="lazy" decoding="async" />
+          <img class="sticky-reveal__mobile-image" :class="`sticky-reveal__image--${item.image.variant}`" :src="item.image.src" :alt="item.image.alt" :width="item.image.width" :height="item.image.height" loading="lazy" decoding="async" >
           <div class="sticky-reveal__copy">
             <h2 :id="`${instanceId}-${item.id}`">{{ item.title }}</h2>
             <p>{{ item.description }}</p>

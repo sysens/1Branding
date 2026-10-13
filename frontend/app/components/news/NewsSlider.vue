@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
 const [container, slider] = useKeenSlider({
@@ -162,29 +160,29 @@ watch(locale, async () => {
         <button
           class="group bg-[length:440%] bg-right w-[81px] h-[81px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
-          @click="prev"
           :aria-label="$t('common.prev')"
+          @click="prev"
         >
-          <img src="/News/vector-10.png" alt="" />
+          <img src="/News/vector-10.png" alt="" >
         </button>
 
         <button
           class="group bg-[length:340%] bg-top w-[81px] h-[81px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
-          @click="next"
           :aria-label="$t('common.next')"
+          @click="next"
         >
-          <img src="/News/vector-11.png" alt="" />
+          <img src="/News/vector-11.png" alt="" >
         </button>
       </div>
     </div>
 
     <div
       class="pointer-events-none absolute left-0 top-[78px] bottom-0 w-[80px] z-[5]"
-    ></div>
+    />
     <div
       class="pointer-events-none absolute right-0 top-[78px] bottom-0 w-[80px] z-[5]"
-    ></div>
+    />
 
     <div
       ref="container"
@@ -206,8 +204,8 @@ watch(locale, async () => {
                   : '/home/rectangle-42016.png'
               "
               alt=""
-            />
-            <div class="absolute inset-0"></div>
+            >
+            <div class="absolute inset-0"/>
           </div>
 
           <div class="px-[30px]">
@@ -218,7 +216,7 @@ watch(locale, async () => {
                 class="w-[14px] h-[14px] opacity-[0.9]"
                 src="/News/vector-9.png"
                 alt=""
-              />
+              >
               <p
                 class="font-normal text-base md:leading-7 md:tracking-normal text-[16px] leading-[28px] tracking-[0%] font-['Poppins','Inter',sans-serif]"
               >
@@ -241,19 +239,19 @@ watch(locale, async () => {
         <button
           class="group bg-[length:440%] bg-right w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
-          @click="prev"
           :aria-label="$t('common.prev')"
+          @click="prev"
         >
-          <img class="w-[19px] h-auto" src="/News/vector-10.png" alt="" />
+          <img class="w-[19px] h-auto" src="/News/vector-10.png" alt="" >
         </button>
 
         <button
           class="group bg-[length:340%] bg-top w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
-          @click="next"
           :aria-label="$t('common.next')"
+          @click="next"
         >
-          <img class="w-[19px] h-auto" src="/News/vector-11.png" alt="" />
+          <img class="w-[19px] h-auto" src="/News/vector-11.png" alt="" >
         </button>
       </div>
     </div>

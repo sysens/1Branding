@@ -9,7 +9,9 @@
     "dev": "nuxt dev --dotenv .env --host 127.0.0.1 --port 3000",
     "generate": "nuxt generate --dotenv .env",
     "preview": "nuxt preview --dotenv .env --port 3000",
-    "start": "nuxt start --dotenv .env --port 3000"
+    "start": "nuxt start --dotenv .env --port 3000",
+    "lint": "eslint .",
+    "typecheck": "nuxi typecheck"
   },
   "dependencies": {
     "@nuxt/image": "^2.1.0",
@@ -27,6 +29,7 @@
     "vue": "^3.5.42"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1",
     "@nuxtjs/i18n": "^10.6.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@types/d3-geo": "^3.1.1",
@@ -34,6 +37,7 @@
     "@types/three": "0.180.0",
     "@types/topojson-client": "^3.1.5",
     "d3-geo": "^3.1.1",
+    "eslint": "^9",
     "graphql": "^17.0.2",
     "msgpackr": "^2.1.0",
     "nuxt-keen-slider": "^1.1.1",

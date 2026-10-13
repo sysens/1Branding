@@ -17,8 +17,6 @@ useGsapContext(root, ({ gsap }) => {
 const locale = useCmsLocale();
 const fetchNewsPage = useNewsPages();
 const resolveImage = useCmsMedia();
-const formatDate = formatNewsDate;
-const pickDate = newsDate;
 
 const pageSize = 4;
 const page = ref(1);
@@ -104,7 +102,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
                 class="w-[668px] object-cover h-full"
                 :src="resolveImage(item.image.url)"
                 alt=""
-              />
+              >
             </div>
 
             <div class="w-full">
@@ -126,9 +124,9 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
     </div>
 
     <button
-      @click="loadMore"
       :disabled="loadingMore || !canLoadMore"
       class="rounded-full bg-black text-white block md:my-[100px] mt-[50px] mb-[100px] border-2 mx-auto w-[280px] h-[60px] border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-[0_0_20px_rgba(3,203,0,0.6)]"
+      @click="loadMore"
     >
       {{ $t("common.showMore") }}
     </button>

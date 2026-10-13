@@ -118,7 +118,7 @@ const colors = computed(() => props.colors ?? []);
             <div
               class="md:w-[154px] md:h-[127px] md:rounded-[20px] w-[102.67px] h-[84.67px] rounded-[13.33px] opacity-100 rotate-0"
               :style="{ backgroundColor: c.HexColorCode || '#000' }"
-            ></div>
+            />
 
             <h2
               class="text-white font-medium md:text-[22px] md:leading-[31.29px] text-center text-[14.67px] leading-[20.86px] tracking-normal font-['Poppins','Inter',sans-serif]"

@@ -14,8 +14,8 @@ const year = new Date().getFullYear();
     <section class="movement-footer__stage" aria-labelledby="movement-title">
       <MovementClock />
       <div class="movement-footer__content">
-        <h2 id="movement-title">{{ t("movement.first") }}<br />{{ t("movement.second") }}</h2>
-        <p>{{ t("movement.description") }}<br />{{ t("movement.detail") }}</p>
+        <h2 id="movement-title">{{ t("movement.first") }}<br >{{ t("movement.second") }}</h2>
+        <p>{{ t("movement.description") }}<br >{{ t("movement.detail") }}</p>
         <CinematicAction :to="localePath('/projects')">{{ t("movement.action") }}</CinematicAction>
       </div>
     </section>

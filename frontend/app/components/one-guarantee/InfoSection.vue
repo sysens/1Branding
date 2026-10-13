@@ -143,15 +143,6 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
-type OneGuaranteeSection2 = {
-  title?: string;
-  text1?: string;
-  text2?: string;
-  text3?: string;
-  text4?: string;
-  text5?: string;
-};
-
 const { own: guarantee } = await useOneGuaranteePage();
 
 const s2 = computed(() => guarantee.value?.section2 ?? null);
@@ -184,7 +175,7 @@ const highlightedText = computed(() => {
   >
     <div
       class="pointer-events-none absolute top-0 font-['Inter'] left-0 w-full h-[80px] bg-gradient-to-b from-black/0 via-black/100 to-transparent"
-    ></div>
+    />
 
     <div class="max-w-[991px] mx-auto flex flex-col items-center text-center">
       <div>
@@ -211,7 +202,7 @@ const highlightedText = computed(() => {
           src="/OneGuarantee/subway-tick-1.png"
           alt=""
           class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2 font-family: Inter;"
-        />
+        >
 
         <p
           class="font-['Inter'] font-light md:text-[24px] text-[14px] leading-[100%] tracking-[0%] text-center"
@@ -237,10 +228,10 @@ const highlightedText = computed(() => {
       <div class="og-divider will-change-transform w-full">
         <div
           class="borderGreen text-[#FFFFFF] font-['Inter'] font-light w-full max-w-[991px] text-[20px] leading-[100%] tracking-normal text-center"
-        ></div>
+        />
         <div
           class="text-[#FFFFFF] text-center w-full h-[2px] bg-gradient-to-r from-transparent via-[#00FF0D] to-transparent"
-        ></div>
+        />
       </div>
 
       <div class="w-full max-w-[801px]">

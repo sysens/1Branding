@@ -89,7 +89,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
                 loading="lazy"
                 decoding="async"
                 draggable="false"
-              />
+              >
             </div>
           </div>
         </div>

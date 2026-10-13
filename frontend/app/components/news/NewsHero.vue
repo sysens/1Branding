@@ -32,22 +32,6 @@ const title = computed(() => (props.news?.title ?? "").toString());
 const text = computed(() => (props.news?.text ?? "").toString());
 const heroImageSrc = computed(() => resolveImage(props.news?.image?.url));
 
-const createdAt = computed(() => {
-  const raw =
-    props.news?.createdAt || props.news?.publishedAt || props.news?.updatedAt || "";
-
-  if (!raw) return "";
-
-  const d = new Date(raw);
-  if (Number.isNaN(d.getTime())) return raw;
-
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-
-  return `${day}.${month}.${year}`;
-});
-
 const images = computed(() => props.news?.images_connection?.nodes ?? []);
 const leftImg = computed(() => resolveImage(images.value?.[0]?.url));
 const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
@@ -62,7 +46,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         >
           <p
             class="font-normal text-[16px] text-white leading-[28px] tracking-normal font-['Poppins','Inter',sans-serif]"
-          ></p>
+          />
         </div>
 
         <h1
@@ -95,7 +79,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
             :alt="title"
             loading="lazy"
             class="leftSide leftImg w-full h-full object-cover md:rounded-l-[30px] mb-[5px]"
-          />
+          >
         </div>
 
         <div class="md:w-[66%] md:h-[531px] h-[300px]">
@@ -105,7 +89,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
             :alt="title"
             loading="lazy"
             class="rightSide rightImg w-full h-full object-cover md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px]"
-          />
+          >
         </div>
       </div>
     </div>

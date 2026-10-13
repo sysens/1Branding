@@ -55,6 +55,8 @@ export default defineNuxtConfig({
   // rules into every page, while `body * { font-family: inherit !important }`
   // (tailwind.css) means only the self-hosted SF Pro WOFF2 files are rendered.
   modules: [
+    // Generates the ESLint flat config (eslint.config.mjs extends it); dev only.
+    "@nuxt/eslint",
     "@nuxt/image",
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",

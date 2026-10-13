@@ -75,7 +75,7 @@ useGsapContext(
       loop
       playsinline
       preload="metadata"
-    ></video>
+    />
 
     <img
       v-else
@@ -84,7 +84,7 @@ useGsapContext(
       :alt="media.alt"
       loading="lazy"
       decoding="async"
-    />
+    >
   </div>
 </template>
 

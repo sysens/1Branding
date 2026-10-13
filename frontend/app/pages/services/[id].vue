@@ -2,27 +2,20 @@
 import Spinner from "~/components/Spinner.vue";
 import ProductsMain from "~/components/products/ProductsMain.vue";
 import { onMounted, nextTick, computed, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-
-type AppLocale = "ru" | "en";
 
 const route = useRoute();
-const { t, locale } = useI18n();
-
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
+const { t } = useI18n();
 
 const getLenis = () => {
   const nuxtApp = useNuxtApp();
-  return (nuxtApp as any).$lenis as
-    | {
-        start?: () => void;
-        stop?: () => void;
-        resize?: () => void;
-        scrollTo?: (to: number | string | HTMLElement, opts?: any) => void;
-      }
-    | undefined;
+  return (nuxtApp as unknown as {
+    $lenis?: {
+      start?: () => void;
+      stop?: () => void;
+      resize?: () => void;
+      scrollTo?: (to: number | string | HTMLElement, opts?: Record<string, unknown>) => void;
+    };
+  }).$lenis;
 };
 
 const raf2 = () =>
@@ -31,7 +24,7 @@ const raf2 = () =>
   );
 
 const refreshLenis = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
   await nextTick();
   await raf2();
   const lenis = getLenis();
@@ -40,11 +33,11 @@ const refreshLenis = async () => {
 };
 
 const stabilizeAfterAssets = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   const fontsReady =
     "fonts" in document
-      ? (document as any).fonts.ready.catch(() => null)
+      ? document.fonts.ready.catch(() => null)
       : Promise.resolve(null);
 
   const imgs = Array.from(document.images || []);
@@ -271,14 +264,13 @@ watch(
       class="fixed inset-0 z-[9999]"
     />
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
     <div>
       <div class="relative z-10">
         <div class="bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat">
-          <div class="md:pt-[60px] pt-[30px]">
-          </div>
+          <div class="md:pt-[60px] pt-[30px]"/>
 
           <div class="px-[20px] md:px-0 containerr">
             <div class="-ml-[20px] md:ml-0">

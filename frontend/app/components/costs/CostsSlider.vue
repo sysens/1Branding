@@ -38,7 +38,7 @@
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
-              />
+              >
 
               <span class="costs-card__name">{{ item.title }}</span>
 
@@ -56,8 +56,6 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 import CostsOrbitalGlow from "~/components/costs/CostsOrbitalGlow.vue";
-
-type AppLocale = "ru" | "en";
 
 type PricingItem = {
   title: string;
@@ -79,7 +77,7 @@ type PriceCategoriesResponse = {
   errors?: Array<{ message: string }>;
 };
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const query = `
   query PriceCategories($locale: I18NLocaleCode!, $withFallback: Boolean!) {

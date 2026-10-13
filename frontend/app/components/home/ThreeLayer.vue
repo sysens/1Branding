@@ -33,10 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
 
-const hasTitleText = computed(() => !!props.title?.trim());
 const hasButtonText = computed(() => !!props.button?.trim());
 
-const shouldShowTitle = computed(() => props.showTitle && hasTitleText.value);
 const shouldShowButton = computed(() => props.showButton && hasButtonText.value);
 
 const fallbackRowSets = computed(() => getLocalBrandCollageRows());

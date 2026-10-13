@@ -58,9 +58,10 @@ onBeforeUnmount(() => {
 <template>
   <div ref="root" class="info-media info-media--frames" role="img" :aria-label="alt">
     <template v-for="(frame, index) in frames" :key="frame">
-      <img v-if="framesRequested" :src="frame" :srcset="w1280Srcset(frame)"
+      <img
+v-if="framesRequested" :src="frame" :srcset="w1280Srcset(frame)"
         :sizes="w1280Srcset(frame) ? '(max-width: 720px) 720px, 100vw' : undefined" alt="" loading="lazy" decoding="async"
-        class="info-media__frame" :class="{ 'is-active': index === active, 'is-previous': index === previous }" />
+        class="info-media__frame" :class="{ 'is-active': index === active, 'is-previous': index === previous }" >
     </template>
   </div>
 </template>

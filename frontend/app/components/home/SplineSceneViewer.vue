@@ -89,7 +89,7 @@ const mountViewer = async () => {
   clearViewer();
   hasError.value = false;
 
-  if (!process.client || !target || !scene) {
+  if (!import.meta.client || !target || !scene) {
     isLoading.value = false;
     return;
   }
@@ -154,7 +154,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="host" class="spline-scene-viewer">
     <div v-if="isLoading && showLoader" class="spline-scene-viewer__fallback">
-      <span class="spline-scene-viewer__loader"></span>
+      <span class="spline-scene-viewer__loader"/>
     </div>
 
     <div v-if="hasError" class="spline-scene-viewer__fallback">

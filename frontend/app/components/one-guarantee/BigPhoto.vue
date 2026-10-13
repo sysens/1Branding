@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 const localePath = useLocalePath();
 const router = useRouter();
@@ -98,14 +96,6 @@ useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     });
   }, { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } });
 
-const { locale } = useI18n();
-type Section6 = {
-  title: string;
-  text: string;
-  buttonText: string;
-  buttonUrl: string;
-};
-
 const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
 const section6 = computed(
@@ -137,7 +127,7 @@ const isExternalUrl = (url: string) => /^https?:\/\//i.test(url);
 const isSitePath = (url: string) => url.startsWith("/") && !url.startsWith("//");
 
 const onCtaClick = async (event: MouseEvent) => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
   if (isModifiedEvent(event)) return;
 
   const target = buttonUrl.value?.trim();
@@ -177,7 +167,7 @@ const onCtaClick = async (event: MouseEvent) => {
           class="cta-img will-change-transform"
           src="/OneGuarantee/image-84.png"
           alt=""
-        />
+        >
       </div>
 
       <div>

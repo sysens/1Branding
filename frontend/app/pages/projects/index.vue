@@ -1,10 +1,9 @@
 <script setup lang="ts">
 // A full-screen project wall: no site footer.
-definePageMeta({ footer: false });
-
 import { computed } from "vue";
 import InfiniteProjectsWall from "~/components/projects/InfiniteProjectsWall.vue";
-import Header from "~/components/Header.vue";
+
+definePageMeta({ footer: false });
 
 const { t } = useI18n();
 const localePath = useLocalePath();

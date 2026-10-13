@@ -18,7 +18,7 @@ const baseLogos = computed(() => props.logos.filter(Boolean));
 
 const MIN_ITEMS_FOR_SMOOTH = 24;
 
-const logos = computed(() => {
+const loopedLogos = computed(() => {
   const arr = baseLogos.value;
   if (!arr.length) return [];
   const times = Math.max(2, Math.ceil(MIN_ITEMS_FOR_SMOOTH / arr.length));
@@ -48,7 +48,7 @@ const marqueeDuration = computed(() => {
       >
         <div class="flex items-center gap-16 px-8">
           <img
-            v-for="(src, i) in logos"
+            v-for="(src, i) in loopedLogos"
             :key="'a-' + i"
             :src="src"
             alt=""
@@ -56,12 +56,12 @@ const marqueeDuration = computed(() => {
             loading="lazy"
             decoding="async"
             draggable="false"
-          />
+          >
         </div>
 
         <div class="flex items-center gap-16 px-8" aria-hidden="true">
           <img
-            v-for="(src, i) in logos"
+            v-for="(src, i) in loopedLogos"
             :key="'b-' + i"
             :src="src"
             alt=""
@@ -69,7 +69,7 @@ const marqueeDuration = computed(() => {
             loading="lazy"
             decoding="async"
             draggable="false"
-          />
+          >
         </div>
       </div>
     </div>

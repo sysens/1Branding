@@ -9,11 +9,11 @@ import Sparkles from "~/components/ui/Sparkles.vue";
     </h2>
 
     <div class="footer-brand-sparkles__stage" aria-hidden="true">
-      <div class="footer-brand-sparkles__glow"></div>
-      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--soft"></div>
-      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--sharp"></div>
-      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--core-soft"></div>
-      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--core"></div>
+      <div class="footer-brand-sparkles__glow"/>
+      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--soft"/>
+      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--sharp"/>
+      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--core-soft"/>
+      <div class="footer-brand-sparkles__line footer-brand-sparkles__line--core"/>
 
       <Sparkles
         class="footer-brand-sparkles__particles"
@@ -25,7 +25,7 @@ import Sparkles from "~/components/ui/Sparkles.vue";
         :speed="0.42"
       />
 
-      <div class="footer-brand-sparkles__edge-mask"></div>
+      <div class="footer-brand-sparkles__edge-mask"/>
     </div>
   </div>
 </template>

@@ -40,7 +40,7 @@ watch(
   { immediate: true }
 );
 
-const projects = computed(() => allProjects.value.slice(0, visibleCount.value));
+const visibleProjects = computed(() => allProjects.value.slice(0, visibleCount.value));
 
 const hasMore = computed(() => visibleCount.value < allProjects.value.length);
 
@@ -88,7 +88,7 @@ const { refresh } = useGsapContext(root, ({ gsap, el }) => {
 });
 
 watch(
-  () => projects.value.length,
+  () => visibleProjects.value.length,
   () => {
     void refresh();
   }
@@ -99,7 +99,7 @@ watch(
   <div ref="root">
     <div class="products bg-transparent grid md:grid-cols-3 grid-cols-2 gap-2">
       <NuxtLink
-        v-for="(item, i) in projects"
+        v-for="(item, i) in visibleProjects"
         :key="item.documentId + i"
         :to="linkTo(item.documentId)"
         class="group relative w-full block"

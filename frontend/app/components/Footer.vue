@@ -6,10 +6,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 // footer clips its content, which starts half its height higher and settles as
 // the footer scrolls in, while a black veil over it fades out.
 
-type AppLocale = "ru" | "en";
-
 const localePath = useLocalePath();
-const { locale, t } = useI18n();
+const { t } = useI18n();
 const { socialMedia: social } = await useFooterSocials();
 
 type FooterLink = { label: string; to?: string; href?: string };

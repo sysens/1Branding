@@ -83,13 +83,13 @@
 
           <div class="toggleButton oneGuarantee relative flex z-[111] justify-end">
             <button
-              type="button"
               ref="menuOpenButton"
+              type="button"
               :aria-label="$t('a11y.openMenu')"
               :aria-expanded="isMobileMenuOpen"
               aria-controls="mobile-menu"
-              @click="isMobileMenuOpen = true"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
+              @click="isMobileMenuOpen = true"
             >
               <!-- Vector, so the 21px bitmap no longer blurs on high-DPI screens. -->
               <svg class="w-[24px] h-auto" viewBox="0 0 21 21" width="24" height="24" fill="#00EA00" aria-hidden="true">
@@ -120,107 +120,107 @@
         role="dialog"
         aria-modal="true"
         :aria-label="$t('a11y.menu')"
-        @keydown="onMenuKeydown"
         class="fixed inset-0 z-[2147483647] min-[950px]:hidden bg-gradient-to-b from-black to-[#00EA00] h-[100dvh] overflow-hidden overscroll-none"
+        @keydown="onMenuKeydown"
       >
-        <div class="absolute inset-0 bg-black/80" aria-hidden="true" @click="closeMobileMenu"></div>
+        <div class="absolute inset-0 bg-black/80" aria-hidden="true" @click="closeMobileMenu"/>
 
         <div class="relative h-full overflow-y-auto overscroll-contain z-[2147483647]">
           <div class="flex items-center justify-between px-[32px] pt-[40px] pb-[72px]">
             <a :href="localePath('/')" @click="onNav($event, localePath('/'))">
-              <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" />
+              <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" >
             </a>
 
             <button
-              type="button"
               ref="menuCloseButton"
+              type="button"
               :aria-label="$t('a11y.closeMenu')"
-              @click="closeMobileMenu"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
+              @click="closeMobileMenu"
             >
               <img
                 class="w-[24px] h-auto rotate-90"
                 src="/header/vector-13.png"
                 alt=""
-              />
+              >
             </button>
           </div>
 
           <div class="px-[20px]">
             <a
               :href="`${localePath('/')}#services`"
-              @click="onNav($event, `${localePath('/')}#services`)"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, `${localePath('/')}#services`)"
             >
               {{ $t("nav.services") }}
             </a>
 
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/about')"
-              @click="onNav($event, localePath('/about'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/about'))"
             >
               {{ $t("nav.about") }}
             </a>
 
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/projects')"
-              @click="onNav($event, localePath('/projects'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/projects'))"
             >
               {{ $t("nav.projects") }}
             </a>
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/contact')"
-              @click="onNav($event, localePath('/contact'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/contact'))"
             >
               {{ $t("nav.contacts") }}
             </a>
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/one-guarantee')"
-              @click="onNav($event, localePath('/one-guarantee'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/one-guarantee'))"
             >
               <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
               {{ $t("brand.oneGuaranteeSuffix") }}
             </a>
 
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/pricing')"
-              @click="onNav($event, localePath('/pricing'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/pricing'))"
             >
               {{ $t("nav.prices") }}
             </a>
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <a
               :href="localePath('/news')"
-              @click="onNav($event, localePath('/news'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              @click="onNav($event, localePath('/news'))"
             >
               {{ $t("nav.news") }}
             </a>
-            <div class="h-px bg-white/10"></div>
+            <div class="h-px bg-white/10"/>
 
             <div>
               <div class="block py-[23px] font-['Inter'] text-white text-[20px]">
                 <div class="relative w-full">
                   <button
                     type="button"
-                    @click="isLangOpen = !isLangOpen"
                     class="w-full px-[20px] flex pb-[33px] items-center justify-between text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle"
+                    @click="isLangOpen = !isLangOpen"
                   >
                     <span>{{ lang === "ru" ? "ru " : "eng" }}</span>
                     <svg
@@ -252,23 +252,23 @@
                     >
                       <button
                         type="button"
-                        @click="pickLang('en')"
                         class="w-full px-[20px] py-[18px] text-start text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
+                        @click="pickLang('en')"
                       >
                         en
                       </button>
-                      <div class="h-px w-[70%] ml-[20px] bg-white/10"></div>
+                      <div class="h-px w-[70%] ml-[20px] bg-white/10"/>
                       <button
                         type="button"
-                        @click="pickLang('ru')"
                         class="w-full py-[18px] text-start px-[20px] text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
+                        @click="pickLang('ru')"
                       >
                         ru
                       </button>
                     </div>
                   </transition>
                 </div>
-                <div class="h-px bg-white/10"></div>
+                <div class="h-px bg-white/10"/>
               </div>
             </div>
           </div>
@@ -294,7 +294,7 @@ const router = useRouter();
 const route = useRoute();
 
 const isIOSWebKit = () => {
-  if (!process.client) return false;
+  if (!import.meta.client) return false;
 
   const ua = window.navigator.userAgent || "";
   const isIOS = /iP(ad|hone|od)/i.test(ua);
@@ -330,7 +330,7 @@ const pickLang = async (val: AppLocale) => {
 };
 
 const lockBodyScroll = () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   document.documentElement.style.overflow = "hidden";
   document.body.style.overflow = "hidden";
@@ -338,7 +338,7 @@ const lockBodyScroll = () => {
 };
 
 const unlockBodyScroll = () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   document.documentElement.style.overflow = "";
   document.body.style.overflow = "";
@@ -393,7 +393,7 @@ watch(
 );
 
 const navigateSafely = async (to: string, replace = false) => {
-  if (!process.client || !to) return;
+  if (!import.meta.client || !to) return;
 
   closeMobileMenu();
   await nextTick();

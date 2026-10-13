@@ -66,7 +66,7 @@ const sections = computed<ProductStorySection[]>(() => {
           <!-- Intrinsic size gives the lazy image a real box before it loads (the
                box starts off-screen; a 0px-wide box never intersects the
                viewport and would never be fetched). -->
-          <img :src="section.imageSrc" :alt="section.imageAlt" width="2560" height="2559" loading="lazy" decoding="async" />
+          <img :src="section.imageSrc" :alt="section.imageAlt" width="2560" height="2559" loading="lazy" decoding="async" >
         </div>
 
         <div class="first-glance-section__copy">

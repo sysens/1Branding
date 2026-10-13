@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
 useGsapContext(root, ({ gsap }) => {
@@ -25,13 +23,6 @@ useGsapContext(root, ({ gsap }) => {
       }
     );
   });
-
-const { locale } = useI18n();
-type AboutPage = {
-  documentId: string;
-  section1: { id: string; title: string; image: { url: string | null; alternativeText?: string | null } | null } | null;
-  section3: { title: string; subTitle: string } | null;
-};
 
 const { aboutPage } = await useAboutPage();
 

@@ -59,7 +59,7 @@ const raf2 = () =>
   );
 
 const refreshLenis = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
   await nextTick();
   await raf2();
   const lenis = getLenis();
@@ -68,7 +68,7 @@ const refreshLenis = async () => {
 };
 
 const stabilizeAfterAssets = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   const fontsReady =
     "fonts" in document ? document.fonts.ready.catch(() => null) : Promise.resolve(null);
@@ -102,8 +102,8 @@ onMounted(async () => {
 
 <template>
   <div class="bg-black relative overflow-x-hidden">
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
     <div class="relative z-10">
       <div>
@@ -121,7 +121,7 @@ onMounted(async () => {
                 aria-hidden="true"
                 :poster="oneGuaranteeVideoPoster"
               >
-                <source v-if="heroVideoSrc" :src="heroVideoSrc" type="video/mp4" />
+                <source v-if="heroVideoSrc" :src="heroVideoSrc" type="video/mp4" >
               </video>
 
               <div
@@ -141,7 +141,7 @@ onMounted(async () => {
         </div>
 
         <!-- Rendered only when the CMS has real client reviews. -->
-        <GuaranteeMarquee :rows="2" :showTitle="false" :showButton="false">
+        <GuaranteeMarquee :rows="2" :show-title="false" :show-button="false">
           <template #header>
             <div class="containerr">
               <div class="md:px-0 px-[20px]">

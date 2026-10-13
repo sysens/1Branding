@@ -2,8 +2,6 @@
 import { computed } from "vue";
 import { isPlaceholderCopy } from "~/utils/seo";
 
-type AppLocale = "ru" | "en";
-
 type MarqueeItem = {
   text: string;
   author: string;
@@ -30,16 +28,6 @@ const props = withDefaults(defineProps<Props>(), {
 const isRealReview = (item: MarqueeItem) =>
   item.text.trim().length > 0 && item.author.trim().length > 0 &&
   !isPlaceholderCopy(`${item.text} ${item.author} ${item.sub ?? ""}`);
-
-const { locale } = useI18n();
-type Section3 = {
-  comment?: Array<{
-    id: string;
-    authorFullName: string;
-    authorQuote: string;
-    authorPosition: string;
-  }>;
-};
 
 const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
@@ -76,10 +64,10 @@ const rowsConfig = computed(() =>
   <section class="relative w-full overflow-hidden bg-black py-20">
     <div
       class="pointer-events-none absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-black to-transparent z-20"
-    ></div>
+    />
     <div
       class="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-black to-transparent z-20"
-    ></div>
+    />
 
     <div class="w-[120%] -ml-[10%] space-y-6">
       <div
@@ -101,14 +89,14 @@ const rowsConfig = computed(() =>
             >
               <div
                 class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0D0D0D] to-[#1f1e1e]"
-              ></div>
+              />
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
                   <div
                     class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold md:mb-[12px]"
                   >
-                    <img src="/OneGuarantee/group-2.png" alt="" />
+                    <img src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p
@@ -151,14 +139,14 @@ const rowsConfig = computed(() =>
             >
               <div
                 class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0D0D0D] to-[#1f1e1e]"
-              ></div>
+              />
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
                   <div
                     class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold"
                   >
-                    <img src="/OneGuarantee/group-2.png" alt="" />
+                    <img src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p

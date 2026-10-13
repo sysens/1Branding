@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
 useGsapContext(root, ({ gsap, ScrollTrigger }) => {
@@ -71,36 +69,6 @@ useGsapContext(root, ({ gsap, ScrollTrigger }) => {
       });
     });
   }, { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } });
-
-const { locale } = useI18n();
-type ImageType = {
-  url: string | null;
-  alternativeText?: string | null;
-};
-
-type Section1 = {
-  id: string;
-  title: string;
-  image: ImageType | null;
-};
-
-type Section2Item = {
-  title: string;
-  text: string;
-  image: ImageType | null;
-};
-
-type Section3 = {
-  title: string;
-  subTitle: string;
-};
-
-type AboutPage = {
-  documentId: string;
-  section1: Section1 | null;
-  section2: Section2Item[] | null;
-  section3: Section3 | null;
-};
 
 const { aboutPage } = await useAboutPage();
 

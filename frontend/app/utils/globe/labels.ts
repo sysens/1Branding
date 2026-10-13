@@ -1,4 +1,5 @@
-import { Camera, Group, Vector3 } from "three";
+import type { Camera, Group} from "three";
+import { Vector3 } from "three";
 import { globePoint } from "./geography";
 import { LOCATIONS } from "./locations";
 

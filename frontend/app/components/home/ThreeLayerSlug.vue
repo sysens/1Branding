@@ -2,8 +2,6 @@
 import { computed, useTemplateRef } from "vue";
 import { useImageBatchReveal } from "~/composables/useImageBatchReveal";
 
-type AppLocale = "ru" | "en";
-
 type Props = {
   rows?: number;
   durationSeconds?: number;
@@ -14,7 +12,6 @@ const props = withDefaults(defineProps<Props>(), {
   durationSeconds: 200,
 });
 
-const { locale } = useI18n();
 type Media = { url: string | null };
 
 type ProjectNode = {
@@ -94,7 +91,7 @@ const localePath = useLocalePath();
 const router = useRouter();
 
 const isIOSWebKit = () => {
-  if (!process.client) return false;
+  if (!import.meta.client) return false;
 
   const ua = window.navigator.userAgent || "";
   const isIOS = /iP(ad|hone|od)/i.test(ua);
@@ -106,7 +103,7 @@ const isIOSWebKit = () => {
 };
 
 const navigateSafely = async (to: string) => {
-  if (!process.client || !to) return;
+  if (!import.meta.client || !to) return;
 
   try {
     if (isIOSWebKit()) {
@@ -203,8 +200,8 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
     <section
       class="marquee-section relative bg-black w-full overflow-hidden flex items-center"
     >
-      <div class="edge-gradient edge-gradient-left"></div>
-      <div class="edge-gradient edge-gradient-right"></div>
+      <div class="edge-gradient edge-gradient-left"/>
+      <div class="edge-gradient edge-gradient-right"/>
 
       <div class="w-[120%] -ml-[10%] relative z-[1]">
         <div class="w-full overflow-hidden space-y-2">

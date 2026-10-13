@@ -59,8 +59,8 @@ useGsapContext(root, ({ gsap }) => {
 <template>
   <div ref="root">
     <div class="bg-black relative overflow-hidden">
-      <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-      <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+      <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+      <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
       <div class="relative z-10 bg-black">
         <div

@@ -40,7 +40,7 @@ useHead({
       fetchpriority="high"
       decoding="async"
       :style="loaderStyle"
-    />
+    >
   </div>
 </template>
 

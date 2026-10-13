@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 type PriceRes = {
   data?: {
     price?: {
@@ -21,7 +19,7 @@ type PriceRes = {
   errors?: Array<{ message: string }>;
 };
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const query = `
   query PriceForCustomer($locale: I18NLocaleCode, $withFallback: Boolean!) {

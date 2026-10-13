@@ -84,6 +84,6 @@ function handleError(): void {
       draggable="false"
       @load="emit('settled', src)"
       @error="handleError"
-    />
+    >
   </span>
 </template>

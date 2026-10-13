@@ -103,7 +103,7 @@ useHead(() => ({
               :fetchpriority="copy.primary && cell.index < 5 ? 'high' : 'auto'"
               decoding="async"
               draggable="false"
-            />
+            >
           </NuxtLink>
         </div>
       </div>

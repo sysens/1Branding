@@ -2,8 +2,6 @@
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import type { OneGuaranteeSection4 } from "~/types/landingPayload";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 const earthDivesVideo = ref<HTMLVideoElement | null>(null);
 const shouldLoadVideo = ref(false);
@@ -124,7 +122,7 @@ onBeforeUnmount(() => {
   earthDivesVideo.value?.pause();
 });
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
@@ -141,11 +139,6 @@ type Card = {
   title: string;
   description: string;
   icon: Media | null;
-};
-
-type Section4 = {
-  title?: string;
-  cards?: Card[];
 };
 
 const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
@@ -191,7 +184,7 @@ const resolveMedia = useCmsMedia();
       src="/General/ellipse-5.png"
       alt=""
       class="absolute right-1 md:top-9 top-[35%] w-[900px] md:w-[37.5rem] h-[900px] md:object-contain oject-fit pointer-events-none select-none -z-10"
-    />
+    >
 
     <div class="containerr relative z-1">
       <h2
@@ -211,8 +204,7 @@ const resolveMedia = useCmsMedia();
             :preload="shouldLoadVideo ? 'metadata' : 'none'"
             :poster="earthDivesVideoPoster"
             :src="shouldLoadVideo ? earthDivesVideoSrc : undefined"
-          >
-          </video>
+          />
         </div>
 
         <div class="main flex-1">
@@ -227,7 +219,7 @@ const resolveMedia = useCmsMedia();
                   class="md:w-[4.375rem] md:h-[4.375rem] w-[40px] h-[40px] object-contain"
                   :src="resolveMedia(card.icon?.url) || '/home/rowthree.jpg'"
                   alt=""
-                />
+                >
               </div>
 
               <div>

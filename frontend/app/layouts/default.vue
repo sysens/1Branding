@@ -8,7 +8,9 @@ const FOOTER_HYDRATION = { rootMargin: "600px 0px" };
 </script>
 
 <template>
-  <Header />
-  <slot />
-  <LazyFooter v-if="showFooter" :hydrate-on-visible="FOOTER_HYDRATION" />
+  <div>
+    <Header />
+    <slot />
+    <LazyFooter v-if="showFooter" :hydrate-on-visible="FOOTER_HYDRATION" />
+  </div>
 </template>

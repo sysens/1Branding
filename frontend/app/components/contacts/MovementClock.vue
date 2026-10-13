@@ -8,15 +8,15 @@ const { canvasRef, ready, running } = useChronograph(isActive);
 <template>
   <div class="movement-art" aria-hidden="true">
     <picture>
-      <source media="(max-width: 767px)" srcset="/Contacts/movement-background-mobile.jpg" />
+      <source media="(max-width: 767px)" srcset="/Contacts/movement-background-mobile.jpg" >
       <img
         src="/Contacts/movement-background.jpg" class="movement-art__background"
         width="1920" height="689" loading="lazy" decoding="async" alt=""
-      />
+      >
     </picture>
     <div ref="targetRef" class="movement-art__clock" :data-state="running ? 'playing' : ready ? 'paused' : 'loading'">
       <div v-if="!ready" class="movement-art__placeholder">
-        <img src="/General/logorobo.webp" width="222" height="493" alt="" :style="EMBLEM_STYLE" />
+        <img src="/General/logorobo.webp" width="222" height="493" alt="" :style="EMBLEM_STYLE" >
       </div>
       <canvas ref="canvasRef" width="806" height="806" :class="{ 'is-ready': ready }" />
     </div>

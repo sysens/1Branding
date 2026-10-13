@@ -17,8 +17,8 @@ usePageSeo({
 <template>
   <div class="relative min-h-screen bg-black overflow-hidden">
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
     <div class="relative z-10">
       <div class="vg md:pt-[60px] pt-[30px]">

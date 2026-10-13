@@ -245,7 +245,7 @@ watch(
       class="sparkles-core__canvas"
       :class="{ 'sparkles-core__canvas--ready': isReady }"
       aria-hidden="true"
-    ></canvas>
+    />
   </div>
 </template>
 

@@ -261,8 +261,8 @@ const loading = computed(() => pending.value || !data.value);
   <div ref="root" class="relative overflow-x-hidden bg-black">
     <Spinner v-if="loading" :size="542" />
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
     <div class="relative z-10">
       <div class="bg-cover bg-center bg-no-repeat">
@@ -270,14 +270,13 @@ const loading = computed(() => pending.value || !data.value);
           <div
             class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 -z-10 h-[140px] w-[92%] max-w-[1400px] rounded-full"
             :style="headerGlowStyle"
-          ></div>
-          <div class="m">
-          </div>
+          />
+          <div class="m"/>
 
           <div
             class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[440px] w-[92%] max-w-[1400px] rounded-full"
             :style="headerGlowStyle"
-          ></div>
+          />
         </div>
 
         <div class="md:py-[115px] md:pt-[114px] pt-[20px]">
@@ -307,7 +306,7 @@ const loading = computed(() => pending.value || !data.value);
       <div
         class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[440px] w-[92%] max-w-[1400px] rounded-full"
         :style="headerGlowStyle"
-      ></div>
+      />
 
       <div>
         <ProjectGrid

@@ -23,7 +23,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     infinite: false,
   })
 
-  let rafId = 0
   let prevFullPath = ""
   const updateScrollTrigger = () => scrollTrigger?.update()
   // Not on the critical path: sections that animate import it themselves; this
@@ -41,10 +40,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const raf = (time: number) => {
     lenis.raf(time)
-    rafId = requestAnimationFrame(raf)
+    requestAnimationFrame(raf)
   }
 
-  rafId = requestAnimationFrame(raf)
+  requestAnimationFrame(raf)
 
   const pageFinishHandler = () => {
     requestAnimationFrame(() => {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // Ends with its own "Join the movement" block instead of the site footer.
-definePageMeta({ footer: false });
-
 import { computed, onMounted, nextTick } from "vue";
 import Form from "~/components/contacts/Form.vue";
 import Locations from "~/components/contacts/Locations.vue";
 import MovementFooter from "~/components/contacts/MovementFooter.vue";
+
+definePageMeta({ footer: false });
 
 
 const { t } = useI18n();
@@ -30,7 +30,7 @@ const raf2 = () =>
   );
 
 const refreshLenis = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
   await nextTick();
   await raf2();
   const lenis = getLenis();
@@ -39,7 +39,7 @@ const refreshLenis = async () => {
 };
 
 const stabilizeAfterAssets = async () => {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   const fontsReady =
     "fonts" in document
@@ -78,8 +78,8 @@ onMounted(async () => {
 
 <template>
   <div class="relative overflow-x-hidden overscroll-y-none">
-    <div class="edge-gradient edge-gradient-left edge-gradient-soft"></div>
-    <div class="edge-gradient edge-gradient-right edge-gradient-soft"></div>
+    <div class="edge-gradient edge-gradient-left edge-gradient-soft"/>
+    <div class="edge-gradient edge-gradient-right edge-gradient-soft"/>
 
     <div class="bg-black relative">
       <div>

@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
-
 const root = ref<HTMLElement | null>(null);
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const GRAPHQL_URL = useGraphqlUrl();
 
 const { own: contactsPage, fallback: fallbackContactsPage } = await useContactsPage();
@@ -88,7 +86,7 @@ const onDownloadBrief = () => {
   window.open(briefFileUrl.value, "_blank");
 };
 
-useGsapContext(root.value as any, ({ gsap }) => {
+useGsapContext(root, ({ gsap }) => {
     const el = root.value;
     if (!el) return;
 
@@ -133,7 +131,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
             {{ contactInfoTitle }}
           </h3>
           <div class="flex gap-[10px] pb-[15px]">
-            <img src="/Contacts/iconsax-call.png" alt="" />
+            <img src="/Contacts/iconsax-call.png" alt="" >
             <h2
               class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
             >
@@ -141,7 +139,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
             </h2>
           </div>
           <div class="flex gap-[10px] md:pb-[87px] pb-[40px]">
-            <img src="/Contacts/sms.png" alt="" />
+            <img src="/Contacts/sms.png" alt="" >
             <h2
               class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
             >
@@ -175,7 +173,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/vector-7.png" alt="" />
+              <img src="/Contacts/vector-7.png" alt="" >
             </a>
             <a
               class="instagream"
@@ -184,7 +182,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/vector-8.png" alt="" />
+              <img src="/Contacts/vector-8.png" alt="" >
             </a>
 
             <a
@@ -194,7 +192,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/wpf_behance.png" alt="" />
+              <img src="/Contacts/wpf_behance.png" alt="" >
             </a>
             <a
               class="linkedIn"
@@ -203,7 +201,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/group-1.png" alt="" />
+              <img src="/Contacts/group-1.png" alt="" >
             </a>
           </div>
         </div>
@@ -231,9 +229,9 @@ useGsapContext(root.value as any, ({ gsap }) => {
           </p>
           <button
             type="button"
-            @click="onDownloadBrief"
             :disabled="!briefFileUrl"
             class="w-[236px] h-[60px] rounded-[32px] text-[16px] text-white font-normal md:text-[19.57px] leading-[19.57px] capitalize font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] text-[16px] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
+            @click="onDownloadBrief"
           >
             {{ $t("common.downloadBrief") }}
           </button>

@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="costs-orbital-glow" aria-hidden="true"></div>
+  <div ref="containerRef" class="costs-orbital-glow" aria-hidden="true"/>
 </template>
 
 <style scoped>

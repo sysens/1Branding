@@ -120,12 +120,12 @@ const s2Image = computed(() => props.image ?? props.fallbackImage);
         </p>
 
         <img
-          class="section-img w-full rounded-[30px] md:h-[700px] h-[542px] object-cover will-change-opacity"
           v-if="s2Image"
+          class="section-img w-full rounded-[30px] md:h-[700px] h-[542px] object-cover will-change-opacity"
           :src="s2Image"
           :alt="section2.title || ''"
           loading="lazy"
-        />
+        >
       </div>
     </div>
   </div>
