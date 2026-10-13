@@ -24,12 +24,12 @@ const ART_H = 620;
 const TUBES: Rect = [3, 22, 1127, 588];
 const ONE: Rect = [941, 117, 850, 491];
 const CARDS: Array<{ key: CardKey; rect: Rect }> = [
-  { key: "naming", rect: [28, 25, 195, 416] },
+  { key: "naming", rect: [28, 31, 195, 410] },
   { key: "branding", rect: [179, 48, 177, 400] },
-  { key: "design", rect: [311, 57, 171, 395] },
-  { key: "photography", rect: [441, 68, 166, 383] },
-  { key: "websites", rect: [574, 77, 162, 374] },
-  { key: "crm", rect: [708, 84, 148, 368] },
+  { key: "design", rect: [311, 60, 171, 392] },
+  { key: "photography", rect: [441, 72, 166, 379] },
+  { key: "websites", rect: [574, 78, 162, 373] },
+  { key: "crm", rect: [708, 90, 148, 362] },
 ];
 const LAST = CARDS.length - 1;
 
