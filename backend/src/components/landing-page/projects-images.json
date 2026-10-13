@@ -1,7 +1,8 @@
 {
   "collectionName": "components_landing_page_projects_images",
   "info": {
-    "displayName": "ProjectsImages"
+    "displayName": "Projects images (not used)",
+    "description": "No content type uses this component."
   },
   "options": {},
   "attributes": {

@@ -1,7 +1,8 @@
 {
   "collectionName": "components_contacts_page_section2s",
   "info": {
-    "displayName": "Section2"
+    "displayName": "Contacts: Form heading",
+    "description": "Title and text above the contact form."
   },
   "options": {},
   "attributes": {

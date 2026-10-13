@@ -1,7 +1,8 @@
 {
   "collectionName": "components_landing_page_tools",
   "info": {
-    "displayName": "Tools"
+    "displayName": "Tools (not used)",
+    "description": "No content type uses this component."
   },
   "options": {},
   "attributes": {

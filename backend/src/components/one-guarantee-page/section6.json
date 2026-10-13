@@ -1,7 +1,8 @@
 {
   "collectionName": "components_one_guarantee_page_section6s",
   "info": {
-    "displayName": "section6"
+    "displayName": "Guarantee: Call to action",
+    "description": "Title, text and button at the end of the One Guarantee page."
   },
   "options": {},
   "attributes": {

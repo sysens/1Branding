@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onBeforeUnmount, computed } from "vue";
 
 const root = ref<HTMLElement | null>(null);
-
-const GRAPHQL_URL = useGraphqlUrl();
 
 const { t } = useI18n();
 const { own: contactsPage } = await useContactsPage();
@@ -21,17 +19,7 @@ const companyPh = computed(() => t("contacts.form.company"));
 const phonePh = computed(() => t("contacts.form.phone"));
 const emailPh = computed(() => t("contacts.form.email"));
 
-const getOrigin = (url: string) => {
-  try {
-    return url ? new URL(url).origin : "";
-  } catch {
-    return "";
-  }
-};
-
 const fileInputRef = ref<HTMLInputElement | null>(null);
-const selectedFile = ref<File | null>(null);
-const sending = ref(false);
 
 const toastOpen = ref(false);
 const toastMsg = ref("");
@@ -49,215 +37,34 @@ const showToast = (msg: string, type: "error" | "success" = "error") => {
   }, type === "error" ? 7000 : 4000);
 };
 
+// Values, validation and sending live in useContactForm; this component is the markup.
+const {
+  topicVal,
+  servicesVal,
+  fullNameVal,
+  jobTitleVal,
+  companyVal,
+  phoneVal,
+  emailVal,
+  selectedFile,
+  honeypotVal,
+  sending,
+  setFile,
+  submit,
+} = useContactForm(showToast);
+
 const onPickFile = () => {
   fileInputRef.value?.click();
 };
 
 const onFileChange = (e: Event) => {
   const input = e.target as HTMLInputElement | null;
-  const files = input?.files;
-  const f = files && files.length ? files[0] : null;
-
-  if (!f) {
-    selectedFile.value = null;
-    return;
-  }
-
-  if (f.size > 10 * 1024 * 1024) {
-    selectedFile.value = null;
-    if (input) input.value = "";
-    showToast(t("common.maxFileSize"), "error");
-    return;
-  }
-
-  selectedFile.value = f;
+  const file = input?.files?.[0] ?? null;
+  if (!setFile(file) && input) input.value = "";
 };
-
-const uploadFileToStrapi = async (file: File): Promise<number> => {
-  const origin = getOrigin(GRAPHQL_URL);
-  const uploadUrl = origin ? `${origin}/api/upload` : "/api/upload";
-
-  const formData = new FormData();
-  formData.append("files", file, file.name || "upload-file");
-
-  const res = await fetch(uploadUrl, {
-    method: "POST",
-    body: formData,
-    credentials: "omit",
-  });
-
-  if (!res.ok) {
-    let errorText = "";
-    try {
-      errorText = await res.text();
-    } catch {
-      errorText = "";
-    }
-    throw Object.assign(new Error(errorText || `Upload failed with status ${res.status}`), { status: res.status });
-  }
-
-  let parsed: unknown = null;
-  try {
-    parsed = await res.json();
-  } catch {
-    throw new Error("Invalid upload response");
-  }
-
-  const id = Array.isArray(parsed) ? (parsed[0] as { id?: unknown } | undefined)?.id : null;
-  if (typeof id !== "number" || !Number.isInteger(id) || id <= 0) {
-    throw new Error(t("common.fileUploadFailed"));
-  }
-  return id;
-};
-
-type ContactRequestPayload = {
-  TopicInput: string;
-  requestedServicesMessageInput: string;
-  requestedServicesMessageFile: number;
-  FullName: string;
-  JobTitle: string;
-  Company: string;
-  PhoneNumber: string;
-  email: string;
-};
-
-// Bot traps checked by the backend: the hidden "website" field stays empty for
-// people, and a real visitor needs more than a few seconds to fill the form.
-const honeypotVal = ref("");
-let formOpenedAt = 0;
-
-const submitContactRequestRest = async (dataPayload: ContactRequestPayload) => {
-  const origin = getOrigin(GRAPHQL_URL);
-  const url = origin ? `${origin}/api/contacts-requests` : "/api/contacts-requests";
-
-  return await $fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: {
-      data: dataPayload,
-      meta: { website: honeypotVal.value, elapsedMs: Date.now() - formOpenedAt },
-    },
-  });
-};
-
-const topicVal = ref("");
-const servicesVal = ref("");
-const fullNameVal = ref("");
-const jobTitleVal = ref("");
-const companyVal = ref("");
-const phoneVal = ref("");
-const emailVal = ref("");
-
-const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
-const isValidPhone = (val: string) => /^\+?[0-9\s().-]{7,32}$/.test(val.trim()) && val.replace(/\D/g, "").length >= 7;
-
-const fieldLimits = {
-  topic: 200,
-  services: 5000,
-  fullName: 150,
-  jobTitle: 150,
-  company: 150,
-  phone: 32,
-  email: 254,
-} as const;
-
-// What a failed $fetch / upload error carries (all optional).
-type RequestError = {
-  status?: number;
-  statusCode?: number;
-  response?: { status?: number };
-  data?: { error?: { message?: string } };
-  message?: string;
-} | null | undefined;
-
-// A short message in the visitor's language instead of the backend's raw text.
-const normalizeBackendError = (error: unknown) => {
-  const e = error as RequestError;
-  const status = Number(e?.status ?? e?.statusCode ?? e?.response?.status ?? 0);
-  const message = String(e?.data?.error?.message || e?.message || "");
-  if (status === 429) return t("common.tooManyRequests");
-  if (status === 413 || /file/i.test(message)) return t("common.fileUploadFailed");
-  if (/email|phone/i.test(message)) return t("common.invalidEmailOrPhone");
-  if (!status || e instanceof TypeError) return t("common.networkError");
-  return t("common.sendFailed");
-};
-
-// The upload of the selected file, kept so a failed submit can be retried
-// without uploading the same file again.
-let uploaded: { file: File; id: number } | null = null;
 
 const onSend = async () => {
-  if (sending.value) return;
-  if (!GRAPHQL_URL) {
-    showToast(t("common.error"), "error");
-    return;
-  }
-
-  if (!topicVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!servicesVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!fullNameVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!jobTitleVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!companyVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!phoneVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!emailVal.value.trim()) return showToast(t("common.requiredField"), "error");
-  if (!isValidEmail(emailVal.value)) return showToast(t("common.invalidEmail"), "error");
-  if (!isValidPhone(phoneVal.value)) return showToast(t("common.invalidEmailOrPhone"), "error");
-  if (
-    topicVal.value.trim().length > fieldLimits.topic ||
-    servicesVal.value.trim().length > fieldLimits.services ||
-    fullNameVal.value.trim().length > fieldLimits.fullName ||
-    jobTitleVal.value.trim().length > fieldLimits.jobTitle ||
-    companyVal.value.trim().length > fieldLimits.company ||
-    phoneVal.value.trim().length > fieldLimits.phone ||
-    emailVal.value.trim().length > fieldLimits.email
-  ) return showToast(t("common.error"), "error");
-  if (!selectedFile.value) return showToast(t("common.fileRequired"), "error");
-
-  sending.value = true;
-
-  try {
-    // The current public Strapi contract uploads media first, then links its ID on create.
-    const file = selectedFile.value;
-    const uploadedFileId = uploaded?.file === file ? uploaded.id : await uploadFileToStrapi(file);
-    uploaded = { file, id: uploadedFileId };
-
-    const dataPayload: ContactRequestPayload = {
-      TopicInput: topicVal.value.trim(),
-      requestedServicesMessageInput: servicesVal.value.trim(),
-      FullName: fullNameVal.value.trim(),
-      JobTitle: jobTitleVal.value.trim(),
-      Company: companyVal.value.trim(),
-      PhoneNumber: phoneVal.value.trim(),
-      email: emailVal.value.trim(),
-      requestedServicesMessageFile: uploadedFileId,
-    };
-
-    await submitContactRequestRest(dataPayload);
-
-    topicVal.value = "";
-    servicesVal.value = "";
-    fullNameVal.value = "";
-    jobTitleVal.value = "";
-    companyVal.value = "";
-    phoneVal.value = "";
-    emailVal.value = "";
-    selectedFile.value = null;
-    uploaded = null;
-    formOpenedAt = Date.now();
-
-    if (fileInputRef.value) {
-      fileInputRef.value.value = "";
-    }
-
-    showToast(t("common.sent"), "success");
-  } catch (e) {
-    // The server refused the attached upload (expired, or the server restarted):
-    // the next try uploads the file again.
-    if (/file/i.test(String((e as RequestError)?.data?.error?.message || ""))) uploaded = null;
-    showToast(normalizeBackendError(e), "error");
-  } finally {
-    sending.value = false;
-  }
+  if ((await submit()) && fileInputRef.value) fileInputRef.value.value = "";
 };
 
 useGsapContext(
@@ -334,10 +141,6 @@ useGsapContext(
   },
   { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } }
 );
-
-onMounted(() => {
-  formOpenedAt = Date.now();
-});
 
 onBeforeUnmount(() => {
   if (toastTimer) clearTimeout(toastTimer);

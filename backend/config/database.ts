@@ -1,6 +1,8 @@
 import path from "path";
 
-export default ({ env }) => {
+import type { StrapiEnv } from "./upload";
+
+export default ({ env }: { env: StrapiEnv }) => {
   // With DATABASE_URL set (Railway's Postgres) the client is postgres even if
   // DATABASE_CLIENT is missing; SQLite only for local development.
   const client =
@@ -76,7 +78,7 @@ export default ({ env }) => {
   return {
     connection: {
       client,
-      ...connections[client],
+      ...connections[client as keyof typeof connections],
       acquireConnectionTimeout: env.int("DATABASE_CONNECTION_TIMEOUT", 60000),
     },
   };

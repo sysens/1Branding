@@ -1,4 +1,6 @@
-export default ({ env }) => ({
+import type { StrapiEnv } from "./upload";
+
+export default ({ env }: { env: StrapiEnv }) => ({
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
   },

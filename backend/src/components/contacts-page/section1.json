@@ -1,7 +1,8 @@
 {
   "collectionName": "components_contacts_page_section1s",
   "info": {
-    "displayName": "Section1"
+    "displayName": "Contacts: Main info",
+    "description": "Address, hours, phone, website, note and the brief file."
   },
   "options": {},
   "attributes": {

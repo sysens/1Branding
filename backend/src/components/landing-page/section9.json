@@ -1,7 +1,8 @@
 {
   "collectionName": "components_landing_page_section9s",
   "info": {
-    "displayName": "Section9"
+    "displayName": "Landing: Section 9 (not shown)",
+    "description": "Not used by the current landing."
   },
   "options": {},
   "attributes": {

@@ -11,7 +11,9 @@
     "dev": "node scripts/ensure-uploads.mjs && strapi develop",
     "develop": "node scripts/ensure-uploads.mjs && strapi develop",
     "start": "node scripts/ensure-uploads.mjs && strapi start",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "test:e2e": "node tests/e2e.cjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@strapi/admin": "5.52.3",

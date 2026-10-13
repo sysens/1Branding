@@ -1,7 +1,8 @@
 {
   "collectionName": "components_projects_page_section2s",
   "info": {
-    "displayName": "Section2"
+    "displayName": "Project: Text and image",
+    "description": "Story block of a project page."
   },
   "options": {},
   "attributes": {

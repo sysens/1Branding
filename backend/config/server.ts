@@ -1,4 +1,6 @@
-export default ({ env }) => ({
+import type { StrapiEnv } from "./upload";
+
+export default ({ env }: { env: StrapiEnv }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
   url: env('PUBLIC_BASE_URL', ''),
