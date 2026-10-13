@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -17,14 +17,8 @@ usePageSeo({
 });
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
 
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap }) => {
     const el = root.value;
     if (!el) return;
 
@@ -59,12 +53,7 @@ onMounted(async () => {
       );
     }
   });
-});
 
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>

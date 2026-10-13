@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 
 type AppLocale = "ru" | "en";
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
 
 const { t, locale } = useI18n();
 const GRAPHQL_URL = useGraphqlUrl();
@@ -89,12 +88,7 @@ const onDownloadBrief = () => {
   window.open(briefFileUrl.value, "_blank");
 };
 
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
+useGsapContext(root.value as any, ({ gsap }) => {
     const el = root.value;
     if (!el) return;
 
@@ -113,13 +107,8 @@ onMounted(async () => {
         clearProps: "transform",
       }
     );
-  }, root.value as any);
-});
+  });
 
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>

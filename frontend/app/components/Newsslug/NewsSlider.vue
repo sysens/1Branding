@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 
 type AppLocale = "ru" | "en";
 
@@ -25,21 +25,7 @@ const [container, slider] = useKeenSlider({
 const prev = () => slider.value?.prev();
 const next = () => slider.value?.next();
 
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
-
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     const el = root.value!;
     const title = el.querySelector<HTMLElement>(".news-title");
     const sliderEl = el.querySelector<HTMLElement>(".news-slider");
@@ -92,35 +78,7 @@ const initGsap = async () => {
         ScrollTrigger.refresh();
       });
     });
-  }, root.value);
-};
-
-onMounted(() => {
-  if (!root.value) return;
-
-  const rect = root.value.getBoundingClientRect();
-  const inViewNow = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inViewNow) initGsap();
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.01, rootMargin: "200px 0px 200px 0px" }
-  );
-
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
-  ctx?.revert();
-  ctx = null;
-
-  inited = false;
-});
+  }, { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } });
 
 const locale = useCmsLocale();
 const fetchNewsPage = useNewsPages();

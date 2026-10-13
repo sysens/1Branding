@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 
 type AppLocale = "ru" | "en";
 
 const root = ref<HTMLElement | null>(null);
 
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
-
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     const el = root.value!;
 
     const heading = el.querySelector<HTMLElement>(".team-heading");
@@ -126,30 +112,7 @@ const initGsap = async () => {
         ScrollTrigger.refresh();
       });
     });
-  }, root.value);
-};
-
-onMounted(() => {
-  if (!root.value) return;
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.15 }
-  );
-
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
-  ctx?.revert();
-  ctx = null;
-  inited = false;
-});
+  }, { scrollTrigger: true, whenVisible: { threshold: 0.15 } });
 
 const { locale } = useI18n();
 type ImageType = { url: string | null; alternativeText?: string | null };

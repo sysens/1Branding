@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
-let ctx: any = null;
+const root = ref<HTMLElement | null>(null);
 
-onMounted(async () => {
-  await nextTick();
-
-  const mod: any = await import("gsap");
-  const gsap: any = mod.gsap || mod.default || mod;
-
-  ctx = gsap.context(() => {
-    const main = document.querySelector<HTMLElement>(".main");
+useGsapContext(root, ({ gsap }) => {
+    const main = root.value?.querySelector<HTMLElement>(".main");
     if (!main) return;
 
     gsap.fromTo(
@@ -19,12 +13,6 @@ onMounted(async () => {
       { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
     );
   });
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 
 const locale = useCmsLocale();
 const fetchNewsPage = useNewsPages();
@@ -100,7 +88,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/NewsSlug/${id}` });
 </script>
 
 <template>
-  <div>
+  <div ref="root">
     <div class="containerr bg-black">
       <div class="main flex flex-col md:gap-[125px] gap-[50px]">
         <NuxtLink

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import NewsHero from "~/components/Newsslug/NewsHero.vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
 
@@ -106,16 +106,9 @@ usePageSeo({
   ),
 });
 
-let ctx: any = null;
 const pageRoot = ref<HTMLElement | null>(null);
 
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  if (!pageRoot.value) return;
-  ctx = gsap.context(() => {
+useGsapContext(pageRoot, ({ gsap }) => {
     const main = pageRoot.value?.querySelector<HTMLElement>(".products");
     if (!main) return;
 
@@ -131,12 +124,7 @@ onMounted(async () => {
       }
     );
   });
-});
 
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>

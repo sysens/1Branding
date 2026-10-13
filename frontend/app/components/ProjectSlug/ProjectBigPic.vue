@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 
 type Props = {
   title?: string | null;
@@ -23,21 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const root = ref<HTMLElement | null>(null);
 
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
-
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     const el = root.value!;
 
     const title = el.querySelector<HTMLElement>(".section-title");
@@ -107,30 +93,7 @@ const initGsap = async () => {
         ScrollTrigger.refresh();
       });
     });
-  }, root.value);
-};
-
-onMounted(() => {
-  if (!root.value) return;
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.15 }
-  );
-
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
-  ctx?.revert();
-  ctx = null;
-  inited = false;
-});
+  }, { scrollTrigger: true, whenVisible: { threshold: 0.15 } });
 
 const section2 = computed(() => ({
   title: props.title ?? props.fallbackTitle,

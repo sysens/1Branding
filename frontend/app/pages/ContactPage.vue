@@ -2,11 +2,11 @@
 // Ends with its own "Join the movement" block instead of the site footer.
 definePageMeta({ footer: false });
 
+import { computed, onMounted, nextTick } from "vue";
 import Form from "~/components/Contacts/Form.vue";
 import Locations from "~/components/Contacts/Locations.vue";
 import MovementFooter from "~/components/Contacts/MovementFooter.vue";
 
-import { computed, onMounted, nextTick } from "vue";
 
 const { t } = useI18n();
 

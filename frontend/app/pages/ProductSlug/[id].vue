@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Spinner from "~/components/Spinner.vue";
 import ProductsMain from "~/components/Products/Productsmain.vue";
-import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue";
+import { onMounted, nextTick, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 type AppLocale = "ru" | "en";
@@ -12,8 +12,6 @@ const { t, locale } = useI18n();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
-
-let ctx: any = null;
 
 const getLenis = () => {
   const nuxtApp = useNuxtApp();
@@ -222,14 +220,7 @@ const pageRoot = ref<HTMLElement | null>(null);
 // A partial GraphQL error must not keep the full-screen spinner up forever.
 const loading = computed(() => pending.value || !gqlData.value);
 
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  // Scoped to this page: a late callback must not animate the next page's nodes.
-  if (!pageRoot.value) return;
-  ctx = gsap.context(() => {
+useGsapContext(pageRoot, ({ gsap }) => {
     const main = pageRoot.value?.querySelector<HTMLElement>(".products");
     const second = pageRoot.value?.querySelector<HTMLElement>(".second");
     if (!main) return;
@@ -247,6 +238,7 @@ onMounted(async () => {
     );
   });
 
+onMounted(async () => {
   await refreshLenis();
   await stabilizeAfterAssets();
 });
@@ -269,10 +261,6 @@ watch(
   }
 );
 
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>

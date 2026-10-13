@@ -3,7 +3,6 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import type { OneGuaranteeSection4 } from "~/types/landingPayload";
 
 type AppLocale = "ru" | "en";
-type GsapContext = { revert: () => void };
 
 const root = ref<HTMLElement | null>(null);
 const earthDivesVideo = ref<HTMLVideoElement | null>(null);
@@ -11,27 +10,11 @@ const shouldLoadVideo = ref(false);
 const earthDivesVideoPoster = "/home/earth.webp";
 const earthDivesVideoSrc = "/home/earth-dives.mp4";
 
-let observer: IntersectionObserver | null = null;
 let videoObserver: IntersectionObserver | null = null;
-let ctx: GsapContext | null = null;
-let inited = false;
 
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  const gsapModule = await import("gsap");
-  const stModule = await import("gsap/ScrollTrigger");
-
-  const gsap = gsapModule.gsap;
-  const ScrollTrigger = stModule.ScrollTrigger;
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
-    const el = root.value!;
+useGsapContext(
+  root,
+  ({ gsap, ScrollTrigger, el }) => {
 
     const titleEl = el.querySelector("h2");
     const leftImg = el.querySelector(".left-earth");
@@ -49,7 +32,7 @@ const initGsap = async () => {
       gsap.set(items, { x: 160, opacity: 0 });
     }
 
-    ScrollTrigger.create({
+    ScrollTrigger?.create({
       trigger: el,
       start: "top 80%",
       once: true,
@@ -100,23 +83,15 @@ const initGsap = async () => {
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
+        ScrollTrigger?.refresh();
       });
     });
-  }, root.value);
-};
+  },
+  { scrollTrigger: true, whenVisible: { threshold: 0, rootMargin: "300px 0px 300px 0px" } }
+);
 
 onMounted(() => {
   if (!root.value) return;
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0, rootMargin: "300px 0px 300px 0px" }
-  );
-
-  observer.observe(root.value);
 
   const video = earthDivesVideo.value;
   if (!video) return;
@@ -144,17 +119,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
   videoObserver?.disconnect();
   videoObserver = null;
   earthDivesVideo.value?.pause();
-
-  ctx?.revert();
-  ctx = null;
-
-  inited = false;
 });
 
 const { t, locale } = useI18n();

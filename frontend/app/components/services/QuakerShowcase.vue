@@ -2,11 +2,10 @@
 // Parked for the upcoming Services page: the Quaker packaging showcase that
 // used to close the landing's "ONE" section (InfoOnPicture.vue). It is not
 // mounted anywhere yet; drop <ServicesQuakerShowcase /> into the Services page.
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import QuakerFrames from "~/components/home/QuakerFrames.vue";
 
 type MediaKind = "image" | "video";
-type GsapContext = { revert: () => void };
 type Media = { url?: string | null; alternativeText?: string | null } | null;
 
 const props = withDefaults(
@@ -46,52 +45,21 @@ const media = computed(() => {
 });
 
 const root = ref<HTMLElement | null>(null);
-let observer: IntersectionObserver | null = null;
-let ctx: GsapContext | null = null;
-let inited = false;
-
 // Rises into place the first time it comes near the screen.
-const reveal = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-  await nextTick();
-  const el = root.value;
-  if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
+useGsapContext(
+  root,
+  ({ gsap, ScrollTrigger, el }) => {
     gsap.set(el, { y: 56, opacity: 0, scale: 0.96 });
-    ScrollTrigger.create({
+    ScrollTrigger?.create({
       trigger: el,
       start: "top 80%",
       once: true,
       onEnter: () => gsap.to(el, { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }),
     });
-    requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
-  }, el);
-};
-
-onMounted(() => {
-  if (!root.value) return;
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) void reveal();
-    },
-    { threshold: 0, rootMargin: "250px 0px 250px 0px" },
-  );
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-  ctx?.revert();
-  ctx = null;
-  inited = false;
-});
+    requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger?.refresh()));
+  },
+  { scrollTrigger: true, whenVisible: { threshold: 0, rootMargin: "250px 0px 250px 0px" } }
+);
 </script>
 
 <template>

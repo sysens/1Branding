@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { computed } from "vue";
 
-let ctx: any = null;
+const root = ref<HTMLElement | null>(null);
 
-onMounted(async () => {
-  await nextTick();
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
-    const main = document.querySelector<HTMLElement>(".gsapDiv");
+useGsapContext(root, ({ gsap }) => {
+    const main = root.value?.querySelector<HTMLElement>(".gsapDiv");
     if (!main) return;
 
     gsap.fromTo(
@@ -17,12 +13,6 @@ onMounted(async () => {
       { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
     );
   });
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 
 type Media = { url?: string | null };
 type NewsItem = {
@@ -64,7 +54,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
 </script>
 
 <template>
-  <div class="mb-[133px]">
+  <div ref="root" class="mb-[133px]">
     <div>
       <div class="products">
         <div

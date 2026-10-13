@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from "vue";
+import { ref, computed, watch } from "vue";
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
 
 type Media = { url: string | null };
 
@@ -66,56 +65,34 @@ const safeTitle = (item: ProjectNode) => (item.section1?.projectTitle ?? "").toS
 const localePath = useLocalePath();
 const linkTo = (id: string) => localePath(`/ProjectSlug/${id}`);
 
-const runGsap = async () => {
-  if (!process.client) return;
+// The list and the button slide in; again whenever more projects are shown.
+const { refresh } = useGsapContext(root, ({ gsap, el }) => {
+  const productsEl = el.querySelector<HTMLElement>(".products");
+  const btn = el.querySelector<HTMLElement>(".showMore");
 
-  await nextTick();
+  if (productsEl) {
+    gsap.fromTo(
+      productsEl,
+      { x: -160, opacity: 0 },
+      { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
+    );
+  }
 
-  const { gsap } = await import("gsap");
-
-  ctx?.revert();
-  ctx = null;
-
-  ctx = gsap.context(() => {
-    const el = root.value;
-    if (!el) return;
-
-    const productsEl = el.querySelector<HTMLElement>(".products");
-    const btn = el.querySelector<HTMLElement>(".showMore");
-
-    if (productsEl) {
-      gsap.fromTo(
-        productsEl,
-        { x: -160, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
-      );
-    }
-
-    if (btn) {
-      gsap.fromTo(
-        btn,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 1.2, ease: "power3.out" }
-      );
-    }
-  });
-};
-
-onMounted(async () => {
-  await runGsap();
+  if (btn) {
+    gsap.fromTo(
+      btn,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, delay: 1.2, ease: "power3.out" }
+    );
+  }
 });
 
 watch(
   () => projects.value.length,
-  async () => {
-    await runGsap();
+  () => {
+    void refresh();
   }
 );
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 </script>
 
 <template>

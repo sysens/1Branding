@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 
 type AppLocale = "ru" | "en";
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
 
-onMounted(async () => {
-  if (!root.value) return;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap }) => {
     const img = root.value!.querySelector(".mission-img");
 
     if (!img) return;
@@ -32,13 +24,7 @@ onMounted(async () => {
         ease: "power3.out",
       }
     );
-  }, root.value);
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
+  });
 
 const { locale } = useI18n();
 type AboutPage = {

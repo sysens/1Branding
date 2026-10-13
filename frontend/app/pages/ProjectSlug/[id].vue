@@ -5,7 +5,7 @@ import Spinner from "~/components/Spinner.vue";
 import ColorSection from "~/components/ProjectSlug/ColorSection.vue";
 import ProjectBigPic from "~/components/ProjectSlug/ProjectBigPic.vue";
 import ProjectGrid from "~/components/ProjectSlug/ProjectGrid.vue";
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { isPlaceholderCopy } from "~/utils/seo";
 
@@ -17,14 +17,8 @@ const gqlLocale = computed<AppLocale>(() =>
 );
 
 const root = ref<HTMLElement | null>(null);
-let ctx: any = null;
 
-onMounted(async () => {
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-
-  ctx = gsap.context(() => {
+useGsapContext(root, ({ gsap }) => {
     const el = root.value;
     if (!el) return;
 
@@ -47,12 +41,6 @@ onMounted(async () => {
       );
     }
   });
-});
-
-onBeforeUnmount(() => {
-  ctx?.revert();
-  ctx = null;
-});
 
 const GRAPHQL_URL = useGraphqlUrl();
 const cmsMedia = useCmsMedia();

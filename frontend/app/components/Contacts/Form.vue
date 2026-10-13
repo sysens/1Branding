@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 
 type AppLocale = "ru" | "en";
 
 const root = ref<HTMLElement | null>(null);
-
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
 
 const GRAPHQL_URL = useGraphqlUrl();
 
@@ -256,28 +252,15 @@ const onSend = async () => {
   }
 };
 
-const initGsap = async () => {
-  if (inited || !root.value) return;
-  inited = true;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
-    const el = root.value!;
-
+useGsapContext(
+  root,
+  ({ gsap, ScrollTrigger, el }) => {
     const title = el.querySelector<HTMLElement>(".form-title");
     const desc = el.querySelector<HTMLElement>(".form-desc");
     const leftCol = el.querySelector<HTMLElement>(".form-left");
     const rightCol = el.querySelector<HTMLElement>(".form-right");
     const agree = el.querySelector<HTMLElement>(".form-agree");
     const sendBtn = el.querySelector<HTMLElement>(".form-send");
-
-    // Reduced motion: no slide-in, the form is simply there.
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const prepare = (node: HTMLElement | null, from: { x?: number; y?: number }) => {
       if (!node) return;
@@ -295,12 +278,12 @@ const initGsap = async () => {
     // run: show everything at once rather than letting focus land on invisible inputs.
     const hidden = [title, desc, leftCol, rightCol, agree, sendBtn].filter(Boolean) as HTMLElement[];
     const revealNow = () => {
-      reveal.kill();
+      reveal?.kill();
       gsap.set(hidden, { x: 0, y: 0, opacity: 1 });
     };
     el.addEventListener("focusin", revealNow, { once: true });
 
-    const reveal = ScrollTrigger.create({
+    const reveal = ScrollTrigger?.create({
       trigger: el,
       start: "top 40%",
       once: true,
@@ -337,39 +320,18 @@ const initGsap = async () => {
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
+        ScrollTrigger?.refresh();
       });
     });
-  }, root.value);
-};
+  },
+  { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } }
+);
 
 onMounted(() => {
   formOpenedAt = Date.now();
-  if (!root.value) return;
-
-  const rect = root.value.getBoundingClientRect();
-  const inViewNow = rect.top < window.innerHeight * 1.2 && rect.bottom > 0;
-  if (inViewNow) initGsap();
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.01, rootMargin: "200px 0px 200px 0px" }
-  );
-
-  observer.observe(root.value);
 });
 
 onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
-  ctx?.revert();
-  ctx = null;
-
-  inited = false;
-
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = null;
 });

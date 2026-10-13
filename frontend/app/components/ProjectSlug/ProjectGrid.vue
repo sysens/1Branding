@@ -1,6 +1,6 @@
 <!-- components/ProjectSlug/ProjectGrid.vue -->
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue";
+import { ref, nextTick, computed, watch } from "vue";
 
 type Props = {
   images?: string[] | null;
@@ -30,10 +30,6 @@ const root = ref<HTMLElement | null>(null);
 const { locale } = useI18n();
 const imageAlt = (position: number) =>
   `${locale.value === "ru" ? "Галерея проекта, изображение" : "Project gallery image"} ${position}`;
-
-let observer: IntersectionObserver | null = null;
-let ctx: any = null;
-let inited = false;
 
 const resolvedImages = computed(() => {
   const arr = (props.images ?? []).filter(Boolean);
@@ -92,19 +88,10 @@ const blocks = computed<Block[]>(() => {
   return out;
 });
 
-const initGsap = async () => {
-  if (!root.value) return;
-  if (inited) return;
-  inited = true;
-
-  await nextTick();
-
-  const { gsap } = await import("gsap");
-  const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-  gsap.registerPlugin(ScrollTrigger);
-
-  ctx = gsap.context(() => {
-    const host = root.value!;
+const { refresh } = useGsapContext(
+  root,
+  ({ gsap, ScrollTrigger, el }) => {
+    const host = el;
     const sections = Array.from(host.querySelectorAll<HTMLElement>(".grid-block"));
 
     sections.forEach((section) => {
@@ -139,7 +126,7 @@ const initGsap = async () => {
         gsap.set(doubleRight, { x: 230, opacity: 0 });
       }
 
-      ScrollTrigger.create({
+      ScrollTrigger?.create({
         trigger: section,
         start: "top 80%",
         once: true,
@@ -225,50 +212,21 @@ const initGsap = async () => {
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
+        ScrollTrigger?.refresh();
       });
     });
-  }, root.value);
-};
-
-const rebuildGsap = async () => {
-  if (!root.value) return;
-  ctx?.revert();
-  ctx = null;
-  inited = false;
-  await initGsap();
-};
+  },
+  { scrollTrigger: true, whenVisible: { threshold: 0.15 } }
+);
 
 watch(
   () => blocks.value.length,
   async () => {
     await nextTick();
-    await rebuildGsap();
+    await refresh();
   }
 );
 
-onMounted(() => {
-  if (!root.value) return;
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting) initGsap();
-    },
-    { threshold: 0.15 }
-  );
-
-  observer.observe(root.value);
-});
-
-onBeforeUnmount(() => {
-  observer?.disconnect();
-  observer = null;
-
-  ctx?.revert();
-  ctx = null;
-
-  inited = false;
-});
 </script>
 
 <template>
