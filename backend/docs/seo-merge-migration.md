@@ -17,80 +17,68 @@ Migratsiya: [`database/migrations/202610140001_merge_seo_components.js`](../data
   o'chiradi. Migratsiya xato bersa tranzaksiya qaytariladi, backend ishga tushmaydi va Railway
   trafikni eski deployda qoldiradi.
 
-Lokal sinov (2026-10-14): eski kod bilan SQLite va Postgres 16 bazalarida en/ru SEO yozildi, nusxasida
+Lokal sinov (2026-10-14): eski kod bilan SQLite, Postgres 16 va Postgres 18 (prod versiyasi) bazalarida en/ru SEO yozildi, nusxasida
 yangi kod ishga tushirildi. GraphQL, REST va document service javoblari oldin va keyin bir xil
 (komponent `id`laridan tashqari), qayta ishga tushirishda migratsiya takrorlanmaydi, admin
 orqali tahrirlash ishlaydi, yangi jadval Strapi o'zi yaratadigan bilan bir xil.
 
 ## 1. Backup (birinchi qadam, majburiy)
 
-1a. Railway → `Postgres` → **Backups** → **Create backup** (rejada bo'lsa).
+Workspace Hobby rejasida: Railway volume backup'lari yo'q (limit 0). Shuning uchun backup
+vaqtinchalik `pg-backup` servisi bilan olindi (2026-10-13 19:49 UTC):
 
-1b. Har holda `pg_dump` ham (parollar konteyner env'ida, ko'rsatish shart emas):
+- image `postgres:18` (server bilan bir xil versiya), volume `pg-backup-volume` → `/backup`;
+- `DATABASE_URL=${{Postgres.DATABASE_URL}}` havolasi, parol hech kimga ko'rsatilmaydi;
+- start command `pg_dump --format=custom` ni `/backup/pre-seo-merge-<vaqt>.dump` ga yozadi,
+  `pg_restore --list` bilan tekshiradi, `BACKUP_OK <fayl>` deb log qiladi va uxlab turadi.
 
-```bash
-railway ssh --service Postgres
-pg_dump -h localhost -Fc -f /var/lib/postgresql/data/pre-seo-merge.dump
-pg_restore --list /var/lib/postgresql/data/pre-seo-merge.dump | grep -c "TABLE DATA"
-```
-
-Oxirgi buyruq 0 dan katta son chiqarishi kerak.
+Natija: `/backup/pre-seo-merge-20261013T194955Z.dump`, 471 KB, 114 ta jadval ma'lumoti.
 
 ## 2. Deploydan oldin tekshirish (faqat o'qish)
 
-Shu `railway ssh` ichida `psql -h localhost`:
+Railway CLI bu kompyuterda yo'q, shuning uchun prod bazada SQL ishga tushirilmadi. O'rniga:
 
-```sql
--- Nechta SEO yozuvi ko'chadi (keyin logdagi raqamlar bilan solishtiriladi)
-SELECT component_type, count(*) FROM seos_cmps GROUP BY component_type ORDER BY 1;
-
--- O'chiriladigan jadvallarda nechta qator bor (ular backupda qoladi)
-SELECT table_name,
-       (xpath('/row/c/text()', query_to_xml(format('SELECT count(*) AS c FROM %I', table_name), false, true, '')))[1]::text::int AS rows
-FROM information_schema.tables
-WHERE table_schema = 'public'
-  AND (table_name LIKE 'components_seo_%'
-       OR table_name LIKE 'components_contacts_page_write_to_one_brendings%'
-       OR table_name IN ('components_contacts_page_topics', 'components_contacts_page_contacts',
-                         'components_contacts_page_requested_services_messages',
-                         'components_landing_page_projects_images', 'components_landing_page_tools'))
-ORDER BY 1;
-```
-
-Saytdagi SEO matnlarini ham saqlab qo'ying (ochiq API, kompyuteringizda):
+- backup ro'yxatida (`pg_restore --list`) `seos`, `seos_cmps`, beshta `components_seo_*` jadvali va
+  o'chiriladigan `components_landing_page_tools`, `components_contacts_page_topics` ma'lumotlari bor;
+- saytdagi SEO ochiq API orqali saqlandi:
 
 ```bash
 Q='{"query":"query($l:I18NLocaleCode){seo(locale:$l){landingPage{title description} aboutPage{title description} pricePage{title description} oneGuaranteePage{title description} contactsPage{title description}}}","variables":{"l":"LOCALE"}}'
 for l in en ru; do curl -s https://onebrandingbackend.up.railway.app/graphql -H 'Content-Type: application/json' --data "${Q/LOCALE/$l}" > seo-$l-before.json; done
+for l in en ru; do curl -s "https://onebrandingbackend.up.railway.app/api/seo?locale=$l&populate=*" -o rest-$l-before.json; done
 ```
 
-## 3. Deploy
+Natija: en'da beshta SEO yozuvi bor (hammasi "HomePage", "About Page title" kabi vaqtinchalik
+matn, frontend ularni e'tiborsiz qoldirib i18n matnini ishlatadi), ru'da SEO hujjati yo'q (REST 404).
+Demak migratsiya 5 ta yozuvni ko'chirishi kutilgan.
 
-- Kam trafikli vaqtda; deploy paytida admin'da SEO'ni tahrirlamang.
-- Branch `main`ga merge qilinadi, Railway backend va frontendni o'zi deploy qiladi.
-- Yangi deploy ishga tushguncha eski backend hali trafikda bo'ladi; migratsiyadan keyin u
-  SEO'ni bo'sh qaytaradi va sayt i18n matnlariga tushadi. Sahifa keshi (5 daqiqa) shu
-  sahifalarni ko'pi bilan 5 daqiqa saqlashi mumkin.
+## 3. Deploy (2026-10-13 19:50 UTC)
 
-## 4. Deploydan keyin tekshirish
+`2065126` `main`ga fast-forward qilindi; Railway backend va frontendni o'zi deploy qildi.
+Yangi backend migratsiyani 19:52:45 da bajardi, eski konteyner 19:53:08 da to'xtadi. Shu oraliqda
+eski konteynerga kelgan yagona so'rov (kuzatuv uchun `curl`) 500 oldi: eski kod o'chirilgan
+`components_seo_*` jadvalini so'radi. Sayt so'rovlari bu oraliqqa tushmadi.
 
-- Backend logi: `migrated 202610140001_merge_seo_components.js` va
-  `[merge-seo] moved {...} into shared.seo; dropped 0 broken link(s)`. Raqamlar 2-qadamdagi
-  `seos_cmps` sonlariga teng bo'lishi kerak.
-- SQL: `SELECT component_type, count(*) FROM seos_cmps GROUP BY 1;` faqat `shared.seo` (jami o'sha
-  son), `SELECT count(*) FROM components_shared_seos;` ham shu son; `components_seo_%` jadvallari yo'q.
-- GraphQL: 2-qadamdagi tsiklni `seo-$l-after.json` bilan qayta ishlating;
-  `diff seo-en-before.json seo-en-after.json` va `ru` uchun ham farq chiqarmasligi kerak.
-- Admin: Content Manager → SEO → en va ru: matnlar joyida, har bir blok "SEO" deb nomlangan.
-- 5 daqiqadan keyin `/`, `/about`, `/pricing`, `/one-guarantee`, `/contact` va `/ru/...` sahifalarining
-  `<title>` va `description`'i oldingidek.
+## 4. Deploydan keyin tekshirish (bajarildi)
+
+- Backend logi: `[merge-seo] moved {"seo.landing-page":1,"seo.about-page":1,"seo.price-page":1,"seo.one-guarantee-page":1,"seo.contacts-page":1} into shared.seo; dropped 0 broken link(s)` — kutilgan 5 ta.
+- GraphQL `seo` (en, ru): oldingisi bilan bayt-ma-bayt bir xil.
+- REST `/api/seo` (en): komponent `id`laridan tashqari bir xil (`id`lar endi 1–5); ru oldingidek 404.
+- `/healthz` 200; `/`, `/about`, `/pricing`, `/one-guarantee`, `/contact`, `/ru`, `/ru/about`, `/projects`
+  sahifalarining `<title>` va description'i joyida.
+- GitHub Actions: `main` va branch'dagi CI yashil.
 
 ## Orqaga qaytarish
 
-Faqat kodni qaytarish yetmaydi: eski kod SEO'ni bo'sh ko'rsatadi va `components_shared_seos`ni o'chiradi.
-Ma'lumot backupda turadi.
+Faqat kodni qaytarish yetmaydi: eski kod `components_shared_seos`ni o'chiradi va SEO so'rovlarida
+500 beradi. Ma'lumot `pg-backup` volume'idagi dumpda turadi.
 
-1. Railway → `Backend` → oldingi muvaffaqiyatli deploy → **Redeploy**.
-2. Backupni tiklash: 1a'dagi Railway backup'dan **Restore** yoki
-   `pg_restore -h localhost --clean --if-exists --no-owner -d "$PGDATABASE" /var/lib/postgresql/data/pre-seo-merge.dump`.
-3. `Backend` service'ni restart qiling va 4-qadamdagi GraphQL `diff`ni qayta tekshiring.
+1. Railway → `Backend` → oldingi muvaffaqiyatli deploy (`d085ff0`) → **Redeploy**.
+2. `pg-backup` servisining start command'ini vaqtincha shunga almashtirib redeploy qiling:
+   `sh -c 'pg_restore --dbname="$DATABASE_URL" --clean --if-exists --no-owner /backup/pre-seo-merge-20261013T194955Z.dump; echo RESTORE_DONE; exec sleep infinity'`
+3. Logda `RESTORE_DONE` chiqqach `Backend`ni restart qiling va 4-qadamdagi GraphQL solishtiruvini takrorlang.
+
+## Tozalash
+
+`pg-backup` servisi (`sleep infinity` bilan) va `pg-backup-volume` faqat orqaga qaytarish uchun turibdi.
+Bir necha kun muammo chiqmasa, ikkalasini ham Railway'dan o'chirish mumkin.
