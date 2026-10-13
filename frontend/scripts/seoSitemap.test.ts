@@ -35,14 +35,14 @@ describe("CMS sitemap", () => {
     // English is the default language ("/"), Russian lives under "/ru".
     expect(urls).toContain("https://example.test/");
     expect(urls).toContain("https://example.test/ru");
-    expect(urls).toContain("https://example.test/NewsSlug/shared%20%26%20one");
-    expect(urls).toContain("https://example.test/ru/NewsSlug/shared%20%26%20one");
-    expect(urls).toContain("https://example.test/ru/NewsSlug/ru-only");
-    expect(urls).not.toContain("https://example.test/NewsSlug/ru-only");
-    expect(urls).toContain("https://example.test/NewsSlug/en-only");
-    expect(urls).not.toContain("https://example.test/ru/NewsSlug/en-only");
-    expect(urls).toContain("https://example.test/ProjectSlug/project");
-    expect(urls).toContain("https://example.test/ProductSlug/category");
+    expect(urls).toContain("https://example.test/news/shared%20%26%20one");
+    expect(urls).toContain("https://example.test/ru/news/shared%20%26%20one");
+    expect(urls).toContain("https://example.test/ru/news/ru-only");
+    expect(urls).not.toContain("https://example.test/news/ru-only");
+    expect(urls).toContain("https://example.test/news/en-only");
+    expect(urls).not.toContain("https://example.test/ru/news/en-only");
+    expect(urls).toContain("https://example.test/projects/project");
+    expect(urls).toContain("https://example.test/services/category");
     // x-default points at the English (default) page.
     expect(xml).toContain('hreflang="x-default" href="https://example.test/"');
     expect(urls.length).toBe(new Set(urls).size);
@@ -61,9 +61,9 @@ describe("CMS sitemap", () => {
         categories_connection: { nodes: [], pageInfo: { pageCount: 1 } },
       } };
     });
-    expect(xml).toMatch(/<loc>https:\/\/example\.test\/ru\/NewsSlug\/%22article%22<\/loc><lastmod>2026-01-01T00:00:00\.000Z<\/lastmod>/);
-    expect(xml).toMatch(/<loc>https:\/\/example\.test\/NewsSlug\/%22article%22<\/loc><lastmod>2026-02-02T00:00:00\.000Z<\/lastmod>/);
-    expect(xml).not.toContain('<loc>https://example.test/NewsSlug/"article"</loc>');
+    expect(xml).toMatch(/<loc>https:\/\/example\.test\/ru\/news\/%22article%22<\/loc><lastmod>2026-01-01T00:00:00\.000Z<\/lastmod>/);
+    expect(xml).toMatch(/<loc>https:\/\/example\.test\/news\/%22article%22<\/loc><lastmod>2026-02-02T00:00:00\.000Z<\/lastmod>/);
+    expect(xml).not.toContain('<loc>https://example.test/news/"article"</loc>');
   });
 
   test("rejects incomplete CMS pages rather than publishing a partial sitemap", async () => {

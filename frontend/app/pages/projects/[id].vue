@@ -1,10 +1,10 @@
-<!-- app/pages/ProjectSlug/[id].vue -->
+<!-- app/pages/projects/[id].vue -->
 <script setup lang="ts">
 import Spinner from "~/components/Spinner.vue";
 
-import ColorSection from "~/components/ProjectSlug/ColorSection.vue";
-import ProjectBigPic from "~/components/ProjectSlug/ProjectBigPic.vue";
-import ProjectGrid from "~/components/ProjectSlug/ProjectGrid.vue";
+import ColorSection from "~/components/project/ColorSection.vue";
+import ProjectBigPic from "~/components/project/ProjectBigPic.vue";
+import ProjectGrid from "~/components/project/ProjectGrid.vue";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { isPlaceholderCopy } from "~/utils/seo";
@@ -197,7 +197,7 @@ usePageSeo({
   image: seoImage,
   imageAlt: projectName,
   breadcrumbs: computed(() => [
-    { name: t("nav.projects"), path: localePath("/Projects") },
+    { name: t("nav.projects"), path: localePath("/projects") },
     { name: projectName.value || t("seo.project"), path: route.path },
   ]),
   structuredData: computed(() => ({

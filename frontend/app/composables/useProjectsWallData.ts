@@ -96,7 +96,7 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
           id,
           image,
           title: project.section1?.projectTitle?.trim() || "Project",
-          to: localePath({ path: `/ProjectSlug/${id}` }),
+          to: localePath({ path: `/projects/${id}` }),
         };
       })
       .filter((project): project is ProjectWallItem => project !== null)

@@ -84,7 +84,7 @@ const loadMore = async () => {
   }
 };
 
-const toNewsSlug = (id: string) => localePath({ path: `/NewsSlug/${id}` });
+const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
 </script>
 
 <template>

@@ -38,7 +38,7 @@ const securityHeaders = {
   "referrer-policy": "strict-origin-when-cross-origin",
   "cross-origin-opener-policy": "same-origin",
 };
-const cachedPages = ["/", "/About", "/ContactPage", "/Costs", "/Oneguarantee", "/Projects", "/News"];
+const cachedPages = ["/", "/about", "/contact", "/pricing", "/one-guarantee", "/projects", "/news"];
 // Rendered pages are kept in the server's memory for 5 minutes and refreshed in
 // the background after that (stale-while-revalidate), so most visitors get the
 // HTML without a render or a CMS round trip. (`isr` only works on Vercel and
@@ -140,12 +140,12 @@ export default defineNuxtConfig({
       [path, pageCache],
       [path === "/" ? "/ru" : `/ru${path}`, pageCache],
     ])),
-    "/ProductSlug/**": pageCache,
-    "/ru/ProductSlug/**": pageCache,
-    "/ProjectSlug/**": pageCache,
-    "/ru/ProjectSlug/**": pageCache,
-    "/NewsSlug/**": pageCache,
-    "/ru/NewsSlug/**": pageCache,
+    "/services/**": pageCache,
+    "/ru/services/**": pageCache,
+    "/projects/**": pageCache,
+    "/ru/projects/**": pageCache,
+    "/news/**": pageCache,
+    "/ru/news/**": pageCache,
     "/_ipx/**": {
       headers: longTermImageCacheHeaders,
     },

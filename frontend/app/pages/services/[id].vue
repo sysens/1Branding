@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Spinner from "~/components/Spinner.vue";
-import ProductsMain from "~/components/Products/Productsmain.vue";
+import ProductsMain from "~/components/products/ProductsMain.vue";
 import { onMounted, nextTick, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -184,7 +184,7 @@ usePageSeo({
   type: "website",
   image: seoImage,
   breadcrumbs: computed(() => [
-    { name: t("nav.projects"), path: localePath("/Projects") },
+    { name: t("nav.projects"), path: localePath("/projects") },
     { name: pageTitle.value, path: route.path },
   ]),
   indexable: computed(() =>

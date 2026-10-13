@@ -42,9 +42,9 @@ if (import.meta.server) {
     script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
   });
 }
-const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/Projects"));
+const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/projects"));
 const showBottomBlur = computed(() =>
-  showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/ContactPage")
+  showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/contact")
 );
 
 // Each blur layer is a fixed backdrop-filter, which makes scrolling costly on

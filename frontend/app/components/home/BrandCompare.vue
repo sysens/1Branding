@@ -72,7 +72,7 @@ const go = (step: 1 | -1) => {
       </button>
     </div>
 
-    <NuxtLink :to="localePath('/Projects')" class="compare-section__button">{{ t("home.compare.cta") }}</NuxtLink>
+    <NuxtLink :to="localePath('/projects')" class="compare-section__button">{{ t("home.compare.cta") }}</NuxtLink>
   </section>
 </template>
 

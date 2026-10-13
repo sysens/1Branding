@@ -90,7 +90,7 @@ onBeforeUnmount(() => {
     </div>
     <!-- No presentations page yet: the button leads to the projects. -->
     <div class="pgallery__cta">
-      <NuxtLink :to="localePath('/Projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
+      <NuxtLink :to="localePath('/projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
       <p class="pgallery__more">{{ t("home.presentations.more") }}</p>
     </div>
     <div class="pgallery__rule" aria-hidden="true" />

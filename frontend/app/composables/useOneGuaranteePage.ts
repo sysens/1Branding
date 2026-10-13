@@ -1,6 +1,6 @@
 /**
  * The One Guarantee single type, fetched once for the whole page: InfoSection,
- * GuaranteeMarquee, EarthDives, Reasons and BigPhotoo all read this one query
+ * GuaranteeMarquee, EarthDives, Reasons and BigPhoto all read this one query
  * (same key) instead of five requests. `fallback` is the English entry, loaded
  * off English, for whatever the Russian entry lacks.
  */

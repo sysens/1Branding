@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Warning from "~/components/Costs/Warning.vue";
+import Warning from "~/components/costs/Warning.vue";
 import { computed } from "vue";
 
 const { t } = useI18n();
@@ -9,7 +9,7 @@ const localePath = useLocalePath();
 usePageSeo({
   title: computed(() => cmsSeo.title.value || t("seo.price.title")),
   description: computed(() => cmsSeo.description.value || t("seo.price.description")),
-  breadcrumbs: computed(() => [{ name: t("nav.prices"), path: localePath("/Costs") }]),
+  breadcrumbs: computed(() => [{ name: t("nav.prices"), path: localePath("/pricing") }]),
 });
 
 </script>

@@ -98,7 +98,7 @@ const fetchPage = async (p: number) => {
 };
 
 const localePath = useLocalePath();
-const toNewsSlug = (id: string) => localePath(`/NewsSlug/${id}`);
+const toNewsSlug = (id: string) => localePath(`/news/${id}`);
 
 const collectFromPages = async (startPage: number, maxPages: number, need: number) => {
   const out: NewsNode[] = [];

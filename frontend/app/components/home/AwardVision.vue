@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
       <div ref="box" class="vision__numeral" :class="{ 'is-ready': ready }" role="img" aria-label="A chrome and black numeral one">
         <canvas ref="canvas" class="vision__canvas" aria-hidden="true" />
       </div>
-      <NuxtLink :to="localePath('/About')" class="vision__button">{{ t("home.vision.cta") }}</NuxtLink>
+      <NuxtLink :to="localePath('/about')" class="vision__button">{{ t("home.vision.cta") }}</NuxtLink>
     </div>
   </section>
 </template>

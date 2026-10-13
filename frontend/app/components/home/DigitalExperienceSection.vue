@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { MacbookScroll } from "~/components/ui/macbook-scroll";
+import MacbookScroll from "~/components/ui/macbook/MacbookDevice.vue";
 
 const { t, te } = useI18n();
 

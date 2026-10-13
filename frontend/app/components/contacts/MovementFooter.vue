@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
       <div class="movement-footer__content">
         <h2 id="movement-title">{{ copy.first }}<br />{{ copy.second }}</h2>
         <p>{{ copy.description }}<br />{{ copy.detail }}</p>
-        <CinematicAction :to="localePath('/Projects')">{{ copy.action }}</CinematicAction>
+        <CinematicAction :to="localePath('/projects')">{{ copy.action }}</CinematicAction>
       </div>
     </section>
     <div class="movement-footer__legal">

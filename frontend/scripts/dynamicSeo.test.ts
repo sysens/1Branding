@@ -3,9 +3,9 @@ import { parse as parseVue } from "vue/compiler-sfc";
 import { parse as parseGraphql } from "graphql";
 
 const routeFiles = [
-  "app/pages/NewsSlug/[id].vue",
-  "app/pages/ProjectSlug/[id].vue",
-  "app/pages/ProductSlug/[id].vue",
+  "app/pages/news/[id].vue",
+  "app/pages/projects/[id].vue",
+  "app/pages/services/[id].vue",
 ];
 
 const scriptOf = async (file: string) => {
@@ -17,7 +17,7 @@ const scriptOf = async (file: string) => {
 describe("dynamic route metadata", () => {
   test("news uses exactly one SSR content request shared with its hero and emits article metadata", async () => {
     const page = await scriptOf(routeFiles[0]!);
-    const hero = await scriptOf("app/components/Newsslug/NewsHero.vue");
+    const hero = await scriptOf("app/components/news/NewsHero.vue");
     const template = (await Bun.file(routeFiles[0]!).text());
     expect((page.match(/await useCmsQuery</g) || [])).toHaveLength(1);
     expect(hero).not.toContain("useFetch");

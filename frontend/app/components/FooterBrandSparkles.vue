@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Sparkles from "~/components/ui/sparkles.vue";
+import Sparkles from "~/components/ui/Sparkles.vue";
 </script>
 
 <template>

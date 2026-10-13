@@ -155,7 +155,7 @@ const marqueeItems = computed<MarqueeItem[]>(() => {
           key: `${catIdx}-${projectIdx}-${id}`,
           title,
           src,
-          to: localePath(`/ProjectSlug/${id}`),
+          to: localePath(`/projects/${id}`),
         };
       })
       .filter((item): item is MarqueeItem => item !== null);
@@ -271,13 +271,13 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
     </section>
 
     <a
-      :href="localePath('/Projects')"
+      :href="localePath('/projects')"
       class="text-white mx-auto mt-[80px] mb-[50px] bg-[url('/home/Component3.png')] md:w-[16.25rem] w-[219px] md:h-[3.75rem] h-[50px] rounded-[32px] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center text-center"
-      @click.prevent="navigateSafely(localePath('/Projects'))"
+      @click.prevent="navigateSafely(localePath('/projects'))"
     >
       {{ $t("aboutPage.moreButton") }}
     </a>
   </div>
 </template>
 
-<style scoped src="./threeLayerSlug.css"></style>
+<style scoped src="./ThreeLayerSlug.css"></style>

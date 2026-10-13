@@ -7,7 +7,7 @@ const origin = useSiteOrigin();
 usePageSeo({
   title: computed(() => t("seo.news.title")),
   description: computed(() => t("seo.news.description")),
-  breadcrumbs: computed(() => [{ name: t("nav.news"), path: localePath("/News") }]),
+  breadcrumbs: computed(() => [{ name: t("nav.news"), path: localePath("/news") }]),
   structuredData: computed(() => ({
     "@type": "CollectionPage",
     name: t("seo.news.title"),

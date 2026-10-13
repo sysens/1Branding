@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ManifestoScroll from "./ManifestoScroll.vue";
-import ThreeLayer from "./threeLayer.vue";
+import ThreeLayer from "./ThreeLayer.vue";
 
 withDefaults(
   defineProps<{

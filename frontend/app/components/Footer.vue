@@ -17,10 +17,10 @@ const columns = computed<Array<{ title: string; links: FooterLink[] }>>(() => [
   {
     title: t("footerNew.explore"),
     links: [
-      { label: t("footerNew.work"), to: localePath("/Projects") },
+      { label: t("footerNew.work"), to: localePath("/projects") },
       { label: t("footerNew.services"), to: `${localePath("/")}#services` },
-      { label: t("footerNew.about"), to: localePath("/About") },
-      { label: t("footerNew.contact"), to: localePath("/ContactPage") },
+      { label: t("footerNew.about"), to: localePath("/about") },
+      { label: t("footerNew.contact"), to: localePath("/contact") },
     ],
   },
   {
@@ -36,7 +36,7 @@ const columns = computed<Array<{ title: string; links: FooterLink[] }>>(() => [
     title: t("footerNew.information"),
     links: [
       { label: t("footerNew.process"), to: `${localePath("/")}#audit` },
-      { label: t("footerNew.guarantee"), to: localePath("/Oneguarantee") },
+      { label: t("footerNew.guarantee"), to: localePath("/one-guarantee") },
       // No privacy or terms pages exist yet: plain labels until they do.
       { label: t("footerNew.privacy") },
       { label: t("footerNew.terms") },
@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
             <span>{{ t("footerNew.pitchFirst") }}</span>
             <span>{{ t("footerNew.pitchSecond") }}</span>
           </p>
-          <NuxtLink :to="localePath('/ContactPage')" class="site-footer__start">
+          <NuxtLink :to="localePath('/contact')" class="site-footer__start">
             {{ t("footerNew.start") }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
           </NuxtLink>

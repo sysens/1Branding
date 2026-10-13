@@ -1,4 +1,4 @@
-<!-- components/ProjectSlug/ProjectGrid.vue -->
+<!-- components/projects/ProjectGrid.vue -->
 <script setup lang="ts">
 import { ref, nextTick, computed, watch } from "vue";
 

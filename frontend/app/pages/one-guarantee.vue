@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import EarthDives from "~/components/home/EarthDives.vue";
-import BigPhotoo from "~/components/OneGuarantee/BigPhotoo.vue";
-import GuaranteeMarquee from "~/components/OneGuarantee/GuaranteeMarquee.vue";
-import InfoSection from "~/components/OneGuarantee/InfoSection.vue";
-import Reasons from "~/components/OneGuarantee/Reasons.vue";
+import BigPhoto from "~/components/one-guarantee/BigPhoto.vue";
+import GuaranteeMarquee from "~/components/one-guarantee/GuaranteeMarquee.vue";
+import InfoSection from "~/components/one-guarantee/InfoSection.vue";
+import Reasons from "~/components/one-guarantee/Reasons.vue";
 import { computed, onMounted, nextTick, ref } from "vue";
 
 interface LenisController {
@@ -45,7 +45,7 @@ const localePath = useLocalePath();
 usePageSeo({
   title: computed(() => cmsSeo.title.value || t("seo.oneGuarantee.title")),
   description: computed(() => cmsSeo.description.value || t("seo.oneGuarantee.description")),
-  breadcrumbs: computed(() => [{ name: "OneGuarantee", path: localePath("/Oneguarantee") }]),
+  breadcrumbs: computed(() => [{ name: "OneGuarantee", path: localePath("/one-guarantee") }]),
 });
 
 const getLenis = () => {
@@ -170,7 +170,7 @@ onMounted(async () => {
         </div>
 
         <div class="containerr">
-          <BigPhotoo />
+          <BigPhoto />
         </div>
       </div>
     </div>

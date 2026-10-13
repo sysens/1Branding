@@ -63,7 +63,7 @@ const firstImage = (item: ProjectNode) => {
 const safeTitle = (item: ProjectNode) => (item.section1?.projectTitle ?? "").toString();
 
 const localePath = useLocalePath();
-const linkTo = (id: string) => localePath(`/ProjectSlug/${id}`);
+const linkTo = (id: string) => localePath(`/projects/${id}`);
 
 // The list and the button slide in; again whenever more projects are shown.
 const { refresh } = useGsapContext(root, ({ gsap, el }) => {

@@ -77,7 +77,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
               <p class="services__tagline">{{ selected.tagline }}</p>
             </div>
           </Transition>
-          <NuxtLink :to="localePath('/ContactPage')" class="services__button">
+          <NuxtLink :to="localePath('/contact')" class="services__button">
             {{ t("home.services.explore") }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>
           </NuxtLink>

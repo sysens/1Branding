@@ -2,10 +2,10 @@
 import { computed } from "vue";
 import Header from "~/components/Header.vue";
 import Footer from "~/components/Footer.vue";
-import BigPhoto from "~/components/About/BigPhoto.vue";
-import ThreePic from "~/components/About/ThreePic.vue";
-import TwoFlex from "~/components/About/TwoFlex.vue";
-import ThreeLayer from "~/components/home/threeLayerSlug.vue";
+import BigPhoto from "~/components/about/BigPhoto.vue";
+import ThreePic from "~/components/about/ThreePic.vue";
+import TwoFlex from "~/components/about/TwoFlex.vue";
+import ThreeLayer from "~/components/home/ThreeLayerSlug.vue";
 
 const { t } = useI18n();
 
@@ -14,7 +14,7 @@ const localePath = useLocalePath();
 usePageSeo({
   title: computed(() => cmsSeo.title.value || t("seo.about.title")),
   description: computed(() => cmsSeo.description.value || t("seo.about.description")),
-  breadcrumbs: computed(() => [{ name: t("nav.about"), path: localePath("/About") }]),
+  breadcrumbs: computed(() => [{ name: t("nav.about"), path: localePath("/about") }]),
 });
 </script>
 

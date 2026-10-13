@@ -3,7 +3,7 @@
 definePageMeta({ footer: false });
 
 import { computed } from "vue";
-import InfiniteProjectsWall from "~/components/Projects/InfiniteProjectsWall.vue";
+import InfiniteProjectsWall from "~/components/projects/InfiniteProjectsWall.vue";
 import Header from "~/components/Header.vue";
 
 const { t } = useI18n();
@@ -12,7 +12,7 @@ const origin = useSiteOrigin();
 usePageSeo({
   title: computed(() => t("seo.projects.title")),
   description: computed(() => t("seo.projects.description")),
-  breadcrumbs: computed(() => [{ name: t("nav.projects"), path: localePath("/Projects") }]),
+  breadcrumbs: computed(() => [{ name: t("nav.projects"), path: localePath("/projects") }]),
   structuredData: computed(() => ({
     "@type": "CollectionPage",
     name: t("seo.projects.title"),

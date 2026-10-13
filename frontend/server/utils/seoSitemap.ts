@@ -17,11 +17,11 @@ type FetchCms = (url: string, options: {
 
 const PAGE_SIZE = 100;
 const collections: Record<Collection, string> = {
-  newsPages_connection: "NewsSlug",
-  projectsPages_connection: "ProjectSlug",
-  categories_connection: "ProductSlug",
+  newsPages_connection: "news",
+  projectsPages_connection: "projects",
+  categories_connection: "services",
 };
-const staticPaths = ["/", "/About", "/ContactPage", "/Costs", "/Oneguarantee", "/Projects", "/News"];
+const staticPaths = ["/", "/about", "/contact", "/pricing", "/one-guarantee", "/projects", "/news"];
 
 const query = `
   query SitemapEntries($page: Int!, $pageSize: Int!, $locale: I18NLocaleCode) {

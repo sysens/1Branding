@@ -19,7 +19,7 @@ const loadCss = (href: string) => {
     css = $fetch<string>(href, { responseType: "text" })
       .then((text) => text
         // url(../fonts/x.woff2) is relative to /_nuxt/; inline it would resolve
-        // against the page URL instead (/en/ProjectSlug/... breaks), so make it
+        // against the page URL instead (/en/projects/... breaks), so make it
         // absolute.
         .replace(RELATIVE_URL, (_, quote: string, path: string) => `url(${quote}${new URL(path, `http://x${href}`).pathname}${quote})`)
         // Keep an embedded "</style" from closing the tag early.

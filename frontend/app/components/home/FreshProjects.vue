@@ -35,7 +35,7 @@ const localePath = useLocalePath();
       </div>
     </div>
 
-    <NuxtLink :to="localePath('/Projects')" class="fresh__more">
+    <NuxtLink :to="localePath('/projects')" class="fresh__more">
       <span class="fresh__blob" aria-hidden="true" />
       <span class="fresh__more-label">{{ t("home.fresh.more") }}</span>
     </NuxtLink>

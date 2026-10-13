@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import NewsHero from "~/components/Newsslug/NewsHero.vue";
-import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
+import NewsHero from "~/components/news/NewsHero.vue";
+import NewsSlider from "~/components/news/NewsSlider.vue";
 
 type AppLocale = "ru" | "en";
 type Media = { url?: string | null };
@@ -97,7 +97,7 @@ usePageSeo({
   image: seoImage,
   structuredData,
   breadcrumbs: computed(() => [
-    { name: t("nav.news"), path: localePath("/News") },
+    { name: t("nav.news"), path: localePath("/news") },
     { name: seoTitle.value, path: route.path },
   ]),
   indexable: computed(() =>

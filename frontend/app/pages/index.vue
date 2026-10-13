@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useSectionTitleReveal } from "~/composables/useSectionTitleReveal";
-import LeadingPage from "~/components/home/leadingPage.vue";
+import LeadingPage from "~/components/home/LeadingPage.vue";
 import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
 import { selectCollageSource } from "~/utils/collageMedia";

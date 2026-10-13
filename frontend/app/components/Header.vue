@@ -16,17 +16,17 @@
         </a>
 
         <nav class="menuLink site-nav hidden min-[950px]:flex flex-1 items-center justify-center">
-          <a class="site-nav__link" :href="localePath('/About')" @click="onNav($event, localePath('/About'))">
+          <a class="site-nav__link" :href="localePath('/about')" @click="onNav($event, localePath('/about'))">
             {{ $t("nav.about") }}
           </a>
-          <a class="site-nav__link" :href="localePath('/Projects')" @click="onNav($event, localePath('/Projects'))">
+          <a class="site-nav__link" :href="localePath('/projects')" @click="onNav($event, localePath('/projects'))">
             {{ $t("nav.projects") }}
           </a>
           <HeaderServicesMenu />
-          <a class="site-nav__link" :href="localePath('/Costs')" @click="onNav($event, localePath('/Costs'))">
+          <a class="site-nav__link" :href="localePath('/pricing')" @click="onNav($event, localePath('/pricing'))">
             {{ $t("nav.prices") }}
           </a>
-          <a class="site-nav__link" :href="localePath('/ContactPage')" @click="onNav($event, localePath('/ContactPage'))">
+          <a class="site-nav__link" :href="localePath('/contact')" @click="onNav($event, localePath('/contact'))">
             {{ $t("nav.contacts") }}
           </a>
 
@@ -71,9 +71,9 @@
 
         <div class="hidden min-[950px]:flex items-center">
           <a
-            :href="localePath('/Oneguarantee')"
+            :href="localePath('/one-guarantee')"
             class="site-guarantee"
-            @click="onNav($event, localePath('/Oneguarantee'))"
+            @click="onNav($event, localePath('/one-guarantee'))"
           >
             <span class="site-guarantee__one">{{ $t("brand.one") }}</span>{{ $t("brand.oneGuaranteeSuffix") }}
           </a>
@@ -158,8 +158,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/About')"
-              @click="onNav($event, localePath('/About'))"
+              :href="localePath('/about')"
+              @click="onNav($event, localePath('/about'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.about") }}
@@ -168,8 +168,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/Projects')"
-              @click="onNav($event, localePath('/Projects'))"
+              :href="localePath('/projects')"
+              @click="onNav($event, localePath('/projects'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.projects") }}
@@ -177,8 +177,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/ContactPage')"
-              @click="onNav($event, localePath('/ContactPage'))"
+              :href="localePath('/contact')"
+              @click="onNav($event, localePath('/contact'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.contacts") }}
@@ -186,8 +186,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/Oneguarantee')"
-              @click="onNav($event, localePath('/Oneguarantee'))"
+              :href="localePath('/one-guarantee')"
+              @click="onNav($event, localePath('/one-guarantee'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
@@ -197,8 +197,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/Costs')"
-              @click="onNav($event, localePath('/Costs'))"
+              :href="localePath('/pricing')"
+              @click="onNav($event, localePath('/pricing'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.prices") }}
@@ -206,8 +206,8 @@
             <div class="h-px bg-white/10"></div>
 
             <a
-              :href="localePath('/News')"
-              @click="onNav($event, localePath('/News'))"
+              :href="localePath('/news')"
+              @click="onNav($event, localePath('/news'))"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
             >
               {{ $t("nav.news") }}

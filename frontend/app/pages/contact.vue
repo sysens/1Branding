@@ -3,9 +3,9 @@
 definePageMeta({ footer: false });
 
 import { computed, onMounted, nextTick } from "vue";
-import Form from "~/components/Contacts/Form.vue";
-import Locations from "~/components/Contacts/Locations.vue";
-import MovementFooter from "~/components/Contacts/MovementFooter.vue";
+import Form from "~/components/contacts/Form.vue";
+import Locations from "~/components/contacts/Locations.vue";
+import MovementFooter from "~/components/contacts/MovementFooter.vue";
 
 
 const { t } = useI18n();
@@ -15,7 +15,7 @@ const localePath = useLocalePath();
 usePageSeo({
   title: computed(() => cmsSeo.title.value || t("seo.contacts.title")),
   description: computed(() => cmsSeo.description.value || t("seo.contacts.description")),
-  breadcrumbs: computed(() => [{ name: t("nav.contacts"), path: localePath("/ContactPage") }]),
+  breadcrumbs: computed(() => [{ name: t("nav.contacts"), path: localePath("/contact") }]),
 });
 
 const nuxtApp = useNuxtApp();

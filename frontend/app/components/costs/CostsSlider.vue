@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
-import CostsOrbitalGlow from "~/components/Costs/CostsOrbitalGlow.vue";
+import CostsOrbitalGlow from "~/components/costs/CostsOrbitalGlow.vue";
 
 type AppLocale = "ru" | "en";
 
