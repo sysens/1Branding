@@ -3,7 +3,8 @@ import { Pause, Play, RotateCcw } from "lucide-vue-next";
 import { useNetworkGlobe } from "~/composables/useNetworkGlobe";
 import { useViewportActivity } from "~/composables/useViewportActivity";
 
-withDefaults(defineProps<{ showLabels?: boolean }>(), { showLabels: true });
+// `controls` shows the pause and reset buttons (the landing leaves them out).
+withDefaults(defineProps<{ showLabels?: boolean; controls?: boolean }>(), { showLabels: true, controls: true });
 
 const { targetRef, isActive } = useViewportActivity({
   rootMargin: "400px 0px",
@@ -40,7 +41,7 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       loading="lazy"
       decoding="async"
     />
-    <div v-if="status === 'ready'" class="network-globe__controls">
+    <div v-if="controls && status === 'ready'" class="network-globe__controls">
       <button
         type="button"
         :aria-label="paused ? 'Resume rotation' : 'Pause rotation'"

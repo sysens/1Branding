@@ -23,7 +23,7 @@ export function createStageLights(): Group {
     const glowHeight = gap * 2.1;
     // Extend both sides of the rim so its light fades instead of ending at a hard edge.
     for (let i = 0; i <= 240; i++) {
-      const x = (i / 240 * 2 - 1) * 760;
+      const x = (i / 240 * 2 - 1) * 1200;
       const screenY = ceilingCurveY(row, x);
       const y = STAGE_HEIGHT / 2 - screenY;
       vertices.push(x, y - 4, -2, x, y + glowHeight, -2);
@@ -53,7 +53,8 @@ export function createStageLights(): Group {
         uniform float bloomGain; uniform float galleryTop;
         void main() {
           float distance = mix(-4., glowHeight, vUv.y);
-          float across = exp(-pow(abs(vStage.x) / 440., 3.6));
+          // The rims run out past the stage's edges (as in the design), fading only far out.
+          float across = exp(-pow(abs(vStage.x) / 950., 4.));
           float centerLight = exp(-pow(abs(vStage.x) / 235., 2.4));
           float rim = exp(-pow(distance / .8, 2.));
           float glow = exp(-max(distance, 0.) / (gap * .85))

@@ -239,7 +239,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 }
 
 .audit__title {
-  font-size: calc(85.5 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.01em;
@@ -501,8 +501,12 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 }
 
 .audit__plan {
+  /* The shared heading size; a long line wraps rather than leave the container. */
+  max-width: min(100%, 1450px);
+  margin-inline: auto;
   margin-top: calc(110 * var(--u)) !important;
-  font-size: calc(57 * var(--u));
+  font-size: var(--section-title-size);
+  text-wrap: balance;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.035em;
@@ -527,6 +531,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 
 .audit__button {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   gap: 0.4em;
@@ -588,7 +593,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 
   .audit__title {
     padding-inline: 1.25rem;
-    font-size: 7.4vw;
+    font-size: var(--section-title-size);
   }
 
   .audit__frame {
@@ -714,7 +719,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
   .audit__plan {
     margin-top: 2.5rem !important;
     padding-inline: 1.25rem;
-    font-size: 1.55rem;
+    font-size: var(--section-title-size);
   }
 
   .audit__text {

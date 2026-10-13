@@ -1,7 +1,10 @@
 const frontendHost = process.env.NUXT_HOST || "127.0.0.1";
 const frontendPort = Number(process.env.NUXT_PORT || "3000");
+// Dev server only: ngrok tunnels (a free tunnel gets a new subdomain each run;
+// a leading dot lets Vite accept every subdomain) plus NUXT_VITE_ALLOWED_HOSTS.
 const viteAllowedHosts = [
-  "tubercularly-oversevere-louie.ngrok-free.dev",
+  ".ngrok-free.app",
+  ".ngrok-free.dev",
   ...(process.env.NUXT_VITE_ALLOWED_HOSTS || "")
     .split(",")
     .map((host) => host.trim())

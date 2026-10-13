@@ -4,6 +4,9 @@ export const AWARDS_PREVIEW_CEILING = "/home/awards/stage-ceiling.v1.webp";
 export const STAGE_WIDTH = 1366;
 export const STAGE_HEIGHT = 840;
 export const CAMERA_DISTANCE = 1800;
+// The rows are laid out this wide (not just the stage): on ultra-wide screens the
+// camera shows past the stage's edges, and the design's gallery runs to them.
+export const GALLERY_COVER = 2400;
 export const CARD_WIDTH = 178;
 export const CARD_HEIGHT = 100;
 export const AWARD_ARTWORK_IDS = [
@@ -31,7 +34,7 @@ export const AWARD_ROWS: readonly AwardRow[] = ROW_WIDTHS.map((width, index) => 
   index, width, height: width * CARD_HEIGHT / CARD_WIDTH,
   gap: Math.max(12, width * .2), top: ROW_TOPS[index]!,
   direction: ROW_DIRECTIONS[index]!, arc: 3 + index * 6, speed: 5 + index * 1.35,
-  count: Math.ceil((STAGE_WIDTH + width * 4) / (width * 1.2)) + 2,
+  count: Math.ceil((GALLERY_COVER + width * 4) / (width * 1.2)) + 2,
 }));
 
 export function getCardPosition(row: AwardRow, column: number, time: number) {

@@ -63,13 +63,13 @@ onBeforeUnmount(() => {
   <!-- The copy is English in both locales. -->
   <section class="vision" lang="en" aria-labelledby="vision-title">
     <div class="vision__frame">
-      <p class="vision__brand">{{ t("home.vision.brand") }}</p>
+      <p v-blur-reveal class="vision__brand">{{ t("home.vision.brand") }}</p>
       <h2 id="vision-title" class="vision__title">
-        <span>{{ t("home.vision.lineFirst") }}</span>
-        <span>{{ t("home.vision.lineSecond") }}</span>
+        <span v-blur-reveal="0.1">{{ t("home.vision.lineFirst") }}</span>
+        <span v-blur-reveal="0.22">{{ t("home.vision.lineSecond") }}</span>
       </h2>
-      <p class="vision__label">{{ t("home.vision.label") }}</p>
-      <p class="vision__year">{{ t("home.vision.year") }}</p>
+      <p v-blur-reveal="0.34" class="vision__label">{{ t("home.vision.label") }}</p>
+      <p v-blur-reveal="0.44" class="vision__year">{{ t("home.vision.year") }}</p>
       <div ref="box" class="vision__numeral" :class="{ 'is-ready': ready }" role="img" aria-label="A chrome and black numeral one">
         <canvas ref="canvas" class="vision__canvas" aria-hidden="true" />
       </div>
@@ -191,12 +191,12 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(395 * var(--u));
-  height: calc(107 * var(--u));
+  width: calc(258 * var(--u));
+  height: calc(62 * var(--u));
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: calc(42 * var(--u));
+  font-size: calc(25 * var(--u));
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -268,10 +268,10 @@ onBeforeUnmount(() => {
 
   .vision__button {
     align-self: center;
-    width: 12.5rem;
-    height: 3.4rem;
+    width: 11.5rem;
+    height: 3.1rem;
     margin-top: 1.5rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 }
 

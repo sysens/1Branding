@@ -102,6 +102,10 @@ onBeforeUnmount(() => {
 <style scoped>
 /* --g is slidor's rem: 16px up to 1440px wide, then growing with the screen. */
 .pgallery {
+  /* The viewport unit this section scales with, frozen once its content
+     reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
+     on wider screens it stays as wide as the container. */
+  --vw: min(1vw, 17.58px);
   --g: 16px;
   padding: clamp(2rem, 3.5vw, 4.5rem) 0 clamp(1.5rem, 2.5vw, 3rem);
   background: #000;
@@ -114,15 +118,17 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.75rem, 1.2vw, 1.5rem);
-  margin: 0 auto clamp(2.5rem, 4.5vw, 5.5rem);
+  gap: clamp(0.75rem, calc(1.2 * var(--vw)), 1.5rem);
+  margin: 0 auto clamp(2.5rem, calc(4.5 * var(--vw)), 5.5rem);
   padding-inline: 1.25rem;
   text-align: center;
 }
 
 .pgallery__title {
   margin: 0;
-  font-size: clamp(1.9rem, 3.4vw, 4.75rem);
+  font-size: var(--section-title-size);
+  /* A long line wraps rather than leave the site container. */
+  max-width: min(100%, 1450px);
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.005em;
@@ -137,10 +143,11 @@ onBeforeUnmount(() => {
 }
 
 .pgallery__text {
-  max-width: min(100%, 60em);
+  /* Never wider than the site container (1450px). */
+  max-width: min(100%, 60em, 1450px);
   margin: 0;
   color: #b8b8b8;
-  font-size: clamp(1rem, 1.55vw, 2.1rem);
+  font-size: clamp(1rem, calc(1.55 * var(--vw)), 2.1rem);
   font-weight: 400;
   line-height: 1.22;
   /* Wide lines with a short last one, as in the design (not balanced). */
@@ -222,14 +229,16 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.3em 1.05em 0.36em;
+  /* The same size as the landing's other buttons (258 x 62 design px). */
+  width: 12.9vw;
+  height: 3.1vw;
   border-radius: 999px;
   background:
     radial-gradient(ellipse 70% 60% at 70% 10%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 70%),
     linear-gradient(100deg, #00b52b 0%, #00e536 45%, #00f83c 70%, #00cf31 100%);
   box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35);
   color: #062b10;
-  font-size: clamp(1.55rem, 2.2vw, 3rem);
+  font-size: 1.25vw;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -271,6 +280,14 @@ onBeforeUnmount(() => {
 @media (min-width: 1441px) {
   .pgallery {
     --g: calc(10px + 0.416667vw);
+  }
+}
+
+@media (max-width: 767px) {
+  .pgallery__button {
+    width: 11.5rem;
+    height: 3.1rem;
+    font-size: 1.1rem;
   }
 }
 

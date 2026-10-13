@@ -100,7 +100,7 @@ const go = (step: 1 | -1) => {
   align-items: center;
   margin: 0;
   padding-inline: 1.25rem;
-  font-size: calc(85 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1.17;
   letter-spacing: -0.025em;
@@ -201,13 +201,14 @@ const go = (step: 1 | -1) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(392 * var(--u));
-  height: calc(107 * var(--u));
-  margin-top: calc(92 * var(--u));
+  /* The size of the landing's other buttons (as AuditStrategy's "Learn more"). */
+  width: calc(258 * var(--u));
+  height: calc(62 * var(--u));
+  margin-top: calc(70 * var(--u));
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: calc(45 * var(--u));
+  font-size: calc(25 * var(--u));
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -227,7 +228,7 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__title {
-    font-size: 8.4vw;
+    font-size: var(--section-title-size);
   }
 
   .compare-section__hint {
@@ -266,10 +267,10 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__button {
-    width: 12.5rem;
-    height: 3.4rem;
+    width: 11.5rem;
+    height: 3.1rem;
     margin-top: 2rem;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 }
 

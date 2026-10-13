@@ -5,6 +5,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 // client names. As on slidor, a name lights up when the pointer passes over it
 // (or it is tapped) and stays lit; once every name is lit, confetti bursts over
 // the table. The cells fade in as a wave when the table first comes into view.
+// The green light behind it floats (each glow drifts slowly on its own loop)
+// and lags the scroll a little, at its own depth, for a gentle parallax.
 // NOTE: the names are the placeholder list from the design (slidor's clients)
 // and must be replaced with OneBranding's own.
 
@@ -39,7 +41,9 @@ const shown = ref(false);
 const expanded = ref(false);
 const celebrated = ref(false);
 const root = ref<HTMLElement | null>(null);
+const section = ref<HTMLElement | null>(null);
 const confetti = ref<HTMLCanvasElement | null>(null);
+const live = ref(false);
 
 const cells = computed(() => CLIENTS.map((name, index) => ({
   name,
@@ -134,7 +138,24 @@ function burst() {
   confettiFrame = requestAnimationFrame(step);
 }
 
+// Parallax: --parallax is how far (px) the section's middle is above the
+// screen's; each backdrop layer moves by its own fraction of it, so the light
+// drifts slower than the table. Only while the section is on screen.
+let parallaxFrame = 0;
+const paintParallax = () => {
+  parallaxFrame = 0;
+  const element = section.value;
+  if (!element) return;
+  const box = element.getBoundingClientRect();
+  const offset = window.innerHeight / 2 - (box.top + box.height / 2);
+  element.style.setProperty("--parallax", `${offset.toFixed(1)}px`);
+};
+const scheduleParallax = () => {
+  if (!parallaxFrame) parallaxFrame = requestAnimationFrame(paintParallax);
+};
+
 let observer: IntersectionObserver | undefined;
+let liveObserver: IntersectionObserver | undefined;
 onMounted(() => {
   if (!root.value) return;
   observer = new IntersectionObserver((entries) => {
@@ -144,29 +165,65 @@ onMounted(() => {
     }
   }, { rootMargin: "0px 0px -15% 0px" });
   observer.observe(root.value);
+
+  if (!section.value || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  liveObserver = new IntersectionObserver((entries) => {
+    const visible = entries.some((entry) => entry.isIntersecting);
+    if (visible === live.value) return;
+    live.value = visible;
+    if (visible) {
+      window.addEventListener("scroll", scheduleParallax, { passive: true });
+      window.addEventListener("resize", scheduleParallax, { passive: true });
+      paintParallax();
+    } else {
+      window.removeEventListener("scroll", scheduleParallax);
+      window.removeEventListener("resize", scheduleParallax);
+    }
+  });
+  liveObserver.observe(section.value);
 });
 
 onBeforeUnmount(() => {
   observer?.disconnect();
+  liveObserver?.disconnect();
+  window.removeEventListener("scroll", scheduleParallax);
+  window.removeEventListener("resize", scheduleParallax);
+  if (parallaxFrame) cancelAnimationFrame(parallaxFrame);
   if (confettiFrame) cancelAnimationFrame(confettiFrame);
 });
 </script>
 
 <template>
   <!-- The copy is English in both locales. -->
-  <section class="clients" lang="en" aria-labelledby="clients-title">
-    <svg class="clients__glow" viewBox="0 0 2000 1100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id="clients-arc" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#7dffb0" stop-opacity="0.55" />
-          <stop offset="1" stop-color="#00c853" stop-opacity="0.1" />
-        </linearGradient>
-        <filter id="clients-blur"><feGaussianBlur stdDeviation="3" /></filter>
-      </defs>
-      <path class="clients__sweep" d="M700 30 C 790 110, 870 190, 940 292 L 2000 292 L 2000 0 L 690 0 Z" />
-      <path d="M700 30 C 790 110, 870 190, 940 292" fill="none" stroke="url(#clients-arc)" stroke-width="3" filter="url(#clients-blur)" />
-      <path d="M0 540 C 40 580, 70 640, 90 700" fill="none" stroke="url(#clients-arc)" stroke-width="2" filter="url(#clients-blur)" opacity="0.6" />
-    </svg>
+  <section ref="section" class="clients" :class="{ 'is-live': live }" lang="en" aria-labelledby="clients-title">
+    <!-- The floating light: three soft glows and the diagonal sweep, each on
+         its own drift loop and parallax depth (--depth). -->
+    <div class="clients__backdrop" aria-hidden="true">
+      <span class="clients__layer" style="--depth: 0.16"><span class="clients__blob clients__blob--top" /></span>
+      <span class="clients__layer" style="--depth: 0.1"><span class="clients__blob clients__blob--left" /></span>
+      <span class="clients__layer" style="--depth: 0.22"><span class="clients__blob clients__blob--bottom" /></span>
+      <span class="clients__layer" style="--depth: 0.08">
+        <svg class="clients__glow" viewBox="0 0 2000 1100" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="clients-arc" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7dffb0" stop-opacity="0.55" />
+              <stop offset="1" stop-color="#00c853" stop-opacity="0.1" />
+            </linearGradient>
+            <!-- The sweep runs on under the table and fades out there, so no
+                 edge shows while it drifts against the table. -->
+            <linearGradient id="clients-sweep" x1="0" y1="-120" x2="0" y2="560" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="rgb(0 120 55)" stop-opacity="0.16" />
+              <stop offset="0.6" stop-color="rgb(0 120 55)" stop-opacity="0.16" />
+              <stop offset="1" stop-color="rgb(0 120 55)" stop-opacity="0" />
+            </linearGradient>
+            <filter id="clients-blur"><feGaussianBlur stdDeviation="3" /></filter>
+          </defs>
+          <path d="M688 -120 L 700 30 C 790 110, 870 190, 940 292 C 975 345, 1000 430, 1010 560 L 2200 560 L 2200 -120 Z" fill="url(#clients-sweep)" />
+          <path d="M700 30 C 790 110, 870 190, 940 292" fill="none" stroke="url(#clients-arc)" stroke-width="3" filter="url(#clients-blur)" />
+          <path d="M0 540 C 40 580, 70 640, 90 700" fill="none" stroke="url(#clients-arc)" stroke-width="2" filter="url(#clients-blur)" opacity="0.6" />
+        </svg>
+      </span>
+    </div>
 
     <div class="clients__head">
       <h2 id="clients-title" class="clients__title">
@@ -210,26 +267,106 @@ onBeforeUnmount(() => {
   z-index: 30;
   overflow: clip;
   padding: calc(120 * var(--u)) calc(62 * var(--u)) calc(60 * var(--u));
-  background:
-    radial-gradient(ellipse 34% 42% at 96% 4%, rgb(0 170 80 / 0.42), rgb(0 0 0 / 0) 72%),
-    radial-gradient(ellipse 26% 32% at 0% 56%, rgb(0 130 60 / 0.32), rgb(0 0 0 / 0) 72%),
-    radial-gradient(ellipse 50% 30% at 70% 100%, rgb(0 90 40 / 0.3), rgb(0 0 0 / 0) 72%),
-    #000;
+  background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */
   font-family: var(--app-font-display) !important;
 }
 
-.clients__glow {
+/* The backdrop and its layers fill the section; a layer is shifted by its
+   share of --parallax (the `translate` property, so it adds to the drift
+   animations' `transform`). */
+.clients__backdrop,
+.clients__layer {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: calc(1100 * var(--u));
   pointer-events: none;
 }
 
-.clients__sweep {
-  fill: rgb(0 120 55 / 0.16);
+.clients__layer {
+  translate: 0 calc(var(--parallax, 0px) * var(--depth, 0));
+  will-change: translate;
+}
+
+/* The glows: each blob is the box of a radial gradient (radii = half its
+   size), centred where the light sits in the design. */
+.clients__blob {
+  position: absolute;
+  border-radius: 50%;
+  animation: 18s ease-in-out infinite alternate paused;
+  will-change: transform, opacity;
+}
+
+.clients__blob--top {
+  left: 62%;
+  top: -38%;
+  width: 68%;
+  height: 84%;
+  background: radial-gradient(closest-side, rgb(0 170 80 / 0.42), rgb(0 0 0 / 0) 72%);
+  animation-name: clients-drift-top;
+}
+
+.clients__blob--left {
+  left: -13%;
+  top: 24%;
+  width: 26%;
+  height: 64%;
+  background: radial-gradient(closest-side, rgb(0 130 60 / 0.32), rgb(0 0 0 / 0) 72%);
+  animation-name: clients-drift-left;
+  animation-duration: 14s;
+}
+
+.clients__blob--bottom {
+  left: 20%;
+  top: 70%;
+  width: 100%;
+  height: 60%;
+  background: radial-gradient(closest-side, rgb(0 90 40 / 0.3), rgb(0 0 0 / 0) 72%);
+  animation-name: clients-drift-bottom;
+  animation-duration: 21s;
+}
+
+/* The sweep reaches past the section's top and right edge, so it can sway
+   without showing an end. */
+.clients__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(1100 * var(--u));
+  overflow: visible;
+  transform-origin: 100% 0;
+  animation: clients-sway 16s ease-in-out infinite alternate paused;
+  will-change: transform;
+}
+
+.clients.is-live .clients__blob,
+.clients.is-live .clients__glow {
+  animation-play-state: running;
+}
+
+@keyframes clients-drift-top {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  50% { transform: translate(-5%, 6%) scale(1.08); opacity: 0.82; }
+  100% { transform: translate(3%, -2%) scale(0.95); opacity: 1; }
+}
+
+@keyframes clients-drift-left {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  50% { transform: translate(18%, -8%) scale(1.15); opacity: 1; }
+  100% { transform: translate(6%, 10%) scale(1.04); opacity: 0.75; }
+}
+
+@keyframes clients-drift-bottom {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.85; }
+  50% { transform: translate(-12%, -6%) scale(1.06); opacity: 1; }
+  100% { transform: translate(-4%, 4%) scale(0.98); opacity: 0.8; }
+}
+
+@keyframes clients-sway {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-1.5%, 2%) rotate(-0.8deg); }
+  100% { transform: translate(1%, -1%) rotate(0.5deg); }
 }
 
 .clients p,
@@ -248,7 +385,7 @@ onBeforeUnmount(() => {
 .clients__title {
   display: flex;
   flex-direction: column;
-  font-size: calc(67 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 0.9;
   letter-spacing: -0.035em;
@@ -385,7 +522,9 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
+/* Positioned, like the head and the table, so it paints above the backdrop. */
 .clients__more {
+  position: relative;
   display: none;
 }
 
@@ -401,7 +540,7 @@ onBeforeUnmount(() => {
   }
 
   .clients__title {
-    font-size: 11vw;
+    font-size: var(--section-title-size);
   }
 
   .clients__intro {
@@ -464,6 +603,11 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .clients__blob,
+  .clients__glow {
+    animation: none;
+  }
+
   .clients__cell {
     opacity: 1;
     transform: none;

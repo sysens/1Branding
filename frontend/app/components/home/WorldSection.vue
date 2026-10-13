@@ -15,7 +15,7 @@ const { t } = useI18n();
       </h2>
     </header>
     <div class="world-section__globe">
-      <NetworkGlobe :show-labels="false" />
+      <NetworkGlobe :show-labels="false" :controls="false" />
     </div>
   </section>
 </template>

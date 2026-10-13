@@ -15,8 +15,8 @@ watch(isActive, (active) => { if (active) loaded.value = true; });
   <section id="airways-scene" ref="targetRef" class="airways-scene" aria-labelledby="airways-title">
     <!-- The copy is English in both locales. -->
     <h2 id="airways-title" class="airways-scene__title" lang="en">
-      <span class="airways-scene__strong">{{ t("home.airways.strong") }}</span>
-      <span class="airways-scene__rest">
+      <span v-blur-reveal class="airways-scene__strong">{{ t("home.airways.strong") }}</span>
+      <span v-blur-reveal="0.2" class="airways-scene__rest">
         <span>{{ t("home.airways.rest1") }}</span>
         <span>{{ t("home.airways.rest2") }}</span>
       </span>

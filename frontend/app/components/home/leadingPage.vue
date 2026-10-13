@@ -2,8 +2,6 @@
 import { computed } from "vue";
 import type { LandingPageContent } from "~/types/landingPayload";
 
-const localePath = useLocalePath();
-
 const props = defineProps<{
   landingPage?: LandingPageContent | null;
 }>();
@@ -110,50 +108,41 @@ const heroCopy = computed<HeroCopy>(() => {
       </div>
     </div>
   </div>
-
-  <Teleport to="body">
-    <NuxtLink
-      :to="localePath('/ContactPage')"
-      :aria-label="$t('nav.contacts')"
-      class="contact-fab fixed right-[40px] md:bottom-[6.25rem] bottom-[65px] z-[9000] group"
-    >
-      <img
-        src="/home/Frame 2147223311.png"
-        alt=""
-        class="transition-all duration-500 ease-out md:h-[5rem] md:w-[5rem] w-[64px] h-[64px] group-hover:scale-110 group-hover:drop-shadow-[0_0_48px_#03CB00] group-hover:brightness-110"
-      />
-    </NuxtLink>
-  </Teleport>
 </template>
 
 <style scoped>
-.contact-fab {
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-}
-
-/* As in the design, the logo wall fills the first screen and the slogan starts
-   near its bottom edge; scrolling reveals the rest of it (HeroClientsReveal lets
-   the hero scroll until its end is in view). The padding is measured from the
-   page top: the header row above this shell is 30px tall (2.5rem from md). On
-   phones the slogan sits higher so the fixed contact button does not cover it.
-   The bottom padding lets the green light of the next section start right under
-   the tagline. */
+/* As in the design, the logo wall fills the first screen and the whole slogan
+   (lead-in, headline, tagline) sits at its bottom edge, fully visible when the
+   page opens. The shell is as tall as the first screen minus the header row above
+   it (30px, 2.5rem from md) and pushes the slogan to the bottom, so the hero is
+   exactly one screen tall. The type sizes below also follow the screen height, so
+   short and wide windows (a 2000x429 browser strip, an ultrawide) keep the whole
+   slogan in view instead of cutting it off. */
 .leading-page-shell {
-  padding-top: calc(64vh - 30px);
-  padding-top: calc(64svh - 30px);
-  padding-bottom: 8vh;
-  padding-bottom: 8svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  min-height: calc(100vh - 30px);
+  min-height: calc(100svh - 30px);
+  padding-bottom: 3.5vh;
+  padding-bottom: 3.5svh;
 }
 
 /* z-index makes the slogan a layer above the logo wall, so its ::before can dim
    the tiles right behind the text while the rest of the wall stays bright. */
 .leading-copy-position {
-  /* The upper bound also follows the screen height, so on very large screens
-     (4K, zoomed-out windows) the slogan keeps the design's share of the view. */
-  --hero-main-size: clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20vh));
+  /* Fluid with the width, but never taller than the design's share of the screen
+     height (a 209px headline on a 1337px-high frame = 15.65%), so the slogan fits
+     the first screen on short, wide windows as well as on tall ones. */
+  --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20vh)), 15.65vh);
   z-index: 0;
+}
+
+@supports (height: 1svh) {
+  .leading-copy-position {
+    --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20svh)), 15.65svh);
+  }
 }
 
 .leading-copy-position::before {
@@ -174,6 +163,11 @@ const heroCopy = computed<HeroCopy>(() => {
 }
 
 @media (max-width: 767px) {
+  /* Less hang on phones, where the lead-in would otherwise touch the screen edge. */
+  .hero-slogan__lead {
+    transform: translateX(calc(var(--hero-main-size) * -0.1));
+  }
+
   .leading-copy-position::before {
     background:
       radial-gradient(ellipse 62% 60% at 50% 62%, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.9) 65%, rgb(0 0 0 / 0) 100%),
@@ -183,21 +177,18 @@ const heroCopy = computed<HeroCopy>(() => {
 
 @media (min-width: 768px) {
   .leading-page-shell {
-    padding-top: calc(84vh - 2.5rem);
-    padding-top: calc(84svh - 2.5rem);
-  }
-
-  .contact-fab {
-    right: max(6.25rem, calc((100vw - 1728px) / 2 + 6.25rem));
+    min-height: calc(100vh - 2.5rem);
+    min-height: calc(100svh - 2.5rem);
   }
 }
 
-/* Sizes follow the design (2000px-wide mockup): the lead-in is 0.7x and the
-   tagline 0.2x the headline (--hero-main-size, set on .leading-copy-position);
-   each grows fluidly with the viewport. */
+/* Sizes follow the design (2000px-wide mockup): the lead-in is 0.74x and the
+   tagline 0.215x the headline (--hero-main-size, set on .leading-copy-position),
+   so the three lines keep the design's proportions at every screen size. The
+   tagline never drops below a readable 0.875rem. */
 .hero-slogan {
-  --hero-lead-size: clamp(3rem, 1.7rem + 6.7vw, max(9.5rem, 14vh));
-  --hero-tagline-size: clamp(0.875rem, 0.5rem + 1.9vw, max(2.75rem, 4vh));
+  --hero-lead-size: calc(var(--hero-main-size) * 0.74);
+  --hero-tagline-size: max(0.875rem, calc(var(--hero-main-size) * 0.215));
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -213,14 +204,17 @@ const heroCopy = computed<HeroCopy>(() => {
 .hero-slogan__lead {
   display: block;
   font-size: var(--hero-lead-size);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.085em;
   white-space: nowrap;
+  /* In the design the lead-in hangs to the left of the headline's centre. */
+  transform: translateX(calc(var(--hero-main-size) * -0.32));
   color: transparent;
-  -webkit-text-stroke: max(1px, 0.02em) #20e848;
+  -webkit-text-stroke: max(1px, 0.024em) #20e848;
   /* The outline fades out where it meets the headline. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, rgb(0 0 0 / 0.35) 100%);
-  mask-image: linear-gradient(to bottom, #000 55%, rgb(0 0 0 / 0.35) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+  mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
 }
 
 /* The design's dash is a wide outlined bar, heavier than a dash glyph. */
@@ -230,15 +224,16 @@ const heroCopy = computed<HeroCopy>(() => {
   height: 0.2em;
   margin-right: 0.05em;
   vertical-align: 0.2em;
-  border: max(1px, 0.02em) solid #20e848;
+  border: max(1px, 0.024em) solid #20e848;
 }
 
 .hero-slogan__main {
   display: block;
-  margin-top: -0.18em;
+  margin-top: -0.21em;
   font-size: var(--hero-main-size);
   font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   color: #e4e4e4;
 }
@@ -246,7 +241,7 @@ const heroCopy = computed<HeroCopy>(() => {
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .hero-slogan__main {
     color: transparent;
-    background-image: linear-gradient(172deg, #ffffff 10%, #dcdcdc 45%, #8f8f8f 100%);
+    background-image: linear-gradient(178deg, #ffffff 18%, #9c9c9c 82%);
     -webkit-background-clip: text;
     background-clip: text;
   }
@@ -256,12 +251,13 @@ const heroCopy = computed<HeroCopy>(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  column-gap: 0.6em;
-  margin-top: 0.1em;
+  column-gap: 0.42em;
+  margin-top: 0.17em;
   color: #00f830;
   font-size: var(--hero-tagline-size);
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.008em;
 }
 
 .hero-slogan__tagline > span {

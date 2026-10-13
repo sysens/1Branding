@@ -98,6 +98,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .social {
+  /* The viewport unit this section scales with, frozen once its content
+     reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
+     on wider screens it stays as wide as the container. */
+  --vw: min(1vw, 17.58px);
   /* Column width and gutter of the design (2000px frame: 544px posts, 8px gaps). */
   --col: 27.2vw;
   --gap: 0.32vw;
@@ -118,7 +122,7 @@ onBeforeUnmount(() => {
   gap: 0.035em;
   margin: 0;
   padding-inline: 1.25rem;
-  font-size: clamp(4.5rem, 12.2vw, 15rem);
+  font-size: clamp(4.5rem, calc(12.2 * var(--vw)), 15rem);
   font-weight: 700;
   line-height: 0.74;
   letter-spacing: -0.02em;
@@ -163,11 +167,12 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1rem, 1.6vw, 2rem);
-  max-width: min(100%, calc(1000 * var(--u)));
-  margin: clamp(3rem, 6vw, 7.5rem) auto 0;
+  gap: clamp(1rem, calc(1.6 * var(--vw)), 2rem);
+  /* 1000px of the 2000px design frame. */
+  max-width: min(100%, calc(50 * var(--vw)));
+  margin: clamp(3rem, calc(6 * var(--vw)), 7.5rem) auto 0;
   padding-inline: 1.25rem;
-  font-size: clamp(1rem, 1.35vw, 1.9rem);
+  font-size: clamp(1rem, calc(1.35 * var(--vw)), 1.9rem);
   line-height: 1.2;
   text-align: center;
 }
@@ -186,7 +191,7 @@ onBeforeUnmount(() => {
 
 /* The closing line is narrower than the paragraph above it. */
 .social__copy .social__lead {
-  max-width: calc(700 * var(--u));
+  max-width: min(100%, calc(35 * var(--vw)));
 }
 
 /* The wall: five columns, the middle one centred, the outer two cut by the

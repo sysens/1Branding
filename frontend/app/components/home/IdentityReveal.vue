@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
 .identity__heading {
   margin: calc(-20 * var(--u)) 0 0;
   color: #000;
-  font-size: calc(115 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
 
   .identity__heading {
     margin-top: -0.5rem;
-    font-size: clamp(2rem, 9.5vw, 2.75rem);
+    font-size: var(--section-title-size);
     line-height: 1.04;
   }
 

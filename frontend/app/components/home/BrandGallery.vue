@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
   margin: 0 auto;
   padding-inline: 1.5rem;
   color: #000;
-  font-size: clamp(2.25rem, min(0.5rem + 4.6vw, 8vh), max(6.25rem, 9vh));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;

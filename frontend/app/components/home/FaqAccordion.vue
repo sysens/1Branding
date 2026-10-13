@@ -20,12 +20,12 @@ const base = useId();
 <template>
   <!-- The copy is English in both locales. -->
   <section class="faq" lang="en" aria-labelledby="faq-title">
-    <h2 id="faq-title" class="faq__title">
+    <h2 id="faq-title" v-blur-reveal class="faq__title">
       {{ t("home.faq.titleLead") }} <span class="faq__green">{{ t("home.faq.titleAccent") }}</span>
     </h2>
 
     <ul class="faq__list">
-      <li v-for="(item, index) in items" :key="index" class="faq__item" :class="{ 'is-open': open === index }">
+      <li v-for="(item, index) in items" :key="index" v-blur-reveal class="faq__item" :class="{ 'is-open': open === index }">
         <h3 class="faq__heading">
           <button
             :id="`${base}-q${index}`"
@@ -67,7 +67,7 @@ const base = useId();
 
 .faq__title {
   margin: 0;
-  font-size: calc(100 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -224,7 +224,7 @@ const base = useId();
   }
 
   .faq__title {
-    font-size: 9.6vw;
+    font-size: var(--section-title-size);
   }
 
   .faq__list {
@@ -257,6 +257,29 @@ const base = useId();
   .faq__answer {
     padding: 0 1.1rem 1.1rem;
     font-size: 0.95rem;
+  }
+}
+
+/* Scrolling in, the questions rise from below one after another (v-blur-reveal
+   marks them; these rules keep the item's own hover transitions as well). */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .faq__item[data-blur-reveal] {
+    opacity: 0;
+    filter: blur(8px);
+    translate: 0 max(2rem, calc(70 * var(--u)));
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
+      filter 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
+      translate 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
+      border-color 0.4s ease,
+      background-color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+
+  .faq__item[data-blur-reveal].is-revealed {
+    opacity: 1;
+    filter: blur(0);
+    translate: 0 0;
   }
 }
 

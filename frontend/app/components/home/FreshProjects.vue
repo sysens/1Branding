@@ -65,10 +65,12 @@ const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, widt
 
 .fresh__title {
   margin: 0;
-  font-size: calc(94 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
+  /* The gap between "Fresh" and "projects" is the design's: tighter than a plain space. */
+  word-spacing: -0.07em;
 }
 
 .fresh__green {
@@ -208,7 +210,7 @@ const srcset = (src: string) => [400, 640, 960].map((width) => `${card(src, widt
   }
 
   .fresh__title {
-    font-size: 11vw;
+    font-size: var(--section-title-size);
   }
 
   .fresh__rows {

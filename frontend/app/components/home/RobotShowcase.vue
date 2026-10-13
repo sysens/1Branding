@@ -61,26 +61,29 @@ const copy = computed(() => String(locale.value) === "ru"
   font-family: var(--app-font-display) !important;
 }
 
-/* The robot stands on the wordmark: its base runs behind the letters. The
-   Spline camera fits the smaller side of the canvas, so this box (1000 x 900)
-   sets the robot's size, with the robot centred in it. */
+/* The robot rises out of the wordmark: its waist sits on the letters and its
+   legs, behind and below them, fade out (the mask), so only head, arms and
+   torso show. The Spline camera fits the smaller side of the canvas, so this
+   box (1300 x 1170) sets the robot's size, with the robot centred in it. */
 .robot__scene {
   position: relative;
   z-index: 1;
-  width: min(100%, calc(1000 * var(--u)));
+  width: min(100%, calc(1300 * var(--u)));
   /* The canvas starts above the section: its top is empty black, clipped. */
-  margin-top: calc(-126 * var(--u));
+  margin-top: calc(-181 * var(--u));
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 79%);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent 79%);
 }
 
 .robot__scene :deep(.footer-robot-scene) {
-  height: calc(900 * var(--u));
+  height: calc(1170 * var(--u));
 }
 
 .robot__brand {
   position: relative;
   z-index: 2;
   width: 100%;
-  margin-top: calc(-143 * var(--u));
+  margin-top: calc(-424 * var(--u));
   pointer-events: none;
 }
 
@@ -114,7 +117,7 @@ const copy = computed(() => String(locale.value) === "ru"
 
 .robot__title {
   margin: 0;
-  font-size: calc(113 * var(--u));
+  font-size: var(--section-title-size);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -155,8 +158,9 @@ const copy = computed(() => String(locale.value) === "ru"
     height: clamp(20rem, 92vw, 26rem);
   }
 
+  /* The wordmark moves up to the robot's waist, where the mask fades its legs. */
   .robot__brand {
-    margin-top: -1.5rem;
+    margin-top: -6.75rem;
   }
 
   .robot__brand :deep(.footer-brand-sparkles__title) {
@@ -173,7 +177,7 @@ const copy = computed(() => String(locale.value) === "ru"
   }
 
   .robot__title {
-    font-size: 8.4vw;
+    font-size: var(--section-title-size);
   }
 
   .robot__text,

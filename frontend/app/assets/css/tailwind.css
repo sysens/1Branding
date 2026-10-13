@@ -70,6 +70,15 @@
     :root {
         --app-font-sans: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --app-font-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        /* One size for the landing's section headings ("Fresh projects",
+           "Frequently asked questions", "Make your brand look better" ...). */
+        --section-title-size: clamp(2.25rem, 5vw, 96px);
+    }
+
+    @media (max-width: 767px) {
+        :root {
+            --section-title-size: clamp(2rem, 9vw, 2.75rem);
+        }
     }
 
     html,
@@ -226,5 +235,26 @@
     .intro-slide-in,
     .intro-drop-in {
         animation: none;
+    }
+}
+
+/* v-blur-reveal (plugins/blur-reveal.ts): text comes in out of a blur the first
+   time it scrolls into view. `translate` (not transform) leaves the element's
+   own transforms alone. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    [data-blur-reveal] {
+        opacity: 0;
+        filter: blur(18px);
+        translate: 0 0.22em;
+        transition:
+            opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s)),
+            filter 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s)),
+            translate 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s));
+    }
+
+    [data-blur-reveal].is-revealed {
+        opacity: 1;
+        filter: blur(0);
+        translate: 0 0;
     }
 }

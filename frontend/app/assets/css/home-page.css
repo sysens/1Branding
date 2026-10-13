@@ -13,8 +13,3 @@
   pointer-events: none;
   background: linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0, rgb(0 0 0 / 0.55) 22vh, rgb(0 0 0 / 0) 38vh);
 }
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .home-leading :deep(.contact-fab) { right: 3.5rem; bottom: 5rem; }
-  .home-leading :deep(.contact-fab img) { width: 5.75rem; height: 5.75rem; }
-}

@@ -79,7 +79,11 @@ const selected = computed(() => services.value.find((service) => service.id === 
 
 <style scoped>
 .services {
-  padding: clamp(5rem, 10vw, 12rem) 0 clamp(4rem, 7vw, 9rem);
+  /* The viewport unit this section scales with, frozen once its content
+     reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
+     on wider screens it stays as wide as the container. */
+  --vw: min(1vw, 17.58px);
+  padding: clamp(5rem, calc(10 * var(--vw)), 12rem) 0 clamp(4rem, calc(7 * var(--vw)), 9rem);
   background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */
@@ -94,7 +98,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
   gap: 0.03em;
   margin: 0;
   padding-inline: 1.25rem;
-  font-size: clamp(2.6rem, 12.2vw, 15rem);
+  font-size: clamp(2.6rem, calc(12.2 * var(--vw)), 15rem);
   font-weight: 700;
   line-height: 0.74;
   letter-spacing: -0.02em;
@@ -127,22 +131,23 @@ const selected = computed(() => services.value.find((service) => service.id === 
 }
 
 .services__subtitle {
-  margin: clamp(1rem, 1.6vw, 2rem) 0 0;
+  margin: clamp(1rem, calc(1.6 * var(--vw)), 2rem) 0 0;
   padding-inline: 1.25rem;
   color: #b9b9b9;
-  font-size: clamp(1.05rem, 1.5vw, 2.1rem);
+  font-size: clamp(1.05rem, calc(1.5 * var(--vw)), 2.1rem);
   line-height: 1.25;
   text-align: center;
   text-wrap: balance;
 }
 
-/* The list (52%) and the card (28%) of a frame 82% wide, as in the design. */
+/* The list (52%) and the card (28%) of a frame 82% wide, as in the design;
+   on very wide screens no wider than the site container (1450px). */
 .services__body {
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 28fr);
-  gap: 2.3vw;
-  width: min(82.5vw, 100% - 2.5rem);
-  margin: clamp(2rem, 3.2vw, 4rem) auto 0;
+  gap: calc(2.3 * var(--vw));
+  width: min(calc(82.5 * var(--vw)), 100% - 2.5rem);
+  margin: clamp(2rem, calc(3.2 * var(--vw)), 4rem) auto 0;
 }
 
 .services__list {
@@ -169,7 +174,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: clamp(0.95rem, 1.2vw, 1.6rem);
+  font-size: clamp(0.95rem, calc(1.2 * var(--vw)), 1.6rem);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.25s ease;
@@ -247,13 +252,13 @@ const selected = computed(() => services.value.find((service) => service.id === 
   align-self: start;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.25rem, 1.8vw, 2.25rem);
+  gap: clamp(1.25rem, calc(1.8 * var(--vw)), 2.25rem);
 }
 
 .services__card {
   display: flex;
   flex-direction: column;
-  padding: clamp(0.9rem, 1vw, 1.4rem);
+  padding: clamp(0.9rem, calc(1 * var(--vw)), 1.4rem);
   border: 1px solid #1d1d1d;
   border-radius: 0.9rem;
   background: #090909;
@@ -263,9 +268,9 @@ const selected = computed(() => services.value.find((service) => service.id === 
   display: flex;
   align-items: center;
   gap: 0.75em;
-  margin: 0.2rem 0 clamp(0.8rem, 1vw, 1.2rem);
+  margin: 0.2rem 0 clamp(0.8rem, calc(1 * var(--vw)), 1.2rem);
   color: #c4c4c4;
-  font-size: clamp(0.7rem, 0.75vw, 1rem);
+  font-size: clamp(0.7rem, calc(0.75 * var(--vw)), 1rem);
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -293,8 +298,8 @@ const selected = computed(() => services.value.find((service) => service.id === 
 }
 
 .services__card-title {
-  margin: clamp(0.9rem, 1.1vw, 1.4rem) 0 0;
-  font-size: clamp(1.6rem, 2.05vw, 2.9rem);
+  margin: clamp(0.9rem, calc(1.1 * var(--vw)), 1.4rem) 0 0;
+  font-size: clamp(1.6rem, calc(2.05 * var(--vw)), 2.9rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -303,7 +308,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
 .services__tagline {
   margin: 0.3em 0 0;
   color: #c9c9c9;
-  font-size: clamp(1.05rem, 1.3vw, 1.8rem);
+  font-size: clamp(1.05rem, calc(1.3 * var(--vw)), 1.8rem);
   line-height: 1.25;
 }
 
@@ -312,12 +317,12 @@ const selected = computed(() => services.value.find((service) => service.id === 
   align-items: center;
   align-self: flex-start;
   gap: 0.45em;
-  margin-top: clamp(1.1rem, 1.4vw, 1.8rem);
+  margin-top: clamp(1.1rem, calc(1.4 * var(--vw)), 1.8rem);
   padding: 0.6em 1.4em;
   border-radius: 999px;
   background: linear-gradient(100deg, #00c92f 0%, #00ee38 55%, #00d634 100%);
   color: #062b10;
-  font-size: clamp(1rem, 1.1vw, 1.5rem);
+  font-size: clamp(1rem, calc(1.1 * var(--vw)), 1.5rem);
   font-weight: 700;
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -346,9 +351,9 @@ const selected = computed(() => services.value.find((service) => service.id === 
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding-top: clamp(1.25rem, 1.8vw, 2.25rem);
+  padding-top: clamp(1.25rem, calc(1.8 * var(--vw)), 2.25rem);
   border-top: 1px solid #1d1d1d;
-  font-size: clamp(1.5rem, 1.9vw, 2.6rem);
+  font-size: clamp(1.5rem, calc(1.9 * var(--vw)), 2.6rem);
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.02em;

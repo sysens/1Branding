@@ -24,10 +24,10 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
     </div>
     <header class="awards-section__heading">
       <h2 id="awards-title">
-        <span class="awards-section__year">{{ year }}</span>
-        <span class="awards-section__title">{{ title }}</span>
+        <span v-blur-reveal class="awards-section__year">{{ year }}</span>
+        <span v-blur-reveal="0.18" class="awards-section__title">{{ title }}</span>
       </h2>
-      <p>{{ subtitle }}</p>
+      <p v-blur-reveal="0.34">{{ subtitle }}</p>
     </header>
     <AwardsStage :numeral="numeral" />
     <AwardsTransition v-if="transition" />

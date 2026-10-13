@@ -1,6 +1,6 @@
 """Cut the "Every part. Working as ONE." render into the layers PartsAsOne.vue animates.
 
-Usage: python scripts/parts-layers.py <render.png> [out_dir=public/home/parts]
+Usage: python scripts/parts-layers.py <render.png> [out_dir=public/home/parts] [--cutout]
 Needs Pillow, numpy and scipy.
 
 The source is the design's 1844x524 render (white background). Every outline
@@ -10,6 +10,8 @@ and the boxes printed at the end go into PartsAsOne.vue.
 Layers (bottom to top): tubes, naming ... crm, one. At rest they rebuild the
 render exactly: a lower layer runs on under the layer above it with the same
 pixels, so the upper one can be cut with a soft or antialiased edge.
+With --cutout the objects are also cut out of the render's white backdrop and
+floor (cutout() below), for a dark page; the boxes printed then differ.
 """
 import json
 import os
@@ -17,6 +19,7 @@ import sys
 
 import numpy as np
 from PIL import Image, ImageDraw
+from scipy import ndimage as ndi
 from scipy.ndimage import binary_erosion, distance_transform_edt, gaussian_filter, uniform_filter1d
 
 # Everything right of the O's outer-left contour; across the tube sockets the
@@ -46,7 +49,59 @@ def smoothstep(e0, e1, x):
     return t * t * (3 - 2 * t)
 
 
-def main(src, out):
+def cutout(rgb, cards):
+    """Alpha of the objects (cards, tubes, letters) against the white backdrop and
+    floor, and their colour with the backdrop taken out (rgb = a*colour + (1-a)*backdrop).
+
+    The backdrop is the smooth, neutral, light area connected to the pure white;
+    behind the objects it is interpolated from its surroundings. Inside the
+    objects alpha is solid, at their edges it is a difference key against that
+    backdrop, so the floor's shadows and reflections drop out and the edges keep
+    their antialiasing without a white fringe. `cards` (their outlines) are always solid.
+    """
+    h, w, _ = rgb.shape
+    lum = rgb @ np.array([0.299, 0.587, 0.114], np.float32)
+    sat = rgb.max(2) - rgb.min(2)
+    smooth = gaussian_filter(lum, 1.0)
+    grad = np.hypot(ndi.sobel(smooth, 1), ndi.sobel(smooth, 0)) / 8
+    card_core = binary_erosion(cards > 0.5, iterations=5)
+
+    # Pure white grows into light, neutral, smooth pixels: the backdrop and the floor.
+    bglike = (sat <= 9) & (((lum >= 232) & (grad <= 5.0)) | ((lum >= 160) & (grad <= 2.2)))
+    labels, _ = ndi.label(bglike)
+    ids = np.unique(labels[(rgb.min(2) >= 250) & bglike])
+    bg = np.isin(labels, ids[ids > 0]) & ~(cards > 0.02)
+
+    # The backdrop behind the objects: normalised convolution, wider where needed.
+    backdrop = rgb.copy()
+    filled = bg.copy()
+    weight = bg.astype(np.float32)
+    for sigma in (3, 8, 20, 50):
+        num = gaussian_filter(rgb * weight[..., None], (sigma, sigma, 0))
+        den = gaussian_filter(weight, sigma)
+        todo = ~filled & (den > 1e-3)
+        backdrop[todo] = num[todo] / den[todo, None]
+        filled |= todo
+
+    key = np.clip((np.abs(rgb - backdrop).max(2) - 6) / 26, 0, 1)
+    obj = ~bg
+    solid = binary_erosion(obj, iterations=2) & (key > 0.5) | card_core
+    solid = ndi.binary_closing(solid, iterations=2) | solid
+    alpha = np.maximum(solid.astype(np.float32), key * ndi.binary_dilation(obj, iterations=1))
+
+    # Drop floor crumbs: keep what is attached to a card, the dark letters or the green.
+    anchor = card_core | (lum < 110) | ((sat > 30) & (rgb[..., 1] > rgb[..., 0]))
+    parts, count = ndi.label(alpha > 0.15, structure=np.ones((3, 3)))
+    mass = ndi.sum(alpha, parts, index=np.arange(1, count + 1))
+    attached = np.unique(parts[anchor])
+    kept = np.isin(parts, np.intersect1d(attached[attached > 0], np.where(mass >= 300)[0] + 1))
+    alpha *= kept | (alpha <= 0.15) & ndi.binary_dilation(kept, iterations=2)
+
+    colour = np.where(alpha[..., None] > 0.02, backdrop + (rgb - backdrop) / np.maximum(alpha, 1e-3)[..., None], rgb)
+    return alpha, np.clip(colour, 0, 255)
+
+
+def main(src, out, cut=False):
     os.makedirs(out, exist_ok=True)
     img = np.asarray(Image.open(src).convert("RGB"), dtype=np.float32)
     h0, w, _ = img.shape
@@ -78,6 +133,9 @@ def main(src, out):
     covered = np.zeros((h, w), np.float32)
     for mask in cards.values():
         covered = np.maximum(covered, mask)
+    matte = np.ones((h, w), np.float32)
+    if cut:
+        matte, rgb = cutout(rgb, covered)
     # Tubes and floor: everything else, running 28px on under the ONE (it slides
     # in together with it). Under each card's edge the tubes stay opaque for
     # 3px, filled with the nearest pixel outside the cards, so a card edge
@@ -87,7 +145,7 @@ def main(src, out):
     tubes_rgb = rgb[iy, ix]
     edge = covered < 0.999
     tubes_rgb[edge] = rgb[edge]
-    tubes_alpha = (1 - polygon(ONE, 28)) * (1 - gaussian_filter(hole.astype(np.float32), 1))
+    tubes_alpha = (1 - polygon(ONE, 28)) * (1 - gaussian_filter(hole.astype(np.float32), 1)) * matte[iy, ix]
 
     boxes = {}
 
@@ -103,10 +161,11 @@ def main(src, out):
 
     save("tubes", tubes_alpha, tubes_rgb)
     for key, mask in cards.items():
-        save(key, mask)
-    save("one", one_alpha)
+        save(key, mask * matte)
+    save("one", one_alpha * matte)
     print(json.dumps({"width": w, "height": h, "boxes": boxes}))
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else os.path.join("public", "home", "parts"))
+    args = [arg for arg in sys.argv[1:] if arg != "--cutout"]
+    main(args[0], args[1] if len(args) > 1 else os.path.join("public", "home", "parts"), "--cutout" in sys.argv)

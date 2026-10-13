@@ -8,6 +8,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 // alone in the middle and slides right, the tubes grow out of the O, CRM & ERP
 // appears, and each other card slides out from behind its neighbour as the
 // tubes reach it (Websites … Naming); then the headline and taglines come in.
+// The green cracks between ONE's panels start dark (two overlays cut from the
+// render by scripts/parts-seams.py) and light up from where the tubes plug in,
+// the front of the light running out through the O, the N and the E.
+// Each card lights up as it lands: it comes out as a dim, unlit slab, flashes
+// (a sheen runs across it) and keeps a lime glow; at the end all of them glow
+// brighter together.
 
 type Rect = readonly [x: number, y: number, w: number, h: number];
 type CardKey = "naming" | "branding" | "design" | "photography" | "websites" | "crm";
@@ -18,12 +24,12 @@ const ART_H = 620;
 const TUBES: Rect = [3, 22, 1127, 588];
 const ONE: Rect = [941, 117, 850, 491];
 const CARDS: Array<{ key: CardKey; rect: Rect }> = [
-  { key: "naming", rect: [26, 22, 197, 419] },
-  { key: "branding", rect: [179, 48, 177, 402] },
-  { key: "design", rect: [311, 56, 171, 397] },
-  { key: "photography", rect: [441, 65, 166, 386] },
-  { key: "websites", rect: [574, 74, 162, 377] },
-  { key: "crm", rect: [708, 82, 148, 370] },
+  { key: "naming", rect: [28, 25, 195, 416] },
+  { key: "branding", rect: [179, 48, 177, 400] },
+  { key: "design", rect: [311, 57, 171, 395] },
+  { key: "photography", rect: [441, 68, 166, 383] },
+  { key: "websites", rect: [574, 77, 162, 374] },
+  { key: "crm", rect: [708, 84, 148, 368] },
 ];
 const LAST = CARDS.length - 1;
 
@@ -56,6 +62,16 @@ const progressAt = (x: number) => {
 const cardWindows = CARDS.map(({ rect: [x, , w] }, index) =>
   index === LAST ? ([0.27, 0.36] as const) : ([progressAt(x + w), progressAt(x + w * 0.25)] as const),
 );
+// The cracks light from the tubes' socket outwards (distances in px of the ONE
+// layer): the far end of the E's cracks is about 610px from it.
+const SEAM_IGNITE = [0.05, 0.33] as const;
+const SEAM_ORIGIN: readonly [number, number] = [JOINT[0] - ONE[0], JOINT[1] - ONE[1]];
+const SEAM_REACH = 640;
+const SEAM_SOFT = 80;
+// A card lights up over the second half of its slide and a little after.
+const CARD_LIGHT = cardWindows.map(([from, to]) => [from + (to - from) * 0.5, to + 0.03] as const);
+const ALL_LIT = [0.84, 0.93] as const;
+const LIME = "181 230 29";
 const HEADLINE = [0.78, 0.87] as const;
 const TAGLINES = [0.8, 0.89] as const;
 
@@ -86,7 +102,14 @@ const screen = ref<HTMLElement | null>(null);
 const stage = ref<HTMLElement | null>(null);
 const one = ref<HTMLElement | null>(null);
 const tubes = ref<HTMLElement | null>(null);
+const seamDark = ref<HTMLElement | null>(null);
+const seamGlow = ref<HTMLElement | null>(null);
+const seamHot = ref<HTMLElement | null>(null);
+// Off until mounted (and never on with reduced motion): the cracks then stay
+// as in the render, lit.
+const animated = ref(false);
 let frame = 0;
+let seamLit = -1;
 let stop: (() => void) | undefined;
 
 function clamp01(value: number) {
@@ -110,6 +133,60 @@ function lerpKeys(keys: Array<readonly [number, number]>, value: number, eased =
   }
   return keys[keys.length - 1]![1];
 }
+
+const setMask = (element: HTMLElement, mask: string) => {
+  element.style.setProperty("mask-image", mask);
+  element.style.setProperty("-webkit-mask-image", mask);
+};
+
+// The light spreads as a soft-edged circle from the tubes' socket: the dark
+// overlay is masked away inside it, a glow fades in a little behind its edge,
+// and a brighter copy of the glow rides on the edge itself as a flash.
+const paintSeams = (progress: number) => {
+  const dark = seamDark.value;
+  const glow = seamGlow.value;
+  const hot = seamHot.value;
+  if (!dark || !glow || !hot) return;
+  const lit = ease(span(progress, SEAM_IGNITE));
+  if (lit === seamLit) return;
+  seamLit = lit;
+
+  const center = `at ${percent(SEAM_ORIGIN[0] / ONE[2])} ${percent(SEAM_ORIGIN[1] / ONE[3])}`;
+  const circle = (radius: number) => `${percent(radius / ONE[2])} ${percent(radius / ONE[3])}`;
+  const front = -SEAM_SOFT + lit * (SEAM_REACH + 2 * SEAM_SOFT);
+  const edge = front + SEAM_SOFT / 2;
+  const inside = front - SEAM_SOFT / 2;
+
+  if (edge <= 0) {
+    dark.style.visibility = "visible";
+    setMask(dark, "none");
+  } else if (inside >= SEAM_REACH) {
+    dark.style.visibility = "hidden";
+  } else {
+    dark.style.visibility = "visible";
+    setMask(dark, `radial-gradient(ellipse ${circle(edge)} ${center}, transparent ${percent(Math.max(0, inside) / edge)}, #000 100%)`);
+  }
+
+  if (edge <= 0) {
+    glow.style.visibility = "hidden";
+  } else {
+    // The glow follows the flash by about one soft edge.
+    const lag = front - SEAM_SOFT;
+    glow.style.visibility = "visible";
+    if (lag - SEAM_SOFT / 2 >= SEAM_REACH) setMask(glow, "none");
+    else setMask(glow, `radial-gradient(ellipse ${circle(Math.max(1, lag + SEAM_SOFT / 2))} ${center}, #000 ${percent(Math.max(0, lag - SEAM_SOFT / 2) / Math.max(1, lag + SEAM_SOFT / 2))}, transparent 100%)`);
+  }
+
+  const flash = Math.min(1, lit * 10, (1 - lit) * 10);
+  if (flash <= 0.001) {
+    hot.style.visibility = "hidden";
+  } else {
+    const outer = front + SEAM_SOFT * 0.5;
+    hot.style.visibility = "visible";
+    hot.style.opacity = flash.toFixed(3);
+    setMask(hot, `radial-gradient(ellipse ${circle(outer)} ${center}, transparent ${percent(Math.max(0, front - SEAM_SOFT * 2.5) / outer)}, #000 ${percent(Math.max(0, front - SEAM_SOFT * 0.4) / outer)}, #000 ${percent(Math.max(0, front) / outer)}, transparent 100%)`);
+  }
+};
 
 const render = () => {
   frame = 0;
@@ -151,6 +228,7 @@ const render = () => {
   const move = step * step * (3 - 2 * step);
   const shift = `translate3d(${(ONE_SHIFT * (1 - move) * u).toFixed(1)}px, 0, 0)`;
   if (one.value) one.value.style.transform = `${shift} scale(${(ONE_SCALE - (ONE_SCALE - 1) * move).toFixed(4)})`;
+  paintSeams(progress);
 
   if (tubes.value) {
     const reach = TUBES[0] + TUBES[2] - frontAt(progress);
@@ -168,7 +246,30 @@ const render = () => {
     card.style.transform = index === LAST
       ? `translate3d(${(6 * (1 - shown)).toFixed(2)}%, 0, 0) scale(${(0.94 + 0.06 * shown).toFixed(4)})`
       : `translate3d(${(72 * (1 - shown)).toFixed(2)}%, 0, 0)`;
-    card.style.filter = shown >= 1 ? "none" : `blur(${((1 - shown) * 6 * u).toFixed(2)}px)`;
+
+    // Unlit it is a dim slab; it brightens with a flash while it lights, and the
+    // lime glow (two drop shadows that follow the card's outline) stays.
+    const light = span(progress, CARD_LIGHT[index]!);
+    const lit = ease(light);
+    const flash = Math.sin(Math.PI * light);
+    const glow = lit * (0.55 + 0.45 * ease(span(progress, ALL_LIT))) + 0.35 * flash;
+    const filters = [];
+    if (shown < 1) filters.push(`blur(${((1 - shown) * 6 * u).toFixed(2)}px)`);
+    const brightness = 0.6 + 0.4 * lit + 0.18 * flash;
+    if (Math.abs(brightness - 1) > 0.001) filters.push(`brightness(${brightness.toFixed(3)})`);
+    if (glow > 0.002) {
+      filters.push(
+        `drop-shadow(0 0 ${(3 * u).toFixed(2)}px rgb(${LIME} / ${(0.85 * glow).toFixed(3)}))`,
+        `drop-shadow(0 0 ${(16 * u).toFixed(2)}px rgb(${LIME} / ${(0.6 * glow).toFixed(3)}))`,
+      );
+    }
+    card.style.filter = filters.length ? filters.join(" ") : "none";
+    // The sheen crosses the card from right to left, the way the light arrives.
+    const sheen = card.querySelector<HTMLElement>("[data-sheen]");
+    if (sheen) {
+      sheen.style.opacity = flash.toFixed(3);
+      sheen.style.backgroundPosition = `${percent(light)} 0`;
+    }
   });
 
   const reveal = (selector: string, range: readonly [number, number]) => {
@@ -180,19 +281,6 @@ const render = () => {
   };
   reveal("[data-headline]", HEADLINE);
   reveal("[data-tagline]", TAGLINES);
-  hideContactButtonOver(view, progress);
-};
-
-// The floating contact button (teleported to body) can sit on the closing
-// lines on some screens; fade it out while it does.
-const hideContactButtonOver = (view: HTMLElement, progress: number) => {
-  const button = progress >= TAGLINES[0] ? document.querySelector<HTMLElement>(".contact-fab") : null;
-  const area = button?.getBoundingClientRect();
-  const covers = !!area && [...view.querySelectorAll<HTMLElement>("[data-tagline]")].some((line) => {
-    const rect = line.getBoundingClientRect();
-    return rect.right > area.left && rect.left < area.right && rect.bottom > area.top && rect.top < area.bottom;
-  });
-  document.documentElement.classList.toggle("parts-fab-off", covers);
 };
 
 const schedule = () => {
@@ -201,6 +289,7 @@ const schedule = () => {
 
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  animated.value = true;
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule, { passive: true });
   stop = () => {
@@ -213,13 +302,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stop?.();
   if (frame) cancelAnimationFrame(frame);
-  document.documentElement.classList.remove("parts-fab-off");
 });
 </script>
 
 <template>
   <!-- The copy is English in both locales. -->
-  <section ref="root" class="parts" lang="en">
+  <section ref="root" class="parts" :class="{ 'parts--animated': animated }" lang="en">
     <div ref="screen" class="parts__screen">
       <!-- Texts sit on the screen rather than the stage, so on phones (where the
            stage pans) they stay in view; on wider screens they line up with the
@@ -248,9 +336,22 @@ onBeforeUnmount(() => {
             :style="{ ...box(card.rect), zIndex: 2 + index }"
           >
             <img :src="`/home/parts/${card.key}.webp`" alt="" :width="card.rect[2]" :height="card.rect[3]" loading="lazy" decoding="async" draggable="false">
+            <span class="parts__sheen" data-sheen :style="{ '--card-image': `url(/home/parts/${card.key}.webp)` }" />
           </div>
           <div ref="one" class="parts__layer parts__one" :style="{ ...box(ONE), transformOrigin: oneOrigin }">
             <img src="/home/parts/one.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+            <!-- The cracks: the dark overlay closes them, the glow and its flash light them. -->
+            <div class="parts__seams">
+              <div ref="seamDark" class="parts__seam parts__seam--dark">
+                <img src="/home/parts/one-seams-dark.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <div ref="seamGlow" class="parts__seam parts__seam--glow">
+                <img src="/home/parts/one-seams-glow.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+              </div>
+              <div ref="seamHot" class="parts__seam parts__seam--hot">
+                <img src="/home/parts/one-seams-glow.webp" alt="" :width="ONE[2]" :height="ONE[3]" loading="lazy" decoding="async" draggable="false">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -377,8 +478,70 @@ onBeforeUnmount(() => {
   will-change: transform, opacity, filter;
 }
 
+/* The light running across a card as it lights up: a lime-white band, clipped
+   to the card's own outline (its image as the mask), moved by JS. */
+.parts__sheen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(100deg, transparent 38%, rgb(236 255 190 / 0.9) 50%, transparent 62%) no-repeat;
+  background-size: 250% 100%;
+  background-position: 0 0;
+  mix-blend-mode: overlay;
+  -webkit-mask: var(--card-image) center / 100% 100% no-repeat;
+  mask: var(--card-image) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
 .parts__one {
   z-index: 8;
+}
+
+/* Without the script (or with reduced motion) the cracks stay lit as in the
+   render: the overlays only exist while the section animates. */
+.parts__seams {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.parts--animated .parts__seams {
+  display: block;
+}
+
+.parts__seam {
+  position: absolute;
+  inset: 0;
+  /* Hidden until the first paint has set their masks. */
+  visibility: hidden;
+}
+
+.parts__seam img {
+  position: absolute;
+  inset: 0;
+}
+
+/* The glow's top edge is the image's (the first crack starts right below it). */
+.parts__seam--glow img {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 4%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 4%);
+  opacity: 0.72;
+  animation: parts-seam-pulse 3.4s ease-in-out infinite;
+}
+
+.parts__seam--hot img {
+  filter: brightness(1.6) saturate(1.15);
+}
+
+@keyframes parts-seam-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
 }
 
 /* Phones (portrait): the stage is wider than the screen and pans with the
@@ -448,17 +611,5 @@ onBeforeUnmount(() => {
   .parts__screen {
     height: 34rem;
   }
-}
-</style>
-
-<style>
-/* Not scoped: the contact button lives in <body>. */
-.contact-fab {
-  transition: opacity 0.3s ease;
-}
-
-.parts-fab-off .contact-fab {
-  opacity: 0;
-  pointer-events: none;
 }
 </style>
