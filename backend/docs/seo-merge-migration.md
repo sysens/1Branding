@@ -71,14 +71,19 @@ eski konteynerga kelgan yagona so'rov (kuzatuv uchun `curl`) 500 oldi: eski kod 
 ## Orqaga qaytarish
 
 Faqat kodni qaytarish yetmaydi: eski kod `components_shared_seos`ni o'chiradi va SEO so'rovlarida
-500 beradi. Ma'lumot `pg-backup` volume'idagi dumpda turadi.
+500 beradi. Ma'lumot `pg-backup-volume` dagi dumpda turadi.
+
+`pg-backup` servisi 2026-10-13 20:04 UTC da o'chirildi; volume (`pg-backup-volume`,
+id `462b285a-e0c5-460e-b1c6-8380d9a0edb5`) dump bilan birga ajratilgan holda saqlanib qoldi.
 
 1. Railway → `Backend` → oldingi muvaffaqiyatli deploy (`d085ff0`) → **Redeploy**.
-2. `pg-backup` servisining start command'ini vaqtincha shunga almashtirib redeploy qiling:
+2. `postgres:18` image'idan yangi servis yarating, `DATABASE_URL=${{Postgres.DATABASE_URL}}` qo'ying,
+   `pg-backup-volume`ni unga `/backup` ga ulang va start command:
    `sh -c 'pg_restore --dbname="$DATABASE_URL" --clean --if-exists --no-owner /backup/pre-seo-merge-20261013T194955Z.dump; echo RESTORE_DONE; exec sleep infinity'`
-3. Logda `RESTORE_DONE` chiqqach `Backend`ni restart qiling va 4-qadamdagi GraphQL solishtiruvini takrorlang.
+3. Logda `RESTORE_DONE` chiqqach `Backend`ni restart qiling va 4-qadamdagi GraphQL solishtiruvini
+   takrorlang; keyin vaqtinchalik servisni o'chiring.
 
 ## Tozalash
 
-`pg-backup` servisi (`sleep infinity` bilan) va `pg-backup-volume` faqat orqaga qaytarish uchun turibdi.
-Bir necha kun muammo chiqmasa, ikkalasini ham Railway'dan o'chirish mumkin.
+`pg-backup-volume` faqat orqaga qaytarish uchun turibdi (ichida ~0.5 MB). Muammo chiqmasa, uni
+Railway'dan o'chirish mumkin; bu dumpni butunlay yo'qotadi.
