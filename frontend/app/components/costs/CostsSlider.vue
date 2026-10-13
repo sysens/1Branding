@@ -79,7 +79,7 @@ type PriceCategoriesResponse = {
   errors?: Array<{ message: string }>;
 };
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 
 const query = `
   query PriceCategories($locale: I18NLocaleCode!, $withFallback: Boolean!) {
@@ -112,7 +112,7 @@ const priceCategories = computed<PriceCategory[]>(() => {
   return priceRes.value?.data?.fallbackPriceCategories || [];
 });
 
-const fromLabel = computed(() => (locale.value === "ru" ? "от" : "from"));
+const fromLabel = computed(() => t("common.from"));
 
 const categoryDescription = (category: PriceCategory) =>
   category.pricing?.[0]?.description?.trim() ||

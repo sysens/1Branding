@@ -1,8 +1,4 @@
 {
-  "lang": {
-    "ru": "Ru",
-    "en": "En"
-  },
   "nav": {
     "home": "Home",
     "about": "About Us",
@@ -16,15 +12,6 @@
     "one": "One",
     "brandingSuffix": "branding",
     "oneGuaranteeSuffix": "Guarantee’s"
-  },
-  "footer": {
-    "branding": "Branding",
-    "presentations": "Presentations",
-    "illustrations": "Illustrations",
-    "packaging": "Packaging",
-    "questions": "Questions",
-    "services": "Services",
-    "copyright": "OneBranding. All rights reserved."
   },
   "seo": {
     "description": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy, naming, logo design, visual identity, brand books and packaging.",
@@ -62,15 +49,13 @@
     },
     "project": "branding case study",
     "projectDescription": "OneBranding case study: {title}. Brand strategy, logo, visual identity and design for a brand from Uzbekistan.",
-    "category": "Branding services",
-    "news_article": "News"
+    "category": "Branding services"
   },
   "common": {
     "prev": "Previous",
     "next": "Next",
     "from": "from",
     "showMore": "Show more",
-    "learnMore": "Learn more",
     "addFile": "Add file",
     "maxFileSize": "maximum 10 MB",
     "contacts": "Contacts",
@@ -79,7 +64,6 @@
     "downloadBrief": "download brief",
     "socials": "SOCIALS",
     "graphqlUrlEmpty": "GRAPHQL_URL EMPTY",
-    "loading": "Loading...",
     "noFileSelected": "No file selected",
     "requiredField": "Please fill all required fields",
     "invalidEmail": "Enter a valid email (must contain {'@'})",
@@ -95,11 +79,6 @@
   },
   "home": {
     "freshProjects": "fresh projects",
-    "gridTitle": "What we do?",
-    "pictureOnWord": {
-      "top": "Strong design for brands",
-      "bottom": "Smart solutions for growth"
-    },
     "earthDives": {
       "title": "What we offer",
       "fallbackTitle": "Logo and brand identity",
@@ -144,24 +123,11 @@
       }
     },
     "rowShorteners": {
-      "title": "Frequently asked questions",
       "faqs": [
-        {
-          "title": "How do you work?",
-          "text": "We start with a deep understanding of your brand. Each project goes through research, concept, design, and final presentation. We stay in touch at every step so the result reflects your goals and style."
-        },
-        {
-          "title": "How long does a project take?",
-          "text": "Timelines depend on the complexity of the project. On average, development takes 2 to 6 weeks, including analytics, design, and final delivery."
-        },
-        {
-          "title": "What's included in design?",
-          "text": "UX research, prototyping, UI design, adaptation for mobile devices, and handoff to developers."
-        },
-        {
-          "title": "Do you work under contract?",
-          "text": "Yes, all projects are carried out under contract with clear stages, timelines, and fixed pricing."
-        }
+        {},
+        {},
+        {},
+        {}
       ]
     },
     "world": {
@@ -418,31 +384,19 @@
       "more": "More"
     }
   },
-  "projectsPage": {
-    "title": "Our projects",
-    "subtitle": "We are proud of every project that helps our clients grow and develop",
-    "viewProject": "View project"
-  },
-  "productsPage": {
-    "title": "Branding",
-    "subtitle": "We create brand identity that sets your brand apart from competitors. Unique concepts and a recognizable style."
-  },
   "productSlug": {
     "titleFallback": "Branding",
     "descFallback": "We create brand identity that sets your brand apart from competitors. Unique concepts and a recognizable style."
   },
   "aboutPage": {
     "title": "Meet our team",
-    "freshProjectsTitle": "Fresh projects",
     "moreButton": "More"
   },
   "newsPage": {
     "title": "Our studio blog"
   },
   "news": {
-    "otherNews": "Other news",
-    "slideTitle": "OneBrending updated the Coffee & Co. style.",
-    "slideDate": "12.10.2025"
+    "otherNews": "Other news"
   },
   "oneGuarantee": {
     "clientsTitle": "What our clients say",
@@ -457,21 +411,6 @@
       "highlightToken": "guaranteed*"
     },
     "reasonsTitle": "WHY DOES THIS WORK EFFECTIVELY?"
-  },
-  "costs": {
-    "title": "Our services and prices",
-    "debugTitle": "dfsfsdf",
-    "slider": {
-      "cardTitlePrefix": "ULTRA",
-      "cardTitleHighlight": "BRANDING",
-      "dev": {
-        "prefix": "development of",
-        "highlight": "complex",
-        "suffix": "fields/industries"
-      },
-      "desc1": "Branding in complex fields requires specialized knowledge and approaches due to business specifics, technical aspects, or target audience characteristics. Branding in complex industries can be challenging, but the right strategy and a focus on audience needs will help you stand out and successfully present your brand.",
-      "desc2": "Branding in complex fields requires specialized knowledge and approaches due to business specifics, technical aspects, or target audience characteristics. Branding in complex industries can be challenging, but the right strategy and focus on"
-    }
   },
   "warning": {
     "title": "Dear customers",
@@ -536,5 +475,33 @@
     "title": "Something went wrong",
     "text": "Please try again in a moment.",
     "home": "Back to home"
+  },
+  "movement": {
+    "first": "Join the",
+    "second": "Movement",
+    "description": "Build your next chapter with One Branding.",
+    "detail": "Your brand's future starts here.",
+    "action": "See in Action",
+    "copyright": "All rights reserved."
+  },
+  "robot": {
+    "lead": "A strong brand is not created by",
+    "accent": "chance.",
+    "description": "It is built through a smart system, clear strategy, and powerful design decisions.",
+    "support": "Onebranding helps your business become easier to recognize, trust, and choose."
+  },
+  "a11y": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "projectImage": "Project gallery image {position}",
+    "loading": "Loading",
+    "clients": "Our clients",
+    "projects": "Projects",
+    "globe": "Rotating world globe with country markers and connecting routes",
+    "globeImage": "World globe with illuminated continents",
+    "pauseGlobe": "Pause rotation",
+    "resumeGlobe": "Resume rotation",
+    "resetGlobe": "Reset globe"
   }
 }

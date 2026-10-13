@@ -28,7 +28,7 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       :tabindex="status === 'ready' ? 0 : -1"
       :aria-hidden="status !== 'ready'"
       role="img"
-      aria-label="Rotating world globe with country markers and connecting routes"
+      :aria-label="$t('a11y.globe')"
       @keydown="onKeydown"
     />
     <div v-show="showLabels" ref="labelsRef" class="network-globe__labels" aria-hidden="true" />
@@ -39,7 +39,7 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       sizes="(max-width: 767px) 153vw, 1160px"
       :preview="false"
       class="network-globe__fallback"
-      alt="World globe with illuminated continents"
+      :alt="$t('a11y.globeImage')"
       width="1160"
       height="760"
       loading="lazy"
@@ -48,8 +48,8 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
     <div v-if="controls && status === 'ready'" class="network-globe__controls">
       <button
         type="button"
-        :aria-label="paused ? 'Resume rotation' : 'Pause rotation'"
-        :title="paused ? 'Resume rotation' : 'Pause rotation'"
+        :aria-label="paused ? $t('a11y.resumeGlobe') : $t('a11y.pauseGlobe')"
+        :title="paused ? $t('a11y.resumeGlobe') : $t('a11y.pauseGlobe')"
         :aria-pressed="paused"
         @click="paused = !paused"
       >
@@ -57,8 +57,8 @@ const { canvasRef, labelsRef, paused, animating, status, onKeydown, reset } =
       </button>
       <button
         type="button"
-        aria-label="Reset globe"
-        title="Reset globe"
+        :aria-label="$t('a11y.resetGlobe')"
+        :title="$t('a11y.resetGlobe')"
         @click="reset"
       >
         <RotateCcw :size="17" />

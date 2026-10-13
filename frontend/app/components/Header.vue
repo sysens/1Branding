@@ -85,7 +85,7 @@
             <button
               type="button"
               ref="menuOpenButton"
-              :aria-label="lang === 'ru' ? 'Открыть меню' : 'Open menu'"
+              :aria-label="$t('a11y.openMenu')"
               :aria-expanded="isMobileMenuOpen"
               aria-controls="mobile-menu"
               @click="isMobileMenuOpen = true"
@@ -119,7 +119,7 @@
         ref="mobileMenu"
         role="dialog"
         aria-modal="true"
-        :aria-label="lang === 'ru' ? 'Меню' : 'Menu'"
+        :aria-label="$t('a11y.menu')"
         @keydown="onMenuKeydown"
         class="fixed inset-0 z-[2147483647] min-[950px]:hidden bg-gradient-to-b from-black to-[#00EA00] h-[100dvh] overflow-hidden overscroll-none"
       >
@@ -134,13 +134,13 @@
             <button
               type="button"
               ref="menuCloseButton"
-              :aria-label="lang === 'ru' ? 'Закрыть меню' : 'Close menu'"
+              :aria-label="$t('a11y.closeMenu')"
               @click="closeMobileMenu"
               class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
             >
               <img
                 class="w-[24px] h-auto rotate-90"
-                src="/header/Vector (13).png"
+                src="/header/vector-13.png"
                 alt=""
               />
             </button>

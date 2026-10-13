@@ -175,7 +175,7 @@ const onCtaClick = async (event: MouseEvent) => {
       <div class="flex justify-center mb-[48px] items-center">
         <img
           class="cta-img will-change-transform"
-          src="/OneGuarantee/image 84.png"
+          src="/OneGuarantee/image-84.png"
           alt=""
         />
       </div>

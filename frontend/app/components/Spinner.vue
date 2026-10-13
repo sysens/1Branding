@@ -29,7 +29,7 @@ useHead({
   <div
     class="spinner-overlay fixed inset-0 grid h-[100dvh] place-items-center bg-black"
     role="status"
-    aria-label="Loading"
+    :aria-label="$t('a11y.loading')"
   >
     <img
       class="spinner-image block"

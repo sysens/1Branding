@@ -1,26 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import MovementClock from "./MovementClock.vue";
 import CinematicAction from "./CinematicAction.vue";
 
 const localePath = useLocalePath();
 
-const { locale } = useI18n();
-const copy = computed(() => locale.value === "ru" ? {
-  first: "Создадим",
-  second: "будущее.",
-  description: "Новая глава вашего бренда начинается с One Branding.",
-  detail: "Давайте сделаем следующий шаг вместе.",
-  action: "Смотреть проекты",
-  copyright: "Все права защищены.",
-} : {
-  first: "Join the",
-  second: "Movement",
-  description: "Build your next chapter with One Branding.",
-  detail: "Your brand's future starts here.",
-  action: "See in Action",
-  copyright: "All rights reserved.",
-});
+const { t } = useI18n();
 const year = new Date().getFullYear();
 
 </script>
@@ -30,13 +14,13 @@ const year = new Date().getFullYear();
     <section class="movement-footer__stage" aria-labelledby="movement-title">
       <MovementClock />
       <div class="movement-footer__content">
-        <h2 id="movement-title">{{ copy.first }}<br />{{ copy.second }}</h2>
-        <p>{{ copy.description }}<br />{{ copy.detail }}</p>
-        <CinematicAction :to="localePath('/projects')">{{ copy.action }}</CinematicAction>
+        <h2 id="movement-title">{{ t("movement.first") }}<br />{{ t("movement.second") }}</h2>
+        <p>{{ t("movement.description") }}<br />{{ t("movement.detail") }}</p>
+        <CinematicAction :to="localePath('/projects')">{{ t("movement.action") }}</CinematicAction>
       </div>
     </section>
     <div class="movement-footer__legal">
-      <small>Copyright &copy; {{ year }} One Branding. {{ copy.copyright }}</small>
+      <small>Copyright &copy; {{ year }} One Branding. {{ t("movement.copyright") }}</small>
     </div>
   </footer>
 </template>

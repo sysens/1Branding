@@ -165,7 +165,7 @@ watch(locale, async () => {
           @click="prev"
           :aria-label="$t('common.prev')"
         >
-          <img src="/News/Vector (10).png" alt="" />
+          <img src="/News/vector-10.png" alt="" />
         </button>
 
         <button
@@ -174,7 +174,7 @@ watch(locale, async () => {
           @click="next"
           :aria-label="$t('common.next')"
         >
-          <img src="/News/Vector (11).png" alt="" />
+          <img src="/News/vector-11.png" alt="" />
         </button>
       </div>
     </div>
@@ -203,7 +203,7 @@ watch(locale, async () => {
               :src="
                 item.image?.url
                   ? resolveImage(item.image.url)
-                  : '/home/Rectangle 42016.png'
+                  : '/home/rectangle-42016.png'
               "
               alt=""
             />
@@ -216,7 +216,7 @@ watch(locale, async () => {
             >
               <img
                 class="w-[14px] h-[14px] opacity-[0.9]"
-                src="/News/Vector(9).png"
+                src="/News/vector-9.png"
                 alt=""
               />
               <p
@@ -244,7 +244,7 @@ watch(locale, async () => {
           @click="prev"
           :aria-label="$t('common.prev')"
         >
-          <img class="w-[19px] h-auto" src="/News/Vector (10).png" alt="" />
+          <img class="w-[19px] h-auto" src="/News/vector-10.png" alt="" />
         </button>
 
         <button
@@ -253,7 +253,7 @@ watch(locale, async () => {
           @click="next"
           :aria-label="$t('common.next')"
         >
-          <img class="w-[19px] h-auto" src="/News/Vector (11).png" alt="" />
+          <img class="w-[19px] h-auto" src="/News/vector-11.png" alt="" />
         </button>
       </div>
     </div>

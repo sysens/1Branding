@@ -11,20 +11,7 @@ const props = withDefaults(defineProps<{ sceneUrl?: string | null }>(), { sceneU
 const DEFAULT_SCENE_URL = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
 const scene = computed(() => props.sceneUrl?.trim() || DEFAULT_SCENE_URL);
 
-const { locale } = useI18n();
-const copy = computed(() => String(locale.value) === "ru"
-  ? {
-      lead: "Сильный бренд не создается",
-      accent: "случайно.",
-      description: "Он строится через понятную систему, точную стратегию и сильные дизайн-решения.",
-      support: "Onebranding помогает бизнесу стать узнаваемее, понятнее и ближе к выбору клиента.",
-    }
-  : {
-      lead: "A strong brand is not created by",
-      accent: "chance.",
-      description: "It is built through a smart system, clear strategy, and powerful design decisions.",
-      support: "Onebranding helps your business become easier to recognize, trust, and choose.",
-    });
+const { t } = useI18n();
 </script>
 
 <template>
@@ -36,9 +23,9 @@ const copy = computed(() => String(locale.value) === "ru"
       <FooterBrandSparkles />
     </div>
     <div class="robot__copy">
-      <h2 id="robot-title" class="robot__title">{{ copy.lead }} <span class="robot__green">{{ copy.accent }}</span></h2>
-      <p class="robot__text">{{ copy.description }}</p>
-      <p class="robot__support">{{ copy.support }}</p>
+      <h2 id="robot-title" class="robot__title">{{ t("robot.lead") }} <span class="robot__green">{{ t("robot.accent") }}</span></h2>
+      <p class="robot__text">{{ t("robot.description") }}</p>
+      <p class="robot__support">{{ t("robot.support") }}</p>
     </div>
   </section>
 </template>

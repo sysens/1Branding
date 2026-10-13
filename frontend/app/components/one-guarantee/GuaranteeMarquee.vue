@@ -108,7 +108,7 @@ const rowsConfig = computed(() =>
                   <div
                     class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold md:mb-[12px]"
                   >
-                    <img src="/OneGuarantee/Group (2).png" alt="" />
+                    <img src="/OneGuarantee/group-2.png" alt="" />
                   </div>
 
                   <p
@@ -158,7 +158,7 @@ const rowsConfig = computed(() =>
                   <div
                     class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold"
                   >
-                    <img src="/OneGuarantee/Group (2).png" alt="" />
+                    <img src="/OneGuarantee/group-2.png" alt="" />
                   </div>
 
                   <p

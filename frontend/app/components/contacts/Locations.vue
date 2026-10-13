@@ -175,7 +175,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/Vector(7).png" alt="" />
+              <img src="/Contacts/vector-7.png" alt="" />
             </a>
             <a
               class="instagream"
@@ -184,7 +184,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/Vector(8).png" alt="" />
+              <img src="/Contacts/vector-8.png" alt="" />
             </a>
 
             <a
@@ -203,7 +203,7 @@ useGsapContext(root.value as any, ({ gsap }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="/Contacts/Group(1).png" alt="" />
+              <img src="/Contacts/group-1.png" alt="" />
             </a>
           </div>
         </div>

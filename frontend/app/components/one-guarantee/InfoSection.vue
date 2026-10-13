@@ -208,7 +208,7 @@ const highlightedText = computed(() => {
         class="og-box will-change-transform relative font-['Inter'] font-light text-[#FFFFFF] text-[24px] leading-[100%] tracking-normal text-center max-w-[751px] border border-[#00FF0D] rounded-[20px] md:px-[75px] md:py-[40px] px-[10px] py-[20px] mb-[80px] mx-auto"
       >
         <img
-          src="/OneGuarantee/subway_tick (1).png"
+          src="/OneGuarantee/subway-tick-1.png"
           alt=""
           class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2 font-family: Inter;"
         />

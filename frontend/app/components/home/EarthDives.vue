@@ -188,7 +188,7 @@ const resolveMedia = useCmsMedia();
 <template>
   <div ref="root" class="relative md:pb-[7.5rem] md:pt-[3.75rem]">
     <img
-      src="/General/Ellipse (5).png"
+      src="/General/ellipse-5.png"
       alt=""
       class="absolute right-1 md:top-9 top-[35%] w-[900px] md:w-[37.5rem] h-[900px] md:object-contain oject-fit pointer-events-none select-none -z-10"
     />

@@ -24,7 +24,7 @@ const { t } = useI18n();
 
 // WebP copy of the 523 KB PNG poster (32 KB).
 const oneGuaranteeVideoPoster = "/OneGuarantee/image95.webp";
-const oneGuaranteeVideoSrc = "/OneGuarantee/Img%205714.mp4";
+const oneGuaranteeVideoSrc = "/OneGuarantee/img-5714.mp4";
 
 // The background video (13 MB) is attached in the browser, and not at all on a
 // data-saving or slow connection: those visitors keep the poster.

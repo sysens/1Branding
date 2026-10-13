@@ -21,15 +21,15 @@ const props = withDefaults(defineProps<Props>(), {
   bottomLeftSrc: null,
   bottomRightSrc: null,
 
-  topFallback: "/home/Rectangle 42016.png",
-  bottomLeftFallback: "/home/Rectangle 42016.png",
-  bottomRightFallback: "/home/Rectangle 42016.png",
+  topFallback: "/home/rectangle-42016.png",
+  bottomLeftFallback: "/home/rectangle-42016.png",
+  bottomRightFallback: "/home/rectangle-42016.png",
 });
 
 const root = ref<HTMLElement | null>(null);
-const { locale } = useI18n();
+const { t } = useI18n();
 const imageAlt = (position: number) =>
-  `${locale.value === "ru" ? "Галерея проекта, изображение" : "Project gallery image"} ${position}`;
+  t("a11y.projectImage", { position });
 
 const resolvedImages = computed(() => {
   const arr = (props.images ?? []).filter(Boolean);

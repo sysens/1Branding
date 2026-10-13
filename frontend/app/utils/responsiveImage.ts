@@ -3,13 +3,13 @@
 // desktop originals.
 export const W1280_IMAGES = [
   "/home/Quaker.webp",
-  "/home/Quaker 2.webp",
-  "/home/Quaker 3.webp",
-  "/home/Quaker 4.webp",
-  "/home/Quaker 5.webp",
-  "/home/Quaker 6.webp",
-  "/home/Quaker 7.webp",
-  "/home/Quaker 8.webp",
+  "/home/quaker-2.webp",
+  "/home/quaker-3.webp",
+  "/home/quaker-4.webp",
+  "/home/quaker-5.webp",
+  "/home/quaker-6.webp",
+  "/home/quaker-7.webp",
+  "/home/quaker-8.webp",
   "/home/macbook-linear.webp",
 ] as const;
 
