@@ -11,31 +11,33 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
+type ContactsSection1 = {
+  title?: string;
+  location?: { title?: string; location?: string };
+  workingHours?: { title?: string; hour?: string };
+  contactInfo?: { phoneNumber?: string; websiteUrl?: string };
+  note?: { title?: string; text?: string };
+  downloadBrief?: { text?: string; file?: { url?: string } };
+};
+
 type ContactsPageGql = {
   data?: {
-    contactsPage?: {
-      section1?: {
-        title?: string;
-        location?: { title?: string; location?: string };
-        workingHours?: { title?: string; hour?: string };
-        contactInfo?: { phoneNumber?: string; websiteUrl?: string };
-        note?: { title?: string; text?: string };
-        downloadBrief?: { text?: string; file?: { url?: string } };
-      };
-    };
+    contactsPage?: { section1?: ContactsSection1 } | null;
+    fallbackContactsPage?: { section1?: ContactsSection1 } | null;
   };
+};
+
+type FooterSocialMedia = {
+  telegramLink?: string | null;
+  instagramLink?: string | null;
+  behanceLink?: string | null;
+  linkedinLink?: string | null;
 };
 
 type FooterSocialsRes = {
   data?: {
-    footer?: {
-      socialMedia?: {
-        telegramLink?: string | null;
-        instagramLink?: string | null;
-        behanceLink?: string | null;
-        linkedinLink?: string | null;
-      } | null;
-    } | null;
+    footer?: { socialMedia?: FooterSocialMedia | null } | null;
+    fallbackFooter?: { socialMedia?: FooterSocialMedia | null } | null;
   };
   errors?: Array<{ message: string }>;
 };
@@ -58,12 +60,35 @@ query ContactsPage($locale: I18NLocaleCode) {
       }
     }
   }
+  # The CMS has no Russian entry yet: fall back to English so the contact details are not empty.
+  fallbackContactsPage: contactsPage(locale: "en") {
+    section1 {
+      title
+      location { title location }
+      workingHours { title hour }
+      contactInfo { phoneNumber websiteUrl }
+      note { title text }
+      downloadBrief {
+        text
+        file { url }
+      }
+    }
+  }
 }
 `;
 
 const FOOTER_SOCIALS_QUERY = `
 query FooterSocials($locale: I18NLocaleCode) {
   footer(locale: $locale) {
+    socialMedia {
+      telegramLink
+      instagramLink
+      behanceLink
+      linkedinLink
+    }
+  }
+  # The CMS has no Russian entry yet: fall back to English so the social links are not empty.
+  fallbackFooter: footer(locale: "en") {
     socialMedia {
       telegramLink
       instagramLink
@@ -101,27 +126,43 @@ const { data: footerGql } = await useAsyncData<FooterSocialsRes>(
 );
 
 const section1 = computed(() => gqlRes.value?.data?.contactsPage?.section1);
+// Headings and notes keep their i18n copy when the locale has no entry; the
+// contact details themselves (address, hours, phone, site, brief file) are the
+// same in every language, so they come from the English entry instead.
+const fallbackSection1 = computed(() => gqlRes.value?.data?.fallbackContactsPage?.section1);
 
 const addressTitle = computed(
   () => section1.value?.location?.title || t("contacts.addressTitle")
 );
 const addressText = computed(
-  () => section1.value?.location?.location || t("contacts.addressText")
+  () =>
+    section1.value?.location?.location ||
+    fallbackSection1.value?.location?.location ||
+    t("contacts.addressText")
 );
 
 const workTitle = computed(
   () => section1.value?.workingHours?.title || t("contacts.workTitle")
 );
 const workHours = computed(
-  () => section1.value?.workingHours?.hour || t("contacts.workHours")
+  () =>
+    section1.value?.workingHours?.hour ||
+    fallbackSection1.value?.workingHours?.hour ||
+    t("contacts.workHours")
 );
 
 const contactInfoTitle = computed(() => t("contacts.contactInfoTitle"));
 const phoneNumber = computed(
-  () => section1.value?.contactInfo?.phoneNumber || "+998 (71) 200-12-34"
+  () =>
+    section1.value?.contactInfo?.phoneNumber ||
+    fallbackSection1.value?.contactInfo?.phoneNumber ||
+    "+998 (71) 200-12-34"
 );
 const websiteUrl = computed(
-  () => section1.value?.contactInfo?.websiteUrl || "onebranding.uz"
+  () =>
+    section1.value?.contactInfo?.websiteUrl ||
+    fallbackSection1.value?.contactInfo?.websiteUrl ||
+    "onebranding.uz"
 );
 
 const noteTitle = computed(() => section1.value?.note?.title || t("contacts.noteTitle"));
@@ -132,7 +173,9 @@ const briefText = computed(
 );
 
 const briefFileUrl = computed(() => {
-  const url = section1.value?.downloadBrief?.file?.url;
+  const url =
+    section1.value?.downloadBrief?.file?.url ||
+    fallbackSection1.value?.downloadBrief?.file?.url;
   if (!url) return "";
   if (!GRAPHQL_URL) return url;
   try {
@@ -143,17 +186,18 @@ const briefFileUrl = computed(() => {
   }
 });
 
-const telegramLink = computed(
-  () => footerGql.value?.data?.footer?.socialMedia?.telegramLink || ""
+const socialMedia = computed(
+  () =>
+    footerGql.value?.data?.footer?.socialMedia ??
+    footerGql.value?.data?.fallbackFooter?.socialMedia ??
+    null
 );
-const instagramLink = computed(
-  () => footerGql.value?.data?.footer?.socialMedia?.instagramLink || ""
-);
-const behanceLink = computed(
-  () => footerGql.value?.data?.footer?.socialMedia?.behanceLink || ""
-);
+
+const telegramLink = computed(() => socialMedia.value?.telegramLink || "");
+const instagramLink = computed(() => socialMedia.value?.instagramLink || "");
+const behanceLink = computed(() => socialMedia.value?.behanceLink || "");
 const linkedinLink = computed(() => {
-  const raw = footerGql.value?.data?.footer?.socialMedia?.linkedinLink || "";
+  const raw = socialMedia.value?.linkedinLink || "";
   if (!raw) return "";
   return raw.startsWith("http") ? raw : `https://${raw.replace(/^\/+/, "")}`;
 });

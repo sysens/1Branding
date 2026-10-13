@@ -1,4 +1,6 @@
 import type { Core, Schema, UID } from "@strapi/strapi";
+import { checkUploadStorage } from "./utils/check-upload-storage";
+import { removeOrphanContactUploads } from "./utils/contact-uploads";
 
 const isApiSingleType = (
   uid: string,
@@ -45,6 +47,34 @@ const disablePublicRegistration = async (strapi: Core.Strapi): Promise<void> => 
   strapi.log.info('Bootstrap disabled public user registration');
 };
 
+// The secrets that sign admin sessions, API tokens and transfers. A value
+// copied from .env.example / .env.railway.example is public, so anyone could
+// forge an admin session with it.
+const SECRET_KEYS = [
+  "APP_KEYS",
+  "ADMIN_JWT_SECRET",
+  "API_TOKEN_SALT",
+  "TRANSFER_TOKEN_SALT",
+  "JWT_SECRET",
+  "ENCRYPTION_KEY",
+];
+const PLACEHOLDER = /tobemodified|change-?me|replace-?me|example|placeholder/i;
+
+const reportWeakSecrets = (strapi: Core.Strapi): void => {
+  if (process.env.NODE_ENV !== "production") return;
+  const weak = SECRET_KEYS.filter((key) =>
+    (process.env[key] ?? "")
+      .split(",")
+      .some((part) => part.trim().length < 16 || PLACEHOLDER.test(part))
+  );
+  // Logged rather than thrown: a crash loop would take the site down too.
+  if (weak.length) {
+    strapi.log.error(
+      `Insecure secrets: ${weak.join(", ")} are missing, too short or copied from an example file. Set new random values.`
+    );
+  }
+};
+
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
     const graphqlExtension = strapi.plugin('graphql')?.service('extension');
@@ -86,7 +116,20 @@ export default {
   },
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    reportWeakSecrets(strapi);
+    void checkUploadStorage(strapi);
     await ensureDefaultSingleTypeDocuments(strapi);
     await disablePublicRegistration(strapi);
+
+    // Contact-form uploads never attached to a submission are deleted hourly.
+    strapi.cron.add({
+      contactUploadCleanup: {
+        task: async () => {
+          const removed = await removeOrphanContactUploads(strapi);
+          if (removed) strapi.log.info(`Removed ${removed} unattached contact upload(s)`);
+        },
+        options: { rule: "17 * * * *" },
+      },
+    });
   },
 };

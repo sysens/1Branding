@@ -31,7 +31,7 @@ describe("brand stories", () => {
     expect(tail.indexOf("<LazyHomeRobotShowcase")).toBeGreaterThan(tail.indexOf("<LazyHomeFaqAccordion"));
     expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeRobotShowcase"));
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);
-    expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('url("/home/scene.jpg")');
+    expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('const SCENE = "/home/scene.jpg"');
     for (const removed of ["GridSection", "EarthDives", "ProjectTabletShowcase", "ThreeLayerSlug", "RowShorteners"]) expect(source).not.toContain(removed);
     expect(source).toContain("<LazyHomeWorldSection");
     // Taken off the landing but kept for other pages (Services etc.).
@@ -50,8 +50,8 @@ describe("brand stories", () => {
   });
   test("landing request no longer fetches removed sections or shared guarantee content", async () => {
     const query = await Bun.file("app/composables/useLandingPayload.ts").text();
-    for (const field of ["section7", "section11", "oneGuarantee"]) expect(query).not.toContain(field);
-    for (const field of ["section2", "section3", "section10", "splineRobot", "footer", "seo"]) expect(query).toContain(field);
+    for (const field of ["section2", "section5", "section7", "section11", "oneGuarantee"]) expect(query).not.toContain(field);
+    for (const field of ["section3", "section10", "splineRobot", "footer", "seo"]) expect(query).toContain(field);
   });
   test("Strapi removes the retired admin/API fields without deleting shared APIs", async () => {
     const schema = await Bun.file(backend + "src/api/landing-page/content-types/landing-page/schema.json").json() as CmsSchema;

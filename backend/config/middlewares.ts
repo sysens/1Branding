@@ -35,7 +35,6 @@ export default ({ env }: { env: StrapiEnv }) => [
       credentials: false,
     },
   },
-  "strapi::poweredBy",
   // gzip/brotli for GraphQL JSON and admin assets; images/video are skipped as
   // non-compressible by koa-compress.
   "strapi::compression",

@@ -18,18 +18,8 @@ export type LandingHeroSlogan = {
   accentText?: string | null;
 };
 
-export type LandingSection2 = {
-  title?: string | null;
-  description?: string | null;
-};
-
 export type LandingSection3 = {
   partnersLogo?: LandingMedia[] | null;
-};
-
-export type LandingSection5Item = {
-  title?: string | null;
-  subTitle?: string | null;
 };
 
 export type LandingSection10Block = {
@@ -60,9 +50,7 @@ export type LandingPageContent = {
   heroSlogan?: LandingHeroSlogan | null;
   slogan?: LandingMedia | null;
   sloganMobile?: LandingMedia | null;
-  section2?: LandingSection2 | null;
   section3?: LandingSection3 | null;
-  section5?: Array<LandingSection5Item | null> | null;
   section10?: LandingSection10Block | Array<LandingSection10Block | null> | null;
   brandCollage?: LandingBrandCollage | null;
   splineRobot?: LandingSplineRobot | null;
@@ -91,6 +79,11 @@ export type LandingPayloadResponse = {
       landingPage?: LandingSeo | null;
     } | null;
     footer?: {
+      socialMedia?: FooterSocialMediaLinks | null;
+    } | null;
+    /** English copies, requested only for other locales (no entry there yet). */
+    fallbackLandingPage?: LandingPageContent | null;
+    fallbackFooter?: {
       socialMedia?: FooterSocialMediaLinks | null;
     } | null;
   };

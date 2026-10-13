@@ -38,9 +38,6 @@ const securityHeaders = {
   "referrer-policy": "strict-origin-when-cross-origin",
   "cross-origin-opener-policy": "same-origin",
 };
-const noIndexHeaders = { "x-robots-tag": "noindex, nofollow" };
-// Leftover prototype routes: reachable but must never compete with the real pages.
-const prototypeRoutes = ["/testPage", "/Newsslug", "/Projectslug", "/idProductSlugSecondVersion", "/ProjectSlug/Products"];
 const isrPages = ["/", "/About", "/ContactPage", "/Costs", "/Oneguarantee", "/Projects", "/News"];
 
 export default defineNuxtConfig({
@@ -138,10 +135,6 @@ export default defineNuxtConfig({
     "/ru/ProjectSlug/**": { isr: 300 },
     "/NewsSlug/**": { isr: 300 },
     "/ru/NewsSlug/**": { isr: 300 },
-    ...Object.fromEntries(prototypeRoutes.flatMap((path) => [
-      [path, { headers: noIndexHeaders, isr: false }],
-      [`/ru${path}`, { headers: noIndexHeaders, isr: false }],
-    ])),
     "/_ipx/**": {
       headers: longTermImageCacheHeaders,
     },

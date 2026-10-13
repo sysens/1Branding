@@ -1,5 +1,13 @@
 import { open, rm } from 'node:fs/promises';
 import { extname } from 'node:path';
+import {
+  CONTACT_UPLOAD_CAPTION,
+  clientKey,
+  isUploadUrl,
+  rememberUpload,
+  takeUpload,
+} from '../utils/contact-uploads';
+import { routePath } from '../utils/route-path';
 
 const UPLOAD_PATH = '/api/upload';
 const SUBMISSION_PATH = '/api/contacts-requests';
@@ -48,16 +56,18 @@ const reject = (ctx: any, message: string): never => ctx.throw(400, message) as 
 
 const limitRequests = (ctx: any, kind: 'upload' | 'submission') => {
   const now = Date.now();
-  const key = `${kind}:${ctx.ip}`;
-  if (attempts.size >= MAX_BUCKETS) {
-    for (const [entry, timestamps] of attempts) {
-      const recent = timestamps.filter((timestamp) => timestamp > now - WINDOW_MS);
-      if (recent.length) attempts.set(entry, recent);
-      else attempts.delete(entry);
-    }
-  }
+  const key = `${kind}:${clientKey(ctx.ip)}`;
   if (!attempts.has(key) && attempts.size >= MAX_BUCKETS) {
-    ctx.throw(429, 'Please try again later');
+    for (const [entry, timestamps] of attempts) {
+      if (timestamps[timestamps.length - 1] <= now - WINDOW_MS) attempts.delete(entry);
+    }
+    // Still full: forget the clients seen longest ago rather than refusing
+    // everyone (Map iteration follows insertion order, and each request
+    // re-inserts its key, so the first keys are the least recently active).
+    for (const entry of attempts.keys()) {
+      if (attempts.size < MAX_BUCKETS) break;
+      attempts.delete(entry);
+    }
   }
 
   const recent = (attempts.get(key) || []).filter((timestamp) => timestamp > now - WINDOW_MS);
@@ -67,23 +77,29 @@ const limitRequests = (ctx: any, kind: 'upload' | 'submission') => {
     ctx.throw(429, 'Please try again later');
   }
   recent.push(now);
+  attempts.delete(key);
   attempts.set(key, recent);
 };
 
-const fields: Record<string, number> = {
-  TopicInput: 200,
-  requestedServicesMessageInput: 5000,
-  FullName: 150,
-  JobTitle: 150,
-  Company: 150,
-  PhoneNumber: 32,
-  email: 254,
+// Single-line fields refuse every control character, line breaks included, so
+// a value cannot fake extra lines in the Telegram notification; the message
+// may keep its line breaks.
+const fields: Record<string, { max: number; multiline?: boolean }> = {
+  TopicInput: { max: 200 },
+  requestedServicesMessageInput: { max: 5000, multiline: true },
+  FullName: { max: 150 },
+  JobTitle: { max: 150 },
+  Company: { max: 150 },
+  PhoneNumber: { max: 32 },
+  email: { max: 254 },
 };
+// Control characters plus the Unicode line and paragraph separators.
+const SINGLE_LINE_FORBIDDEN = /[\p{Cc}\p{Zl}\p{Zp}]/u;
+const MULTILINE_FORBIDDEN = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
 
 // Bot traps sent by the website form alongside `data`: a hidden "website"
 // field real visitors never fill, and how long the form was open. Scripts that
 // fill every input or post instantly are refused; `meta` never reaches Strapi.
-// `meta` is optional so a frontend deployed before this backend keeps working.
 const MIN_FILL_MS = 3_000;
 const MAX_FILL_MS = 24 * 60 * 60 * 1000;
 
@@ -98,24 +114,25 @@ const checkBotTraps = (ctx: any, body: Record<string, unknown>) => {
   delete body.meta;
 };
 
-const validateSubmission = async (ctx: any, strapi: any) => {
+/** Validates a submission and returns the id of the upload it attaches. */
+const validateSubmission = async (ctx: any, strapi: any): Promise<number> => {
   const body = ctx.request.body;
   const data = body?.data;
-  if (!isRecord(body) || !('data' in body) ||
+  if (!isRecord(body) || !('data' in body) || !('meta' in body) ||
       Object.keys(body).some((key) => key !== 'data' && key !== 'meta')) {
     reject(ctx, 'Invalid contact submission');
   }
-  if ('meta' in body) checkBotTraps(ctx, body);
+  checkBotTraps(ctx, body);
   if (!isRecord(data) ||
       Object.keys(data).length !== Object.keys(fields).length + 1 ||
       Object.keys(data).some((key) => key !== 'requestedServicesMessageFile' && !(key in fields))) {
     reject(ctx, 'Invalid contact submission');
   }
 
-  for (const [key, max] of Object.entries(fields)) {
+  for (const [key, { max, multiline }] of Object.entries(fields)) {
     const value = data[key];
     if (typeof value !== 'string' || !value.trim() || value.trim().length > max ||
-        /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(value)) {
+        (multiline ? MULTILINE_FORBIDDEN : SINGLE_LINE_FORBIDDEN).test(value)) {
       reject(ctx, `Invalid ${key}`);
     }
     data[key] = value.trim();
@@ -131,22 +148,31 @@ const validateSubmission = async (ctx: any, strapi: any) => {
 
   const file = await strapi.db.query('plugin::upload.file').findOne({
     where: { id },
-    select: ['name', 'ext', 'mime', 'size', 'url', 'provider', 'createdAt'],
+    select: ['name', 'ext', 'mime', 'size', 'url', 'provider', 'caption', 'createdAt'],
+    populate: { related: true },
   });
   const createdAt = file && new Date(file.createdAt).getTime();
   if (!file || !Number.isFinite(createdAt) || createdAt > Date.now() + 60_000 ||
-      Date.now() - createdAt > 30 * 60 * 1000 || file.provider !== 'local' ||
-      typeof file.url !== 'string' || !/^\/uploads\/[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/.test(file.url) ||
+      Date.now() - createdAt > 30 * 60 * 1000 ||
+      file.caption !== CONTACT_UPLOAD_CAPTION ||
+      (Array.isArray(file.related) && file.related.length > 0) ||
+      !isUploadUrl(strapi, file.provider, file.url) ||
       typeof file.name !== 'string' || !isAllowedFileType(file.name, file.mime || '') ||
       file.ext?.toLowerCase() !== extname(file.name).toLowerCase() ||
       !(file.size > 0 && file.size <= 10 * 1024)) { // Strapi stores size in KB.
     reject(ctx, 'Invalid contact file');
   }
+  // Last, so a submission refused above can be corrected and sent again: the
+  // upload must be this client's own and not attached by an earlier submission.
+  if (!takeUpload(id as number, clientKey(ctx.ip))) reject(ctx, 'Invalid contact file');
+  return id as number;
 };
 
 const validateUpload = async (ctx: any) => {
+  if (Object.keys(ctx.request.body ?? {}).length) reject(ctx, 'Upload one contact file');
+  const groups = Object.keys(ctx.request.files ?? {});
   const input = ctx.request.files?.files;
-  if (!input || Array.isArray(input) || !isRecord(input)) reject(ctx, 'Upload one contact file');
+  if (groups.length !== 1 || !input || Array.isArray(input) || !isRecord(input)) reject(ctx, 'Upload one contact file');
   const { originalFilename, mimetype, size, filepath } = input;
   if (typeof originalFilename !== 'string' || originalFilename.length > 150 ||
       !/^[^/\\\u0000-\u001f]+$/.test(originalFilename) ||
@@ -169,6 +195,21 @@ const validateUpload = async (ctx: any) => {
   }
 };
 
+// Marks the stored file as a contact attachment (see utils/contact-uploads) and
+// remembers which client uploaded it.
+const recordUpload = async (ctx: any, strapi: any) => {
+  const uploaded = Array.isArray(ctx.body) ? ctx.body : [];
+  for (const file of uploaded) {
+    if (!Number.isSafeInteger(file?.id)) continue;
+    await strapi.db.query('plugin::upload.file').update({
+      where: { id: file.id },
+      data: { caption: CONTACT_UPLOAD_CAPTION },
+    });
+    file.caption = CONTACT_UPLOAD_CAPTION;
+    rememberUpload(file.id, clientKey(ctx.ip));
+  }
+};
+
 // strapi::body only deletes formidable temp files when the downstream chain
 // succeeds; on a thrown error they would stay in the OS temp dir forever.
 const removeTempFiles = async (ctx: any) => {
@@ -180,16 +221,20 @@ const removeTempFiles = async (ctx: any) => {
   await Promise.all(paths.map((filepath) => rm(filepath, { force: true }).catch(() => {})));
 };
 
+const hasBodyLength = (ctx: any): boolean =>
+  /^\d+$/.test(ctx.get('Content-Length')) && !ctx.get('Transfer-Encoding');
+
 // Two passes: before body parsing (cheap rate/size checks) and after parsing
 // (file/field checks). These endpoints keep Strapi's existing upload + create contract.
 export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any }) =>
   async (ctx: any, next: () => Promise<void>) => {
-    if (ctx.method !== 'POST' || (ctx.path !== UPLOAD_PATH && ctx.path !== SUBMISSION_PATH)) {
+    const path = routePath(ctx.path);
+    if (ctx.method !== 'POST' || (path !== UPLOAD_PATH && path !== SUBMISSION_PATH)) {
       return next();
     }
+    const isUpload = path === UPLOAD_PATH;
 
     if (config.phase === 'pre') {
-      const isUpload = ctx.path === UPLOAD_PATH;
       // `POST /api/upload?id=<n>` makes Strapi replace (or re-describe) an
       // existing media file. The public contact flow never sends a query string.
       if (ctx.querystring) reject(ctx, 'Unexpected query parameters');
@@ -198,19 +243,33 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
         contentType.startsWith('application/json'))) {
         reject(ctx, 'Invalid request content type');
       }
+      // A chunked body has no length to check up front, and the parser would
+      // read all of it before any limit applied. Browsers always send one.
+      if (!hasBodyLength(ctx)) ctx.throw(411, 'Content-Length required');
       const maxLength = isUpload ? MAX_CONTACT_FILE_BYTES + 64 * 1024 : 16 * 1024;
       if (Number(ctx.get('Content-Length')) > maxLength) ctx.throw(413, 'Request too large');
       limitRequests(ctx, isUpload ? 'upload' : 'submission');
-    } else if (ctx.path === UPLOAD_PATH) {
+      return next();
+    }
+
+    if (isUpload) {
       try {
         await validateUpload(ctx);
-        return await next();
+        await next();
       } catch (error) {
         await removeTempFiles(ctx);
         throw error;
       }
-    } else {
-      await validateSubmission(ctx, strapi);
+      if (ctx.status < 300) await recordUpload(ctx, strapi);
+      return;
     }
-    return next();
+
+    const fileId = await validateSubmission(ctx, strapi);
+    try {
+      await next();
+    } catch (error) {
+      // Not saved: the same upload may be attached again on a retry.
+      rememberUpload(fileId, clientKey(ctx.ip));
+      throw error;
+    }
   };

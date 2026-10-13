@@ -1,5 +1,6 @@
 import { readFile, stat } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
+import { isUploadUrl, uploadLocation } from './contact-uploads';
 
 const MAX_DOCUMENT_BYTES = 10 * 1024 * 1024;
 const UPLOAD_PATH = /^\/uploads\/[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/;
@@ -60,11 +61,20 @@ export async function sendTelegramMessage(message: string) {
   );
 }
 
-const checkedUploadUrl = (fileUrl: string): URL => {
+// An attachment is downloaded only from where this server stores uploads: its
+// own `/uploads` (PUBLIC_BASE_URL) for the local provider, the R2 public URL
+// for aws-s3. Nothing else, so a stored URL can never point the fetch elsewhere.
+const checkedUploadUrl = (fileUrl: string, provider: unknown): URL => {
+  const url = new URL(fileUrl);
+  if (uploadLocation(strapi).provider === 'aws-s3') {
+    if (url.protocol !== 'https:' || !isUploadUrl(strapi, provider, fileUrl)) {
+      throw new Error('Attachment URL is not an approved upload');
+    }
+    return url;
+  }
   const base = process.env.PUBLIC_BASE_URL;
   if (!base) throw new Error('Attachment base URL is not configured');
   const expected = new URL(base);
-  const url = new URL(fileUrl);
   const isLocalDev = process.env.NODE_ENV !== 'production' &&
     ['localhost', '127.0.0.1', '[::1]'].includes(expected.hostname);
   if (url.origin !== expected.origin || url.username || url.password ||
@@ -75,8 +85,8 @@ const checkedUploadUrl = (fileUrl: string): URL => {
   return url;
 };
 
-const fetchBoundedFile = async (fileUrl: string): Promise<Uint8Array> => {
-  const url = checkedUploadUrl(fileUrl);
+const fetchBoundedFile = async (fileUrl: string, provider: unknown): Promise<Uint8Array> => {
+  const url = checkedUploadUrl(fileUrl, provider);
   const response = await fetch(url, {
     redirect: 'error',
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -139,20 +149,20 @@ const readLocalUpload = async (urlPath: string): Promise<Uint8Array | null> => {
 };
 
 /**
- * Sends an uploaded contact attachment to Telegram. The file is read from disk
- * when it lives on this instance (no dependency on PUBLIC_BASE_URL being
- * reachable from inside the container); otherwise it is downloaded from
- * PUBLIC_BASE_URL with the same origin and size checks as before.
+ * Sends an uploaded contact attachment to Telegram. A local-provider file is
+ * read from disk when it lives on this instance (no dependency on
+ * PUBLIC_BASE_URL being reachable from inside the container); otherwise it is
+ * downloaded, from R2's public URL or PUBLIC_BASE_URL, with origin and size checks.
  */
-export async function sendTelegramDocument(fileUrl: string, fileName = 'file') {
+export async function sendTelegramDocument(fileUrl: string, fileName = 'file', provider: unknown = 'local') {
   const auth = credentials();
   if (!auth) return;
 
-  let bytes = await readLocalUpload(fileUrl);
+  let bytes = provider === 'local' ? await readLocalUpload(fileUrl) : null;
   if (!bytes) {
     const baseUrl = process.env.PUBLIC_BASE_URL;
-    if (!baseUrl) throw new Error('Attachment base URL is not configured');
-    bytes = await fetchBoundedFile(new URL(fileUrl, baseUrl).href);
+    if (!baseUrl && provider === 'local') throw new Error('Attachment base URL is not configured');
+    bytes = await fetchBoundedFile(new URL(fileUrl, baseUrl || undefined).href, provider);
   }
 
   const safeFileName = fileName.replace(/[^\p{L}\p{N}._ -]/gu, '_').slice(0, 150) || 'file';

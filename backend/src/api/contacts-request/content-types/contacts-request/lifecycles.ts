@@ -15,6 +15,7 @@ interface ContactsRequestLifecycleEvent {
 interface RequestedServicesMessageFile {
   name?: string | null;
   url?: string | null;
+  provider?: string | null;
 }
 
 interface ContactsRequestEntry {
@@ -50,7 +51,9 @@ const notify = async (entry: ContactsRequestEntry): Promise<void> => {
     "<b>Yangi Ariza keldi</b>",
     "",
     `<b>Topic:</b> ${escapeTelegramHtml(clip(entry.TopicInput, 200))}`,
-    `<b>Message:</b> ${escapeTelegramHtml(clip(entry.requestedServicesMessageInput, 2500))}`,
+    // The only multi-line field: quoted, so lines inside it cannot pass for
+    // the fields below (single-line fields refuse line breaks).
+    `<b>Message:</b><blockquote>${escapeTelegramHtml(clip(entry.requestedServicesMessageInput, 2500))}</blockquote>`,
     `<b>Full name:</b> ${escapeTelegramHtml(clip(entry.FullName, 150))}`,
     `<b>Job title:</b> ${escapeTelegramHtml(clip(entry.JobTitle, 150))}`,
     `<b>Company:</b> ${escapeTelegramHtml(clip(entry.Company, 150))}`,
@@ -61,7 +64,7 @@ const notify = async (entry: ContactsRequestEntry): Promise<void> => {
   await sendTelegramMessage(message);
 
   if (file?.url) {
-    await sendTelegramDocument(file.url, file.name || "document");
+    await sendTelegramDocument(file.url, file.name || "document", file.provider || "local");
   }
 };
 

@@ -74,7 +74,7 @@ usePageSeo({
             </div>
           </template>
           <div>
-            <HomeNumberText :section="landingPage?.section2" :partner-logos="partnerLogos" :collage-rows="brandCollageRows" />
+            <HomeNumberText :partner-logos="partnerLogos" :collage-rows="brandCollageRows" />
           </div>
         </HeroClientsReveal>
         <div class="home-info-picture"><InfoOnPicture :section="landingPage?.section10" /></div>

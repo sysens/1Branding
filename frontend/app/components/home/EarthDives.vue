@@ -178,14 +178,15 @@ type Card = {
   icon: Media | null;
 };
 
+type Section4 = {
+  title?: string;
+  cards?: Card[];
+};
+
 type GqlRes = {
   data?: {
-    oneGuarantee?: {
-      section4?: {
-        title?: string;
-        cards?: Card[];
-      } | null;
-    } | null;
+    oneGuarantee?: { section4?: Section4 | null } | null;
+    fallbackOneGuarantee?: { section4?: Section4 | null } | null;
   };
   errors?: Array<{ message: string }>;
 };
@@ -197,6 +198,17 @@ const gqlLocale = computed<AppLocale>(() =>
 const query = `
   query OneGuaranteeSection4($locale: I18NLocaleCode) {
     oneGuarantee(locale: $locale) {
+      section4 {
+        title
+        cards {
+          title
+          description
+          icon { url }
+        }
+      }
+    }
+    # The CMS has no Russian entry yet: fall back to English so the cards are not empty.
+    fallbackOneGuarantee: oneGuarantee(locale: "en") {
       section4 {
         title
         cards {
@@ -229,11 +241,13 @@ const { data } = await useAsyncData<GqlRes | null>(
 const section4 = computed(
   () => props.section ?? data.value?.data?.oneGuarantee?.section4 ?? null
 );
+const fallbackSection4 = computed(() => data.value?.data?.fallbackOneGuarantee?.section4 ?? null);
 
+// The heading keeps its i18n copy; only the cards come from the English entry.
 const sectionTitle = computed(() => section4.value?.title || t("home.earthDives.title"));
 
 const cards = computed<Card[]>(() =>
-  (section4.value?.cards ?? []).map((card) => ({
+  ((section4.value?.cards?.length ? section4.value.cards : fallbackSection4.value?.cards) ?? []).map((card) => ({
     title: card.title ?? "",
     description: card.description ?? "",
     icon: card.icon?.url ? { url: card.icon.url } : null,

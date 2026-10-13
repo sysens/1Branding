@@ -159,12 +159,24 @@ type GqlRes = {
     oneGuarantee?: {
       section6?: Section6 | null;
     } | null;
+    fallbackOneGuarantee?: {
+      section6?: Section6 | null;
+    } | null;
   };
 };
 
 const query = `
   query Section6($locale: I18NLocaleCode) {
     oneGuarantee(locale: $locale) {
+      section6 {
+        title
+        text
+        buttonText
+        buttonUrl
+      }
+    }
+    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
+    fallbackOneGuarantee: oneGuarantee(locale: "en") {
       section6 {
         title
         text
@@ -185,7 +197,8 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
 
 const section6 = computed(
   () =>
-    data.value?.data?.oneGuarantee?.section6 ?? {
+    data.value?.data?.oneGuarantee?.section6 ??
+    data.value?.data?.fallbackOneGuarantee?.section6 ?? {
       title: "",
       text: "",
       buttonText: "",

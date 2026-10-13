@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import ManifestoScroll from "./ManifestoScroll.vue";
 import ThreeLayer from "./threeLayer.vue";
-import type { LandingSection2 } from "~/types/landingPayload";
 
 withDefaults(
   defineProps<{
     collageRows?: string[][];
     partnerLogos?: string[];
-    section?: LandingSection2 | null;
   }>(),
   {
     collageRows: () => [],
     partnerLogos: () => [],
-    section: null,
   },
 );
 </script>

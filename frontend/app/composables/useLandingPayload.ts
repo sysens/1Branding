@@ -8,7 +8,7 @@ import type {
 } from "~/types/landingPayload";
 
 const LANDING_PAYLOAD_QUERY = `
-  query LandingPayload($locale: I18NLocaleCode) {
+  query LandingPayload($locale: I18NLocaleCode, $withFallback: Boolean!) {
     seo(locale: $locale) {
       landingPage {
         title
@@ -16,39 +16,7 @@ const LANDING_PAYLOAD_QUERY = `
       }
     }
     landingPage(locale: $locale) {
-      heroSlogan {
-        mutedText
-        mainText
-        accentText
-      }
-      slogan { alternativeText caption }
-      sloganMobile { alternativeText caption }
-      section2 {
-        title
-        description
-      }
-      section3 {
-        partnersLogo { url }
-      }
-      brandCollage {
-        row1 { url formats }
-        row2 { url formats }
-        row3 { url formats }
-      }
-      section5 {
-        title
-        subTitle
-      }
-      section10 {
-        title
-        description
-        image { url }
-      }
-      splineRobot {
-        title
-        description
-        sceneUrl
-      }
+      ...LandingPageFields
     }
     footer(locale: $locale) {
       socialMedia {
@@ -56,6 +24,46 @@ const LANDING_PAYLOAD_QUERY = `
         behanceLink
         telegramLink
       }
+    }
+    # The CMS has no Russian entry yet: fall back to English so the landing is not empty.
+    # Not requested for English itself, so this (inlined) payload is not sent twice.
+    fallbackLandingPage: landingPage(locale: "en") @include(if: $withFallback) {
+      ...LandingPageFields
+    }
+    fallbackFooter: footer(locale: "en") @include(if: $withFallback) {
+      socialMedia {
+        instagramLink
+        behanceLink
+        telegramLink
+      }
+    }
+  }
+
+  fragment LandingPageFields on LandingPage {
+    heroSlogan {
+      mutedText
+      mainText
+      accentText
+    }
+    slogan { alternativeText caption }
+    sloganMobile { alternativeText caption }
+    section3 {
+      partnersLogo { url }
+    }
+    brandCollage {
+      row1 { url formats }
+      row2 { url formats }
+      row3 { url formats }
+    }
+    section10 {
+      title
+      description
+      image { url }
+    }
+    splineRobot {
+      title
+      description
+      sceneUrl
     }
   }
 `;
@@ -85,7 +93,7 @@ const fetchLandingPayloadCached = (graphqlUrl: string, gqlLocale: AppLocale) => 
     headers: { "Content-Type": "application/json" },
     body: {
       query: LANDING_PAYLOAD_QUERY,
-      variables: { locale: gqlLocale },
+      variables: { locale: gqlLocale, withFallback: gqlLocale !== "en" },
     },
   });
 
@@ -112,10 +120,21 @@ export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
     : { data: emptyData };
 
   return {
-    landingPage: computed(() => data.value?.data?.landingPage ?? null),
+    landingPage: computed(() => {
+      const own = data.value?.data?.landingPage;
+      if (own) return own;
+      const fallback = data.value?.data?.fallbackLandingPage;
+      // section10's heading and text have i18n copy (BrandGallery), which reads
+      // better on a page in another language than the English CMS text.
+      return fallback ? { ...fallback, section10: null } : null;
+    }),
+    // No English fallback: the page's own i18n title/description fill an empty SEO entry.
     seo: computed(() => data.value?.data?.seo?.landingPage ?? null),
     footerSocialMedia: computed(
-      () => data.value?.data?.footer?.socialMedia ?? null
+      () =>
+        data.value?.data?.footer?.socialMedia ??
+        data.value?.data?.fallbackFooter?.socialMedia ??
+        null
     ),
   };
 };

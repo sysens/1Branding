@@ -39,18 +39,19 @@ const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
 
+type Section3 = {
+  comment?: Array<{
+    id: string;
+    authorFullName: string;
+    authorQuote: string;
+    authorPosition: string;
+  }>;
+};
+
 type GqlRes = {
   data?: {
-    oneGuarantee?: {
-      section3?: {
-        comment?: Array<{
-          id: string;
-          authorFullName: string;
-          authorQuote: string;
-          authorPosition: string;
-        }>;
-      } | null;
-    } | null;
+    oneGuarantee?: { section3?: Section3 | null } | null;
+    fallbackOneGuarantee?: { section3?: Section3 | null } | null;
   };
   errors?: Array<{ message: string }>;
 };
@@ -58,6 +59,17 @@ type GqlRes = {
 const query = `
   query OneGuaranteeComments($locale: I18NLocaleCode) {
     oneGuarantee(locale: $locale) {
+      section3 {
+        comment {
+          id
+          authorFullName
+          authorQuote
+          authorPosition
+        }
+      }
+    }
+    # The CMS has no Russian entry yet: fall back to English so the reviews are not empty.
+    fallbackOneGuarantee: oneGuarantee(locale: "en") {
       section3 {
         comment {
           id
@@ -80,7 +92,8 @@ const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
 });
 
 const apiItems = computed<MarqueeItem[]>(() => {
-  const list = data.value?.data?.oneGuarantee?.section3?.comment ?? [];
+  const own = data.value?.data?.oneGuarantee?.section3?.comment ?? [];
+  const list = own.length ? own : data.value?.data?.fallbackOneGuarantee?.section3?.comment ?? [];
   return list
     .filter((c) => (c?.authorQuote || "").trim().length)
     .map((c) => ({
