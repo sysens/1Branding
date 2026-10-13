@@ -139,14 +139,7 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
+const { locale } = useI18n();
 type Section6 = {
   title: string;
   text: string;
@@ -154,51 +147,12 @@ type Section6 = {
   buttonUrl: string;
 };
 
-type GqlRes = {
-  data?: {
-    oneGuarantee?: {
-      section6?: Section6 | null;
-    } | null;
-    fallbackOneGuarantee?: {
-      section6?: Section6 | null;
-    } | null;
-  };
-};
-
-const query = `
-  query Section6($locale: I18NLocaleCode) {
-    oneGuarantee(locale: $locale) {
-      section6 {
-        title
-        text
-        buttonText
-        buttonUrl
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
-    fallbackOneGuarantee: oneGuarantee(locale: "en") {
-      section6 {
-        title
-        text
-        buttonText
-        buttonUrl
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
-  key: computed(() => `one-guarantee-section6-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
+const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
 const section6 = computed(
   () =>
-    data.value?.data?.oneGuarantee?.section6 ??
-    data.value?.data?.fallbackOneGuarantee?.section6 ?? {
+    guarantee.value?.section6 ??
+    fallbackGuarantee.value?.section6 ?? {
       title: "",
       text: "",
       buttonText: "",

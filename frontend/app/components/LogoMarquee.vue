@@ -140,7 +140,7 @@ const onResize = () => { void fillAndLoop(); };
 onMounted(() => {
   const start = () => { void fillAndLoop(); };
   if ("requestIdleCallback" in window) window.requestIdleCallback(start, { timeout: 1500 });
-  else window.setTimeout(start, 200);
+  else globalThis.setTimeout(start, 200);
   window.addEventListener("resize", onResize, { passive: true });
 });
 onBeforeUnmount(() => window.removeEventListener("resize", onResize));
@@ -167,8 +167,8 @@ const shuffledForColumn = (logos: readonly string[], colIdx: number, count: numb
   const arr = [...logos];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
-    const tmp = arr[i];
-    arr[i] = arr[j];
+    const tmp = arr[i]!;
+    arr[i] = arr[j]!;
     arr[j] = tmp;
   }
   // Columns longer than the logo list repeat it in the same shuffled order.

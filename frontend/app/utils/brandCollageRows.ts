@@ -71,7 +71,7 @@ const shuffleArray = (arr: string[], seed: number): string[] => {
 
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    [copy[i], copy[j]] = [copy[j]!, copy[i]!];
   }
 
   return copy;
@@ -111,12 +111,12 @@ const spreadDuplicates = (arr: string[], seed: number): string[] => {
           .filter((candidate) => candidate.index !== i && candidate.value !== result[i - 1]);
 
         if (candidates.length) {
-          swapIndex = candidates[Math.floor(rand() * candidates.length)].index;
+          swapIndex = candidates[Math.floor(rand() * candidates.length)]!.index;
         }
       }
 
       if (swapIndex !== -1) {
-        [result[i], result[swapIndex]] = [result[swapIndex], result[i]];
+        [result[i], result[swapIndex]] = [result[swapIndex]!, result[i]!];
         changed = true;
       }
     }

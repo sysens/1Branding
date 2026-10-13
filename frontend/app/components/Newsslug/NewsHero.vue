@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, nextTick, computed } from "vue";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 let ctx: any = null;
 
@@ -37,8 +36,7 @@ type NewsItem = {
 };
 
 const props = defineProps<{ news: NewsItem | null }>();
-const graphqlUrl = String(useRuntimeConfig().public.graphqlUrl || "");
-const resolveImage = (url?: string | null) => resolveStrapiMediaUrl(url, graphqlUrl);
+const resolveImage = useCmsMedia();
 
 const title = computed(() => (props.news?.title ?? "").toString());
 const text = computed(() => (props.news?.text ?? "").toString());

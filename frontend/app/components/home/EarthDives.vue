@@ -157,8 +157,6 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { t, locale } = useI18n();
 
 const props = withDefaults(
@@ -183,65 +181,12 @@ type Section4 = {
   cards?: Card[];
 };
 
-type GqlRes = {
-  data?: {
-    oneGuarantee?: { section4?: Section4 | null } | null;
-    fallbackOneGuarantee?: { section4?: Section4 | null } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
-const query = `
-  query OneGuaranteeSection4($locale: I18NLocaleCode) {
-    oneGuarantee(locale: $locale) {
-      section4 {
-        title
-        cards {
-          title
-          description
-          icon { url }
-        }
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the cards are not empty.
-    fallbackOneGuarantee: oneGuarantee(locale: "en") {
-      section4 {
-        title
-        cards {
-          title
-          description
-          icon { url }
-        }
-      }
-    }
-  }
-`;
-
-const { data } = await useAsyncData<GqlRes | null>(
-  () => `one-guarantee-section4-${gqlLocale.value}`,
-  async () => {
-    if (props.section || !GRAPHQL_URL) return null;
-
-    return await $fetch<GqlRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
-        query,
-        variables: { locale: gqlLocale.value },
-      },
-    });
-  },
-  { watch: [gqlLocale] }
-);
+const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
 const section4 = computed(
-  () => props.section ?? data.value?.data?.oneGuarantee?.section4 ?? null
+  () => props.section ?? guarantee.value?.section4 ?? null
 );
-const fallbackSection4 = computed(() => data.value?.data?.fallbackOneGuarantee?.section4 ?? null);
+const fallbackSection4 = computed(() => fallbackGuarantee.value?.section4 ?? null);
 
 // The heading keeps its i18n copy; only the cards come from the English entry.
 const sectionTitle = computed(() => section4.value?.title || t("home.earthDives.title"));
@@ -270,14 +215,7 @@ const displayCards = computed<Card[]>(() => {
   return [...cmsCards, ...fallbackCards.value].slice(0, 3);
 });
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveMedia = useCmsMedia();
 </script>
 
 <template>

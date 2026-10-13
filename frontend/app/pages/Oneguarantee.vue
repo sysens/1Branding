@@ -16,9 +16,9 @@ interface LenisController {
   ) => void;
 }
 
-interface LenisAwareNuxtApp extends ReturnType<typeof useNuxtApp> {
+type LenisAwareNuxtApp = ReturnType<typeof useNuxtApp> & {
   $lenis?: LenisController;
-}
+};
 
 const { t } = useI18n();
 

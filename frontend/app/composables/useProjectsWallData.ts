@@ -1,7 +1,4 @@
 import { computed, type ComputedRef } from "vue";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
-
-type AppLocale = "ru" | "en";
 
 type ProjectMedia = {
   url?: string | null;
@@ -54,39 +51,29 @@ const PROJECTS_WALL_QUERY = `
 `;
 
 export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
-  const runtimeConfig = useRuntimeConfig();
-  const graphqlUrl = String(runtimeConfig.public.graphqlUrl || "");
+  const graphqlUrl = useGraphqlUrl();
+  const cmsMedia = useCmsMedia();
   const localePath = useLocalePath();
-  const { locale } = useI18n();
-  const gqlLocale = computed<AppLocale>(() =>
-    locale.value === "en" ? "en" : "ru"
-  );
+  const gqlLocale = useCmsLocale();
 
   const fetchProjects = async (
-    localeValue: AppLocale
+    localeValue: CmsLocale
   ): Promise<ProjectNode[]> => {
     if (!graphqlUrl) return [];
 
-    const response = await $fetch<ProjectsWallResponse>(graphqlUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
-        query: PROJECTS_WALL_QUERY,
-        variables: { locale: localeValue },
-      },
-    });
+    const response = await cmsRequest<NonNullable<ProjectsWallResponse["data"]>>(graphqlUrl, PROJECTS_WALL_QUERY, { locale: localeValue });
 
-    if (response.errors?.length && !response.data?.projectsPages_connection) {
+    if (response?.errors?.length && !response.data?.projectsPages_connection) {
       throw new Error(response.errors.map((error) => error.message).join("; "));
     }
 
-    return (response.data?.projectsPages_connection?.nodes ?? []).filter(
+    return (response?.data?.projectsPages_connection?.nodes ?? []).filter(
       (node): node is ProjectNode => node !== null
     );
   };
 
   const { data } = await useAsyncData<ProjectNode[]>(
-    "projects-wall-data",
+    () => `projects-wall-${gqlLocale.value}`,
     async () => {
       const localized = await fetchProjects(gqlLocale.value);
       if (localized.length || gqlLocale.value === "en") return localized;
@@ -94,7 +81,6 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
     },
     {
       default: () => [],
-      watch: [gqlLocale],
     }
   );
 
@@ -102,10 +88,7 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
     data.value
       .map((project) => {
         const id = project.documentId?.trim() || "";
-        const image = resolveStrapiMediaUrl(
-          project.section1?.images?.[0]?.url,
-          graphqlUrl
-        );
+        const image = cmsMedia(project.section1?.images?.[0]?.url);
 
         if (!id || !image) return null;
 

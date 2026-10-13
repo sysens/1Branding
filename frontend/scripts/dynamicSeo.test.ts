@@ -19,14 +19,14 @@ describe("dynamic route metadata", () => {
     const page = await scriptOf(routeFiles[0]!);
     const hero = await scriptOf("app/components/Newsslug/NewsHero.vue");
     const template = (await Bun.file(routeFiles[0]!).text());
-    expect((page.match(/await useFetch</g) || [])).toHaveLength(1);
+    expect((page.match(/await useCmsQuery</g) || [])).toHaveLength(1);
     expect(hero).not.toContain("useFetch");
     expect(hero).not.toContain("$fetch");
     expect(template).toContain('<NewsHero :news="news" />');
     expect(page).toContain('"@type": "NewsArticle"');
     expect(page).toContain("datePublished");
     expect(page).toContain("dateModified");
-    expect(page).toContain("resolveStrapiMediaUrl");
+    expect(page).toContain("useCmsMedia()");
     expect(page).toContain('type: "article"');
     expect(page).toContain("!!data.value?.data?.newsPage");
     expect(page).toContain("statusCode: 404");
@@ -39,7 +39,7 @@ describe("dynamic route metadata", () => {
       const script = await scriptOf(file);
       expect(script).toContain("usePageSeo({");
       expect(script).toContain("image: seoImage");
-      expect(script).toContain("resolveStrapiMediaUrl");
+      expect(script).toContain("useCmsMedia()");
       expect(script).toContain('"preview" in route.query');
       expect(script).toContain('"draft" in route.query');
       expect(script).toMatch(/!!(?:data|gqlData)\.value\?\.data\?\.(?:projectsPage|category)/);

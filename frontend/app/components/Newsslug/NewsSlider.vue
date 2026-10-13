@@ -3,33 +3,6 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from "vue"
 
 type AppLocale = "ru" | "en";
 
-type ImageType = { url: string | null };
-type NewsNode = {
-  documentId: string;
-  title: string;
-  createdAt?: string | null;
-  publishedAt?: string | null;
-  updatedAt?: string | null;
-  image: ImageType | null;
-};
-
-type PageInfo = {
-  page?: number;
-  pageSize?: number;
-  pageCount?: number;
-  total?: number;
-} | null;
-
-type NewsConn = {
-  nodes?: NewsNode[];
-  pageInfo?: PageInfo;
-};
-
-type GqlRes = {
-  data?: { newsPages_connection?: NewsConn | null };
-  errors?: Array<{ message: string }>;
-};
-
 const root = ref<HTMLElement | null>(null);
 
 const [container, slider] = useKeenSlider({
@@ -149,86 +122,21 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-const fallbackLocale: AppLocale = "en";
+const locale = useCmsLocale();
+const fetchNewsPage = useNewsPages();
+const resolveImage = useCmsMedia();
+const formatDate = formatNewsDate;
+const pickDate = newsDate;
 
 const pageSize = 10;
 const items = ref<NewsNode[]>([]);
-const pageInfo = ref<PageInfo>(null);
+const pageInfo = ref<NewsPageInfo>(null);
 
-const query = `
-  query NewsPagesConnection($page: Int!, $pageSize: Int!, $locale: I18NLocaleCode) {
-    newsPages_connection(
-      locale: $locale
-      pagination: { page: $page, pageSize: $pageSize }
-    ) {
-      nodes {
-        documentId
-        title
-        createdAt
-        publishedAt
-        updatedAt
-        image { url }
-      }
-      pageInfo {
-        page
-        pageSize
-        pageCount
-        total
-      }
-    }
-  }
-`;
-
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveImage = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  const base = apiBase.value;
-  if (url.startsWith("/")) return base + url;
-  return base + "/" + url;
-};
-
-const formatDate = (iso?: string | null) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}.${mm}.${yyyy}`;
-};
-
-const pickDate = (n: NewsNode) => n.createdAt || n.publishedAt || n.updatedAt || "";
-
-const fetchPageByLocale = async (p: number, localeValue: AppLocale) => {
-  if (!GRAPHQL_URL) return { nodes: [], pi: null as PageInfo };
-
-  const res = await $fetch<GqlRes>(GRAPHQL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: { query, variables: { page: p, pageSize, locale: localeValue } },
-  });
-
-  const nodes = res?.data?.newsPages_connection?.nodes ?? [];
-  const pi = res?.data?.newsPages_connection?.pageInfo ?? null;
-  return { nodes, pi };
-};
-
+// Own language first; English when the CMS has no news in it.
 const fetchPage = async (p: number) => {
-  const current = await fetchPageByLocale(p, gqlLocale.value);
-
-  if (current.nodes.length || gqlLocale.value === fallbackLocale) {
-    return current;
-  }
-
-  return await fetchPageByLocale(p, fallbackLocale);
+  const current = await fetchNewsPage(p, pageSize, locale.value);
+  if (current.nodes.length || locale.value === "en") return current;
+  return await fetchNewsPage(p, pageSize, "en");
 };
 
 const localePath = useLocalePath();
@@ -260,9 +168,9 @@ const collectFromPages = async (startPage: number, maxPages: number, need: numbe
 
 const initItems = async () => {
   const first = await fetchPage(1);
-  pageInfo.value = first.pi;
+  pageInfo.value = first.pageInfo;
 
-  const max = Number(first.pi?.pageCount ?? 1) || 1;
+  const max = Number(first.pageInfo?.pageCount ?? 1) || 1;
   const randomPage = Math.floor(Math.random() * max) + 1;
 
   const filled = await collectFromPages(randomPage, max, pageSize);
@@ -276,7 +184,7 @@ onMounted(async () => {
   await initItems();
 });
 
-watch(gqlLocale, async () => {
+watch(locale, async () => {
   await initItems();
 });
 </script>

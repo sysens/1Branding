@@ -114,15 +114,7 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
+const { locale } = useI18n();
 type ImageType = {
   url: string | null;
   alternativeText?: string | null;
@@ -152,59 +144,11 @@ type AboutPage = {
   section3: Section3 | null;
 };
 
-type GqlRes = {
-  data?: {
-    aboutPage?: AboutPage | null;
-    fallbackAboutPage?: AboutPage | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const query = `
-  query AboutPage($locale: I18NLocaleCode) {
-    aboutPage(locale: $locale) {
-      documentId
-      section2 {
-        title
-        text
-        image { url alternativeText }
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
-    fallbackAboutPage: aboutPage(locale: "en") {
-      documentId
-      section2 {
-        title
-        text
-        image { url alternativeText }
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  key: computed(() => `about-core-ideas-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
-
-const aboutPage = computed(() => data.value?.data?.aboutPage ?? data.value?.data?.fallbackAboutPage ?? null);
+const { aboutPage } = await useAboutPage();
 
 const section2 = computed(() => aboutPage.value?.section2 ?? []);
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveImage = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveImage = useCmsMedia();
 
 const section2WithImages = computed(() =>
   section2.value.map((item) => ({

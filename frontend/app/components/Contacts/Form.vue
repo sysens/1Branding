@@ -9,44 +9,12 @@ let observer: IntersectionObserver | null = null;
 let ctx: any = null;
 let inited = false;
 
-type ContactsPageGql = {
-  data?: {
-    contactsPage?: {
-      section2?: { title?: string | null; text?: string | null } | null;
-    } | null;
-  };
-};
+const GRAPHQL_URL = useGraphqlUrl();
 
-const config = useRuntimeConfig();
-const GRAPHQL_URL = (config.public.graphqlUrl as string) || "";
+const { t } = useI18n();
+const { own: contactsPage } = await useContactsPage();
 
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
-const CONTACTS_PAGE_QUERY = `
-query ContactFormCopy($locale: I18NLocaleCode) {
-  contactsPage(locale: $locale) {
-    section2 { title text }
-  }
-}
-`;
-
-const { data: gqlRes } = await useAsyncData<ContactsPageGql>(
-  () => `contact-form-copy-${gqlLocale.value}`,
-  async () => {
-    if (!GRAPHQL_URL) return {};
-    return await $fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: CONTACTS_PAGE_QUERY, variables: { locale: gqlLocale.value } },
-    });
-  },
-  { watch: [gqlLocale] }
-);
-
-const formCopy = computed(() => gqlRes.value?.data?.contactsPage?.section2);
+const formCopy = computed(() => contactsPage.value?.section2);
 const formTitle = computed(() => formCopy.value?.title || t("contacts.form.title"));
 const formDescription = computed(() => formCopy.value?.text || t("contacts.form.description"));
 const topicTitle = computed(() => t("contacts.form.topicTitle"));

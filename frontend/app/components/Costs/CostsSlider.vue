@@ -81,17 +81,8 @@ type PriceCategoriesResponse = {
 
 const { locale } = useI18n();
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = runtimeConfig.public.graphqlUrl as string;
-
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
-const fallbackLocale: AppLocale = "en";
-
 const query = `
-  query PriceCategories($locale: I18NLocaleCode!, $fallbackLocale: I18NLocaleCode!) {
+  query PriceCategories($locale: I18NLocaleCode!, $withFallback: Boolean!) {
     priceCategories(locale: $locale) {
       title
       pricing {
@@ -101,7 +92,7 @@ const query = `
         description
       }
     }
-    fallbackPriceCategories: priceCategories(locale: $fallbackLocale) {
+    fallbackPriceCategories: priceCategories(locale: "en") @include(if: $withFallback) {
       title
       pricing {
         title
@@ -113,21 +104,7 @@ const query = `
   }
 `;
 
-const { data: priceRes } = await useFetch<PriceCategoriesResponse>(GRAPHQL_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: computed(() => ({
-    query,
-    variables: {
-      locale: gqlLocale.value,
-      fallbackLocale,
-    },
-  })),
-  key: computed(() => `price-categories-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
+const { data: priceRes } = await useCmsQuery<NonNullable<PriceCategoriesResponse["data"]>>("price-categories", query);
 
 const priceCategories = computed<PriceCategory[]>(() => {
   const current = priceRes.value?.data?.priceCategories || [];

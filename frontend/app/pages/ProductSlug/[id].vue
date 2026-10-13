@@ -3,12 +3,11 @@ import Spinner from "~/components/Spinner.vue";
 import ProductsMain from "~/components/Products/Productsmain.vue";
 import { onMounted, onBeforeUnmount, nextTick, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 type AppLocale = "ru" | "en";
 
 const route = useRoute();
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
+const { t, locale } = useI18n();
 
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
@@ -69,8 +68,8 @@ const stabilizeAfterAssets = async () => {
   await refreshLenis();
 };
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const GRAPHQL_URL = useGraphqlUrl();
+const cmsMedia = useCmsMedia();
 
 type Media = { url: string | null };
 
@@ -99,8 +98,6 @@ type GqlRes = {
 };
 
 const categoryId = computed(() => String(route.params.id || "").trim());
-const fallbackLocale: AppLocale = "en";
-
 definePageMeta({ key: (route) => route.fullPath });
 if (!categoryId.value) {
   throw createError({ statusCode: 404, statusMessage: "Category not found" });
@@ -145,35 +142,17 @@ const query = `
   }
 `;
 
-const { data: gqlData, error, pending } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: {
-      documentId: categoryId.value,
-      locale: gqlLocale.value,
-      fallbackLocale,
-    },
-  })),
-  key: computed(
-    () => `productslug-category-${categoryId.value}-${String(gqlLocale.value)}`
-  ),
-  watch: [categoryId, gqlLocale],
-});
+const { data: gqlData, error, pending } = await useCmsQuery<NonNullable<GqlRes["data"]>>(
+  () => `category-${categoryId.value}`,
+  query,
+  { variables: () => ({ documentId: categoryId.value }) }
+);
 
 const gqlErrors = computed(
   () => gqlData.value?.errors?.map((e) => e.message).join(" | ") || ""
 );
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveMedia = cmsMedia;
 
 const category = computed(
   () => gqlData.value?.data?.category ?? gqlData.value?.data?.fallbackCategory ?? null
@@ -194,11 +173,10 @@ const pageDesc = computed(
   () => category.value?.description || t("productSlug.descFallback")
 );
 
-const seoImage = computed(() => resolveStrapiMediaUrl(
+const seoImage = computed(() => cmsMedia(
   category.value?.projects_connection?.nodes?.find(
     (project) => project?.section1?.images?.some((media) => !!media?.url)
-  )?.section1?.images?.find((media) => !!media?.url)?.url,
-  GRAPHQL_URL
+  )?.section1?.images?.find((media) => !!media?.url)?.url
 ));
 
 const localePath = useLocalePath();
@@ -262,7 +240,7 @@ onMounted(async () => {
       { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
     );
 
-    gsap.fromTo(
+    if (second) gsap.fromTo(
       second,
       { x: 160, opacity: 0 },
       { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }

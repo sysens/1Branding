@@ -1,6 +1,5 @@
-import { computed, ref, type ComputedRef, type Ref } from "vue";
+import { computed, type ComputedRef } from "vue";
 import type {
-  AppLocale,
   FooterSocialMediaLinks,
   LandingPageContent,
   LandingPayloadResponse,
@@ -74,56 +73,10 @@ type LandingPayloadResult = {
   footerSocialMedia: ComputedRef<FooterSocialMediaLinks | null>;
 };
 
-// Strapi GraphQL sekin javob beradi; bir xil so'rov 60 sekund davomida
-// xotiradan o'qiladi (SSR + client), TTFB barqaror bo'ladi
-const LANDING_PAYLOAD_TTL_MS = 60_000;
-const payloadCache = new Map<string, { expiresAt: number; payload: Promise<LandingPayloadResponse> }>();
-
-const fetchLandingPayloadCached = (graphqlUrl: string, gqlLocale: AppLocale) => {
-  const key = `${graphqlUrl}::${gqlLocale}`;
-  const now = Date.now();
-  const cached = payloadCache.get(key);
-
-  if (cached && cached.expiresAt > now) {
-    return cached.payload;
-  }
-
-  const payload = $fetch<LandingPayloadResponse>(graphqlUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: {
-      query: LANDING_PAYLOAD_QUERY,
-      variables: { locale: gqlLocale, withFallback: gqlLocale !== "en" },
-    },
-  });
-
-  // Neither a failed request nor a GraphQL error answer is kept for the next visitor.
-  payload.then(
-    (response) => {
-      if (response?.errors?.length) payloadCache.delete(key);
-    },
-    () => payloadCache.delete(key)
-  );
-
-  payloadCache.set(key, { expiresAt: now + LANDING_PAYLOAD_TTL_MS, payload });
-  return payload;
-};
-
+// The whole page is cached by the server (see pageCache in nuxt.config.ts),
+// so this query runs once per render and needs no cache of its own.
 export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
-  const runtimeConfig = useRuntimeConfig();
-  const graphqlUrl = String(runtimeConfig.public.graphqlUrl || "");
-  const { locale } = useI18n();
-  const gqlLocale = computed<AppLocale>(() =>
-    locale.value === "en" ? "en" : "ru"
-  );
-  const emptyData: Ref<LandingPayloadResponse | null> = ref(null);
-
-  const { data } = graphqlUrl
-    ? await useAsyncData<LandingPayloadResponse>(
-        () => `landing-payload-${gqlLocale.value}`,
-        () => fetchLandingPayloadCached(graphqlUrl, gqlLocale.value)
-      )
-    : { data: emptyData };
+  const { data } = await useCmsQuery<NonNullable<LandingPayloadResponse["data"]>>("landing-payload", LANDING_PAYLOAD_QUERY);
 
   return {
     landingPage: computed(() => {

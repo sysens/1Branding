@@ -7,12 +7,11 @@ import ProjectBigPic from "~/components/ProjectSlug/ProjectBigPic.vue";
 import ProjectGrid from "~/components/ProjectSlug/ProjectGrid.vue";
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 import { isPlaceholderCopy } from "~/utils/seo";
 
 type AppLocale = "ru" | "en";
 
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
+const { t, locale } = useI18n();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
@@ -55,8 +54,8 @@ onBeforeUnmount(() => {
   ctx = null;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
+const GRAPHQL_URL = useGraphqlUrl();
+const cmsMedia = useCmsMedia();
 
 const route = useRoute();
 const documentId = computed(() => String(route.params.id || "").trim());
@@ -164,22 +163,11 @@ const query = `
   }
 `;
 
-const fallbackLocale: AppLocale = "en";
-
-const { data, error, pending } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: {
-      documentId: documentId.value,
-      locale: gqlLocale.value,
-      fallbackLocale,
-    },
-  })),
-  key: computed(() => `projects-page-${documentId.value}-${String(gqlLocale.value)}`),
-  watch: [documentId, gqlLocale],
-});
+const { data, error, pending } = await useCmsQuery<NonNullable<GqlRes["data"]>>(
+  () => `project-${documentId.value}`,
+  query,
+  { variables: () => ({ documentId: documentId.value }) }
+);
 
 const page = computed(
   () =>
@@ -208,9 +196,8 @@ const seoDescription = computed(() =>
     .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
   t("seo.projectDescription", { title: projectName.value || "OneBranding" })
 );
-const seoImage = computed(() => resolveStrapiMediaUrl(
-  section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url,
-  GRAPHQL_URL
+const seoImage = computed(() => cmsMedia(
+  section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url
 ));
 
 const localePath = useLocalePath();
@@ -242,14 +229,7 @@ usePageSeo({
   ),
 });
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveMedia = cmsMedia;
 
 const images = computed(() => {
   const nodes = section1.value?.images_connection?.nodes ?? [];

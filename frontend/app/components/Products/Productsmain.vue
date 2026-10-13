@@ -23,17 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   projects: null,
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveMedia = useCmsMedia();
 
 const allProjects = computed(() => {
   const nodes = props.projects ?? [];

@@ -8,7 +8,9 @@ import {
   watch,
   type CSSProperties,
 } from "vue";
-import type { TweenVars } from "gsap";
+
+// gsap declares its option types in a global namespace.
+type TweenVars = gsap.TweenVars;
 
 type SplitTextTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span";
 type SplitType = "chars" | "words" | "lines";

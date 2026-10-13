@@ -6,130 +6,18 @@ type AppLocale = "ru" | "en";
 const root = ref<HTMLElement | null>(null);
 let ctx: any = null;
 
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
+const { t, locale } = useI18n();
+const GRAPHQL_URL = useGraphqlUrl();
 
-type ContactsSection1 = {
-  title?: string;
-  location?: { title?: string; location?: string };
-  workingHours?: { title?: string; hour?: string };
-  contactInfo?: { phoneNumber?: string; websiteUrl?: string };
-  note?: { title?: string; text?: string };
-  downloadBrief?: { text?: string; file?: { url?: string } };
-};
+const { own: contactsPage, fallback: fallbackContactsPage } = await useContactsPage();
 
-type ContactsPageGql = {
-  data?: {
-    contactsPage?: { section1?: ContactsSection1 } | null;
-    fallbackContactsPage?: { section1?: ContactsSection1 } | null;
-  };
-};
+const { socialMedia } = await useFooterSocials();
 
-type FooterSocialMedia = {
-  telegramLink?: string | null;
-  instagramLink?: string | null;
-  behanceLink?: string | null;
-  linkedinLink?: string | null;
-};
-
-type FooterSocialsRes = {
-  data?: {
-    footer?: { socialMedia?: FooterSocialMedia | null } | null;
-    fallbackFooter?: { socialMedia?: FooterSocialMedia | null } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const config = useRuntimeConfig();
-const GRAPHQL_URL = (config.public.graphqlUrl as string) || "";
-
-const CONTACTS_PAGE_QUERY = `
-query ContactsPage($locale: I18NLocaleCode) {
-  contactsPage(locale: $locale) {
-    section1 {
-      title
-      location { title location }
-      workingHours { title hour }
-      contactInfo { phoneNumber websiteUrl }
-      note { title text }
-      downloadBrief {
-        text
-        file { url }
-      }
-    }
-  }
-  # The CMS has no Russian entry yet: fall back to English so the contact details are not empty.
-  fallbackContactsPage: contactsPage(locale: "en") {
-    section1 {
-      title
-      location { title location }
-      workingHours { title hour }
-      contactInfo { phoneNumber websiteUrl }
-      note { title text }
-      downloadBrief {
-        text
-        file { url }
-      }
-    }
-  }
-}
-`;
-
-const FOOTER_SOCIALS_QUERY = `
-query FooterSocials($locale: I18NLocaleCode) {
-  footer(locale: $locale) {
-    socialMedia {
-      telegramLink
-      instagramLink
-      behanceLink
-      linkedinLink
-    }
-  }
-  # The CMS has no Russian entry yet: fall back to English so the social links are not empty.
-  fallbackFooter: footer(locale: "en") {
-    socialMedia {
-      telegramLink
-      instagramLink
-      behanceLink
-      linkedinLink
-    }
-  }
-}
-`;
-
-const { data: gqlRes } = await useAsyncData<ContactsPageGql>(
-  () => `contacts-page-${gqlLocale.value}`,
-  async () => {
-    if (!GRAPHQL_URL) return {};
-    return await $fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: CONTACTS_PAGE_QUERY, variables: { locale: gqlLocale.value } },
-    });
-  },
-  { watch: [gqlLocale] }
-);
-
-const { data: footerGql } = await useAsyncData<FooterSocialsRes>(
-  () => `footer-socials-contacts-${gqlLocale.value}`,
-  async () => {
-    if (!GRAPHQL_URL) return {};
-    return await $fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: FOOTER_SOCIALS_QUERY, variables: { locale: gqlLocale.value } },
-    });
-  },
-  { watch: [gqlLocale] }
-);
-
-const section1 = computed(() => gqlRes.value?.data?.contactsPage?.section1);
+const section1 = computed(() => contactsPage.value?.section1);
 // Headings and notes keep their i18n copy when the locale has no entry; the
 // contact details themselves (address, hours, phone, site, brief file) are the
 // same in every language, so they come from the English entry instead.
-const fallbackSection1 = computed(() => gqlRes.value?.data?.fallbackContactsPage?.section1);
+const fallbackSection1 = computed(() => fallbackContactsPage.value?.section1);
 
 const addressTitle = computed(
   () => section1.value?.location?.title || t("contacts.addressTitle")
@@ -186,13 +74,6 @@ const briefFileUrl = computed(() => {
     return url;
   }
 });
-
-const socialMedia = computed(
-  () =>
-    footerGql.value?.data?.footer?.socialMedia ??
-    footerGql.value?.data?.fallbackFooter?.socialMedia ??
-    null
-);
 
 const telegramLink = computed(() => socialMedia.value?.telegramLink || "");
 const instagramLink = computed(() => socialMedia.value?.instagramLink || "");

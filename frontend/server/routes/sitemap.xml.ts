@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const xml = await buildSitemap(
       resolveSiteOrigin(event),
       String(config.public.graphqlUrl || ""),
-      (url, options) => $fetch(url, options)
+      (url, options) => ($fetch as unknown as (u: string, o: typeof options) => Promise<unknown>)(url, options) as never
     );
     setHeader(event, "Content-Type", "application/xml; charset=utf-8");
     setHeader(event, "Cache-Control", "public, max-age=300, s-maxage=300");

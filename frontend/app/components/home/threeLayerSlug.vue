@@ -14,14 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   durationSeconds: 200,
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const { locale } = useI18n();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-const fallbackLocale: AppLocale = "en";
-
 type Media = { url: string | null };
 
 type ProjectNode = {
@@ -53,7 +46,7 @@ type GqlRes = {
 };
 
 const query = `
-  query CategoriesConnection($locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+  query CategoriesConnection($locale: I18NLocaleCode, $withFallback: Boolean!) {
     categories_connection(locale: $locale) {
       nodes {
         categoryName
@@ -72,7 +65,7 @@ const query = `
         }
       }
     }
-    fallbackCategoriesConnection: categories_connection(locale: $fallbackLocale) {
+    fallbackCategoriesConnection: categories_connection(locale: "en") @include(if: $withFallback) {
       nodes {
         categoryName
         projects_connection(
@@ -93,25 +86,9 @@ const query = `
   }
 `;
 
-const { data: gqlData } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value, fallbackLocale },
-  })),
-  key: computed(() => `categories-connection-marquee-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
+const { data: gqlData } = await useCmsQuery<NonNullable<GqlRes["data"]>>("categories-marquee", query);
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveMedia = useCmsMedia();
 
 const localePath = useLocalePath();
 const router = useRouter();

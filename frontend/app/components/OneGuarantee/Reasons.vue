@@ -101,67 +101,14 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
+const { t, locale } = useI18n();
 
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
+type WhyItem = NonNullable<NonNullable<OneGuaranteeEntry["section5"]>["whyItWorks"]>[number];
 
-type WhyItem = {
-  text: string;
-  checkMark?: {
-    url?: string | null;
-  } | null;
-};
+const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
-type Section5 = {
-  title?: string;
-  whyItWorks?: WhyItem[];
-};
-
-type GqlRes = {
-  data?: {
-    oneGuarantee?: { section5?: Section5 } | null;
-    fallbackOneGuarantee?: { section5?: Section5 } | null;
-  };
-};
-
-const query = `
-  query Section5($locale: I18NLocaleCode) {
-    oneGuarantee(locale: $locale) {
-      section5 {
-        title
-        whyItWorks {
-          text
-          checkMark { url }
-        }
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the list is not empty.
-    fallbackOneGuarantee: oneGuarantee(locale: "en") {
-      section5 {
-        title
-        whyItWorks {
-          text
-          checkMark { url }
-        }
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
-  key: computed(() => `one-guarantee-section5-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
-
-const section5 = computed(() => data.value?.data?.oneGuarantee?.section5);
-const fallbackSection5 = computed(() => data.value?.data?.fallbackOneGuarantee?.section5);
+const section5 = computed(() => guarantee.value?.section5);
+const fallbackSection5 = computed(() => fallbackGuarantee.value?.section5);
 
 // The title keeps its i18n copy; only the list comes from the English entry.
 const title = computed(() => section5.value?.title || t("oneGuarantee.reasonsTitle"));
@@ -170,14 +117,7 @@ const items = computed<WhyItem[]>(() =>
   section5.value?.whyItWorks?.length ? section5.value.whyItWorks : fallbackSection5.value?.whyItWorks || []
 );
 
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveImg = (url?: string | null) => {
-  if (!url) return "/OneGuarantee/subway_tick (1).png";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveImg = useCmsMedia();
 </script>
 
 <template>

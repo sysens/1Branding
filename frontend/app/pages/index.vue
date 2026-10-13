@@ -4,7 +4,6 @@ import { useSectionTitleReveal } from "~/composables/useSectionTitleReveal";
 import LeadingPage from "~/components/home/leadingPage.vue";
 import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 import { selectCollageSource } from "~/utils/collageMedia";
 import { cmsSeoText } from "~/utils/seo";
 import type { LandingMedia } from "~/types/landingPayload";
@@ -14,8 +13,7 @@ import type { LandingMedia } from "~/types/landingPayload";
 // start. Hydrating the whole page up front was one ~340ms main-thread task.
 const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = String(runtimeConfig.public.graphqlUrl || "");
+const cmsMedia = useCmsMedia();
 const { t, locale } = useI18n();
 const route = useRoute();
 const { landingPage, seo: landingSeo, footerSocialMedia } = await useLandingPayload();
@@ -27,12 +25,12 @@ const brandCollageRows = computed(() => {
   const collage = landingPage.value?.brandCollage;
   if (!collage) return [];
   const urls = (items?: LandingMedia[] | null) => (items ?? [])
-    .map(item => resolveStrapiMediaUrl(selectCollageSource(item), GRAPHQL_URL))
+    .map(item => cmsMedia(selectCollageSource(item)))
     .filter((url): url is string => Boolean(url));
   return [urls(collage.row1), urls(collage.row2), urls(collage.row3)];
 });
 const partnerLogos = computed(() => (landingPage.value?.section3?.partnersLogo ?? [])
-  .map(item => resolveStrapiMediaUrl(item.url ?? null, GRAPHQL_URL))
+  .map(item => cmsMedia(item.url ?? null))
   .filter((url): url is string => Boolean(url)));
 
 // CMS copy wins once an editor fills it in; scaffolding placeholders fall back to i18n.

@@ -40,63 +40,19 @@ onBeforeUnmount(() => {
   ctx = null;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
+const { locale } = useI18n();
 type AboutPage = {
   documentId: string;
   section1: { id: string; title: string; image: { url: string | null; alternativeText?: string | null } | null } | null;
   section3: { title: string; subTitle: string } | null;
 };
 
-type GqlRes = {
-  data?: { aboutPage?: AboutPage | null; fallbackAboutPage?: AboutPage | null };
-  errors?: Array<{ message: string }>;
-};
+const { aboutPage } = await useAboutPage();
 
-const query = `
-  query AboutPage($locale: I18NLocaleCode) {
-    aboutPage(locale: $locale) {
-      documentId
-      section1 { id title image { url alternativeText } }
-      section3 { title subTitle }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
-    fallbackAboutPage: aboutPage(locale: "en") {
-      documentId
-      section1 { id title image { url alternativeText } }
-      section3 { title subTitle }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  key: computed(() => `about-team-photo-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
-
-const aboutPage = computed(() => data.value?.data?.aboutPage ?? data.value?.data?.fallbackAboutPage ?? null);
 const section1 = computed(() => aboutPage.value?.section1 ?? null);
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
+const media = useCmsMedia();
 
-const imageSrc = computed(() => {
-  const url = section1.value?.image?.url;
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-});
+const imageSrc = computed(() => media(section1.value?.image?.url));
 </script>
 
 <template>

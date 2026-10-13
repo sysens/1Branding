@@ -2,7 +2,6 @@
 import { onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import NewsHero from "~/components/Newsslug/NewsHero.vue";
 import NewsSlider from "~/components/Newsslug/NewsSlider.vue";
-import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
 
 type AppLocale = "ru" | "en";
 type Media = { url?: string | null };
@@ -23,8 +22,8 @@ type NewsResponse = {
 
 const { t, locale } = useI18n();
 const route = useRoute();
-const runtimeConfig = useRuntimeConfig();
-const graphqlUrl = String(runtimeConfig.public.graphqlUrl || "");
+const graphqlUrl = useGraphqlUrl();
+const cmsMedia = useCmsMedia();
 const documentId = computed(() => String(route.params.id || "").trim());
 const gqlLocale = computed<AppLocale>(() => locale.value === "en" ? "en" : "ru");
 
@@ -54,16 +53,11 @@ const query = `
 `;
 
 // One SSR request supplies both the rendered article and its metadata.
-const { data, error } = await useFetch<NewsResponse>(graphqlUrl, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { documentId: documentId.value, locale: gqlLocale.value, fallbackLocale: "en" },
-  })),
-  key: computed(() => `news-page-${documentId.value}-${gqlLocale.value}`),
-  watch: [documentId, gqlLocale],
-});
+const { data, error } = await useCmsQuery<NonNullable<NewsResponse["data"]>>(
+  () => `news-page-${documentId.value}`,
+  query,
+  { variables: () => ({ documentId: documentId.value }) }
+);
 const news = computed(() => data.value?.data?.newsPage ?? data.value?.data?.fallbackNewsPage ?? null);
 
 if (error.value || (!news.value && (data.value?.errors?.length || !data.value?.data))) {
@@ -77,7 +71,7 @@ const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news.title")
 const seoDescription = computed(() =>
   (news.value?.text || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) || t("seo.news.description")
 );
-const seoImage = computed(() => resolveStrapiMediaUrl(news.value?.image?.url, graphqlUrl));
+const seoImage = computed(() => cmsMedia(news.value?.image?.url));
 const origin = useSiteOrigin();
 const localePath = useLocalePath();
 const canonical = computed(() => `${origin}${route.path}`);

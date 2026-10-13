@@ -71,10 +71,13 @@ export const usePageSeo = (input: PageSeoInput) => {
 
   const alternates = computed(() => {
     if (!withAlternates.value || !indexable.value) return [];
-    const links = (["ru", "en"] as const).map((code) => {
-      const path = switchLocalePath(code);
-      return path ? { rel: "alternate", hreflang: code, href: `${origin}${cleanPath(path)}`, key: `hreflang-${code}` } : null;
-    }).filter((link): link is NonNullable<typeof link> => !!link);
+    type AlternateLink = { rel: "alternate"; hreflang: string; href: string; key: string };
+    const links = (["ru", "en"] as const)
+      .map((code): AlternateLink | null => {
+        const path = switchLocalePath(code);
+        return path ? { rel: "alternate", hreflang: code, href: `${origin}${cleanPath(path)}`, key: `hreflang-${code}` } : null;
+      })
+      .filter((link): link is AlternateLink => !!link);
     const defaultLink = links.find((link) => link.hreflang === "en");
     if (defaultLink) links.push({ ...defaultLink, hreflang: "x-default", key: "hreflang-x-default" });
     return links;
@@ -122,7 +125,7 @@ export const usePageSeo = (input: PageSeoInput) => {
 
   useServerHead(() => ({
     link: [
-      ...(indexable.value ? [{ rel: "canonical", href: canonical.value, key: "canonical" }] : []),
+      ...(indexable.value ? [{ rel: "canonical" as const, href: canonical.value, key: "canonical" }] : []),
       ...alternates.value,
     ],
     script: jsonLd.value

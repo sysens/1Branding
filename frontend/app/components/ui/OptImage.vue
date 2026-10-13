@@ -44,8 +44,8 @@ const imgAttrs = computed(() => {
       v-bind="imgAttrs"
       :src="sources.fallback"
       :sizes="sizes"
-      :width="imgAttrs.width ?? sources.width"
-      :height="imgAttrs.height ?? sources.height"
+      :width="(imgAttrs.width as number | string | undefined) ?? sources.width"
+      :height="(imgAttrs.height as number | string | undefined) ?? sources.height"
       :style="style"
     >
   </picture>

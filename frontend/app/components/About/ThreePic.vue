@@ -151,14 +151,7 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
+const { locale } = useI18n();
 type ImageType = { url: string | null; alternativeText?: string | null };
 
 type Section3 = {
@@ -167,58 +160,11 @@ type Section3 = {
   creatorsImages: ImageType[] | null;
 };
 
-type GqlRes = {
-  data?: {
-    aboutPage?: {
-      section3?: Section3 | null;
-    } | null;
-    fallbackAboutPage?: {
-      section3?: Section3 | null;
-    } | null;
-  };
-};
+const { aboutPage } = await useAboutPage();
 
-const query = `
-  query AboutPage($locale: I18NLocaleCode) {
-    aboutPage(locale: $locale) {
-      section3 {
-        title
-        subTitle
-        creatorsImages { url alternativeText }
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the section is not empty.
-    fallbackAboutPage: aboutPage(locale: "en") {
-      section3 {
-        title
-        subTitle
-        creatorsImages { url alternativeText }
-      }
-    }
-  }
-`;
+const section3 = computed(() => aboutPage.value?.section3 ?? null);
 
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({
-    query,
-    variables: { locale: gqlLocale.value },
-  })),
-  key: computed(() => `about-creators-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
-
-const section3 = computed(() => (data.value?.data?.aboutPage ?? data.value?.data?.fallbackAboutPage)?.section3 ?? null);
-
-const apiBase = computed(() => GRAPHQL_URL.replace(/\/graphql\/?$/, ""));
-
-const resolveImage = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/")) return apiBase.value + url;
-  return apiBase.value + "/" + url;
-};
+const resolveImage = useCmsMedia();
 
 const section3Images = computed(() =>
   (section3.value?.creatorsImages ?? [])

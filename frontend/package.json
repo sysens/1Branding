@@ -38,6 +38,8 @@
     "msgpackr": "^2.1.0",
     "nuxt-keen-slider": "^1.1.1",
     "topojson-client": "^3.1.0",
+    "typescript": "^5",
+    "vue-tsc": "^3",
     "world-atlas": "^2.0.2"
   }
 }

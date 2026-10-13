@@ -287,7 +287,7 @@ type AppLocale = "ru" | "en";
 const isMobileMenuOpen = useState<boolean>("mobileMenuOpen", () => false);
 const isLangOpen = useState<boolean>("mobileLangOpen", () => false);
 
-const { locale } = useI18n<{ message: any }, AppLocale>();
+const { locale } = useI18n();
 const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
 const router = useRouter();
@@ -375,6 +375,7 @@ const onMenuKeydown = (event: KeyboardEvent) => {
   if (!focusable.length) return;
   const first = focusable[0];
   const last = focusable[focusable.length - 1];
+  if (!first || !last) return;
   if (event.shiftKey && document.activeElement === first) {
     event.preventDefault();
     last.focus();

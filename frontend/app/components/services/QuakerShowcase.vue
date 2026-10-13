@@ -30,16 +30,10 @@ const QUAKER_FRAMES = [
   "/home/Quaker 8.webp",
 ] as const;
 
-const runtimeConfig = useRuntimeConfig();
-const apiBase = String(runtimeConfig.public.graphqlUrl || "").replace(/\/graphql\/?$/, "");
+const cmsMedia = useCmsMedia();
 
-const resolveMedia = (url?: string | null) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  if (url.startsWith("/home/") || url.startsWith("/General/")) return url;
-  if (url.startsWith("/")) return apiBase + url;
-  return `${apiBase}/${url}`;
-};
+const resolveMedia = (url?: string | null) =>
+  url?.startsWith("/home/") || url?.startsWith("/General/") ? url : cmsMedia(url);
 
 const media = computed(() => {
   const src = resolveMedia(props.image?.url) || QUAKER_FRAMES[0];

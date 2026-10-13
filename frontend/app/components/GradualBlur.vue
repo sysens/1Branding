@@ -183,7 +183,7 @@ const setupIntersectionObserver = () => {
 
   intersectionObserver = new IntersectionObserver(
     ([entry]) => {
-      isVisible.value = entry.isIntersecting;
+      isVisible.value = Boolean(entry?.isIntersecting);
     },
     { threshold: 0.1 }
   );
@@ -199,7 +199,7 @@ const blurDivs = computed(() => {
       ? config.value.strength * config.value.hoverIntensity
       : config.value.strength;
 
-  const curveFunc = CURVE_FUNCTIONS[config.value.curve] || CURVE_FUNCTIONS.linear;
+  const curveFunc = CURVE_FUNCTIONS[config.value.curve] ?? ((p: number) => p);
 
   for (let i = 1; i <= config.value.divCount; i++) {
     let progress = i / config.value.divCount;

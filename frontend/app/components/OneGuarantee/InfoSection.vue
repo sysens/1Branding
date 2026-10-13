@@ -180,10 +180,7 @@ onBeforeUnmount(() => {
   inited = false;
 });
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { t, locale } = useI18n<{ message: any }, AppLocale>();
+const { t, locale } = useI18n();
 const gqlLocale = computed<AppLocale>(() =>
   (locale.value as AppLocale) === "en" ? "en" : "ru"
 );
@@ -197,39 +194,9 @@ type OneGuaranteeSection2 = {
   text5?: string;
 };
 
-type GqlRes = {
-  data?: {
-    oneGuarantee?: {
-      section2?: OneGuaranteeSection2 | null;
-    } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
+const { own: guarantee } = await useOneGuaranteePage();
 
-const query = `
-  query OneGuaranteeSection2($locale: I18NLocaleCode) {
-    oneGuarantee(locale: $locale) {
-      section2 {
-        title
-        text1
-        text2
-        text3
-        text4
-        text5
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
-  key: computed(() => `one-guarantee-section2-${gqlLocale.value}`),
-  watch: [gqlLocale],
-});
-
-const s2 = computed(() => data.value?.data?.oneGuarantee?.section2 ?? null);
+const s2 = computed(() => guarantee.value?.section2 ?? null);
 
 const s2Title = computed(() => s2.value?.title || t("oneGuarantee.section2.title"));
 const s2Text1 = computed(() => s2.value?.text1 || t("oneGuarantee.section2.text1"));

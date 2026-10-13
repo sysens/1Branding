@@ -31,14 +31,7 @@ const isRealReview = (item: MarqueeItem) =>
   item.text.trim().length > 0 && item.author.trim().length > 0 &&
   !isPlaceholderCopy(`${item.text} ${item.author} ${item.sub ?? ""}`);
 
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
-
-const { locale } = useI18n<{ message: any }, AppLocale>();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
-
+const { locale } = useI18n();
 type Section3 = {
   comment?: Array<{
     id: string;
@@ -48,52 +41,11 @@ type Section3 = {
   }>;
 };
 
-type GqlRes = {
-  data?: {
-    oneGuarantee?: { section3?: Section3 | null } | null;
-    fallbackOneGuarantee?: { section3?: Section3 | null } | null;
-  };
-  errors?: Array<{ message: string }>;
-};
-
-const query = `
-  query OneGuaranteeComments($locale: I18NLocaleCode) {
-    oneGuarantee(locale: $locale) {
-      section3 {
-        comment {
-          id
-          authorFullName
-          authorQuote
-          authorPosition
-        }
-      }
-    }
-    # The CMS has no Russian entry yet: fall back to English so the reviews are not empty.
-    fallbackOneGuarantee: oneGuarantee(locale: "en") {
-      section3 {
-        comment {
-          id
-          authorFullName
-          authorQuote
-          authorPosition
-        }
-      }
-    }
-  }
-`;
-
-const { data } = await useFetch<GqlRes>(GRAPHQL_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  // Reactive, so switching language refetches with the new locale.
-  body: computed(() => ({ query, variables: { locale: gqlLocale.value } })),
-  server: false,
-  key: computed(() => `one-guarantee-comments-${gqlLocale.value}`),
-});
+const { own: guarantee, fallback: fallbackGuarantee } = await useOneGuaranteePage();
 
 const apiItems = computed<MarqueeItem[]>(() => {
-  const own = data.value?.data?.oneGuarantee?.section3?.comment ?? [];
-  const list = own.length ? own : data.value?.data?.fallbackOneGuarantee?.section3?.comment ?? [];
+  const own = guarantee.value?.section3?.comment ?? [];
+  const list = own.length ? own : fallbackGuarantee.value?.section3?.comment ?? [];
   return list
     .filter((c) => (c?.authorQuote || "").trim().length)
     .map((c) => ({

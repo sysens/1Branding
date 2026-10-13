@@ -20,42 +20,14 @@ const props = withDefaults(defineProps<{
   socialMedia: null,
 });
 
-type FooterDataRes = {
-  data?: {
-    footer?: { socialMedia?: FooterSocialMediaLinks | null } | null;
-    fallbackFooter?: { socialMedia?: FooterSocialMediaLinks | null } | null;
-  };
-};
-
-const runtimeConfig = useRuntimeConfig();
-const GRAPHQL_URL = (runtimeConfig.public.graphqlUrl as string) || "";
 const localePath = useLocalePath();
 const { locale, t } = useI18n();
-const gqlLocale = computed<AppLocale>(() => (String(locale.value) === "en" ? "en" : "ru"));
+// The landing passes the links from its own payload; other pages fetch them.
+const fetched = props.usePrefetchedData ? null : await useFooterSocials();
 
-const FOOTER_QUERY = `
-  query FooterData($locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
-    footer(locale: $locale) { socialMedia { instagramLink behanceLink telegramLink } }
-    fallbackFooter: footer(locale: $fallbackLocale) { socialMedia { instagramLink behanceLink telegramLink } }
-  }
-`;
-
-const { data: footerGql } = await useAsyncData<FooterDataRes | null>(
-  () => `footer-data-${gqlLocale.value}`,
-  async () => {
-    if (props.usePrefetchedData || !GRAPHQL_URL) return null;
-    return await $fetch<FooterDataRes>(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: { query: FOOTER_QUERY, variables: { locale: gqlLocale.value, fallbackLocale: "en" } },
-    });
-  },
-  { watch: [gqlLocale] },
+const social = computed<FooterSocialMediaLinks | null>(() =>
+  props.usePrefetchedData ? props.socialMedia : fetched?.socialMedia.value ?? null
 );
-
-const social = computed<FooterSocialMediaLinks | null>(() => props.usePrefetchedData
-  ? props.socialMedia
-  : footerGql.value?.data?.footer?.socialMedia ?? footerGql.value?.data?.fallbackFooter?.socialMedia ?? null);
 
 type FooterLink = { label: string; to?: string; href?: string };
 const columns = computed<Array<{ title: string; links: FooterLink[] }>>(() => [
