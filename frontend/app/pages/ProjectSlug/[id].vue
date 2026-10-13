@@ -284,7 +284,6 @@ const loading = computed(() => pending.value || !data.value);
             :style="headerGlowStyle"
           ></div>
           <div class="m">
-            <Header />
           </div>
 
           <div
@@ -352,6 +351,5 @@ const loading = computed(() => pending.value || !data.value);
         {{ gqlErrors }}
       </div>
     </div>
-    <Footer />
   </div>
 </template>

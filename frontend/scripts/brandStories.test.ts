@@ -29,7 +29,8 @@ describe("brand stories", () => {
     expect(tail.indexOf("<LazyHomeFreshProjects")).toBeGreaterThan(tail.indexOf("<LazyHomeClientsGrid"));
     expect(tail.indexOf("<LazyHomeFaqAccordion")).toBeGreaterThan(tail.indexOf("<LazyHomeFreshProjects"));
     expect(tail.indexOf("<LazyHomeRobotShowcase")).toBeGreaterThan(tail.indexOf("<LazyHomeFaqAccordion"));
-    expect(tail.indexOf("<LazyFooter")).toBeGreaterThan(tail.indexOf("<LazyHomeRobotShowcase"));
+    // The site footer comes from the default layout, after every page.
+    expect(await Bun.file("app/layouts/default.vue").text()).toContain("<LazyFooter");
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);
     expect(await Bun.file("app/components/home/AirwaysSceneSection.vue").text()).toContain('const SCENE = "/home/scene.jpg"');
     for (const removed of ["GridSection", "EarthDives", "ProjectTabletShowcase", "ThreeLayerSlug", "RowShorteners"]) expect(source).not.toContain(removed);
@@ -46,12 +47,13 @@ describe("brand stories", () => {
     expect(source).toContain(':numeral="false"');
     expect(await Bun.file("public/home/awards/stage-ceiling.v1.webp").exists()).toBe(true);
     expect(await Bun.file("app/components/home/awards/AwardsTransition.vue").exists()).toBe(true);
-    expect(source).toContain(':landing-page="landingPage" :social-media="footerSocialMedia"');
+    // The footer (and its social links) come from the layout, not the page.
+    expect(source).not.toContain("<LazyFooter");
   });
   test("landing request no longer fetches removed sections or shared guarantee content", async () => {
     const query = await Bun.file("app/composables/useLandingPayload.ts").text();
     for (const field of ["section2", "section5", "section7", "section11", "oneGuarantee"]) expect(query).not.toContain(field);
-    for (const field of ["section3", "section10", "splineRobot", "footer", "seo"]) expect(query).toContain(field);
+    for (const field of ["section3", "section10", "splineRobot", "seo"]) expect(query).toContain(field);
   });
   test("Strapi removes the retired admin/API fields without deleting shared APIs", async () => {
     const schema = await Bun.file(backend + "src/api/landing-page/content-types/landing-page/schema.json").json() as CmsSchema;

@@ -147,7 +147,6 @@ onBeforeUnmount(() => {
       <div
         class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
       >
-        <Header />
 
         <div class="containerr">
           <NewsHero :news="news" />
@@ -158,6 +157,5 @@ onBeforeUnmount(() => {
         <NewsSlider />
       </div>
     </div>
-    <Footer />
   </div>
 </template>

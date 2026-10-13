@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import type { FooterSocialMediaLinks, LandingPageContent } from "~/types/landingPayload";
 
 // Site footer: "Let's build what's next." with the start-a-project call, four
 // link columns and the brand line. It is revealed like jsoft.vercel.app's: the
@@ -9,25 +8,9 @@ import type { FooterSocialMediaLinks, LandingPageContent } from "~/types/landing
 
 type AppLocale = "ru" | "en";
 
-const props = withDefaults(defineProps<{
-  usePrefetchedData?: boolean;
-  /** Kept for the landing's call site; the robot that used it moved to RobotShowcase. */
-  landingPage?: LandingPageContent | null;
-  socialMedia?: FooterSocialMediaLinks | null;
-}>(), {
-  usePrefetchedData: false,
-  landingPage: null,
-  socialMedia: null,
-});
-
 const localePath = useLocalePath();
 const { locale, t } = useI18n();
-// The landing passes the links from its own payload; other pages fetch them.
-const fetched = props.usePrefetchedData ? null : await useFooterSocials();
-
-const social = computed<FooterSocialMediaLinks | null>(() =>
-  props.usePrefetchedData ? props.socialMedia : fetched?.socialMedia.value ?? null
-);
+const { socialMedia: social } = await useFooterSocials();
 
 type FooterLink = { label: string; to?: string; href?: string };
 const columns = computed<Array<{ title: string; links: FooterLink[] }>>(() => [

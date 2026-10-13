@@ -29,7 +29,6 @@ usePageSeo({
       <div
         class="vg relative z-10 bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat pt-[30px] md:pt-[60px]"
       >
-        <Header />
 
         <h1
           class="products intro-slide-in px-4 pt-[137px] pb-[30px] text-center text-[40px] font-normal leading-[100%] tracking-normal text-[#FFFFFF] md:pt-[127px] md:pb-[60px] md:text-[50px] md:leading-[100%]"
@@ -59,7 +58,6 @@ usePageSeo({
 
     <ThreeLayer />
 
-    <Footer />
   </div>
 </template>
 

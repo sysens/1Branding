@@ -127,7 +127,6 @@ onMounted(async () => {
               <div
                 class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[60px] pt-[30px]"
               >
-                <Header />
 
                 <h1
                   class="text-[#FFFFFF] font-normal md:text-[50px] md:leading-[100%] md:tracking-[0] md:pt-[127px] pt-[137px] md:pb-[60px] pb-[30px] text-[40px] leading-[100%] tracking-normal text-center products"
@@ -175,6 +174,5 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <Footer />
   </div>
 </template>

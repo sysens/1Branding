@@ -22,7 +22,6 @@ usePageSeo({
 
     <div class="relative z-10">
       <div class="vg md:pt-[60px] pt-[30px]">
-        <Header />
 
         <h1 class="sr-only">{{ $t("seo.price.h1") }}</h1>
 
@@ -35,7 +34,6 @@ usePageSeo({
         <Warning />
       </div>
 
-      <Footer />
     </div>
   </div>
 </template>

@@ -16,7 +16,7 @@ const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 const cmsMedia = useCmsMedia();
 const { t, locale } = useI18n();
 const route = useRoute();
-const { landingPage, seo: landingSeo, footerSocialMedia } = await useLandingPayload();
+const { landingPage, seo: landingSeo } = await useLandingPayload();
 useHomePageReady();
 const pageRoot = ref<HTMLElement | null>(null);
 useSectionTitleReveal(pageRoot);
@@ -65,7 +65,7 @@ usePageSeo({
             </div>
             <div class="home-hero-shade" aria-hidden="true" />
             <div class="relative">
-              <div class="pt-[30px] md:pt-10"><Header /></div>
+              <div class="pt-[30px] md:pt-10" />
               <section class="leading-target home-leading">
                 <LeadingPage :landing-page="landingPage" />
               </section>
@@ -99,7 +99,6 @@ usePageSeo({
           <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeFaqAccordion :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
-          <LazyFooter :hydrate-on-visible="LAZY_HYDRATION" use-prefetched-data :landing-page="landingPage" :social-media="footerSocialMedia" />
         </div>
       </div>
     </div>

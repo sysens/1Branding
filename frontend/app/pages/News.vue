@@ -77,7 +77,6 @@ onBeforeUnmount(() => {
         <div
           class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
         >
-          <Header />
 
           <h1
             class="hero-title text-white max-w-[1000px] md:pt-0 pt-[120px] md:mt-[159px] mt-[37px] md:pb-[50px] pb-[30px] mx-auto font-normal md:mb-[77px] md:text-[62px] md:leading-[62px] md:tracking-normal text-[40px] leading-[120%] tracking-[0%] text-center"
@@ -88,7 +87,6 @@ onBeforeUnmount(() => {
 
         <NewsMain />
       </div>
-      <Footer />
     </div>
   </div>
 </template>

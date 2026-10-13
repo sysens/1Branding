@@ -290,7 +290,6 @@ onBeforeUnmount(() => {
       <div class="relative z-10">
         <div class="bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat">
           <div class="md:pt-[60px] pt-[30px]">
-            <Header />
           </div>
 
           <div class="px-[20px] md:px-0 containerr">
@@ -322,6 +321,5 @@ onBeforeUnmount(() => {
       {{ gqlErrors }}
     </div>
 
-    <Footer />
   </div>
 </template>

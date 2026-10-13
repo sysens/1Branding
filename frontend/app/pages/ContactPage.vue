@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Ends with its own "Join the movement" block instead of the site footer.
+definePageMeta({ footer: false });
+
 import Form from "~/components/Contacts/Form.vue";
 import Locations from "~/components/Contacts/Locations.vue";
 import MovementFooter from "~/components/Contacts/MovementFooter.vue";
@@ -83,7 +86,6 @@ onMounted(async () => {
         <div
           class="md:pt-[60px] pt-[30px] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat"
         >
-          <Header />
 
           <h1
             class="products intro-slide-in font-normal text-[#FFFFFF] md:text-[62px] md:pt-[105px] pt-[118px] md:pb-[83px] pb-[54px] md:leading-[1] md:tracking-normal text-center text-[40px] leading-[100%] tracking-[0%]"

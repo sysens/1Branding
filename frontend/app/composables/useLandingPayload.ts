@@ -1,6 +1,5 @@
 import { computed, type ComputedRef } from "vue";
 import type {
-  FooterSocialMediaLinks,
   LandingPageContent,
   LandingPayloadResponse,
   LandingSeo,
@@ -17,24 +16,10 @@ const LANDING_PAYLOAD_QUERY = `
     landingPage(locale: $locale) {
       ...LandingPageFields
     }
-    footer(locale: $locale) {
-      socialMedia {
-        instagramLink
-        behanceLink
-        telegramLink
-      }
-    }
     # The CMS has no Russian entry yet: fall back to English so the landing is not empty.
     # Not requested for English itself, so this (inlined) payload is not sent twice.
     fallbackLandingPage: landingPage(locale: "en") @include(if: $withFallback) {
       ...LandingPageFields
-    }
-    fallbackFooter: footer(locale: "en") @include(if: $withFallback) {
-      socialMedia {
-        instagramLink
-        behanceLink
-        telegramLink
-      }
     }
   }
 
@@ -70,11 +55,11 @@ const LANDING_PAYLOAD_QUERY = `
 type LandingPayloadResult = {
   landingPage: ComputedRef<LandingPageContent | null>;
   seo: ComputedRef<LandingSeo | null>;
-  footerSocialMedia: ComputedRef<FooterSocialMediaLinks | null>;
 };
 
 // The whole page is cached by the server (see pageCache in nuxt.config.ts),
-// so this query runs once per render and needs no cache of its own.
+// so this query runs once per render and needs no cache of its own. The
+// footer's social links come from the footer itself (useFooterSocials).
 export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
   const { data } = await useCmsQuery<NonNullable<LandingPayloadResponse["data"]>>("landing-payload", LANDING_PAYLOAD_QUERY);
 
@@ -89,11 +74,5 @@ export const useLandingPayload = async (): Promise<LandingPayloadResult> => {
     }),
     // No English fallback: the page's own i18n title/description fill an empty SEO entry.
     seo: computed(() => data.value?.data?.seo?.landingPage ?? null),
-    footerSocialMedia: computed(
-      () =>
-        data.value?.data?.footer?.socialMedia ??
-        data.value?.data?.fallbackFooter?.socialMedia ??
-        null
-    ),
   };
 };

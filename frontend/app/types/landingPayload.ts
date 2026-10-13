@@ -40,12 +40,6 @@ export type LandingSplineRobot = {
   sceneUrl?: string | null;
 };
 
-export type FooterSocialMediaLinks = {
-  instagramLink?: string | null;
-  behanceLink?: string | null;
-  telegramLink?: string | null;
-};
-
 export type LandingPageContent = {
   heroSlogan?: LandingHeroSlogan | null;
   slogan?: LandingMedia | null;
@@ -78,14 +72,8 @@ export type LandingPayloadResponse = {
     seo?: {
       landingPage?: LandingSeo | null;
     } | null;
-    footer?: {
-      socialMedia?: FooterSocialMediaLinks | null;
-    } | null;
     /** English copies, requested only for other locales (no entry there yet). */
     fallbackLandingPage?: LandingPageContent | null;
-    fallbackFooter?: {
-      socialMedia?: FooterSocialMediaLinks | null;
-    } | null;
   };
   errors?: Array<{ message: string }>;
 };
