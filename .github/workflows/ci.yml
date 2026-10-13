@@ -1,0 +1,51 @@
+# Runs on every push and pull request. Railway deploys `main` on its own; this
+# only reports whether the commit builds and passes the tests.
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Tests
+        run: bun test scripts/
+      - name: Build
+        run: bun run build
+        env:
+          NUXT_PUBLIC_GRAPHQL_URL: https://onebrandingbackend.up.railway.app/graphql
+
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Typecheck
+        run: ./node_modules/.bin/tsc --noEmit -p tsconfig.json
+      - name: Build
+        run: bun run build
+        env:
+          NODE_ENV: production

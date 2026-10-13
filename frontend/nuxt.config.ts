@@ -38,7 +38,15 @@ const securityHeaders = {
   "referrer-policy": "strict-origin-when-cross-origin",
   "cross-origin-opener-policy": "same-origin",
 };
-const isrPages = ["/", "/About", "/ContactPage", "/Costs", "/Oneguarantee", "/Projects", "/News"];
+const cachedPages = ["/", "/About", "/ContactPage", "/Costs", "/Oneguarantee", "/Projects", "/News"];
+// Rendered pages are kept in the server's memory for 5 minutes and refreshed in
+// the background after that (stale-while-revalidate), so most visitors get the
+// HTML without a render or a CMS round trip. (`isr` only works on Vercel and
+// Netlify; on this Node server it did nothing.) The cached render sees only the
+// headers listed in `varies`: the host ones keep each domain's canonical URLs.
+const pageCache = {
+  cache: { swr: true, maxAge: 300, varies: ["host", "x-forwarded-host", "x-forwarded-proto"] },
+};
 
 export default defineNuxtConfig({
   // Keep the generated project references identical in dev, prepare and build.
@@ -91,6 +99,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Server-only: the backend's GraphQL URL on Railway's private network
+    // (NUXT_GRAPHQL_URL_INTERNAL). See server/plugins/internal-graphql.ts.
+    graphqlUrlInternal: "",
     public: {
       graphqlUrl: process.env.NUXT_PUBLIC_GRAPHQL_URL,
       // Production origin for canonical/hreflang/sitemap, e.g. https://onebranding.uz
@@ -125,16 +136,16 @@ export default defineNuxtConfig({
     // keep working through a permanent redirect.
     "/en": { redirect: { to: "/", statusCode: 301 } },
     "/en/**": { redirect: { to: "/**", statusCode: 301 } },
-    ...Object.fromEntries(isrPages.flatMap((path) => [
-      [path, { isr: 300 }],
-      [path === "/" ? "/ru" : `/ru${path}`, { isr: 300 }],
+    ...Object.fromEntries(cachedPages.flatMap((path) => [
+      [path, pageCache],
+      [path === "/" ? "/ru" : `/ru${path}`, pageCache],
     ])),
-    "/ProductSlug/**": { isr: 300 },
-    "/ru/ProductSlug/**": { isr: 300 },
-    "/ProjectSlug/**": { isr: 300 },
-    "/ru/ProjectSlug/**": { isr: 300 },
-    "/NewsSlug/**": { isr: 300 },
-    "/ru/NewsSlug/**": { isr: 300 },
+    "/ProductSlug/**": pageCache,
+    "/ru/ProductSlug/**": pageCache,
+    "/ProjectSlug/**": pageCache,
+    "/ru/ProjectSlug/**": pageCache,
+    "/NewsSlug/**": pageCache,
+    "/ru/NewsSlug/**": pageCache,
     "/_ipx/**": {
       headers: longTermImageCacheHeaders,
     },
@@ -157,6 +168,14 @@ export default defineNuxtConfig({
   nitro: {
     // Ship .br/.gz siblings of text assets (JS, CSS, SVG, JSON, .bin) for the static server.
     compressPublicAssets: { gzip: true, brotli: true },
+    // The page cache (pageCache) lives in memory; an LRU bound keeps URLs with
+    // random query strings from growing it without limit.
+    storage: {
+      cache: {
+        driver: "lru-cache",
+        max: 300,
+      },
+    },
     devStorage: {
       cache: {
         driver: "memory",

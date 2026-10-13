@@ -25,6 +25,8 @@ const getAllowedOrigins = (env: StrapiEnv): string[] => {
 };
 
 export default ({ env }: { env: StrapiEnv }) => [
+  // Railway deploy healthcheck; answered before logging so it stays quiet.
+  "global::healthz",
   "strapi::logger",
   "strapi::errors",
   buildUploadSecurityMiddleware(env),
