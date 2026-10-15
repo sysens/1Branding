@@ -259,7 +259,8 @@ const render = () => {
       : `translate3d(${(72 * (1 - shown)).toFixed(2)}%, 0, 0)`;
 
     // Unlit it is a dim slab; it brightens with a flash while it lights, and the
-    // lime glow (two drop shadows that follow the card's outline) stays.
+    // lime glow stays: two drop shadows that follow the card's outline, and a
+    // wide one lifted above it so the haze fills the white between the cards' tops.
     const light = span(progress, CARD_LIGHT[index]!);
     const lit = ease(light);
     const flash = Math.sin(Math.PI * light);
@@ -272,6 +273,7 @@ const render = () => {
       filters.push(
         `drop-shadow(0 0 ${(3 * u).toFixed(2)}px rgb(${LIME} / ${(0.85 * glow).toFixed(3)}))`,
         `drop-shadow(0 0 ${(16 * u).toFixed(2)}px rgb(${LIME} / ${(0.6 * glow).toFixed(3)}))`,
+        `drop-shadow(0 ${(-14 * u).toFixed(2)}px ${(36 * u).toFixed(2)}px rgb(${LIME} / ${(0.45 * glow).toFixed(3)}))`,
       );
     }
     card.style.filter = filters.length ? filters.join(" ") : "none";

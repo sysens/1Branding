@@ -14,12 +14,24 @@ let preloadObserver: IntersectionObserver | null = null;
 let visibilityObserver: IntersectionObserver | null = null;
 let nearViewport = false;
 let inViewport = false;
+let started = false;
 let generation = 0;
 
+// The robot's entrance is the scene's Spline "Start" event, and play() fires it
+// again on every resume. So the scene is played once, the first time it shows;
+// after that, off screen only its rendering pauses (renderMode "manual" skips
+// whole frames) and the entrance does not run again.
 const updatePlayback = () => {
   if (!application || !ready.value) return;
-  if (inViewport && !document.hidden) application.play();
-  else application.stop();
+  const visible = inViewport && !document.hidden;
+  if (!started) {
+    if (!visible) return;
+    started = true;
+    application.play();
+    return;
+  }
+  (application as Application & { renderMode: "auto" | "manual" }).renderMode = visible ? "auto" : "manual";
+  if (visible) application.requestRender();
 };
 
 const clear = () => {
@@ -27,6 +39,7 @@ const clear = () => {
   controller = null;
   application?.dispose();
   application = null;
+  started = false;
   ready.value = false;
 };
 

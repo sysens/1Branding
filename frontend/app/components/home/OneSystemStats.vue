@@ -60,8 +60,9 @@ const STARTS = [0, 0.23, 0.46, 0.69];
 const BUILD = 0.085;
 const HOLD = 0.07;
 const LEAVE = 0.085;
-// The wave starts a little before the screen pins.
-const LEAD = 0.4;
+// The wave starts once the screen pins, so the first figure builds in place
+// like the others instead of while it is still scrolling up into view.
+const LEAD = 0;
 
 const sliceAt = (progress: number, index: number) => {
   const time = progress - STARTS[index]!;

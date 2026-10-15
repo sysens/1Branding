@@ -17,10 +17,11 @@ const { t } = useI18n();
     <div class="world-section__globe">
       <NetworkGlobe :show-labels="false" :controls="false" />
     </div>
+    <!-- Static, no reveal: the statement is already there when the globe scrolls in. -->
     <h3 class="world-section__statement">
-      <span v-blur-reveal class="world-section__lead">{{ t("home.world.lead") }}</span>
-      <strong v-blur-reveal="0.12">{{ t("home.world.strong") }}</strong>
-      <span v-blur-reveal="0.24" class="world-section__closing">{{ t("home.world.closing") }}</span>
+      <span class="world-section__lead">{{ t("home.world.lead") }}</span>
+      <strong>{{ t("home.world.strong") }}</strong>
+      <span class="world-section__closing">{{ t("home.world.closing") }}</span>
     </h3>
   </section>
 </template>
