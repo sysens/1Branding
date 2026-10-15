@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
   --gap: calc(0.32 * var(--vw));
   position: relative;
   overflow: clip;
-  padding-top: clamp(5rem, 11vw, 14rem);
+  padding-top: clamp(5rem, calc(11 * var(--container-vw)), 14rem);
   background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
 /* The wall: five columns, the middle one centred, the outer two cut by the
    screen edges; the grid scales from its centre while it scrolls out. */
 .social__viewport {
-  margin-top: clamp(3.5rem, 6.5vw, 8rem);
+  margin-top: clamp(3.5rem, calc(6.5 * var(--container-vw)), 8rem);
 }
 
 .social__grid {

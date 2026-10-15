@@ -144,9 +144,10 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* --u is one pixel of the 2000px design frame. */
+/* --u is one pixel of the 2000px design frame, frozen at a 1450px wide screen
+   so the content stays inside the 1450px site container on wider ones. */
 .site-footer {
-  --u: 0.05vw;
+  --u: min(0.05vw, 0.725px);
   --green: #08e24f;
   position: relative;
   z-index: 30;
@@ -164,7 +165,9 @@ onBeforeUnmount(() => {
 .site-footer__inner {
   display: flex;
   flex-direction: column;
+  max-width: 1450px;
   min-height: min(100svh, calc(1130 * var(--u)));
+  margin-inline: auto;
   padding: calc(150 * var(--u)) calc(72 * var(--u)) calc(70 * var(--u)) calc(70 * var(--u));
   will-change: transform;
 }

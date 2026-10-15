@@ -58,21 +58,18 @@
 }
 
 @layer base {
-    /* Wide monitors (1920px+): grow every rem-based size with the viewport
-       (16px at 1920 -> ~21px at 2560, capped at 22px) so sections keep the
-       proportions they have on a laptop instead of shrinking into the middle. */
-    @media (min-width: 1920px) {
-        html {
-            font-size: clamp(16px, 0.8333vw, 22px);
-        }
-    }
+    /* rem stays 16px on every screen: wide monitors show the same content in the
+       1450px site container instead of a scaled-up copy of it. */
 
     :root {
         --app-font-sans: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --app-font-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        /* 1vw until the screen is as wide as the 1450px site container, then
+           frozen: sizes built on it stop growing once the container is full. */
+        --container-vw: min(1vw, 14.5px);
         /* One size for the landing's section headings ("Fresh projects",
            "Frequently asked questions", "Make your brand look better" ...). */
-        --section-title-size: clamp(2.25rem, 5vw, 96px);
+        --section-title-size: clamp(2.25rem, calc(5 * var(--container-vw)), 96px);
     }
 
     @media (max-width: 767px) {

@@ -193,21 +193,21 @@ onBeforeUnmount(() => {
 
 /* Sizes follow the design: value 180, label 50, closing 65 (cap heights). */
 .stats__line--value {
-  font-size: min(max(14.7vw, 5.5rem), 30vh);
+  font-size: min(max(calc(14.7 * var(--container-vw)), 5.5rem), 30vh);
   line-height: 0.95;
   letter-spacing: -0.015em;
 }
 
 .stats__line--label {
   margin-top: 0.12em;
-  font-size: min(max(4.1vw, 1.45rem), 8.3vh);
+  font-size: min(max(calc(4.1 * var(--container-vw)), 1.45rem), 8.3vh);
   font-weight: 600;
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
 .stats__line--closing {
-  font-size: min(max(5.3vw, 2rem), 10.8vh);
+  font-size: min(max(calc(5.3 * var(--container-vw)), 2rem), 10.8vh);
   line-height: 1.1;
 }
 

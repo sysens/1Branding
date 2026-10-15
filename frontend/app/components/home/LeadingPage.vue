@@ -135,13 +135,13 @@ const heroCopy = computed<HeroCopy>(() => {
   /* Fluid with the width, but never taller than the design's share of the screen
      height (a 209px headline on a 1337px-high frame = 15.65%), so the slogan fits
      the first screen on short, wide windows as well as on tall ones. */
-  --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20vh)), 15.65vh);
+  --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6 * var(--container-vw), max(13.5rem, 20vh)), 15.65vh);
   z-index: 0;
 }
 
 @supports (height: 1svh) {
   .leading-copy-position {
-    --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6vw, max(13.5rem, 20svh)), 15.65svh);
+    --hero-main-size: min(clamp(4.3rem, 2.4rem + 9.6 * var(--container-vw), max(13.5rem, 20svh)), 15.65svh);
   }
 }
 
