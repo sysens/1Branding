@@ -52,7 +52,7 @@ const base = useId();
 <style scoped>
 /* --u is one pixel of the 2000px design frame. */
 .faq {
-  --u: 0.05vw;
+  --u: min(0.05vw, 0.725px);
   position: relative;
   z-index: 30;
   display: flex;

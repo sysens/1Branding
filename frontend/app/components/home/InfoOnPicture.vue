@@ -33,9 +33,13 @@ const s10 = computed<SectionBlock | null>(() => {
 
 <template>
   <section class="brand-identity-feature">
-    <IdentityReveal />
+    <div class="home-contained">
+      <IdentityReveal />
+    </div>
     <BrandGallery :title="s10?.title" :description="s10?.description" />
-    <PartsAsOne />
+    <div class="home-contained">
+      <PartsAsOne />
+    </div>
   </section>
 </template>
 

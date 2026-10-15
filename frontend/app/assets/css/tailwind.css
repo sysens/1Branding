@@ -169,6 +169,16 @@
         padding-left: 20px;
         padding-right: 20px;
     }
+
+    /* Landing sections that are not carousels or galleries: the 1450px site
+       container without the gutter, so their content stays inside it on wide
+       screens. Global, because scoped styles do not reach child components. */
+    .home-contained {
+        position: relative;
+        width: 100%;
+        max-width: 1450px;
+        margin-inline: auto;
+    }
 }
 
 .edge-gradient {
