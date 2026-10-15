@@ -205,13 +205,13 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__panel {
   position: fixed;
   z-index: 1001;
-  top: calc(30px + var(--header-h, 64px) + 14px);
+  top: calc(30px + var(--header-h, 45px) + 14px);
   left: 0;
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
   gap: 3.2vw;
   width: 100vw;
-  max-height: calc(100vh - 30px - var(--header-h, 66px) - 14px);
+  max-height: calc(100vh - 30px - var(--header-h, 45px) - 14px);
   overflow: auto;
   padding: clamp(24px, 2.2vw, 44px) clamp(24px, 2.4vw, 48px);
   border-top: 1px solid rgb(255 255 255 / 0.08);
@@ -344,7 +344,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 @media (min-width: 1920px) {
 
   .svc__panel {
-    --header-h: clamp(64px, 3.2vw, 84px);
+    --header-h: clamp(45px, 2.24vw, 59px);
   }
 }
 

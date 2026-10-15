@@ -3,7 +3,7 @@
     <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[34px] min-[950px]:pr-[14px] border h-[76px] min-[950px]:h-[64px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[686px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[24px] min-[950px]:pr-[10px] border h-[76px] min-[950px]:h-[45px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
         <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
         <a
@@ -40,7 +40,7 @@
             >
               <span>{{ lang === "ru" ? "ru" : "en" }}</span>
               <svg
-                class="w-3.5 h-3.5 transition-transform duration-200"
+                class="w-2.5 h-2.5 transition-transform duration-200"
                 :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
                 viewBox="0 0 24 24"
                 fill="none"
@@ -60,7 +60,7 @@
             >
               <div
                 v-if="isLangOpen"
-                class="absolute left-1/2 -translate-x-1/2 top-[44px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
+                class="absolute left-1/2 -translate-x-1/2 top-[31px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
               >
                 <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('en')">en</button>
                 <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('ru')">ru</button>
@@ -444,11 +444,12 @@ onBeforeUnmount(() => {
 
 <style>
 /* Header type, after the design: a semibold, slightly tracked face for the
-   links and the button, the wordmark larger. The design's 2000px frame has
-   these px sizes; wider screens scale them up (see the 1920px block). */
+   links and the button, the wordmark larger. On desktop the whole bar is 70%
+   of the design's 2000px-frame sizes; wider screens scale it up (see the
+   1920px block). */
 .site-header {
-  --nav-size: 15px;
-  --logo-size: 27px;
+  --nav-size: 10.5px;
+  --logo-size: 19px;
 }
 
 .site-logo {
@@ -467,13 +468,13 @@ onBeforeUnmount(() => {
 }
 
 .site-nav {
-  gap: 22px;
+  gap: 15px;
 }
 
 .site-nav__link {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   padding: 0;
   border: 0;
   background: none;
@@ -496,8 +497,8 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 168px;
-  height: 34px;
+  width: 118px;
+  height: 24px;
   border: 1px solid rgb(64 140 52 / 0.85);
   border-radius: 40px;
   background: #000;
@@ -564,30 +565,30 @@ onBeforeUnmount(() => {
 /* Narrow desktops: the items close up. */
 @media (min-width: 950px) and (max-width: 1099px) {
   .site-header {
-    --logo-size: 24px;
+    --logo-size: 17px;
   }
 
   .site-header .site-nav {
-    gap: 16px;
+    gap: 11px;
   }
 }
 
 /* Keep the header's laptop proportions on 1920px+ monitors (sizes are px). */
 @media (min-width: 1920px) {
   .site-header {
-    --nav-size: clamp(15px, 0.75vw, 20px);
-    --logo-size: clamp(27px, 1.35vw, 36px);
-    max-width: clamp(980px, 49vw, 1300px);
-    height: clamp(64px, 3.2vw, 84px);
+    --nav-size: clamp(10.5px, 0.525vw, 14px);
+    --logo-size: clamp(19px, 0.945vw, 25px);
+    max-width: clamp(686px, 34.3vw, 910px);
+    height: clamp(45px, 2.24vw, 59px);
   }
 
   .site-header .site-nav {
-    gap: clamp(22px, 1.1vw, 30px);
+    gap: clamp(15px, 0.77vw, 21px);
   }
 
   .site-guarantee {
-    width: clamp(168px, 8.4vw, 220px);
-    height: clamp(34px, 1.7vw, 45px);
+    width: clamp(118px, 5.88vw, 154px);
+    height: clamp(24px, 1.19vw, 32px);
   }
 }
 </style>
