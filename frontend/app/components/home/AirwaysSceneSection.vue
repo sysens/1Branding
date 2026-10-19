@@ -98,10 +98,20 @@ const sceneVars = computed(() => {
 
 .airways-scene__image {
   width: 100%;
+  /* At most as wide as the 1920px frame, centred on wider screens. */
+  max-width: var(--frame-max);
   aspect-ratio: 8192 / 4611;
-  /* Ultra-wide screens: one screen tall, cropped around the banner. */
+  /* Short, wide windows: one screen tall, cropped around the banner. */
   max-height: 100svh;
+  margin-inline: auto;
   background: #000 center 30% / cover no-repeat;
+}
+
+/* Wider than the frame: the photo's sides fade into the black page. */
+@media (min-width: 1921px) {
+  .airways-scene__image {
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
 }
 
 /* WebP by screen size; browsers that take image-set() with type() get AVIF. */

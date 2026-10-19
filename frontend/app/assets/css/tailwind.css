@@ -58,18 +58,19 @@
 }
 
 @layer base {
-    /* Wide monitors (1920px+): grow every rem-based size with the viewport
-       (16px at 1920 -> ~21px at 2560, capped at 22px) so sections keep the
-       proportions they have on a laptop instead of shrinking into the middle. */
-    @media (min-width: 1920px) {
-        html {
-            font-size: clamp(16px, 0.8333vw, 22px);
-        }
-    }
-
     :root {
         --app-font-sans: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --app-font-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        /* The landing's content frame, as on apple.com: up to 1920px wide every
+           section scales with the screen exactly as designed; on wider screens
+           (2K, ultrawide, 4K) the content keeps its 1920px size and stays
+           centred while backgrounds and galleries still span the screen.
+           --fvw is 1vw of that frame: use it instead of vw for sizes. */
+        --frame-max: 1920px;
+        --fvw: min(1vw, 19.2px);
+        /* The space left and right of the frame (0 up to 1920px): add it to a
+           full-width section's side padding to keep its content in the frame. */
+        --frame-side: max(0px, calc((100% - var(--frame-max)) / 2));
         /* One size for the landing's section headings ("Fresh projects",
            "Frequently asked questions", "Make your brand look better" ...). */
         --section-title-size: clamp(2.25rem, 5vw, 96px);

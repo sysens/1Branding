@@ -146,7 +146,7 @@ onBeforeUnmount(() => {
 <style scoped>
 /* --u is one pixel of the 2000px design frame. */
 .site-footer {
-  --u: 0.05vw;
+  --u: calc(0.05 * var(--fvw));
   --green: #08e24f;
   position: relative;
   z-index: 30;
@@ -164,7 +164,10 @@ onBeforeUnmount(() => {
 .site-footer__inner {
   display: flex;
   flex-direction: column;
+  /* Centred in the 1920px frame on wider screens (see --frame-max). */
+  max-width: var(--frame-max);
   min-height: min(100svh, calc(1130 * var(--u)));
+  margin-inline: auto;
   padding: calc(150 * var(--u)) calc(72 * var(--u)) calc(70 * var(--u)) calc(70 * var(--u));
   will-change: transform;
 }

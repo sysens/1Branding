@@ -1,7 +1,7 @@
 /* --u is one pixel of the 2000px design frame; the 880px tall stage must fit
    under the fixed header. */
 .parts {
-  --u: min(0.05vw, calc((100svh - 8rem) / 880));
+  --u: min(calc(0.05 * var(--fvw)), calc((100svh - 8rem) / 880));
   position: relative;
   height: 420vh;
   background: #fff;

@@ -107,8 +107,8 @@ onBeforeUnmount(() => {
      on wider screens it stays as wide as the container. */
   --vw: min(1vw, 17.58px);
   /* Column width and gutter of the design (2000px frame: 544px posts, 8px gaps). */
-  --col: 27.2vw;
-  --gap: 0.32vw;
+  --col: calc(27.2 * var(--fvw));
+  --gap: calc(0.32 * var(--fvw));
   position: relative;
   overflow: clip;
   padding-top: clamp(5rem, 11vw, 14rem);

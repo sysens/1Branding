@@ -1,13 +1,14 @@
 /* --u is one pixel of the 2000px design frame. */
 .clients {
-  --u: 0.05vw;
+  --u: calc(0.05 * var(--fvw));
   --green: #22e352;
   position: relative;
   /* Same layer as the dark sections' black edge fades but later in the page:
      the table runs edge to edge, as in the design. */
   z-index: 30;
   overflow: clip;
-  padding: calc(120 * var(--u)) calc(62 * var(--u)) calc(60 * var(--u));
+  /* The glows span the screen; the title and the table stay in the frame. */
+  padding: calc(120 * var(--u)) calc(var(--frame-side) + 62 * var(--u)) calc(60 * var(--u));
   background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */

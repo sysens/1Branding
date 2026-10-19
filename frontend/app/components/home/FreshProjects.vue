@@ -45,7 +45,7 @@ const localePath = useLocalePath();
 <style scoped>
 /* --u is one pixel of the 2000px design frame. */
 .fresh {
-  --u: 0.05vw;
+  --u: calc(0.05 * var(--fvw));
   --card-w: calc(505 * var(--u));
   --card-h: calc(285 * var(--u));
   --gap: calc(13 * var(--u));

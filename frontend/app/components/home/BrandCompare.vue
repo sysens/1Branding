@@ -79,7 +79,7 @@ const go = (step: 1 | -1) => {
 <style scoped>
 /* --u is one pixel of the 2000px design frame. */
 .compare-section {
-  --u: 0.05vw;
+  --u: calc(0.05 * var(--fvw));
   position: relative;
   /* Same layer as the dark sections' edge fades but later: they stay off
      this white section; the fixed header (31) stays on top. */
