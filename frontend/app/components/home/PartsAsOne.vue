@@ -4,7 +4,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { optLargest } from "~/utils/optImage";
 
 // "Every part. Working as ONE." — the design's own render, cut into layers
-// (public/home/parts, made by scripts/parts-layers.py): the chrome tubes, the
+// (public/home/parts, made by scripts/parts-layers.py, then the cards' top
+// edges trimmed by scripts/parts-card-tops.py): the chrome tubes, the
 // six service cards and the segmented ONE. Put back together at rest they are
 // the render pixel for pixel. The section is pinned while scrolling: ONE starts
 // alone in the middle and slides right, the tubes grow out of the O, CRM & ERP

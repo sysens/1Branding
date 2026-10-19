@@ -1,7 +1,8 @@
 """Cut the "Every part. Working as ONE." render into the layers PartsAsOne.vue animates.
 
 Usage: python scripts/parts-layers.py <render.png> [out_dir=public/home/parts] [--cutout]
-Needs Pillow, numpy and scipy.
+Needs Pillow, numpy and scipy. Then run scripts/parts-card-tops.py (takes the
+white band off some cards' top edges) and node scripts/optimize-images.mjs.
 
 The source is the design's 1844x524 render (white background). Every outline
 below is in its pixel coordinates, so a different render needs new outlines,
