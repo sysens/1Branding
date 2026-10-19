@@ -105,13 +105,13 @@ onBeforeUnmount(() => {
   /* The viewport unit this section scales with, frozen once its content
      reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
      on wider screens it stays as wide as the container. */
-  --vw: min(1vw, 14.5px);
+  --vw: min(1vw, 17.58px);
   /* Column width and gutter of the design (2000px frame: 544px posts, 8px gaps). */
-  --col: calc(27.2 * var(--vw));
-  --gap: calc(0.32 * var(--vw));
+  --col: 27.2vw;
+  --gap: 0.32vw;
   position: relative;
   overflow: clip;
-  padding-top: clamp(5rem, calc(11 * var(--container-vw)), 14rem);
+  padding-top: clamp(5rem, 11vw, 14rem);
   background: #000;
   color: #fff;
   /* Outranks the global `body * { font-family: inherit !important }`. */
@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
 /* The wall: five columns, the middle one centred, the outer two cut by the
    screen edges; the grid scales from its centre while it scrolls out. */
 .social__viewport {
-  margin-top: clamp(3.5rem, calc(6.5 * var(--container-vw)), 8rem);
+  margin-top: clamp(3.5rem, 6.5vw, 8rem);
 }
 
 .social__grid {

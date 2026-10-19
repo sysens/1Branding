@@ -1,6 +1,6 @@
 /* --u is one pixel of the 2000px design frame. */
 .audit {
-  --u: min(0.05vw, 0.725px);
+  --u: 0.05vw;
   --green: #00f562;
   position: relative;
   display: flex;
@@ -38,7 +38,7 @@
 }
 
 .audit__screen {
-  --u: min(0.05vw, 0.725px, calc((100svh - 8rem) / 980));
+  --u: min(0.05vw, calc((100svh - 8rem) / 980));
   position: sticky;
   top: 0;
   display: flex;

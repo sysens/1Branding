@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
 <style scoped>
 /* --u is one pixel of the 2000x1141 design frame; the frame fits one screen. */
 .vision {
-  --u: min(0.05vw, 0.725px, calc(100svh / 1141));
+  --u: min(0.05vw, calc(100svh / 1141));
   position: relative;
   /* Same layer as the dark sections' black edge fades (z-index 30) but later
      in the page, so they do not dirty this white card; the fixed header (31)

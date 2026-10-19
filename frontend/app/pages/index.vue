@@ -66,11 +66,9 @@ usePageSeo({
             <div class="home-hero-shade" aria-hidden="true" />
             <div class="relative">
               <div class="pt-[30px] md:pt-10" />
-              <div class="home-contained">
-                <section class="leading-target home-leading">
-                  <LeadingPage :landing-page="landingPage" />
-                </section>
-              </div>
+              <section class="leading-target home-leading">
+                <LeadingPage :landing-page="landingPage" />
+              </section>
             </div>
           </template>
           <div>
@@ -82,47 +80,25 @@ usePageSeo({
              marquee) and FirstGlanceSections (Vivea / Starbucks) were taken off
              the landing; their components stay for other pages. -->
         <LazyHomeProjectSlideWall :hydrate-on-visible="LAZY_HYDRATION" />
-        <div class="home-contained">
-          <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" />
-        </div>
-        <div class="home-contained">
-          <LazyHomeOneSystemStats :hydrate-on-visible="LAZY_HYDRATION" />
-        </div>
+        <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" />
+        <LazyHomeOneSystemStats :hydrate-on-visible="LAZY_HYDRATION" />
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
-          <!-- Awards, presentation, brand compare and fresh projects are galleries or
-               carousels: they keep the full screen width. Everything else is contained. -->
           <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :logos="partnerLogos" :numeral="false" :transition="false" />
           <!-- BrandStoriesSection (Apex / Perfect Candy / GreenGo) and the glow
                that led into it were taken off the landing; they stay for other pages. -->
-          <div class="home-contained">
-            <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
+          <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomePresentationGallery :hydrate-on-visible="LAZY_HYDRATION" />
-          <div class="home-contained">
-            <LazyHomeSocialIdentity :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
-          <div class="home-contained">
-            <LazyHomeOnePartnerServices :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
-          <div class="home-contained">
-            <LazyHomeAwardVision :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
+          <LazyHomeSocialIdentity :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeOnePartnerServices :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAwardVision :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeBrandCompare :hydrate-on-visible="LAZY_HYDRATION" />
-          <div class="home-contained">
-            <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
-          <div class="home-contained">
-            <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
+          <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" />
-          <div class="home-contained">
-            <LazyHomeFaqAccordion :hydrate-on-visible="LAZY_HYDRATION" />
-          </div>
-          <div class="home-contained">
-            <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
-          </div>
+          <LazyHomeFaqAccordion :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
         </div>
       </div>
     </div>

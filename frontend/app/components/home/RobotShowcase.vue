@@ -33,7 +33,7 @@ const { t } = useI18n();
 <style scoped>
 /* --u is one pixel of the 2000px design frame. */
 .robot {
-  --u: min(0.05vw, 0.725px);
+  --u: 0.05vw;
   position: relative;
   z-index: 30;
   display: flex;

@@ -53,7 +53,7 @@ const sceneVars = computed(() => {
 <style scoped>
 .airways-scene {
   position: relative;
-  padding-top: clamp(3rem, calc(7 * var(--container-vw)), 8rem);
+  padding-top: clamp(3rem, 7vw, 8rem);
   background: #000;
 }
 
@@ -65,11 +65,11 @@ const sceneVars = computed(() => {
   align-items: last baseline;
   justify-content: center;
   gap: 0.16em;
-  margin: 0 0 clamp(-4rem, calc(-4 * var(--container-vw)), -1rem);
+  margin: 0 0 clamp(-4rem, -4vw, -1rem);
   padding-inline: 1.25rem;
   color: #fff;
   font-family: var(--app-font-display) !important;
-  font-size: clamp(4.25rem, calc(10 * var(--container-vw)), 12rem);
+  font-size: clamp(4.25rem, 10vw, 12rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;

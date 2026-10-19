@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
    the viewport width but never so large that the block (~1005 design px tall)
    outgrows the screen under the fixed header. */
 .identity {
-  --u: min(0.05vw, 0.725px, calc((100svh - 10rem) / 1005));
+  --u: min(0.05vw, calc((100svh - 10rem) / 1005));
   position: relative;
   height: 400vh;
   background: #fff;
