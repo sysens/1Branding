@@ -37,6 +37,9 @@
   margin: 0;
   color: #0a0a0a;
   white-space: nowrap;
+  /* Keep copy hidden before Vue mounts. The scroll renderer reveals it only
+     near the end of the sequence, avoiding a visible first-paint flash. */
+  opacity: 0;
 }
 
 .parts__brand {
@@ -233,6 +236,13 @@
   .parts__layer,
   .parts__card {
     will-change: auto;
+  }
+
+  .parts__brand,
+  .parts__headline,
+  .parts__lead,
+  .parts__tagline {
+    opacity: 1;
   }
 }
 
