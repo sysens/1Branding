@@ -230,7 +230,7 @@ useGsapContext(root, ({ gsap }) => {
           <button
             type="button"
             :disabled="!briefFileUrl"
-            class="w-[236px] h-[60px] rounded-[32px] text-[16px] text-white font-normal md:text-[19.57px] leading-[19.57px] capitalize font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] text-[16px] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
+            class="w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] text-[16px] text-white font-normal md:text-[19.57px] leading-[19.57px] capitalize font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] text-[16px] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
             @click="onDownloadBrief"
           >
             {{ $t("common.downloadBrief") }}

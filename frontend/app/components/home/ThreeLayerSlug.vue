@@ -269,7 +269,7 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
 
     <a
       :href="localePath('/projects')"
-      class="text-white mx-auto mt-[80px] mb-[50px] bg-[url('/home/Component3.png')] md:w-[16.25rem] w-[219px] md:h-[3.75rem] h-[50px] rounded-[32px] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center text-center"
+      class="text-white mx-auto mt-[80px] mb-[50px] bg-[url('/home/Component3.png')] w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center text-center"
       @click.prevent="navigateSafely(localePath('/projects'))"
     >
       {{ $t("aboutPage.moreButton") }}

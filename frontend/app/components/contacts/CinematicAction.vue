@@ -34,8 +34,8 @@ const resetLight = () => { lightX.value = "calc(100% - 6px)"; };
 .cinematic-action {
   position: relative;
   display: inline-flex;
-  width: 174px;
-  height: 40px;
+  width: var(--button-w);
+  height: var(--button-h);
   isolation: isolate;
   vertical-align: middle;
 }

@@ -62,6 +62,12 @@ const goHome = () => clearError({ redirect: localePath("/") });
 }
 
 .error-page__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--button-w);
+  height: var(--button-h);
   margin-top: 1.5rem;
   padding: 0.9rem 2.25rem;
   border: 2px solid #03cb00;

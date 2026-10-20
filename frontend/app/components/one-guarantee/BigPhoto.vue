@@ -187,7 +187,7 @@ const onCtaClick = async (event: MouseEvent) => {
           <NuxtLink
             :to="isExternalUrl(buttonUrl) ? buttonUrl : localePath(isSitePath(buttonUrl) ? buttonUrl : '/')"
             :external="isExternalUrl(buttonUrl)"
-            class="cta-btn inline-flex items-center justify-center text-white bg-[url('/home/Component3.png')] bg-no-repeat w-[260px] h-[60px] rounded-[32px] bg-[length:120%] bg-[position:100%_50%] transition-all duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[length:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] text-[16px] font-['Inter']"
+            class="cta-btn inline-flex items-center justify-center text-white bg-[url('/home/Component3.png')] bg-no-repeat w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] bg-[length:120%] bg-[position:100%_50%] transition-all duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[length:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] text-[16px] font-['Inter']"
             @click="onCtaClick"
           >
             {{ buttonText }}
