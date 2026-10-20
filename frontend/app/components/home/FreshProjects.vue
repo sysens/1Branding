@@ -155,15 +155,17 @@ const localePath = useLocalePath();
   position: relative;
   display: grid;
   place-items: center;
-  width: calc(263 * var(--u));
-  height: calc(62 * var(--u));
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   margin-top: calc(84 * var(--u));
   overflow: hidden;
   isolation: isolate;
   border-radius: 999px;
   background: linear-gradient(100deg, #26b830 0%, #3fe24a 45%, #63ff5c 100%);
   color: #eaffea;
-  font-size: calc(26 * var(--u));
+  font-size: var(--button-font);
   font-weight: 500;
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -228,10 +230,7 @@ const localePath = useLocalePath();
   }
 
   .fresh__more {
-    width: 10.5rem;
-    height: 3rem;
     margin-top: 2.25rem;
-    font-size: 1.1rem;
   }
 }
 

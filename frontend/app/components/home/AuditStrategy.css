@@ -315,13 +315,15 @@
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  width: calc(258 * var(--u));
-  height: calc(62 * var(--u));
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   margin-top: calc(37 * var(--u));
   border-radius: 999px;
   background: var(--green);
   color: #052b12;
-  font-size: calc(25 * var(--u));
+  font-size: var(--button-font);
   font-weight: 700;
   letter-spacing: -0.02em;
   text-decoration: none;
@@ -508,10 +510,7 @@
   }
 
   .audit__button {
-    width: 11.5rem;
-    height: 3.1rem;
     margin-top: 1.5rem;
-    font-size: 1.1rem;
   }
 }
 

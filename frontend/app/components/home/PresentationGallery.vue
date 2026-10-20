@@ -228,16 +228,18 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* The same size as the landing's other buttons (258 x 62 design px). */
-  width: 12.9vw;
-  height: 3.1vw;
+  /* The landing's shared button size (--button-*). */
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   border-radius: 999px;
   background:
     radial-gradient(ellipse 70% 60% at 70% 10%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 70%),
     linear-gradient(100deg, #00b52b 0%, #00e536 45%, #00f83c 70%, #00cf31 100%);
   box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35);
   color: #062b10;
-  font-size: 1.25vw;
+  font-size: var(--button-font);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -279,14 +281,6 @@ onBeforeUnmount(() => {
 @media (min-width: 1441px) {
   .pgallery {
     --g: calc(10px + 0.416667vw);
-  }
-}
-
-@media (max-width: 767px) {
-  .pgallery__button {
-    width: 11.5rem;
-    height: 3.1rem;
-    font-size: 1.1rem;
   }
 }
 

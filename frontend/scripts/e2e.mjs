@@ -52,7 +52,10 @@ try {
   check("home renders through the private URL", res.status === 200 && proxyHits > 0, `${res.status}, ${proxyHits} proxy hits, ${firstMs} ms`);
   check("cache-control set", /s-maxage=300/.test(res.headers.get("cache-control") || ""), res.headers.get("cache-control"));
   check("canonical uses the forwarded host", first.includes('href="https://onebrandingworld.com/"'), (first.match(/rel="canonical"[^>]*/) || [""])[0]);
-  check("home has CMS content", first.includes("r2.dev"), "");
+  // The page's data (CMS media URLs among it) is in its extracted payload.
+  const payloadSrc = (first.match(/data-src="([^"]+)"/) || [])[1]?.replace(/&amp;/g, "&");
+  const payload = payloadSrc ? await (await fetch(BASE + payloadSrc, { headers })).text() : "";
+  check("home has CMS content", payload.includes("r2.dev"), payloadSrc || "no payload");
 
   const hitsBefore = proxyHits;
   t = Date.now();

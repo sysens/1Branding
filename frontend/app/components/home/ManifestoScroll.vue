@@ -20,9 +20,13 @@ const MESSAGES: Segment[][][] = [
 const FADE = 0.3;
 const BLUR_PX = 10;
 const SHIFT_PERCENT = 14;
+// The bar fades out near the end of the scroll: it is gone before the tilted
+// collage below (whose raised corner shows a little early) comes into view.
+const BAR_FADE: [number, number] = [0.85, 0.95];
 
 const root = ref<HTMLElement | null>(null);
 const bar = ref<HTMLElement | null>(null);
+const track = ref<HTMLElement | null>(null);
 let messages: HTMLElement[] = [];
 let frame = 0;
 let stop: (() => void) | undefined;
@@ -44,6 +48,7 @@ const render = () => {
     message.style.transform = `translate3d(0, ${(SHIFT_PERCENT - clamp01(local) * 2 * SHIFT_PERCENT).toFixed(2)}%, 0)`;
   });
   if (bar.value) bar.value.style.transform = `scaleX(${progress.toFixed(4)})`;
+  if (track.value) track.value.style.opacity = (1 - ramp(progress, ...BAR_FADE)).toFixed(3);
 };
 
 const schedule = () => {
@@ -83,7 +88,7 @@ onBeforeUnmount(() => {
         </span>
       </p>
 
-      <div class="manifesto__progress" aria-hidden="true">
+      <div ref="track" class="manifesto__progress" aria-hidden="true">
         <div ref="bar" class="manifesto__progress-fill" />
       </div>
     </div>

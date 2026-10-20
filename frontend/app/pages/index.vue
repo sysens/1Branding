@@ -85,7 +85,7 @@ usePageSeo({
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
-          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :logos="partnerLogos" :numeral="false" :transition="false" />
+          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :numeral="false" :transition="false" />
           <!-- BrandStoriesSection (Apex / Perfect Candy / GreenGo) and the glow
                that led into it were taken off the landing; they stay for other pages. -->
           <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />

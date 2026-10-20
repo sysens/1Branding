@@ -161,8 +161,10 @@ const go = (step: 1 | -1) => {
 .compare-section__arrow {
   display: grid;
   place-items: center;
-  width: calc(75 * var(--u));
-  height: calc(100 * var(--u));
+  /* About half the first draft's 75 x 100: the chevrons no longer outweigh
+     the pictures. */
+  width: max(2rem, calc(40 * var(--u)));
+  height: max(2.6rem, calc(56 * var(--u)));
   padding: 0;
   border: 0;
   background: none;
@@ -201,14 +203,16 @@ const go = (step: 1 | -1) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* The size of the landing's other buttons (as AuditStrategy's "Learn more"). */
-  width: calc(258 * var(--u));
-  height: calc(62 * var(--u));
+  /* The landing's shared button size (--button-*). */
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   margin-top: calc(70 * var(--u));
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: calc(25 * var(--u));
+  font-size: var(--button-font);
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -267,10 +271,7 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__button {
-    width: 11.5rem;
-    height: 3.1rem;
     margin-top: 2rem;
-    font-size: 1.1rem;
   }
 }
 

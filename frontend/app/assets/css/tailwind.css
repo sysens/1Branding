@@ -71,6 +71,13 @@
         /* The space left and right of the frame (0 up to 1920px): add it to a
            full-width section's side padding to keep its content in the frame. */
         --frame-side: max(0px, calc((100% - var(--frame-max)) / 2));
+        /* One size for every pill button (the design's 258 x 62 px, 25px type,
+           on its 2000px frame), never smaller than the phone size. Longer
+           labels grow the button sideways; the height and type stay. */
+        --button-w: max(11.5rem, calc(12.9 * var(--fvw)));
+        --button-h: max(3.1rem, calc(3.1 * var(--fvw)));
+        --button-font: max(1.1rem, calc(1.25 * var(--fvw)));
+        --button-pad: max(1.5rem, calc(1.5 * var(--fvw)));
         /* One size for the landing's section headings ("Fresh projects",
            "Frequently asked questions", "Make your brand look better" ...). */
         --section-title-size: clamp(2.25rem, 5vw, 96px);

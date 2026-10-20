@@ -221,13 +221,16 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   gap: 0.5em;
-  width: calc(377 * var(--u));
-  height: calc(82 * var(--u));
+  /* The landing's shared button size (--button-*). */
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   margin-top: calc(42 * var(--u));
   border-radius: 999px;
   background: var(--green);
   color: #031c0b;
-  font-size: calc(31 * var(--u));
+  font-size: var(--button-font);
   font-weight: 700;
   letter-spacing: -0.02em;
   text-decoration: none;
@@ -364,11 +367,7 @@ a.site-footer__link:focus-visible {
   }
 
   .site-footer__start {
-    width: auto;
-    height: 3.4rem;
     margin-top: 1.5rem;
-    padding: 0 1.6rem;
-    font-size: 1.1rem;
   }
 
   .site-footer__columns {

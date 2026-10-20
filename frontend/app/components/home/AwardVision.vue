@@ -191,12 +191,14 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(258 * var(--u));
-  height: calc(62 * var(--u));
+  width: max-content;
+  min-width: var(--button-w);
+  height: var(--button-h);
+  padding-inline: var(--button-pad);
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: calc(25 * var(--u));
+  font-size: var(--button-font);
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -268,10 +270,7 @@ onBeforeUnmount(() => {
 
   .vision__button {
     align-self: center;
-    width: 11.5rem;
-    height: 3.1rem;
     margin-top: 1.5rem;
-    font-size: 1.1rem;
   }
 }
 

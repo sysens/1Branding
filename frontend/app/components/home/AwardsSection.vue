@@ -10,7 +10,17 @@ const { t } = useI18n();
 // green-to-yellow glow under the stage that led into the yellow brand stories.
 // The landing leaves both out, other pages can keep them.
 withDefaults(defineProps<{ logos?: string[]; numeral?: boolean; transition?: boolean }>(), { logos: () => [], numeral: true, transition: true });
-const fallbackLogos = ["/home/arianespace.webp", "/home/hyperlooptt.webp", "/home/accor.webp", "/home/rakuten.png", "/home/lexus.webp", "/home/sorare.webp", "/home/Vector.webp"];
+
+// The clients' white logos (public/home/partners, trimmed to their artwork and
+// 98px tall: twice the strip's logo height). A page can pass its own list.
+const PARTNER_LOGOS = [
+  "202-burger", "anvar-usta", "apex-pizza", "art-anor", "asakabank", "barberra",
+  "bliss", "brono-360", "burger-king", "cyber-nat", "deco-360", "dodo-kids",
+  "gloss-maxx", "grechno", "hayaati", "lemonart", "luqmam", "marinno",
+  "mayda-manti", "nescafe", "nivea", "omaf", "overspray", "ozpermit",
+  "perfect-candy", "poyqadam", "raviosta", "red-bull", "starbucks", "street-77",
+  "wok",
+].map((name) => `/home/partners/${name}.webp`);
 
 const year = computed(() => t("home.awards.year") || "2026");
 const title = computed(() => t("home.awards.title") || "Awwward");
@@ -20,7 +30,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
 <template>
   <section id="awards" class="awards-section" aria-labelledby="awards-title">
     <div class="awards-section__brands" role="group" :aria-label="$t('a11y.clients')">
-      <Brands :logos="logos.length ? logos : fallbackLogos" :duration-seconds="160" />
+      <Brands :logos="logos.length ? logos : PARTNER_LOGOS" :duration-seconds="160" />
     </div>
     <header class="awards-section__heading">
       <h2 id="awards-title">
