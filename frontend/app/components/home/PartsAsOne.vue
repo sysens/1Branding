@@ -209,7 +209,11 @@ const render = () => {
   // The sticky range; unlike innerHeight it does not change when a phone's
   // toolbar shows or hides.
   const distance = section.offsetHeight - view.offsetHeight;
-  const progress = distance > 0 ? clamp01(-section.getBoundingClientRect().top / distance) : 1;
+  // The component stylesheet can arrive a frame after Vue mounts. Until its
+  // sticky height is applied, there is no usable scroll range; treating that
+  // as progress 1 briefly reveals the end-copy before the first real paint.
+  if (distance <= 0) return;
+  const progress = clamp01(-section.getBoundingClientRect().top / distance);
 
   // Stage placement: centred when the render fits, otherwise panned with the
   // action and finally zoomed out to the whole render.
@@ -302,7 +306,12 @@ const schedule = () => {
 };
 
 onMounted(() => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    screen.value?.querySelectorAll<HTMLElement>("[data-headline], [data-tagline]").forEach((element) => {
+      element.style.opacity = "1";
+    });
+    return;
+  }
   animated.value = true;
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule, { passive: true });
@@ -310,7 +319,9 @@ onMounted(() => {
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
   };
-  render();
+  // Let the component stylesheet establish the sticky layout before the
+  // first measurement. The copy is inline-hidden in the meantime.
+  requestAnimationFrame(() => requestAnimationFrame(render));
 });
 
 onBeforeUnmount(() => {
@@ -326,16 +337,16 @@ onBeforeUnmount(() => {
       <!-- Texts sit on the screen rather than the stage, so on phones (where the
            stage pans) they stay in view; on wider screens they line up with the
            design frame through the same --u maths. -->
-      <p class="parts__brand" data-headline>OneBranding</p>
-      <h2 class="parts__headline" data-headline>
+      <p class="parts__brand" data-headline style="opacity: 0">OneBranding</p>
+      <h2 class="parts__headline" data-headline style="opacity: 0">
         <span>{{ t("home.parts.headlineFirst") }}</span>
         <span>{{ t("home.parts.headlineSecond") }}</span>
       </h2>
       <ul class="sr-only">
         <li v-for="service in services" :key="service">{{ service }}</li>
       </ul>
-      <p class="parts__lead" data-tagline>{{ t("home.parts.lead") }}</p>
-      <p class="parts__tagline" data-tagline>{{ t("home.parts.tagline") }}</p>
+      <p class="parts__lead" data-tagline style="opacity: 0">{{ t("home.parts.lead") }}</p>
+      <p class="parts__tagline" data-tagline style="opacity: 0">{{ t("home.parts.tagline") }}</p>
 
       <div ref="stage" class="parts__stage" aria-hidden="true">
         <div class="parts__art">
