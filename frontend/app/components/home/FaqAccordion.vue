@@ -25,22 +25,28 @@ const base = useId();
       {{ t("home.faq.titleLead") }} <span class="faq__green">{{ t("home.faq.titleAccent") }}</span>
     </h2>
 
-    <ul class="faq__list">
-      <li v-for="(item, index) in items" :key="index" v-blur-reveal class="faq__item" :class="{ 'is-open': open === index }">
+    <ul v-blur-reveal class="faq__list">
+      <li v-for="(item, index) in items" :key="index" class="faq__item" :class="{ 'is-open': open === index }">
         <h3 class="faq__heading">
           <button
             :id="`${base}-q${index}`"
             type="button"
             class="faq__question"
             :aria-expanded="open === index"
-            :aria-controls="`${base}-a${index}`"
+            :aria-controls="open === index ? `${base}-a${index}` : undefined"
             @click="toggle(index)"
           >
             <span>{{ item.question }}</span>
             <span class="faq__icon" aria-hidden="true" />
           </button>
         </h3>
-        <div :id="`${base}-a${index}`" class="faq__panel" role="region" :aria-labelledby="`${base}-q${index}`">
+        <div
+          v-if="open === index"
+          :id="`${base}-a${index}`"
+          class="faq__panel"
+          role="region"
+          :aria-labelledby="`${base}-q${index}`"
+        >
           <div class="faq__panel-inner">
             <p class="faq__answer">{{ item.answer }}</p>
           </div>
@@ -187,16 +193,7 @@ const base = useId();
 }
 
 .faq__panel {
-  display: block;
   overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.25s ease;
-}
-
-.faq__item.is-open .faq__panel {
-  max-height: 24rem;
-  opacity: 1;
 }
 
 .faq__panel-inner {
@@ -254,31 +251,7 @@ const base = useId();
   }
 }
 
-/* Scrolling in, the questions rise from below one after another (v-blur-reveal
-   marks them; these rules keep the item's own hover transitions as well). */
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .faq__item[data-blur-reveal] {
-    opacity: 0;
-    filter: blur(8px);
-    translate: 0 max(2rem, calc(70 * var(--u)));
-    transition:
-      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
-      filter 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
-      translate 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-batch, 0s),
-      border-color 0.4s ease,
-      background-color 0.4s ease,
-      box-shadow 0.4s ease;
-  }
-
-  .faq__item[data-blur-reveal].is-revealed {
-    opacity: 1;
-    filter: blur(0);
-    translate: 0 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .faq__panel,
   .faq__icon,
   .faq__icon::before,
   .faq__icon::after {

@@ -97,7 +97,9 @@ usePageSeo({
           <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
           <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeFaqAccordion :hydrate-on-visible="LAZY_HYDRATION" />
+          <!-- FAQ must hydrate immediately: lazy hydration can reset the open
+               item while the visitor is interacting with an answer. -->
+          <HomeFaqAccordion />
           <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
         </div>
       </div>
