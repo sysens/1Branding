@@ -71,13 +71,11 @@
         /* The space left and right of the frame (0 up to 1920px): add it to a
            full-width section's side padding to keep its content in the frame. */
         --frame-side: max(0px, calc((100% - var(--frame-max)) / 2));
-        /* One fixed size for every pill button: the design's 62px height and
-           25px type on its 2000px frame, wide enough for the longest label
-           ("Start your project") with the design's side padding, never
-           smaller than the phone size. A label longer than that would
-           overflow the pill, so keep labels short. */
-        --button-w: max(13rem, calc(14.5 * var(--fvw)));
-        --button-h: max(3.1rem, calc(3.1 * var(--fvw)));
+        /* One fixed desktop size for every primary CTA. The 247 × 60px
+           footprint stays consistent across landing sections and has enough
+           room for the longest current label, "Start your project". */
+        --button-w: 247px;
+        --button-h: 60px;
         --button-font: max(1.1rem, calc(1.25 * var(--fvw)));
         --button-pad: max(1.5rem, calc(1.5 * var(--fvw)));
         /* One size for the landing's section headings ("Fresh projects",
