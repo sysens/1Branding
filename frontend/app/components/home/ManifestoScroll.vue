@@ -141,6 +141,12 @@ onBeforeUnmount(() => {
   width: fit-content;
   max-width: 100%;
   text-wrap: balance;
+  /* A block's background covers its line box only: with this tight
+     line-height the descenders (g, y, q) fall outside it and, clipped to the
+     text, go unpainted. Pad the paint box down to them; the negative margin
+     keeps the layout. */
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
   background: linear-gradient(90deg, #009c30, #00d82a);
   -webkit-background-clip: text;
   background-clip: text;
