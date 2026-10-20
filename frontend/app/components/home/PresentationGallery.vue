@@ -229,10 +229,10 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   /* The landing's shared button size (--button-*). */
-  width: max-content;
-  min-width: var(--button-w);
+  width: var(--button-w);
   height: var(--button-h);
   padding-inline: var(--button-pad);
+  white-space: nowrap;
   border-radius: 999px;
   background:
     radial-gradient(ellipse 70% 60% at 70% 10%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 70%),

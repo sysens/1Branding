@@ -333,9 +333,9 @@
   /* The landing's shared button size (--button-*), outlined. */
   .clients__more {
     display: block;
-    width: max-content;
-    min-width: var(--button-w);
+    width: var(--button-w);
     height: var(--button-h);
+    white-space: nowrap;
     margin: 1.25rem auto 0;
     padding: 0 var(--button-pad);
     border: 1px solid rgb(34 227 82 / 0.5);

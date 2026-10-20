@@ -191,10 +191,10 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: max-content;
-  min-width: var(--button-w);
+  width: var(--button-w);
   height: var(--button-h);
   padding-inline: var(--button-pad);
+  white-space: nowrap;
   border-radius: 999px;
   background: #000;
   color: #fff;

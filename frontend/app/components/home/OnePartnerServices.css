@@ -239,10 +239,10 @@
   align-self: flex-start;
   justify-content: center;
   gap: 0.45em;
-  width: max-content;
-  min-width: var(--button-w);
+  width: var(--button-w);
   height: var(--button-h);
   padding-inline: var(--button-pad);
+  white-space: nowrap;
   margin-top: clamp(1.1rem, calc(1.4 * var(--vw)), 1.8rem);
   border-radius: 999px;
   background: linear-gradient(100deg, #00c92f 0%, #00ee38 55%, #00d634 100%);

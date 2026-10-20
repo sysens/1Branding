@@ -222,10 +222,10 @@ onBeforeUnmount(() => {
   justify-content: center;
   gap: 0.5em;
   /* The landing's shared button size (--button-*). */
-  width: max-content;
-  min-width: var(--button-w);
+  width: var(--button-w);
   height: var(--button-h);
   padding-inline: var(--button-pad);
+  white-space: nowrap;
   margin-top: calc(42 * var(--u));
   border-radius: 999px;
   background: var(--green);
