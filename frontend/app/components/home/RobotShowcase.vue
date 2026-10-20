@@ -76,7 +76,9 @@ const { t } = useI18n();
 
 .robot__brand :deep(.footer-brand-sparkles__title) {
   font-size: calc(205 * var(--u));
+  line-height: 1.05;
   letter-spacing: -0.02em;
+  padding-bottom: 0.08em;
   background: linear-gradient(100deg, #b9b9b9 0%, #ffffff 28%, #ffffff 70%, #e6e6e6 100%);
   -webkit-background-clip: text;
   background-clip: text;

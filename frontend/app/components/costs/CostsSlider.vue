@@ -29,8 +29,11 @@
               type="button"
               class="costs-card"
               :class="{ 'costs-card--active': activeIndex[categoryIndex] === itemIndex }"
+              :aria-expanded="expandedIndex[categoryIndex] === itemIndex"
+              :aria-controls="`costs-details-${categoryIndex}-${itemIndex}`"
               @mouseenter="setActive(categoryIndex, itemIndex)"
               @focus="setActive(categoryIndex, itemIndex)"
+              @click="toggleDetails(categoryIndex, itemIndex)"
             >
               <img
                 class="costs-card__badge"
@@ -40,12 +43,24 @@
                 loading="lazy"
               >
 
-              <span class="costs-card__name">{{ item.title }}</span>
+              <span class="costs-card__summary">
+                <span class="costs-card__name">{{ item.title }}</span>
 
-              <span class="costs-card__price">
-                <span class="costs-card__from">{{ fromLabel }}</span>
-                <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
+                <span class="costs-card__price">
+                  <span class="costs-card__from">{{ fromLabel }}</span>
+                  <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
+                </span>
               </span>
+
+              <Transition name="costs-details">
+                <span
+                  v-if="expandedIndex[categoryIndex] === itemIndex"
+                  :id="`costs-details-${categoryIndex}-${itemIndex}`"
+                  class="costs-card__details"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </span>
+              </Transition>
             </button>
           </div>
         </section>
@@ -126,12 +141,14 @@ const formatPrice = (value: string) => {
 
 // Highlighted ("featured") card per category — defaults to the first, follows hover/focus.
 const activeIndex = reactive<Record<number, number>>({});
+const expandedIndex = reactive<Record<number, number | null>>({});
 
 watch(
   priceCategories,
   (categories) => {
     categories.forEach((_, index) => {
       if (activeIndex[index] === undefined) activeIndex[index] = 0;
+      if (expandedIndex[index] === undefined) expandedIndex[index] = null;
     });
   },
   { immediate: true }
@@ -139,6 +156,11 @@ watch(
 
 const setActive = (categoryIndex: number, itemIndex: number) => {
   activeIndex[categoryIndex] = itemIndex;
+};
+
+const toggleDetails = (categoryIndex: number, itemIndex: number) => {
+  setActive(categoryIndex, itemIndex);
+  expandedIndex[categoryIndex] = expandedIndex[categoryIndex] === itemIndex ? null : itemIndex;
 };
 </script>
 
@@ -232,6 +254,14 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
   transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
 }
 
+.costs-card__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
 .costs-card:hover {
   transform: translateY(-1px);
 }
@@ -285,6 +315,35 @@ const setActive = (categoryIndex: number, itemIndex: number) => {
   font-size: clamp(1.3rem, 3vw, 2.75rem);
   line-height: 1;
   color: #ffffff;
+}
+
+.costs-card__details {
+  flex-basis: 100%;
+  overflow: hidden;
+  max-height: 10rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgb(255 255 255 / 0.17);
+  color: rgb(255 255 255 / 0.82);
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+.costs-details-enter-active,
+.costs-details-leave-active {
+  transition: max-height 0.25s ease, margin-top 0.25s ease, padding-top 0.25s ease, opacity 0.2s ease;
+}
+
+.costs-details-enter-from,
+.costs-details-leave-to {
+  max-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  border-top-color: transparent;
+  opacity: 0;
 }
 
 /* "1" badge image — only visible on the active card, top-right corner */
