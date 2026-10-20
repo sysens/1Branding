@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
 
-// "Frequently asked questions": one answer open at a time; it unfolds by
-// animating the row's grid track (0fr → 1fr), so any answer length eases open.
+// "Frequently asked questions": one answer open at a time. A max-height
+// transition is used instead of a fractional grid track because it reliably
+// keeps the answer visible inside this lazy-hydrated landing section.
 
 const { t, tm, rt } = useI18n();
 const items = computed(() => (tm("home.faq.items") as Array<{ q: unknown; a: unknown }>).map((item) => ({
@@ -186,18 +187,20 @@ const base = useId();
 }
 
 .faq__panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  display: block;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.25s ease;
 }
 
 .faq__item.is-open .faq__panel {
-  grid-template-rows: 1fr;
+  max-height: 24rem;
+  opacity: 1;
 }
 
 .faq__panel-inner {
-  min-height: 0;
-  overflow: hidden;
+  display: block;
 }
 
 .faq__answer {
@@ -207,15 +210,6 @@ const base = useId();
   color: #9a9da1;
   font-size: calc(20 * var(--u));
   line-height: 1.55;
-  opacity: 0;
-  transform: translateY(calc(-8 * var(--u)));
-  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.faq__item.is-open .faq__answer {
-  opacity: 1;
-  transform: none;
-  transition-delay: 0.12s;
 }
 
 @media (max-width: 767px) {
@@ -285,7 +279,6 @@ const base = useId();
 
 @media (prefers-reduced-motion: reduce) {
   .faq__panel,
-  .faq__answer,
   .faq__icon,
   .faq__icon::before,
   .faq__icon::after {

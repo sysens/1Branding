@@ -236,6 +236,7 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
 .costs-card {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -318,6 +319,7 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
 }
 
 .costs-card__details {
+  width: 100%;
   flex-basis: 100%;
   overflow: hidden;
   max-height: 10rem;
