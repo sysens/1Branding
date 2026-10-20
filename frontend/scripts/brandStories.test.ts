@@ -27,8 +27,9 @@ describe("brand stories", () => {
     expect(tail.indexOf("<LazyHomeAuditStrategy")).toBeGreaterThan(tail.indexOf("<LazyHomeBrandCompare"));
     expect(tail.indexOf("<LazyHomeClientsGrid")).toBeGreaterThan(tail.indexOf("<LazyHomeAuditStrategy"));
     expect(tail.indexOf("<LazyHomeFreshProjects")).toBeGreaterThan(tail.indexOf("<LazyHomeClientsGrid"));
-    expect(tail.indexOf("<LazyHomeFaqAccordion")).toBeGreaterThan(tail.indexOf("<LazyHomeFreshProjects"));
-    expect(tail.indexOf("<LazyHomeRobotShowcase")).toBeGreaterThan(tail.indexOf("<LazyHomeFaqAccordion"));
+    // The FAQ hydrates at once (lazy hydration could reset an open answer).
+    expect(tail.indexOf("<HomeFaqAccordion")).toBeGreaterThan(tail.indexOf("<LazyHomeFreshProjects"));
+    expect(tail.indexOf("<LazyHomeRobotShowcase")).toBeGreaterThan(tail.indexOf("<HomeFaqAccordion"));
     // The site footer comes from the default layout, after every page.
     expect(await Bun.file("app/layouts/default.vue").text()).toContain("<LazyFooter");
     expect(await Bun.file("public/home/scene.jpg").exists()).toBe(true);

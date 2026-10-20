@@ -36,7 +36,13 @@ export function useSectionTitleReveal(root: Ref<HTMLElement | null>): void {
       });
       root.value?.querySelectorAll("h1,h2").forEach(title => {
         if (seen.has(title)) return;
-        seen.add(title); observer.observe(title);
+        seen.add(title);
+        // A heading its own section keeps hidden (PartsAsOne's headline until
+        // the end of its pinned scroll, blur-reveal titles) reveals itself:
+        // fading it in here would show it early and snap it back out when
+        // the animation ends.
+        if (getComputedStyle(title).opacity === "0") return;
+        observer.observe(title);
       });
     };
     const mutations = new MutationObserver(observe);
