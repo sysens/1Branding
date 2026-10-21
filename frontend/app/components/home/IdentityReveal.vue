@@ -70,7 +70,7 @@ const render = () => {
   words.forEach((word, index) => {
     const shown = progress >= (index / last) * LAST_CUE;
     const was = word.hasAttribute("data-revealed");
-    revealTo(word, shown, shown && !was ? Math.min(batch++, 15) * 40 : 0);
+    revealTo(word, shown, shown && !was ? Math.min(batch++, 15) * 40 : 0, { sweep: false });
   });
 };
 

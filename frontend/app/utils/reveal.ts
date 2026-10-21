@@ -2,7 +2,12 @@
 //
 // - "blur" (headings, v-blur-reveal): out of a blur, fading in and settling up
 //   a little, 1.3s on an ease-out-cubic (a stronger ease-out had the text 95%
-//   in after 150ms, which read as a pop rather than a reveal).
+//   in after 150ms, which read as a pop rather than a reveal), while a soft
+//   edge sweeps it in from left to right: apple.com/iphone-18-pro's animated
+//   headline ("Welcome to the mother chip.") lights up left to right as a
+//   300%-wide gradient slides across it (`gradient-swipe`, 3.5s). Here the
+//   sweep is a mask, so the heading keeps its own colours (white, black, the
+//   green accents).
 // - "rise" (everything else: text, buttons, cards, media; v-rise): measured on
 //   apple.com/iphone, no blur: fading in over 0.9s while rising 30px over
 //   0.7s, both ease-in-out.
@@ -25,6 +30,34 @@ const BLUR_IN: KeyframeAnimationOptions = { duration: 1300, easing: "cubic-bezie
 const RISE_FADE: KeyframeAnimationOptions = { duration: 900, easing: "cubic-bezier(0.42, 0, 0.58, 1)" };
 const RISE_MOVE: KeyframeAnimationOptions = { duration: 700, easing: "cubic-bezier(0.42, 0, 0.58, 1)" };
 const OUT: KeyframeAnimationOptions = { duration: 450, easing: "cubic-bezier(0.4, 0, 1, 1)" };
+
+// The sweep: a mask three times the element's width, opaque on its left
+// third and clear on its right third with a soft ramp between; sliding it
+// from its right end (all clear) to its left end (all opaque) uncovers the
+// element from left to right.
+const SWEEP_MASK = "linear-gradient(90deg, #000 40%, transparent 60%)";
+const sweepKeyframe = (position: string): Keyframe => ({
+  maskImage: SWEEP_MASK,
+  maskSize: "300% 100%",
+  maskRepeat: "no-repeat",
+  maskPosition: position,
+  webkitMaskImage: SWEEP_MASK,
+  webkitMaskSize: "300% 100%",
+  webkitMaskRepeat: "no-repeat",
+  webkitMaskPosition: position,
+});
+// An element with a mask of its own (the awards' outlined year) would see it
+// swapped for the sweep's and back: it gets the blur without the sweep.
+const hasOwnMask = (element: HTMLElement) => {
+  const style = getComputedStyle(element);
+  return (style.maskImage || style.webkitMaskImage || "none") !== "none";
+};
+
+// The edge crosses the heading in about 0.7s, as in the video of Apple's
+// page, on a soft ease-in-out so the travel itself is seen.
+const SWEEP: KeyframeAnimationOptions = { duration: 1100, easing: "cubic-bezier(0.45, 0, 0.25, 1)" };
+
+export type RevealOptions = { sweep?: boolean };
 
 /** The gap between one item of a section and the next (apple.com: ~0.15s). */
 export const REVEAL_STEP_MS = 150;
@@ -78,7 +111,7 @@ const track = (element: HTMLElement, animations: Animation[]) => {
 };
 
 /** Shows the element: from hidden (or from where it is) to its own style. */
-export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = lookOf(element)): void {
+export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = lookOf(element), options: RevealOptions = {}): void {
   wanted.set(element, true);
   const from = take(element);
   element.setAttribute("data-revealed", "");
@@ -95,7 +128,10 @@ export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = l
     return;
   }
   const timing = look === "rise" ? RISE_FADE : BLUR_IN;
-  track(element, [element.animate([{ offset: 0, ...(from ?? hidden(element, look)) }], { ...timing, delay, fill: "backwards" })]);
+  const sweep = look === "blur" && !from && options.sweep !== false && !hasOwnMask(element);
+  const animations = [element.animate([{ offset: 0, ...(from ?? hidden(element, look)) }], { ...timing, delay, fill: "backwards" })];
+  if (sweep) animations.unshift(element.animate([sweepKeyframe("100% 0"), sweepKeyframe("0% 0")], { ...SWEEP, delay, fill: "backwards" }));
+  track(element, animations);
 }
 
 /** Hides the element again (a section scrolled back past its cue). */
@@ -118,8 +154,8 @@ export function revealOut(element: HTMLElement, look: RevealLook = lookOf(elemen
 }
 
 /** Reveals or hides the element to match `shown`, only when that changes. */
-export function revealTo(element: HTMLElement, shown: boolean, delayMs = 0): void {
+export function revealTo(element: HTMLElement, shown: boolean, delayMs = 0, options: RevealOptions = {}): void {
   if ((wanted.get(element) ?? element.hasAttribute("data-revealed")) === shown) return;
-  if (shown) revealIn(element, delayMs);
+  if (shown) revealIn(element, delayMs, lookOf(element), options);
   else revealOut(element);
 }
