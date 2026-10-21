@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
   <section class="social" lang="en" aria-labelledby="social-title">
     <h2 id="social-title" class="social__title">
       <span v-blur-reveal class="social__one">{{ t("home.social.one") }}</span>
-      <span v-blur-reveal="0.12" class="social__rest">
+      <span v-blur-reveal class="social__rest">
         <span class="social__brand">{{ t("home.social.brand") }}</span>
         <span class="social__language">{{ t("home.social.visual") }} <span class="social__accent">{{ t("home.social.language") }}</span></span>
       </span>
@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
       <p v-rise class="social__lead">{{ t("home.social.text2") }}</p>
     </div>
     <div class="social__viewport">
-      <div ref="grid" class="social__grid" aria-hidden="true">
+      <div ref="grid" class="social__grid" data-reveal-row aria-hidden="true">
         <div v-for="(column, index) in COLUMNS" :key="index" v-rise class="social__column" :class="{ 'social__column--low': index % 2 === 0 }" :data-column="index">
           <div v-for="(post, row) in column" :key="row" class="social__post">
             <OptImage :src="postSrc(post)" :sizes="POST_SIZES" alt="" width="544" height="680" loading="lazy" decoding="async" draggable="false" />

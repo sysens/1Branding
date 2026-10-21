@@ -119,7 +119,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       <div class="audit__hero">
         <h2 id="audit-title" class="audit__heading">
           <span v-blur-reveal>{{ t("home.audit.lineFirst") }}</span>
-          <span v-blur-reveal="0.12" class="audit__green">{{ t("home.audit.lineSecond") }}</span>
+          <span v-blur-reveal class="audit__green">{{ t("home.audit.lineSecond") }}</span>
         </h2>
         <p v-rise class="audit__aside">
           <span>{{ t("home.audit.asideFirst") }}</span>

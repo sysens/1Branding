@@ -65,11 +65,11 @@ onBeforeUnmount(() => {
     <div class="vision__frame">
       <p v-blur-reveal class="vision__brand">{{ t("home.vision.brand") }}</p>
       <h2 id="vision-title" class="vision__title">
-        <span v-blur-reveal="0.1">{{ t("home.vision.lineFirst") }}</span>
-        <span v-blur-reveal="0.22">{{ t("home.vision.lineSecond") }}</span>
+        <span v-blur-reveal>{{ t("home.vision.lineFirst") }}</span>
+        <span v-blur-reveal>{{ t("home.vision.lineSecond") }}</span>
       </h2>
-      <p v-blur-reveal="0.34" class="vision__label">{{ t("home.vision.label") }}</p>
-      <p v-blur-reveal="0.44" class="vision__year">{{ t("home.vision.year") }}</p>
+      <p v-blur-reveal class="vision__label">{{ t("home.vision.label") }}</p>
+      <p v-blur-reveal class="vision__year">{{ t("home.vision.year") }}</p>
       <div ref="box" class="vision__numeral" :class="{ 'is-ready': ready }" role="img" aria-label="A chrome and black numeral one">
         <canvas ref="canvas" class="vision__canvas" aria-hidden="true" />
       </div>

@@ -5,7 +5,10 @@
 //   in after 150ms, which read as a pop rather than a reveal).
 // - "rise" (everything else: text, buttons, cards, media; v-rise): measured on
 //   apple.com/iphone, no blur: fading in over 0.9s while rising 30px over
-//   0.7s, both ease-in-out, items of a block one after another 0.16s apart.
+//   0.7s, both ease-in-out.
+//
+// A section's items come in one after another, REVEAL_STEP_MS apart, in
+// document order (plugins/blur-reveal.ts), as Apple's do.
 //
 // Both are Web Animations of opacity, filter and translate, which run on the
 // compositor and stay smooth while the page is busy (hydrating sections,
@@ -23,8 +26,8 @@ const RISE_FADE: KeyframeAnimationOptions = { duration: 900, easing: "cubic-bezi
 const RISE_MOVE: KeyframeAnimationOptions = { duration: 700, easing: "cubic-bezier(0.42, 0, 0.58, 1)" };
 const OUT: KeyframeAnimationOptions = { duration: 450, easing: "cubic-bezier(0.4, 0, 1, 1)" };
 
-/** The gap between items of a block that come into view together, in seconds. */
-export const REVEAL_STAGGER: Record<RevealLook, number> = { blur: 0.09, rise: 0.16 };
+/** The gap between one item of a section and the next (apple.com: ~0.15s). */
+export const REVEAL_STEP_MS = 150;
 
 const running = new WeakMap<HTMLElement, Animation[]>();
 // Whether each element was last asked to show or to hide.

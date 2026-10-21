@@ -11,7 +11,7 @@ const { t } = useI18n();
     <header class="world-section__heading">
       <h2 id="world-title">
         <span v-blur-reveal class="world-section__eyebrow">{{ t("home.world.eyebrow") }}</span>
-        <span v-blur-reveal="0.12" class="world-section__word">{{ t("home.world.word") }}</span>
+        <span v-blur-reveal class="world-section__word">{{ t("home.world.word") }}</span>
       </h2>
     </header>
     <div v-rise class="world-section__globe">
@@ -19,8 +19,8 @@ const { t } = useI18n();
     </div>
     <h3 class="world-section__statement">
       <span v-blur-reveal class="world-section__lead">{{ t("home.world.lead") }}</span>
-      <strong v-blur-reveal="0.12">{{ t("home.world.strong") }}</strong>
-      <span v-blur-reveal="0.24" class="world-section__closing">{{ t("home.world.closing") }}</span>
+      <strong v-blur-reveal>{{ t("home.world.strong") }}</strong>
+      <span v-blur-reveal class="world-section__closing">{{ t("home.world.closing") }}</span>
     </h3>
   </section>
 </template>
