@@ -46,11 +46,11 @@ const selected = computed(() => services.value.find((service) => service.id === 
         <span>{{ t("home.services.every") }} <span class="services__accent">{{ t("home.services.solution") }}</span></span>
       </span>
     </h2>
-    <p class="services__subtitle">{{ t("home.services.subtitle") }}</p>
+    <p v-rise class="services__subtitle">{{ t("home.services.subtitle") }}</p>
 
     <div class="services__body">
       <ul class="services__list">
-        <li v-for="service in services" :key="service.id" class="services__item" :class="{ 'is-selected': service.id === selectedId }">
+        <li v-for="service in services" :key="service.id" v-rise class="services__item" :class="{ 'is-selected': service.id === selectedId }">
           <button type="button" class="services__row" :aria-pressed="service.id === selectedId" @click="selectedId = service.id">
             <span class="services__number">{{ service.id }}</span>
             <span class="services__name">{{ service.name }}</span>
@@ -66,7 +66,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
       </ul>
 
       <aside class="services__side">
-        <div class="services__card" aria-live="polite">
+        <div v-rise class="services__card" aria-live="polite">
           <p class="services__label"><span aria-hidden="true" />{{ t("home.services.selected") }}</p>
           <Transition name="services-swap" mode="out-in">
             <div :key="selected.id" class="services__selected">
@@ -82,7 +82,7 @@ const selected = computed(() => services.value.find((service) => service.id === 
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>
           </NuxtLink>
         </div>
-        <p class="services__closing">
+        <p v-rise class="services__closing">
           <span>{{ t("home.services.closingFirst") }}</span>
           <span class="services__closing-muted">{{ t("home.services.closingLead") }}<span class="services__accent">{{ t("home.services.closingAccent") }}</span></span>
         </p>

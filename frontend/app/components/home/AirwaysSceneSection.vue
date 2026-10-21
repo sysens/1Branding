@@ -38,7 +38,7 @@ const sceneVars = computed(() => {
         <span>{{ t("home.airways.rest2") }}</span>
       </span>
     </h2>
-    <div class="airways-scene__stage">
+    <div v-rise class="airways-scene__stage">
       <div
         class="airways-scene__image"
         :class="{ 'is-loaded': loaded }"

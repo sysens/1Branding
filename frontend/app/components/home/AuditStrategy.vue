@@ -115,13 +115,13 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
     <div ref="pin" class="audit__pin">
     <div ref="screen" class="audit__screen">
     <div class="audit__frame">
-      <p class="audit__eyebrow">{{ t("home.audit.eyebrow") }}</p>
+      <p v-rise class="audit__eyebrow">{{ t("home.audit.eyebrow") }}</p>
       <div class="audit__hero">
         <h2 id="audit-title" class="audit__heading">
           <span v-blur-reveal>{{ t("home.audit.lineFirst") }}</span>
           <span v-blur-reveal="0.12" class="audit__green">{{ t("home.audit.lineSecond") }}</span>
         </h2>
-        <p class="audit__aside">
+        <p v-rise class="audit__aside">
           <span>{{ t("home.audit.asideFirst") }}</span>
           <span>{{ t("home.audit.asideSecond") }}</span>
         </p>
@@ -204,11 +204,11 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       </div>
     </div>
 
-    <p class="audit__plan">
+    <p v-blur-reveal class="audit__plan">
       <span class="audit__green">{{ t("home.audit.planAccent") }}</span> {{ t("home.audit.planRest") }}
     </p>
-    <p class="audit__text">{{ t("home.audit.text") }}</p>
-    <NuxtLink :to="localePath('/contact')" class="audit__button">
+    <p v-rise class="audit__text">{{ t("home.audit.text") }}</p>
+    <NuxtLink v-rise :to="localePath('/contact')" class="audit__button">
       {{ t("home.audit.cta") }}
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
     </NuxtLink>

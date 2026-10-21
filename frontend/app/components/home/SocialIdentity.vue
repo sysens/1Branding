@@ -85,8 +85,8 @@ onBeforeUnmount(() => {
       </span>
     </h2>
     <div class="social__copy">
-      <p>{{ t("home.social.text") }} <strong>{{ t("home.social.textStrong") }}</strong></p>
-      <p class="social__lead">{{ t("home.social.text2") }}</p>
+      <p v-rise>{{ t("home.social.text") }} <strong>{{ t("home.social.textStrong") }}</strong></p>
+      <p v-rise class="social__lead">{{ t("home.social.text2") }}</p>
     </div>
     <div class="social__viewport">
       <div ref="grid" class="social__grid" aria-hidden="true">

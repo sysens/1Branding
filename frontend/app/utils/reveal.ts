@@ -1,35 +1,52 @@
-// One look for every heading that comes into view on the site: out of a blur,
-// fading in and settling up a little, on a long, soft ease-out (as on
-// apple.com). Web Animations of opacity, filter and translate run on the
-// compositor, so they stay smooth while the page is busy (hydrating sections,
-// decoding images, a 3D scene starting).
+// How things come into view on the site, in two looks:
 //
-// The hidden state before a reveal is CSS ([data-blur-reveal] without
-// [data-revealed], assets/css/tailwind.css), only while scripting is on and
-// motion is allowed, so the server-rendered text is never lost. The
-// animations use `translate`, not `transform`, so an element's own transforms
-// stay untouched; it needs a block or inline-block box for that to move it.
+// - "blur" (headings, v-blur-reveal): out of a blur, fading in and settling up
+//   a little, 1.3s on an ease-out-cubic (a stronger ease-out had the text 95%
+//   in after 150ms, which read as a pop rather than a reveal).
+// - "rise" (everything else: text, buttons, cards, media; v-rise): measured on
+//   apple.com/iphone, no blur: fading in over 0.9s while rising 30px over
+//   0.7s, both ease-in-out, items of a block one after another 0.16s apart.
+//
+// Both are Web Animations of opacity, filter and translate, which run on the
+// compositor and stay smooth while the page is busy (hydrating sections,
+// decoding images, a 3D scene starting). The hidden state before a reveal is
+// CSS ([data-blur-reveal] / [data-rise] without [data-revealed],
+// assets/css/tailwind.css), only while scripting is on and motion is allowed,
+// so the server-rendered content is never lost. `translate` is used, not
+// `transform`, so an element's own transforms stay untouched; it needs a
+// block or inline-block box for that to move it.
 
-// Hidden: transparent, blurred and 0.28em below where the element sits (its
-// own `translate`, if it has one, is kept: some centre themselves with it).
-const BLUR = "blur(16px)";
-const hidden = (element: HTMLElement): Keyframe => {
-  const own = getComputedStyle(element).translate;
-  const [x = "0px", y = "0px"] = own === "none" ? [] : own.split(" ");
-  return { opacity: 0, filter: BLUR, translate: `${x} calc(${y} + 0.28em)` };
-};
-// Ease-out-cubic over 1.3s: the blur clears and the text rises at an even,
-// unhurried pace (a stronger ease-out had it 95% in after 150ms, which read as
-// a pop rather than a reveal).
-const IN: KeyframeAnimationOptions = { duration: 1300, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" };
+export type RevealLook = "blur" | "rise";
+
+const BLUR_IN: KeyframeAnimationOptions = { duration: 1300, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" };
+const RISE_FADE: KeyframeAnimationOptions = { duration: 900, easing: "cubic-bezier(0.42, 0, 0.58, 1)" };
+const RISE_MOVE: KeyframeAnimationOptions = { duration: 700, easing: "cubic-bezier(0.42, 0, 0.58, 1)" };
 const OUT: KeyframeAnimationOptions = { duration: 450, easing: "cubic-bezier(0.4, 0, 1, 1)" };
 
-const running = new WeakMap<HTMLElement, Animation>();
+/** The gap between items of a block that come into view together, in seconds. */
+export const REVEAL_STAGGER: Record<RevealLook, number> = { blur: 0.09, rise: 0.16 };
+
+const running = new WeakMap<HTMLElement, Animation[]>();
 // Whether each element was last asked to show or to hide.
 const wanted = new WeakMap<HTMLElement, boolean>();
 
 export const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+export const lookOf = (element: HTMLElement): RevealLook => (element.hasAttribute("data-rise") ? "rise" : "blur");
+
+// The element's own translate moved down by `by` (its own is kept: some
+// elements centre themselves with it).
+const lowered = (element: HTMLElement, by: string) => {
+  const own = getComputedStyle(element).translate;
+  const [x = "0px", y = "0px"] = own === "none" ? [] : own.split(" ");
+  return `${x} calc(${y} + ${by})`;
+};
+
+const hidden = (element: HTMLElement, look: RevealLook): Keyframe =>
+  look === "rise"
+    ? { opacity: 0, translate: lowered(element, "30px") }
+    : { opacity: 0, filter: "blur(16px)", translate: lowered(element, "0.28em") };
 
 // Where an element is right now, when an animation is cut short: the next one
 // starts from there instead of jumping.
@@ -43,32 +60,43 @@ const current = (element: HTMLElement): Keyframe => {
 };
 
 const take = (element: HTMLElement) => {
-  const previous = running.get(element);
-  const from = previous && previous.playState !== "finished" ? current(element) : null;
-  previous?.cancel();
+  const previous = running.get(element) ?? [];
+  const from = previous.some((animation) => animation.playState !== "finished") ? current(element) : null;
+  previous.forEach((animation) => animation.cancel());
   running.delete(element);
   return from;
 };
 
+const track = (element: HTMLElement, animations: Animation[]) => {
+  running.set(element, animations);
+  // The fade is the longer of a rise's two animations, and it comes last.
+  const last = animations[animations.length - 1];
+  if (last) last.onfinish = () => running.delete(element);
+};
+
 /** Shows the element: from hidden (or from where it is) to its own style. */
-export function revealIn(element: HTMLElement, delayMs = 0): void {
+export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = lookOf(element)): void {
   wanted.set(element, true);
   const from = take(element);
   element.setAttribute("data-revealed", "");
   if (prefersReducedMotion() || typeof element.animate !== "function") return;
-  // One keyframe at offset 0: the end is the element's own style, whatever
+  const delay = from ? 0 : delayMs;
+  // Keyframes at offset 0 only: the end is the element's own style, whatever
   // its opacity or filter normally is.
-  const animation = element.animate([{ offset: 0, ...(from ?? hidden(element)) }], {
-    ...IN,
-    delay: from ? 0 : delayMs,
-    fill: "backwards",
-  });
-  running.set(element, animation);
-  animation.onfinish = () => running.delete(element);
+  if (look === "rise" && !from) {
+    const start = hidden(element, "rise");
+    track(element, [
+      element.animate([{ offset: 0, translate: start.translate }], { ...RISE_MOVE, delay, fill: "backwards" }),
+      element.animate([{ offset: 0, opacity: 0 }], { ...RISE_FADE, delay, fill: "backwards" }),
+    ]);
+    return;
+  }
+  const timing = look === "rise" ? RISE_FADE : BLUR_IN;
+  track(element, [element.animate([{ offset: 0, ...(from ?? hidden(element, look)) }], { ...timing, delay, fill: "backwards" })]);
 }
 
 /** Hides the element again (a section scrolled back past its cue). */
-export function revealOut(element: HTMLElement): void {
+export function revealOut(element: HTMLElement, look: RevealLook = lookOf(element)): void {
   wanted.set(element, false);
   if (!element.hasAttribute("data-revealed")) return;
   const from = take(element);
@@ -76,8 +104,8 @@ export function revealOut(element: HTMLElement): void {
     element.removeAttribute("data-revealed");
     return;
   }
-  const animation = element.animate([{ offset: 0, ...(from ?? {}) }, { offset: 1, ...hidden(element) }], { ...OUT, fill: "forwards" });
-  running.set(element, animation);
+  const animation = element.animate([{ offset: 0, ...(from ?? {}) }, { offset: 1, ...hidden(element, look) }], { ...OUT, fill: "forwards" });
+  running.set(element, [animation]);
   animation.onfinish = () => {
     // The CSS hidden state takes over once the attribute is gone.
     element.removeAttribute("data-revealed");

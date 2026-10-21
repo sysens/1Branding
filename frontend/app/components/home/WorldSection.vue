@@ -14,7 +14,7 @@ const { t } = useI18n();
         <span v-blur-reveal="0.12" class="world-section__word">{{ t("home.world.word") }}</span>
       </h2>
     </header>
-    <div class="world-section__globe">
+    <div v-rise class="world-section__globe">
       <NetworkGlobe :show-labels="false" :controls="false" />
     </div>
     <h3 class="world-section__statement">

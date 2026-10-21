@@ -70,9 +70,9 @@ onBeforeUnmount(() => {
       <h2 id="pgallery-title" v-blur-reveal class="pgallery__title">
         {{ t("home.presentations.titleLead") }}<span class="pgallery__accent">{{ t("home.presentations.titleAccent") }}</span>
       </h2>
-      <p class="pgallery__text">{{ t("home.presentations.text") }}</p>
+      <p v-rise class="pgallery__text">{{ t("home.presentations.text") }}</p>
     </header>
-    <div class="pgallery__frame">
+    <div v-rise class="pgallery__frame">
       <div ref="grid" class="pgallery__grid" aria-hidden="true">
         <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" class="pgallery__line" :class="rowIndex % 2 ? 'pgallery__line--odd' : 'pgallery__line--even'">
           <div v-for="slide in row" :key="slide.src" class="pgallery__slide" :style="{ aspectRatio: slide.ratio }">
@@ -90,8 +90,8 @@ onBeforeUnmount(() => {
     </div>
     <!-- No presentations page yet: the button leads to the projects. -->
     <div class="pgallery__cta">
-      <NuxtLink :to="localePath('/projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
-      <p class="pgallery__more">{{ t("home.presentations.more") }}</p>
+      <NuxtLink v-rise :to="localePath('/projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
+      <p v-rise class="pgallery__more">{{ t("home.presentations.more") }}</p>
     </div>
     <div class="pgallery__rule" aria-hidden="true" />
   </section>

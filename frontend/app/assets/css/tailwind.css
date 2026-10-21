@@ -275,12 +275,14 @@
     }
 }
 
-/* The hidden state of text that comes in out of a blur (utils/reveal.ts,
-   v-blur-reveal): only while scripting is on and motion is allowed, so the
-   server-rendered text is never lost. The animation itself is a Web Animation
-   from this state to the element's own style. */
+/* The hidden state of content that comes into view (utils/reveal.ts:
+   v-blur-reveal for headings, v-rise for the rest): only while scripting is on
+   and motion is allowed, so the server-rendered content is never lost. The
+   animation itself is a Web Animation from this state to the element's own
+   style. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-    [data-blur-reveal]:not([data-revealed]) {
+    [data-blur-reveal]:not([data-revealed]),
+    [data-rise]:not([data-revealed]) {
         opacity: 0;
     }
 }

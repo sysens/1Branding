@@ -95,6 +95,7 @@ onBeforeUnmount(() => {
         <figure
           v-for="card in cards"
           :key="card.src"
+          v-rise
           class="gallery__card"
           :style="{ '--ratio': card.ratio }"
         >
@@ -110,9 +111,9 @@ onBeforeUnmount(() => {
         <div class="gallery__spacer" aria-hidden="true" />
       </div>
 
-      <p class="gallery__description">{{ description }}</p>
+      <p v-rise class="gallery__description">{{ description }}</p>
 
-      <div class="gallery__progress" aria-hidden="true">
+      <div v-rise class="gallery__progress" aria-hidden="true">
         <div class="gallery__progress-line"><div ref="bar" class="gallery__progress-fill" /></div>
         <span class="gallery__progress-hint">{{ $t("home.gallery.hint") }}</span>
       </div>

@@ -52,7 +52,7 @@ const onLeave = (element: Element, done: () => void) => {
     </h2>
 
     <ul class="faq__list">
-      <li v-for="(item, index) in items" :key="index" v-blur-reveal="0.08 * index" class="faq__item" :class="{ 'is-open': open === index }">
+      <li v-for="(item, index) in items" :key="index" v-rise class="faq__item" :class="{ 'is-open': open === index }">
         <h3 class="faq__heading">
           <button
             :id="`${base}-q${index}`"

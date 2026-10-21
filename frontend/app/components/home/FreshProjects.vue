@@ -24,7 +24,7 @@ const localePath = useLocalePath();
     </h2>
 
     <div class="fresh__rows" aria-hidden="true">
-      <div v-for="row in rows" :key="row.id" class="fresh__row" :class="`fresh__row--${row.direction}`">
+      <div v-for="row in rows" :key="row.id" v-rise class="fresh__row" :class="`fresh__row--${row.direction}`">
         <div class="fresh__track">
           <div v-for="copy in 2" :key="copy" class="fresh__set">
             <div v-for="src in row.cards" :key="`${copy}-${src}`" class="fresh__card">
@@ -35,7 +35,7 @@ const localePath = useLocalePath();
       </div>
     </div>
 
-    <NuxtLink :to="localePath('/projects')" class="fresh__more">
+    <NuxtLink v-rise :to="localePath('/projects')" class="fresh__more">
       <span class="fresh__blob" aria-hidden="true" />
       <span class="fresh__more-label">{{ t("home.fresh.more") }}</span>
     </NuxtLink>

@@ -41,9 +41,9 @@ const go = (step: 1 | -1) => {
       <span v-blur-reveal>{{ t("home.compare.titleFirst") }}</span>
       <span v-blur-reveal="0.12">{{ t("home.compare.titleLead") }}<span class="compare-section__accent">{{ t("home.compare.titleAccent") }}</span></span>
     </h2>
-    <p class="compare-section__hint">{{ t("home.compare.hint") }}</p>
+    <p v-rise class="compare-section__hint">{{ t("home.compare.hint") }}</p>
 
-    <div class="compare-section__stage">
+    <div v-rise class="compare-section__stage">
       <button type="button" class="compare-section__arrow" :aria-label="t('home.compare.prev')" @click="go(-1)">
         <svg viewBox="0 0 40 64" aria-hidden="true" focusable="false"><path d="M34 4 6 32l28 28" /></svg>
       </button>
@@ -72,7 +72,7 @@ const go = (step: 1 | -1) => {
       </button>
     </div>
 
-    <NuxtLink :to="localePath('/projects')" class="compare-section__button">{{ t("home.compare.cta") }}</NuxtLink>
+    <NuxtLink v-rise :to="localePath('/projects')" class="compare-section__button">{{ t("home.compare.cta") }}</NuxtLink>
   </section>
 </template>
 
