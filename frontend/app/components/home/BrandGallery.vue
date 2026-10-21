@@ -127,7 +127,12 @@ onBeforeUnmount(() => {
 .gallery {
   --card-h: min(34vw, 42vh);
   --start-padding: max(1.5rem, 27vw);
-  --end-padding: 6vw;
+  /* The description's type size and the width of its text (also set on it
+     below): the row's travel ends with the last card's right edge on the
+     text's right edge, so the end padding is the text's side margin. */
+  --description-font: clamp(0.95rem, min(1.2vw, 2.1vh), 1.75rem);
+  --description-width: min(100vw - 3rem, 58 * var(--description-font));
+  --end-padding: calc((100vw - var(--description-width)) / 2);
   --travel: max(0px, calc(var(--card-h) * var(--track-units) + var(--start-padding) + var(--end-padding) - 100vw));
   position: relative;
   height: calc(100vh + var(--travel) * 1.1);
@@ -219,11 +224,11 @@ onBeforeUnmount(() => {
    the cards; the height cap keeps the whole screen within short windows. */
 .gallery__description {
   box-sizing: content-box;
-  max-width: min(100% - 3rem, 58em);
+  max-width: var(--description-width);
   margin: clamp(1.25rem, min(4vw, 6vh), 5rem) auto 0;
   padding-inline: 1.5rem;
   color: #606060;
-  font-size: clamp(0.95rem, min(1.2vw, 2.1vh), 1.75rem);
+  font-size: var(--description-font);
   line-height: 1.27;
   letter-spacing: -0.005em;
   text-align: center;
