@@ -67,7 +67,7 @@ onBeforeUnmount(() => {
   <!-- The copy is English in both locales. -->
   <section class="pgallery" lang="en" aria-labelledby="pgallery-title">
     <header class="pgallery__header">
-      <h2 id="pgallery-title" class="pgallery__title">
+      <h2 id="pgallery-title" v-blur-reveal class="pgallery__title">
         {{ t("home.presentations.titleLead") }}<span class="pgallery__accent">{{ t("home.presentations.titleAccent") }}</span>
       </h2>
       <p class="pgallery__text">{{ t("home.presentations.text") }}</p>

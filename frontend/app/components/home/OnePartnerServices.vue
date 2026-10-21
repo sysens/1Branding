@@ -40,8 +40,8 @@ const selected = computed(() => services.value.find((service) => service.id === 
   <!-- The copy is English in both locales. -->
   <section id="services" class="services" lang="en" aria-labelledby="services-title">
     <h2 id="services-title" class="services__title">
-      <span class="services__one">{{ t("home.services.one") }}</span>
-      <span class="services__rest">
+      <span v-blur-reveal class="services__one">{{ t("home.services.one") }}</span>
+      <span v-blur-reveal="0.12" class="services__rest">
         <span>{{ t("home.services.partner") }}</span>
         <span>{{ t("home.services.every") }} <span class="services__accent">{{ t("home.services.solution") }}</span></span>
       </span>

@@ -2,6 +2,7 @@
 import OptImage from "~/components/ui/OptImage.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { optLargest } from "~/utils/optImage";
+import { revealTo } from "~/utils/reveal";
 
 // "Every part. Working as ONE." — the design's own render, cut into layers
 // (public/home/parts, made by scripts/parts-layers.py, then the cards' top
@@ -75,8 +76,10 @@ const SEAM_SOFT = 80;
 const CARD_LIGHT = cardWindows.map(([from, to]) => [from + (to - from) * 0.5, to + 0.03] as const);
 const ALL_LIT = [0.84, 0.93] as const;
 const LIME = "181 230 29";
-const HEADLINE = [0.78, 0.87] as const;
-const TAGLINES = [0.8, 0.89] as const;
+// The copy's cues: past them the headline and the taglines come in on the
+// shared timed reveal (utils/reveal.ts), and go again when scrolled back.
+const HEADLINE_CUE = 0.78;
+const TAGLINES_CUE = 0.8;
 
 // Screens narrower than the stage: where the camera looks (frame x), and at the
 // end it pulls back until the whole render fits.
@@ -290,15 +293,13 @@ const render = () => {
     }
   });
 
-  const reveal = (selector: string, range: readonly [number, number]) => {
-    const shown = ease(span(progress, range));
-    view.querySelectorAll<HTMLElement>(selector).forEach((element) => {
-      element.style.opacity = shown.toFixed(3);
-      element.style.transform = `translate3d(0, ${(24 * (1 - shown) * u).toFixed(1)}px, 0)`;
+  const cue = (selector: string, at: number) => {
+    view.querySelectorAll<HTMLElement>(selector).forEach((element, index) => {
+      revealTo(element, progress >= at, index * 120);
     });
   };
-  reveal("[data-headline]", HEADLINE);
-  reveal("[data-tagline]", TAGLINES);
+  cue("[data-headline]", HEADLINE_CUE);
+  cue("[data-tagline]", TAGLINES_CUE);
 };
 
 const schedule = () => {
@@ -306,12 +307,7 @@ const schedule = () => {
 };
 
 onMounted(() => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    screen.value?.querySelectorAll<HTMLElement>("[data-headline], [data-tagline]").forEach((element) => {
-      element.style.opacity = "1";
-    });
-    return;
-  }
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   animated.value = true;
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule, { passive: true });
@@ -320,7 +316,7 @@ onMounted(() => {
     window.removeEventListener("resize", schedule);
   };
   // Let the component stylesheet establish the sticky layout before the
-  // first measurement. The copy is inline-hidden in the meantime.
+  // first measurement; the copy stays in its hidden state in the meantime.
   requestAnimationFrame(() => requestAnimationFrame(render));
 });
 
@@ -337,16 +333,16 @@ onBeforeUnmount(() => {
       <!-- Texts sit on the screen rather than the stage, so on phones (where the
            stage pans) they stay in view; on wider screens they line up with the
            design frame through the same --u maths. -->
-      <p class="parts__brand" data-headline style="opacity: 0">OneBranding</p>
-      <h2 class="parts__headline" data-headline style="opacity: 0">
+      <p class="parts__brand" data-headline data-blur-reveal="manual">OneBranding</p>
+      <h2 class="parts__headline" data-headline data-blur-reveal="manual">
         <span>{{ t("home.parts.headlineFirst") }}</span>
         <span>{{ t("home.parts.headlineSecond") }}</span>
       </h2>
       <ul class="sr-only">
         <li v-for="service in services" :key="service">{{ service }}</li>
       </ul>
-      <p class="parts__lead" data-tagline style="opacity: 0">{{ t("home.parts.lead") }}</p>
-      <p class="parts__tagline" data-tagline style="opacity: 0">{{ t("home.parts.tagline") }}</p>
+      <p class="parts__lead" data-tagline data-blur-reveal="manual">{{ t("home.parts.lead") }}</p>
+      <p class="parts__tagline" data-tagline data-blur-reveal="manual">{{ t("home.parts.tagline") }}</p>
 
       <div ref="stage" class="parts__stage" aria-hidden="true">
         <div class="parts__art">

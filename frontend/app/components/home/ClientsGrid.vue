@@ -227,8 +227,8 @@ onBeforeUnmount(() => {
 
     <div class="clients__head">
       <h2 id="clients-title" class="clients__title">
-        <span>{{ t("home.clients.titleFirst") }}</span>
-        <span><span class="clients__green">{{ t("home.clients.count") }}</span> {{ t("home.clients.titleRest") }}</span>
+        <span v-blur-reveal>{{ t("home.clients.titleFirst") }}</span>
+        <span v-blur-reveal="0.12"><span class="clients__green">{{ t("home.clients.count") }}</span> {{ t("home.clients.titleRest") }}</span>
       </h2>
       <div class="clients__intro">
         <p>{{ t("home.clients.text") }}</p>

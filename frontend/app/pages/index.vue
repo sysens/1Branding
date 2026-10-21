@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSectionTitleReveal } from "~/composables/useSectionTitleReveal";
+import { useAmbientSurfaces } from "~/composables/useAmbientSurfaces";
 import LeadingPage from "~/components/home/LeadingPage.vue";
 import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
@@ -19,7 +19,7 @@ const route = useRoute();
 const { landingPage, seo: landingSeo } = await useLandingPayload();
 useHomePageReady();
 const pageRoot = ref<HTMLElement | null>(null);
-useSectionTitleReveal(pageRoot);
+useAmbientSurfaces(pageRoot);
 
 const brandCollageRows = computed(() => {
   const collage = landingPage.value?.brandCollage;

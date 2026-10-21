@@ -87,8 +87,8 @@ onBeforeUnmount(() => {
   <section ref="root" class="gallery" :style="{ '--track-units': trackUnits.toFixed(3) }">
     <div class="gallery__screen">
       <h2 class="gallery__heading">
-        <span class="gallery__heading-line">{{ heading.lead }}</span>
-        <span v-if="heading.accent" class="gallery__heading-line gallery__heading-line--accent">{{ ` ${heading.accent}` }}</span>
+        <span v-blur-reveal class="gallery__heading-line">{{ heading.lead }}</span>
+        <span v-if="heading.accent" v-blur-reveal="0.12" class="gallery__heading-line gallery__heading-line--accent">{{ ` ${heading.accent}` }}</span>
       </h2>
 
       <div ref="track" class="gallery__track">

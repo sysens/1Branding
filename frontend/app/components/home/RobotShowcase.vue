@@ -23,7 +23,7 @@ const { t } = useI18n();
       <FooterBrandSparkles />
     </div>
     <div class="robot__copy">
-      <h2 id="robot-title" class="robot__title">{{ t("robot.lead") }} <span class="robot__green">{{ t("robot.accent") }}</span></h2>
+      <h2 id="robot-title" v-blur-reveal class="robot__title">{{ t("robot.lead") }} <span class="robot__green">{{ t("robot.accent") }}</span></h2>
       <p class="robot__text">{{ t("robot.description") }}</p>
       <p class="robot__support">{{ t("robot.support") }}</p>
     </div>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
 
-// "Frequently asked questions": one answer open at a time. A max-height
-// transition is used instead of a fractional grid track because it reliably
-// keeps the answer visible inside this lazy-hydrated landing section.
+// "Frequently asked questions": one answer open at a time. An answer slides
+// open (and closed) the way apple.com's do: its height eases between 0 and
+// its own, and the text fades in a moment after the box starts to grow. The
+// heights are Web Animations on the panel, which Vue's <Transition> adds and
+// removes; the question rows come in one after another as the list scrolls in.
 
 const { t, tm, rt } = useI18n();
 const items = computed(() => (tm("home.faq.items") as Array<{ q: unknown; a: unknown }>).map((item) => ({
@@ -16,6 +18,30 @@ const toggle = (index: number) => {
   open.value = open.value === index ? null : index;
 };
 const base = useId();
+
+const EASE = "cubic-bezier(0.32, 0.72, 0, 1)";
+const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const onEnter = (element: Element, done: () => void) => {
+  const panel = element as HTMLElement;
+  if (reduced()) return done();
+  const open = panel.animate([{ height: "0px" }, { height: `${panel.scrollHeight}px` }], { duration: 560, easing: EASE });
+  panel.firstElementChild?.animate(
+    [{ opacity: 0, translate: "0 -0.6em" }, { opacity: 1, translate: "0 0" }],
+    { duration: 620, delay: 80, easing: EASE, fill: "backwards" },
+  );
+  open.onfinish = () => done();
+  open.oncancel = () => done();
+};
+
+const onLeave = (element: Element, done: () => void) => {
+  const panel = element as HTMLElement;
+  if (reduced()) return done();
+  const close = panel.animate([{ height: `${panel.offsetHeight}px` }, { height: "0px" }], { duration: 420, easing: EASE, fill: "forwards" });
+  panel.firstElementChild?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: "ease-out", fill: "forwards" });
+  close.onfinish = () => done();
+  close.oncancel = () => done();
+};
 </script>
 
 <template>
@@ -25,8 +51,8 @@ const base = useId();
       {{ t("home.faq.titleLead") }} <span class="faq__green">{{ t("home.faq.titleAccent") }}</span>
     </h2>
 
-    <ul v-blur-reveal class="faq__list">
-      <li v-for="(item, index) in items" :key="index" class="faq__item" :class="{ 'is-open': open === index }">
+    <ul class="faq__list">
+      <li v-for="(item, index) in items" :key="index" v-blur-reveal="0.08 * index" class="faq__item" :class="{ 'is-open': open === index }">
         <h3 class="faq__heading">
           <button
             :id="`${base}-q${index}`"
@@ -40,17 +66,19 @@ const base = useId();
             <span class="faq__icon" aria-hidden="true" />
           </button>
         </h3>
-        <div
-          v-if="open === index"
-          :id="`${base}-a${index}`"
-          class="faq__panel"
-          role="region"
-          :aria-labelledby="`${base}-q${index}`"
-        >
-          <div class="faq__panel-inner">
-            <p class="faq__answer">{{ item.answer }}</p>
+        <Transition :css="false" @enter="onEnter" @leave="onLeave">
+          <div
+            v-if="open === index"
+            :id="`${base}-a${index}`"
+            class="faq__panel"
+            role="region"
+            :aria-labelledby="`${base}-q${index}`"
+          >
+            <div class="faq__panel-inner">
+              <p class="faq__answer">{{ item.answer }}</p>
+            </div>
           </div>
-        </div>
+        </Transition>
       </li>
     </ul>
   </section>
@@ -158,7 +186,7 @@ const base = useId();
   flex: none;
   width: calc(20 * var(--u));
   height: calc(20 * var(--u));
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform 0.56s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .faq__icon::before,
@@ -172,7 +200,7 @@ const base = useId();
   border-radius: 2px;
   background: #e8e8e8;
   content: "";
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.3s ease;
+  transition: transform 0.56s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.3s ease;
 }
 
 .faq__icon::after {

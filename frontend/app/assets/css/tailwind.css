@@ -275,24 +275,13 @@
     }
 }
 
-/* v-blur-reveal (plugins/blur-reveal.ts): text comes in out of a blur the first
-   time it scrolls into view. `translate` (not transform) leaves the element's
-   own transforms alone. */
+/* The hidden state of text that comes in out of a blur (utils/reveal.ts,
+   v-blur-reveal): only while scripting is on and motion is allowed, so the
+   server-rendered text is never lost. The animation itself is a Web Animation
+   from this state to the element's own style. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-    [data-blur-reveal] {
+    [data-blur-reveal]:not([data-revealed]) {
         opacity: 0;
-        filter: blur(18px);
-        translate: 0 0.22em;
-        transition:
-            opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s)),
-            filter 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s)),
-            translate 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--reveal-delay, 0s) + var(--reveal-batch, 0s));
-    }
-
-    [data-blur-reveal].is-revealed {
-        opacity: 1;
-        filter: blur(0);
-        translate: 0 0;
     }
 }
 

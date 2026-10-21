@@ -33,7 +33,7 @@ const sceneVars = computed(() => {
     <!-- The copy is English in both locales. -->
     <h2 id="airways-title" class="airways-scene__title" lang="en">
       <span v-blur-reveal class="airways-scene__strong">{{ t("home.airways.strong") }}</span>
-      <span v-blur-reveal="0.2" class="airways-scene__rest">
+      <span v-blur-reveal="0.12" class="airways-scene__rest">
         <span>{{ t("home.airways.rest1") }}</span>
         <span>{{ t("home.airways.rest2") }}</span>
       </span>

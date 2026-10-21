@@ -38,8 +38,8 @@ const go = (step: 1 | -1) => {
   <!-- The copy is English in both locales. -->
   <section class="compare-section" lang="en" aria-labelledby="compare-title" aria-roledescription="carousel">
     <h2 id="compare-title" class="compare-section__title">
-      <span>{{ t("home.compare.titleFirst") }}</span>
-      <span>{{ t("home.compare.titleLead") }}<span class="compare-section__accent">{{ t("home.compare.titleAccent") }}</span></span>
+      <span v-blur-reveal>{{ t("home.compare.titleFirst") }}</span>
+      <span v-blur-reveal="0.12">{{ t("home.compare.titleLead") }}<span class="compare-section__accent">{{ t("home.compare.titleAccent") }}</span></span>
     </h2>
     <p class="compare-section__hint">{{ t("home.compare.hint") }}</p>
 

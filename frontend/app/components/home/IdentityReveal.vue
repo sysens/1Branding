@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { revealTo } from "~/utils/reveal";
 
 type Tone = "ink" | "accent" | "muted" | "strong";
 type Word = { text: string; tone: Tone; index: number };
@@ -46,20 +47,31 @@ const headingText = computed(() =>
 );
 
 // jsoft.vercel.app's reveal: the section is ~4 screens tall with a sticky
-// screen; scrolling through it drives --progress from 0 to 1 and the CSS turns
-// each word from blurred and lowered to sharp, one after another.
+// screen, and scrolling through it brings the words in one after another. The
+// scroll only cues each word (word i at i / (total - 1) of LAST_CUE); the word
+// then comes in on its own, timed animation (utils/reveal.ts), so it is smooth
+// however fast or slow the page is scrolled, and goes again when scrolled back.
+const LAST_CUE = 0.85;
 const root = ref<HTMLElement | null>(null);
 const screen = ref<HTMLElement | null>(null);
+let words: HTMLElement[] = [];
 let frame = 0;
 let stop: (() => void) | undefined;
 
 const render = () => {
   frame = 0;
   const section = root.value;
-  if (!section || !screen.value) return;
+  if (!section || !words.length) return;
   const distance = section.offsetHeight - window.innerHeight;
-  const progress = distance > 0 ? -section.getBoundingClientRect().top / distance : 1;
-  screen.value.style.setProperty("--progress", Math.min(1, Math.max(0, progress)).toFixed(4));
+  const progress = distance > 0 ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / distance)) : 1;
+  const last = Math.max(1, words.length - 1);
+  // Words cued in the same frame (a fast scroll) still follow one another.
+  let batch = 0;
+  words.forEach((word, index) => {
+    const shown = progress >= (index / last) * LAST_CUE;
+    const was = word.hasAttribute("data-revealed");
+    revealTo(word, shown, shown && !was ? Math.min(batch++, 15) * 40 : 0);
+  });
 };
 
 const schedule = () => {
@@ -67,6 +79,7 @@ const schedule = () => {
 };
 
 onMounted(() => {
+  words = Array.from(screen.value?.querySelectorAll<HTMLElement>(".identity__word") ?? []);
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule, { passive: true });
@@ -85,7 +98,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section ref="root" class="identity">
-    <div ref="screen" class="identity__screen" :style="{ '--word-total': layout.total }">
+    <div ref="screen" class="identity__screen">
       <!-- The OneBranding wordmark drawn on its 125px grid: outlined O, I and E
            around the solid green 1, fading out towards the heading. -->
       <svg class="identity__logo" viewBox="0 0 1233 420" aria-hidden="true" focusable="false">
@@ -104,7 +117,7 @@ onBeforeUnmount(() => {
             :key="word.index"
             class="identity__word"
             :class="`identity__word--${word.tone}`"
-            :style="{ '--word-index': word.index }"
+            data-blur-reveal="manual"
           >{{ wordIndex < line.length - 1 ? `${word.text} ` : word.text }}</span>
         </span>
       </h2>
@@ -115,7 +128,7 @@ onBeforeUnmount(() => {
           :key="word.index"
           class="identity__word"
           :class="`identity__word--${word.tone}`"
-          :style="{ '--word-index': word.index }"
+          data-blur-reveal="manual"
         >{{ wordIndex < layout.paragraph.length - 1 ? `${word.text} ` : word.text }}</span>
       </p>
     </div>
@@ -198,20 +211,12 @@ onBeforeUnmount(() => {
   letter-spacing: -0.005em;
 }
 
-/* jsoft.vercel.app's .tw-word: word i starts at i / (total - 1) of the way
-   (less one step) and takes 13% of the progress to come in. Without the script
-   (no --progress) the calc is invalid and every word simply shows. Each word
-   keeps its trailing space (white-space: pre) so the text reads normally. */
+/* A word is its own box (inline-flex) so it can rise into place; it keeps its
+   trailing space (white-space: pre) so the text reads normally. Its hidden
+   state and reveal are the shared ones ([data-blur-reveal], utils/reveal.ts). */
 .identity__word {
-  --word-step: 0.13;
-  --word-turn: calc(var(--word-index) / (var(--word-total) - 1) * (1 - var(--word-step)));
-  --word-progress: clamp(0, calc((var(--progress) - var(--word-turn)) / var(--word-step)), 1);
   display: inline-flex;
   white-space: pre;
-  opacity: var(--word-progress);
-  filter: blur(calc((1 - var(--word-progress)) * 10px));
-  transform: translate3d(0, calc((1 - var(--word-progress)) * 0.22em), 0);
-  will-change: opacity, filter, transform;
 }
 
 .identity__word--accent {

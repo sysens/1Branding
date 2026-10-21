@@ -78,8 +78,8 @@ onBeforeUnmount(() => {
   <!-- The copy is English in both locales. -->
   <section class="social" lang="en" aria-labelledby="social-title">
     <h2 id="social-title" class="social__title">
-      <span class="social__one">{{ t("home.social.one") }}</span>
-      <span class="social__rest">
+      <span v-blur-reveal class="social__one">{{ t("home.social.one") }}</span>
+      <span v-blur-reveal="0.12" class="social__rest">
         <span class="social__brand">{{ t("home.social.brand") }}</span>
         <span class="social__language">{{ t("home.social.visual") }} <span class="social__accent">{{ t("home.social.language") }}</span></span>
       </span>
