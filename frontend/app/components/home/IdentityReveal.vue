@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
     <div ref="screen" class="identity__screen">
       <!-- The OneBranding wordmark drawn on its 125px grid: outlined O, I and E
            around the solid green 1, fading out towards the heading. -->
-      <svg class="identity__logo" viewBox="0 0 1233 420" aria-hidden="true" focusable="false">
+      <svg v-rise class="identity__logo" viewBox="0 0 1233 420" aria-hidden="true" focusable="false">
         <g class="identity__logo-outline">
           <path d="M0 0H375V700H0Z M125 103H250V700H125Z" />
           <path d="M438 0H563V700H438Z" />

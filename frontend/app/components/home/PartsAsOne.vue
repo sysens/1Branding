@@ -344,7 +344,7 @@ onBeforeUnmount(() => {
       <p class="parts__lead" data-tagline data-blur-reveal="manual">{{ t("home.parts.lead") }}</p>
       <p class="parts__tagline" data-tagline data-blur-reveal="manual">{{ t("home.parts.tagline") }}</p>
 
-      <div ref="stage" class="parts__stage" aria-hidden="true">
+      <div ref="stage" v-rise class="parts__stage" aria-hidden="true">
         <div class="parts__art">
           <div ref="tubes" class="parts__layer parts__tubes" :style="box(TUBES)">
             <OptImage src="/home/parts/tubes.webp" :sizes="layerSizes(TUBES[2])" :preview="false" alt="" :width="TUBES[2]" :height="TUBES[3]" loading="lazy" decoding="async" draggable="false" />

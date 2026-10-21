@@ -90,7 +90,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="social__viewport">
       <div ref="grid" class="social__grid" aria-hidden="true">
-        <div v-for="(column, index) in COLUMNS" :key="index" class="social__column" :class="{ 'social__column--low': index % 2 === 0 }" :data-column="index">
+        <div v-for="(column, index) in COLUMNS" :key="index" v-rise class="social__column" :class="{ 'social__column--low': index % 2 === 0 }" :data-column="index">
           <div v-for="(post, row) in column" :key="row" class="social__post">
             <OptImage :src="postSrc(post)" :sizes="POST_SIZES" alt="" width="544" height="680" loading="lazy" decoding="async" draggable="false" />
           </div>

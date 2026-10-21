@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
 <template>
   <section ref="root" class="slide-wall" aria-hidden="true">
     <div class="slide-wall__lines">
-      <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" class="slide-wall__line">
+      <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" v-rise class="slide-wall__line">
         <div v-for="src in row" :key="src" class="slide-wall__slide">
           <OptImage
             :src="src"

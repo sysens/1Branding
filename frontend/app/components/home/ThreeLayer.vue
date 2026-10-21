@@ -86,6 +86,7 @@ const rowsConfig = computed(() => {
         <div
           v-for="(row, rowIndex) in rowsConfig"
           :key="row.key"
+          v-rise
           class="marquee-row flex w-max"
           :class="[row.animClass, { 'marquee-row--waiting': !row.duplicatedImages.every(image => settledSources.has(image.src)) }]"
           :style="{ '--marquee-duration': marqueeDuration }"
