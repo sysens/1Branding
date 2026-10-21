@@ -48,9 +48,12 @@ const headingText = computed(() =>
 
 // jsoft.vercel.app's reveal: the section is ~4 screens tall with a sticky
 // screen, and scrolling through it brings the words in one after another. The
-// scroll only cues each word (word i at i / (total - 1) of LAST_CUE); the word
+// scroll only cues each word (word i between FIRST_CUE and LAST_CUE); the word
 // then comes in on its own, timed animation (utils/reveal.ts), so it is smooth
 // however fast or slow the page is scrolled, and goes again when scrolled back.
+// The first word waits for the pinned scroll to begin: at 0 it showed alone
+// all the while the section was still coming up the screen.
+const FIRST_CUE = 0.015;
 const LAST_CUE = 0.85;
 const root = ref<HTMLElement | null>(null);
 const screen = ref<HTMLElement | null>(null);
@@ -68,7 +71,7 @@ const render = () => {
   // Words cued in the same frame (a fast scroll) still follow one another.
   let batch = 0;
   words.forEach((word, index) => {
-    const shown = progress >= (index / last) * LAST_CUE;
+    const shown = progress >= FIRST_CUE + (index / last) * (LAST_CUE - FIRST_CUE);
     const was = word.hasAttribute("data-revealed");
     revealTo(word, shown, shown && !was ? Math.min(batch++, 15) * 40 : 0, { sweep: false });
   });
