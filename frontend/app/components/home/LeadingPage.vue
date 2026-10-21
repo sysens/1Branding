@@ -88,7 +88,7 @@ const heroCopy = computed<HeroCopy>(() => {
 <template>
   <div class="leading-page-shell overflow-hidden">
     <div class="leading-copy-position relative">
-      <div class="flex justify-center intro-slide-in">
+      <div class="flex justify-center">
         <h1 class="hero-slogan">
           <!-- The design has no visible keyword line; it stays in the heading for
                search engines and screen readers. The interpolated trailing spaces
@@ -258,6 +258,78 @@ const heroCopy = computed<HeroCopy>(() => {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.008em;
+}
+
+/* The landing's heading reveal (utils/reveal.ts) in CSS, so the hero comes
+   in at first paint without waiting for the app: each line out of a blur,
+   fading in and rising a little, while a soft edge sweeps it in from left
+   to right (apple.com's animated headline), the lines 0.15s apart. The
+   sweep is a mask three times the line's width slid across it; the lead-in
+   keeps its own fade-out mask under the sweep, so nothing jumps when the
+   sweep ends. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-slogan__lead,
+  .hero-slogan__main,
+  .hero-slogan__tagline {
+    animation:
+      hero-line-in 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) var(--hero-line-delay) backwards,
+      hero-line-sweep 1.1s cubic-bezier(0.45, 0, 0.25, 1) var(--hero-line-delay) backwards;
+  }
+
+  .hero-slogan__lead {
+    --hero-line-delay: 0.2s;
+    animation-name: hero-line-in, hero-lead-sweep;
+  }
+
+  .hero-slogan__main {
+    --hero-line-delay: 0.35s;
+  }
+
+  .hero-slogan__tagline {
+    --hero-line-delay: 0.5s;
+  }
+}
+
+@keyframes hero-line-in {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    translate: 0 0.28em;
+  }
+}
+
+@keyframes hero-line-sweep {
+  from {
+    -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat;
+    mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat;
+  }
+
+  to {
+    -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat;
+    mask: linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat;
+  }
+}
+
+@keyframes hero-lead-sweep {
+  from {
+    -webkit-mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat,
+      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+    -webkit-mask-composite: source-in;
+    mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat intersect,
+      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+  }
+
+  to {
+    -webkit-mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat,
+      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+    -webkit-mask-composite: source-in;
+    mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat intersect,
+      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+  }
 }
 
 .hero-slogan__tagline > span {
