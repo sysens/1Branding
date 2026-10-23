@@ -4,8 +4,10 @@ import { computed, ref, useId } from "vue";
 // "Frequently asked questions": one answer open at a time. An answer slides
 // open (and closed) the way apple.com's do: its height eases between 0 and
 // its own, and the text fades in a moment after the box starts to grow. The
-// heights are Web Animations on the panel, which Vue's <Transition> adds and
-// removes; the question rows come in one after another as the list scrolls in.
+// heights are Web Animations on the panel, which Vue's <Transition> runs as
+// v-show shows and hides it: every answer stays in the server HTML, so search
+// engines read them all. The question rows come in one after another as the
+// list scrolls in.
 
 const { t, tm, rt } = useI18n();
 const items = computed(() => (tm("home.faq.items") as Array<{ q: unknown; a: unknown }>).map((item) => ({
@@ -59,7 +61,7 @@ const onLeave = (element: Element, done: () => void) => {
             type="button"
             class="faq__question"
             :aria-expanded="open === index"
-            :aria-controls="open === index ? `${base}-a${index}` : undefined"
+            :aria-controls="`${base}-a${index}`"
             @click="toggle(index)"
           >
             <span>{{ item.question }}</span>
@@ -68,7 +70,7 @@ const onLeave = (element: Element, done: () => void) => {
         </h3>
         <Transition :css="false" @enter="onEnter" @leave="onLeave">
           <div
-            v-if="open === index"
+            v-show="open === index"
             :id="`${base}-a${index}`"
             class="faq__panel"
             role="region"

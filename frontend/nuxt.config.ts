@@ -75,11 +75,10 @@ export default defineNuxtConfig({
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-        {
-          name: "description",
-          content:
-            "OneBranding — брендинговое агентство полного цикла в Ташкенте: стратегия и нейминг, разработка логотипа, фирменный стиль, брендбук и дизайн упаковки.",
-        },
+        // No site-wide description here: every route sets its own in its
+        // language (usePageSeo). A Russian one here replaced the page's in the
+        // browser after hydration, and Google, which renders pages, showed it
+        // under the English home page's title.
         { name: "theme-color", content: "#000000" },
         { name: "format-detection", content: "telephone=no" },
         { name: "application-name", content: "OneBranding" },
@@ -111,7 +110,7 @@ export default defineNuxtConfig({
       siteUrl: "",
       // Optional Organization JSON-LD contacts (NUXT_PUBLIC_ORG_PHONE / _EMAIL /
       // _SAME_AS as a comma-separated list of profile URLs).
-      orgPhone: "",
+      orgPhone: "+998935608000",
       orgEmail: "",
       orgSameAs: "",
     },

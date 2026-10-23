@@ -66,6 +66,20 @@ describe("CMS sitemap", () => {
     expect(xml).not.toContain('<loc>https://example.test/news/"article"</loc>');
   });
 
+  test("leaves out case studies still in placeholder copy (served noindex)", async () => {
+    const xml = await buildSitemap("https://example.test", "https://cms.test/graphql", async () => ({ data: {
+      newsPages_connection: { nodes: [], pageInfo: { pageCount: 1 } },
+      projectsPages_connection: { nodes: [
+        { documentId: "lorem", section1: { projectTitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." } },
+        { documentId: "makva", section1: { projectTitle: "Makva pasta packaging" } },
+      ], pageInfo: { pageCount: 1 } },
+      categories_connection: { nodes: [], pageInfo: { pageCount: 1 } },
+    } }));
+    const urls = capture(xml);
+    expect(urls).toContain("https://example.test/projects/makva");
+    expect(urls.some((url) => url.includes("/projects/lorem"))).toBe(false);
+  });
+
   test("rejects incomplete CMS pages rather than publishing a partial sitemap", async () => {
     await expect(buildSitemap("https://example.test", "https://cms.test/graphql", async () => ({
       data: { newsPages_connection: { nodes: [], pageInfo: { pageCount: 1 } } },

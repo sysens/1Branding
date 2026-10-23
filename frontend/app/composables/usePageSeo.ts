@@ -37,15 +37,19 @@ const cleanPath = (path: string) => {
  * One place for every page's search/social metadata: title, description,
  * canonical, hreflang, Open Graph/Twitter cards, robots and JSON-LD.
  *
- * Only the title is kept up to date in the browser (tab name on client-side
- * navigation). Everything else is read by crawlers and link previews from the
- * server HTML of each URL, and computing it again during hydration (i18n,
- * JSON-LD, ~20 reactive head entries) was a measurable part of that task.
+ * Only the title and the description are kept up to date in the browser (the
+ * tab name on client-side navigation; Google renders pages, so the hydrated
+ * description is the one it reads). Everything else is read by crawlers and
+ * link previews from the server HTML of each URL, and computing it again
+ * during hydration (JSON-LD, ~20 reactive head entries) was a measurable part
+ * of that task.
  */
 export const usePageSeo = (input: PageSeoInput) => {
   const title = computed(() => toValue(input.title)?.trim() || "");
   if (import.meta.client) {
+    const { t } = useI18n();
     useHead({ title: () => title.value });
+    useSeoMeta({ description: () => toMetaDescription(toValue(input.description)) || t("seo.description") });
     return;
   }
 

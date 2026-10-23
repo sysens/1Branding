@@ -1,6 +1,8 @@
+import { isPlaceholderCopy } from "../../app/utils/seo";
+
 type Locale = "ru" | "en";
 type Collection = "newsPages_connection" | "projectsPages_connection" | "categories_connection";
-type Node = { documentId?: string | null; updatedAt?: string | null } | null;
+type Node = { documentId?: string | null; updatedAt?: string | null; section1?: { projectTitle?: string | null } | null } | null;
 type Connection = {
   nodes?: Node[] | null;
   pageInfo?: { pageCount?: number | null } | null;
@@ -30,7 +32,7 @@ const query = `
       pageInfo { pageCount }
     }
     projectsPages_connection(locale: $locale, pagination: { page: $page, pageSize: $pageSize }) {
-      nodes { documentId updatedAt }
+      nodes { documentId updatedAt section1 { projectTitle } }
       pageInfo { pageCount }
     }
     categories_connection(locale: $locale, pagination: { page: $page, pageSize: $pageSize }) {
@@ -94,6 +96,9 @@ export async function buildSitemap(siteUrl: string, graphqlUrl: string, fetchCms
         for (const node of connection.nodes) {
           const id = node?.documentId?.trim();
           if (!id) continue;
+          // A case study still in "Lorem ipsum" is served noindex
+          // (pages/projects/[id].vue); listing it would only be reported back.
+          if (collection === "projectsPages_connection" && isPlaceholderCopy(node?.section1?.projectTitle)) continue;
           const path = `/${segment}/${encodeURIComponent(id)}`;
           const entry = pages.get(path) ?? { locales: new Set<Locale>(), updatedAt: {} as Partial<Record<Locale, string>> };
           entry.locales.add(locale);
