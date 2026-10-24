@@ -125,6 +125,12 @@ const submit = async (ip, payload) => {
   check('submission without meta refused', r.status === 400, `status ${r.status}`);
   r = await submit('203.0.113.14', submission(fileId, { FullName: 'Name\nEmail: fake@x.com' }));
   check('line break in single-line field refused', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.15', submission(fileId, { Extra: 'x' }));
+  check('unknown field refused', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.15', submission(fileId, { constructor: 'x' }));
+  check('inherited name as a field refused', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.15', submission(fileId, { Source: 'google.com\nPhone: +1' }));
+  check('line break in Source refused', r.status === 400, `status ${r.status}`);
   r = await submit('203.0.113.10', submission(fileId));
   check('owner submission accepted', r.status === 200 || r.status === 201, `status ${r.status} ${r.text}`);
   r = await submit('203.0.113.10', submission(fileId));
@@ -132,8 +138,8 @@ const submit = async (ip, payload) => {
 
   // IPv6 clients share a /64 bucket for ownership.
   const up6 = await upload('2001:db8:1:2::abcd');
-  r = await submit('2001:db8:1:2:ffff::1', submission(up6.json?.[0]?.id));
-  check('IPv6 /64 treated as one client', r.status === 200 || r.status === 201, `status ${r.status} ${r.text}`);
+  r = await submit('2001:db8:1:2:ffff::1', submission(up6.json?.[0]?.id, { Source: 'google.com | landing /ru/services/brending | form /ru/contact' }));
+  check('IPv6 /64 treated as one client (with a lead source)', r.status === 200 || r.status === 201, `status ${r.status} ${r.text}`);
 
   // Guard.
   let res = await fetch(BASE + '/api/upload/files', { headers: { Authorization: 'Basic abc' } });

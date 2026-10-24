@@ -31,6 +31,8 @@ const fileMimes: Record<string, string[]> = {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
 
+const own = (object: object, key: string): boolean => Object.prototype.hasOwnProperty.call(object, key);
+
 const isAllowedFileType = (name: string, mime: string): boolean => {
   const expected = fileMimes[extname(name).toLowerCase()];
   return Boolean(expected && expected.includes(mime.toLowerCase()));
@@ -84,7 +86,7 @@ const limitRequests = (ctx: any, kind: 'upload' | 'submission') => {
 // Single-line fields refuse every control character, line breaks included, so
 // a value cannot fake extra lines in the Telegram notification; the message
 // may keep its line breaks.
-const fields: Record<string, { max: number; multiline?: boolean }> = {
+const fields: Record<string, { max: number; multiline?: boolean; optional?: boolean }> = {
   TopicInput: { max: 200 },
   requestedServicesMessageInput: { max: 5000, multiline: true },
   FullName: { max: 150 },
@@ -92,6 +94,9 @@ const fields: Record<string, { max: number; multiline?: boolean }> = {
   Company: { max: 150 },
   PhoneNumber: { max: 32 },
   email: { max: 254 },
+  // Where the visitor came from (referrer, landing page, utm_* tags), filled
+  // in by the website, not typed by the visitor. Older pages do not send it.
+  Source: { max: 500, optional: true },
 };
 // Control characters plus the Unicode line and paragraph separators.
 const SINGLE_LINE_FORBIDDEN = /[\p{Cc}\p{Zl}\p{Zp}]/u;
@@ -123,14 +128,19 @@ const validateSubmission = async (ctx: any, strapi: any): Promise<number> => {
     reject(ctx, 'Invalid contact submission');
   }
   checkBotTraps(ctx, body);
+  // Own keys only: `in` would also accept inherited names such as "constructor".
   if (!isRecord(data) ||
-      Object.keys(data).length !== Object.keys(fields).length + 1 ||
-      Object.keys(data).some((key) => key !== 'requestedServicesMessageFile' && !(key in fields))) {
+      !own(data, 'requestedServicesMessageFile') ||
+      Object.keys(data).some((key) => key !== 'requestedServicesMessageFile' && !own(fields, key))) {
     reject(ctx, 'Invalid contact submission');
   }
 
-  for (const [key, { max, multiline }] of Object.entries(fields)) {
+  for (const [key, { max, multiline, optional }] of Object.entries(fields)) {
     const value = data[key];
+    if (optional && (value === undefined || value === '')) {
+      delete data[key];
+      continue;
+    }
     if (typeof value !== 'string' || !value.trim() || value.trim().length > max ||
         (multiline ? MULTILINE_FORBIDDEN : SINGLE_LINE_FORBIDDEN).test(value)) {
       reject(ctx, `Invalid ${key}`);

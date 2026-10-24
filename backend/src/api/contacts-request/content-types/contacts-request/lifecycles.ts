@@ -26,6 +26,7 @@ interface ContactsRequestEntry {
   Company?: string | null;
   PhoneNumber?: string | null;
   email?: string | null;
+  Source?: string | null;
   requestedServicesMessageFile?: RequestedServicesMessageFile | null;
 }
 
@@ -59,6 +60,7 @@ const notify = async (entry: ContactsRequestEntry): Promise<void> => {
     `<b>Company:</b> ${escapeTelegramHtml(clip(entry.Company, 150))}`,
     `<b>Phone:</b> ${escapeTelegramHtml(clip(entry.PhoneNumber, 32))}`,
     `<b>Email:</b> ${escapeTelegramHtml(clip(entry.email, 254))}`,
+    ...(entry.Source ? [`<b>Source:</b> ${escapeTelegramHtml(clip(entry.Source, 500))}`] : []),
   ].join("\n");
 
   await sendTelegramMessage(message);

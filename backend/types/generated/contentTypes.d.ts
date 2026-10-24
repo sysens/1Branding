@@ -613,6 +613,7 @@ export interface ApiContactsRequestContactsRequest
       Schema.Attribute.Required;
     requestedServicesMessageInput: Schema.Attribute.Text &
       Schema.Attribute.Required;
+    Source: Schema.Attribute.Text;
     TopicInput: Schema.Attribute.Text & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
