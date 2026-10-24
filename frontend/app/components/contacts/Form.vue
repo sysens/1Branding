@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
         class="w-[92vw] max-w-[560px] rounded-xl border border-white/10 px-4 py-3 backdrop-blur-md shadow-lg"
         :class="toastType === 'success' ? 'bg-green-500/20' : 'bg-black/50'"
       >
-        <p class="text-[24px] md:text-[16px] leading-[120%]" :class="toastType === 'success' ? 'text-green-400' : 'text-red-500'">
+        <p class="type-body" :class="toastType === 'success' ? 'text-green-400' : 'text-red-500'">
           {{ toastMsg }}
         </p>
       </div>
@@ -167,13 +167,13 @@ onBeforeUnmount(() => {
     <section class="w-full bg-black pt-10">
       <div class="mx-auto">
         <h2
-          class="form-title will-change-transform font-['Inter'] font-normal text-[20px] leading-[100%] tracking-[0%] text-center text-[#FFFFFF] pb-[30px] md:text-[36px]"
+          class="form-title will-change-transform type-h4 text-center text-[#FFFFFF] pb-[30px]"
         >
           {{ formTitle }}
         </h2>
 
         <p
-          class="form-desc will-change-transform font-['Inter'] font-light text-[14px] leading-[120%] tracking-normal md:pb-[60px] pb-[88px] text-[#FFFFFF] md:font-normal md:text-[20px]"
+          class="form-desc will-change-transform type-lead type-measure mx-auto md:pb-[60px] pb-[88px] text-[#FFFFFF]"
         >
           {{ formDescription }}
         </p>
@@ -191,7 +191,7 @@ onBeforeUnmount(() => {
           >
           <div class="form-left will-change-transform">
             <h3
-              class="font-normal md:text-[24px] md:pb-[30px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
+              class="type-h5 pb-[30px] text-[#FFFFFF]"
             >
               {{ topicTitle }}
             </h3>
@@ -205,11 +205,11 @@ onBeforeUnmount(() => {
               :placeholder="topicInput"
               :aria-label="topicInput"
               :maxlength="fieldLimits.topic"
-              class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+              class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
             >
 
             <h3
-              class="font-normal md:text-[24px] md:pb-[30px] pt-[40px] pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
+              class="type-h5 pt-[40px] pb-[30px] text-[#FFFFFF]"
             >
               {{ servicesTitle }}
             </h3>
@@ -223,7 +223,7 @@ onBeforeUnmount(() => {
               :placeholder="servicesInput"
               :aria-label="servicesTitle"
               :maxlength="fieldLimits.services"
-              class="w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+              class="type-body w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
             />
 
             <div class="flex mt-[18px] pb-[10px] md:pb-[110px] items-center gap-[36px]">
@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
                 >
                 <button
                   type="button"
-                  class="capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-[#FFFFFF] rounded-[32px] font-normal md:text-[19.57px] text-[16px] leading-[19.57px] tracking-normal text-center align-middle font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] md:text-[20px] hover:bg-[size:140%] hover:bg-[position:0%_50%] text-[16px] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
+                  class="type-lead font-semibold capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-[#FFFFFF] rounded-[32px] text-center align-middle bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
                   @click="onPickFile"
                 >
                   {{ $t("common.addFile") }}
@@ -247,20 +247,20 @@ onBeforeUnmount(() => {
 
               <div class="w-full">
                 <p
-                  class="font-inter text-[#FFFFFF] font-normal md:text-[20px] md:leading-[20px] md:tracking-normal text-[14px] leading-[100%] tracking-[0%]"
+                  class="type-lead text-[#FFFFFF]"
                 >
                   {{ $t("common.maxFileSize") }}
                 </p>
 
                 <div v-if="selectedFile" class="mt-2 flex items-center gap-3">
                   <p
-                    class="max-w-[260px] truncate text-white/80 text-[14px] md:text-[16px]"
+                    class="type-small max-w-[260px] truncate text-white/80"
                   >
                     {{ selectedFile.name }}
                   </p>
                 </div>
 
-                <p v-else class="mt-2 text-white/40 text-[13px] md:text-[14px]">
+                <p v-else class="type-caption mt-2 text-white/60">
                   {{ $t("common.noFileSelected") }}
                 </p>
               </div>
@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
 
           <div class="form-right will-change-transform">
             <h3
-              class="font-normal md:text-[24px] md:pb-[30px] pt-[40px] md:pt-0 pb-[30px] md:leading-[24px] text-[#FFFFFF] md:tracking-normal font-['Inter'] text-[20px] leading-[100%] tracking-[0%]"
+              class="type-h5 pt-[40px] md:pt-0 pb-[30px] text-[#FFFFFF]"
             >
               {{ $t("common.contacts") }}
             </h3>
@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
                 :placeholder="fullNamePh"
                 :aria-label="fullNamePh"
                 :maxlength="fieldLimits.fullName"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -296,7 +296,7 @@ onBeforeUnmount(() => {
                 :placeholder="jobTitlePh"
                 :aria-label="jobTitlePh"
                 :maxlength="fieldLimits.jobTitle"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -308,7 +308,7 @@ onBeforeUnmount(() => {
                 :placeholder="companyPh"
                 :aria-label="companyPh"
                 :maxlength="fieldLimits.company"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -320,7 +320,7 @@ onBeforeUnmount(() => {
                 :placeholder="phonePh"
                 :aria-label="phonePh"
                 :maxlength="fieldLimits.phone"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -333,14 +333,14 @@ onBeforeUnmount(() => {
                 :placeholder="emailPh"
                 :aria-label="emailPh"
                 :maxlength="fieldLimits.email"
-                class="w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/50 placeholder:font-['Inter'] outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
             </div>
           </div>
         </form>
 
         <p
-          class="form-agree will-change-transform font-inter text-[#FFFFFF] font-normal md:text-[20px] md:leading-[20px] mb-[29px] mt-[48px] md:tracking-normal text-[14px] leading-[100%] tracking-[0%]"
+          class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[29px] mt-[48px]"
         >
           {{ $t("contacts.form.agreement") }}
           <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
           type="submit"
           form="contact-request-form"
           :disabled="sending"
-          class="form-send will-change-transform capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap mb-[6px] text-[#FFFFFF] rounded-[32px] font-font1 font-normal md:text-[19.57px] leading-[19.57px] tracking-normal text-center align-middle disabled:opacity-60 disabled:cursor-not-allowed font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] text-[16px] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
+          class="form-send will-change-transform type-lead font-semibold capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap mb-[6px] text-[#FFFFFF] rounded-[32px] text-center align-middle disabled:opacity-60 disabled:cursor-not-allowed bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
         >
           {{ sending ? $t("common.sending") : $t("common.send") }}
         </button>

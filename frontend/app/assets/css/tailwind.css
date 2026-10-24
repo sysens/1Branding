@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 /* ================== SF PRO ==================
- * Latin + Cyrillic subsets in WOFF2 (~30 KB each instead of ~330 KB OTF).
- * `body * { font-family: inherit !important }` below means these two families
- * are the only faces the site ever renders. Text 500 and Display 600 are only
- * used below the first screen, so they are registered after the first paint
- * (plugins/01.deferred-fonts.client.ts); until then 400 / 700 stand in.
+ * Latin + Cyrillic subsets in WOFF2 (~30 KB each). Two optical sizes, as Apple
+ * draws them: SF Pro Text below 20px, SF Pro Display from 20px up (the type
+ * tokens below pick the right one). Three weights only: 400 for reading,
+ * 600 for headings, labels and buttons, 700 for the display sizes. A weight
+ * without its own file here would be faked or replaced by the browser.
  */
 @font-face {
     font-family: "SF Pro Text";
@@ -43,8 +43,8 @@
 
 @font-face {
     font-family: "SF Pro Display";
-    src: url("/fonts/v2/SF-Pro-Display-Medium.woff2") format("woff2");
-    font-weight: 500;
+    src: url("/fonts/v2/SF-Pro-Display-Semibold.woff2") format("woff2");
+    font-weight: 600;
     font-style: normal;
     font-display: swap;
 }
@@ -76,17 +76,72 @@
            room for the longest current label, "Start your project". */
         --button-w: 247px;
         --button-h: 60px;
-        --button-font: max(1.1rem, calc(1.25 * var(--fvw)));
+        /* Button labels: the lead step at 600 (see .type-lead). */
+        --button-font: var(--type-lead-size);
         --button-pad: max(1.5rem, calc(1.5 * var(--fvw)));
-        /* One size for the landing's section headings ("Fresh projects",
-           "Frequently asked questions", "Make your brand look better" ...). */
-        --section-title-size: clamp(2.25rem, 5vw, 96px);
-    }
-
-    @media (max-width: 767px) {
-        :root {
-            --section-title-size: clamp(2rem, 9vw, 2.75rem);
-        }
+        /* ================== TYPE SCALE ==================
+           Every text on the site uses one of these 15 steps (the .type-*
+           classes below, or these variables in a component's CSS). Sizes are
+           rem, so they follow the reader's browser text size, and fluid: the
+           first value is the phone size (390px), the middle term grows with
+           the screen, the last value is the size at 1920px and up. Each step
+           has its own line height and tracking: reading text is set loose
+           (1.45-1.5), headings tighter as they grow, and large type is
+           tracked in, as SF Pro is designed to be.
+           Text steps (SF Pro Text) */
+        --type-label-size: 0.75rem;      /* 12: uppercase labels, eyebrows */
+        --type-label-lh: 1.3;
+        --type-label-ls: 0.08em;
+        --type-caption-size: 0.8125rem;  /* 13: captions, legal, small UI */
+        --type-caption-lh: 1.4;
+        --type-caption-ls: 0;
+        --type-small-size: 0.9375rem;    /* 15: secondary text, menus, tables */
+        --type-small-lh: 1.45;
+        --type-small-ls: -0.005em;
+        --type-body-size: clamp(1rem, 0.977rem + 0.095vw, 1.0625rem);      /* 16 / 17 */
+        --type-body-lh: 1.5;
+        --type-body-ls: -0.01em;
+        --type-lead-size: clamp(1.0625rem, 1.016rem + 0.19vw, 1.1875rem);  /* 17 / 19 */
+        --type-lead-lh: 1.45;
+        --type-lead-ls: -0.01em;
+        /* Heading steps (SF Pro Display, 600) */
+        --type-h5-size: 1.3125rem;                                          /* 21 */
+        --type-h5-lh: 1.25;
+        --type-h5-ls: 0;
+        --type-h4-size: clamp(1.375rem, 1.236rem + 0.571vw, 2rem);          /* 22 / 28 / 32 */
+        --type-h4-lh: 1.2;
+        --type-h4-ls: -0.005em;
+        --type-h3-size: clamp(1.625rem, 1.3rem + 1.333vw, 2.875rem);        /* 26 / 40 / 46 */
+        --type-h3-lh: 1.15;
+        --type-h3-ls: -0.01em;
+        --type-h2-size: clamp(2rem, 1.443rem + 2.286vw, 4.125rem);          /* 32 / 56 / 66 */
+        --type-h2-lh: 1.1;
+        --type-h2-ls: -0.015em;
+        --type-h1-size: clamp(2.25rem, 1.414rem + 3.429vw, 5.5rem);         /* 36 / 72 / 88 */
+        --type-h1-lh: 1.05;
+        --type-h1-ls: -0.02em;
+        /* Display steps (SF Pro Display, 700): the landing's poster lines */
+        --type-display-s-size: clamp(2.75rem, 1.543rem + 4.952vw, 7.5rem);  /* 44 / 96 / 120 */
+        --type-display-s-lh: 0.95;
+        --type-display-s-ls: -0.025em;
+        --type-display-m-size: clamp(3.25rem, 1.486rem + 7.238vw, 10rem);   /* 52 / 128 / 160 */
+        --type-display-m-lh: 0.9;
+        --type-display-m-ls: -0.03em;
+        --type-display-l-size: clamp(4rem, 1.4rem + 10.667vw, 14rem);       /* 64 / 176 / 224 */
+        --type-display-l-lh: 0.88;
+        --type-display-l-ls: -0.035em;
+        --type-display-xl-size: clamp(5.5rem, 1.6rem + 16vw, 20rem);        /* 88 / 256 / 320 */
+        --type-display-xl-lh: 0.85;
+        --type-display-xl-ls: -0.04em;
+        /* The measure of running text: 36em is 70-75 characters of SF Pro
+           (its "0" is wide, so 65ch would be ~85). The narrow one is ~50. */
+        --type-measure: 36em;
+        --type-measure-narrow: 25em;
+        /* Uppercase headings take a little air instead of the tight default. */
+        --type-caps-ls: 0.02em;
+        /* The landing's section headings ("Fresh projects", "Frequently asked
+           questions" ...): the h1 step. */
+        --section-title-size: var(--type-h1-size);
     }
 
     /* Vertical panning only (no sideways drift on phones), but pinch-zoom stays
@@ -142,6 +197,7 @@
         border-radius: 999px;
         background: #03cb00;
         color: #000;
+        font-size: var(--type-small-size);
         font-weight: 600;
         transform: translateY(-200%);
         transition: transform 0.2s ease;
@@ -159,16 +215,43 @@
         font-family: var(--app-font-sans);
     }
 
-    body * {
-        font-family: inherit !important;
+    /* Form controls take the page's type instead of the system font. */
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
     }
 
-    body :where(h1, h2, h3, h4, h5, h6) {
-        font-family: var(--app-font-display) !important;
+    /* Headings default to the display face; a .type-* step below 20px
+       switches back to SF Pro Text. Zero specificity: any component rule wins. */
+    :where(h1, h2, h3, h4, h5, h6) {
+        font-family: var(--app-font-display);
     }
 }
 
 @layer components {
+    /* The type scale as classes (see the tokens in :root). Each sets the face,
+       size, line height, tracking and default weight of its step. */
+    .type-label { font-family: var(--app-font-sans); font-size: var(--type-label-size); line-height: var(--type-label-lh); letter-spacing: var(--type-label-ls); font-weight: 600; text-transform: uppercase; }
+    .type-caption { font-family: var(--app-font-sans); font-size: var(--type-caption-size); line-height: var(--type-caption-lh); letter-spacing: var(--type-caption-ls); font-weight: 400; }
+    .type-small { font-family: var(--app-font-sans); font-size: var(--type-small-size); line-height: var(--type-small-lh); letter-spacing: var(--type-small-ls); font-weight: 400; }
+    .type-body { font-family: var(--app-font-sans); font-size: var(--type-body-size); line-height: var(--type-body-lh); letter-spacing: var(--type-body-ls); font-weight: 400; }
+    .type-lead { font-family: var(--app-font-sans); font-size: var(--type-lead-size); line-height: var(--type-lead-lh); letter-spacing: var(--type-lead-ls); font-weight: 400; }
+    .type-h5 { font-family: var(--app-font-display); font-size: var(--type-h5-size); line-height: var(--type-h5-lh); letter-spacing: var(--type-h5-ls); font-weight: 600; }
+    .type-h4 { font-family: var(--app-font-display); font-size: var(--type-h4-size); line-height: var(--type-h4-lh); letter-spacing: var(--type-h4-ls); font-weight: 600; }
+    .type-h3 { font-family: var(--app-font-display); font-size: var(--type-h3-size); line-height: var(--type-h3-lh); letter-spacing: var(--type-h3-ls); font-weight: 600; }
+    .type-h2 { font-family: var(--app-font-display); font-size: var(--type-h2-size); line-height: var(--type-h2-lh); letter-spacing: var(--type-h2-ls); font-weight: 600; }
+    .type-h1 { font-family: var(--app-font-display); font-size: var(--type-h1-size); line-height: var(--type-h1-lh); letter-spacing: var(--type-h1-ls); font-weight: 600; }
+    .type-display-s { font-family: var(--app-font-display); font-size: var(--type-display-s-size); line-height: var(--type-display-s-lh); letter-spacing: var(--type-display-s-ls); font-weight: 700; }
+    .type-display-m { font-family: var(--app-font-display); font-size: var(--type-display-m-size); line-height: var(--type-display-m-lh); letter-spacing: var(--type-display-m-ls); font-weight: 700; }
+    .type-display-l { font-family: var(--app-font-display); font-size: var(--type-display-l-size); line-height: var(--type-display-l-lh); letter-spacing: var(--type-display-l-ls); font-weight: 700; }
+    .type-display-xl { font-family: var(--app-font-display); font-size: var(--type-display-xl-size); line-height: var(--type-display-xl-lh); letter-spacing: var(--type-display-xl-ls); font-weight: 700; }
+    /* Uppercase headings: a touch of tracking instead of the tight default. */
+    .type-caps { text-transform: uppercase; letter-spacing: var(--type-caps-ls); }
+    /* A comfortable line length for running text (70-75 characters). */
+    .type-measure { max-width: var(--type-measure); }
+
     .containerr {
         max-width: 1450px;
         width: 100%;

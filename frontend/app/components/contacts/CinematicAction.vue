@@ -51,9 +51,12 @@ const resetLight = () => { lightX.value = "calc(100% - 6px)"; };
   border-radius: 999px;
   background: #d1d1d1;
   color: #5a250a;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0;
+  /* The label step: 12px semibold capitals, tracked 0.08em. */
+  font-family: var(--app-font-sans);
+  font-size: var(--type-label-size);
+  font-weight: 600;
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-ls);
   text-transform: uppercase;
   text-decoration: none;
 }

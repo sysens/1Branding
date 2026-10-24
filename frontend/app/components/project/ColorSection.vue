@@ -95,6 +95,8 @@ const section3 = computed(() => {
 });
 
 const colors = computed(() => props.colors ?? []);
+// More than about two lines of running text reads better left-aligned.
+const textIsLong = computed(() => (section3.value?.text ?? "").trim().length > 180);
 </script>
 
 <template>
@@ -102,7 +104,7 @@ const colors = computed(() => props.colors ?? []);
     <div class="containerr">
       <div class="w-full md:pt-[167px] pt-[100px]">
         <h2
-          class="cp-title text-white font-normal md:text-[62px] md:leading-[1] mb-[27px] md:px-0 px-[20px] text-[40px] leading-[100%] tracking-normal text-center will-change-transform"
+          class="cp-title type-h2 text-white mb-[27px] md:px-0 px-[20px] text-center will-change-transform"
         >
           {{ section3?.title || $t("project.palette") }}
         </h2>
@@ -121,7 +123,7 @@ const colors = computed(() => props.colors ?? []);
             />
 
             <p
-              class="text-white font-medium md:text-[22px] md:leading-[31.29px] text-center text-[14.67px] leading-[20.86px] tracking-normal font-['Poppins','Inter',sans-serif]"
+              class="type-lead font-semibold text-white text-center"
             >
               {{ c.HexColorCode || "" }}
             </p>
@@ -129,8 +131,11 @@ const colors = computed(() => props.colors ?? []);
         </div>
       </div>
 
+      <!-- CMS copy: one or two lines stay centred, a longer text is
+           left-aligned at a reading measure (the block stays centred). -->
       <p
-        class="cp-text font-light text-white text-[16px] leading-[120%] md:leading-[28px] tracking-normal text-center will-change-transform"
+        class="cp-text type-body type-measure mx-auto text-white will-change-transform"
+        :class="textIsLong ? 'text-left' : 'text-center'"
       >
         {{ section3?.text || "" }}
       </p>

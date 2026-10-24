@@ -84,7 +84,7 @@ const resolveImg = useCmsMedia();
   >
     <div class="eff-head will-change-transform">
       <h2
-        class="font-normal md:text-[62px] md:leading-[100%] md:tracking-tighter text-[#FFFFFF] mb-[80px] text-[40px] leading-[120%] tracking-normal text-center font-['Inter']"
+        class="type-h2 type-caps text-[#FFFFFF] mb-[80px] text-center"
       >
         {{ title }}
       </h2>
@@ -107,7 +107,7 @@ const resolveImg = useCmsMedia();
 
           <div>
             <p
-              class="font-light md:text-[24px] md:leading-[28px] tracking-normal text-[#FFFFFF] text-[14px] leading-[120%] font-['Inter']"
+              class="type-lead text-[#FFFFFF]"
             >
               {{ item.text }}
             </p>

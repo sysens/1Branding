@@ -44,21 +44,31 @@ const goHome = () => clearError({ redirect: localePath("/") });
   text-align: center;
 }
 
+/* Type: the code is the display-l step, the title h3, the text body. */
 .error-page__code {
   color: #03cb00;
-  font-size: clamp(5rem, 18vw, 12rem);
-  font-weight: 600;
-  line-height: 1;
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-l-size);
+  font-weight: 700;
+  line-height: var(--type-display-l-lh);
+  letter-spacing: var(--type-display-l-ls);
 }
 
 .error-page__title {
-  font-size: clamp(1.75rem, 4vw, 3rem);
-  font-weight: 500;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h3-size);
+  font-weight: 600;
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
 }
 
 .error-page__text {
   max-width: 32rem;
   color: rgb(255 255 255 / 0.7);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 
 .error-page__button {
@@ -74,6 +84,11 @@ const goHome = () => clearError({ redirect: localePath("/") });
   border-radius: 999px;
   background: #000;
   color: #fff;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  font-weight: 600;
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   box-shadow: 0 0 20px rgb(3 203 0 / 0.6);
   transition: box-shadow 0.3s ease;
 }

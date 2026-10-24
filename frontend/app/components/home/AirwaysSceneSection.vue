@@ -56,7 +56,9 @@ const sceneVars = computed(() => {
   background: #000;
 }
 
-/* "strong" with the two short lines standing on its baseline, as in the design. */
+/* "strong" with the two short lines standing on its baseline, as in the design:
+   the word is display-m, the two lines h4 (the design's 0.235 ratio is ~0.22
+   on the scale). The overlap with the stage below is in em of the word. */
 .airways-scene__title {
   position: relative;
   z-index: 1;
@@ -64,14 +66,14 @@ const sceneVars = computed(() => {
   align-items: last baseline;
   justify-content: center;
   gap: 0.16em;
-  margin: 0 0 clamp(-4rem, -4vw, -1rem);
+  margin: 0 0 -0.4em;
   padding-inline: 1.25rem;
   color: #fff;
-  font-family: var(--app-font-display) !important;
-  font-size: clamp(4.25rem, 10vw, 12rem);
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-m-size);
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
+  line-height: var(--type-display-m-lh);
+  letter-spacing: var(--type-display-m-ls);
 }
 
 .airways-scene__strong {
@@ -85,10 +87,16 @@ const sceneVars = computed(() => {
 .airways-scene__rest {
   display: flex;
   flex-direction: column;
-  font-size: 0.235em;
+  font-size: var(--type-h4-size);
   font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
+}
+
+/* The two lines stay two lines; under 360px they may wrap rather than run
+   off the screen. */
+.airways-scene__rest > span {
+  white-space: nowrap;
 }
 
 .airways-scene__stage {
@@ -163,6 +171,29 @@ const sceneVars = computed(() => {
 @media (max-width: 767px) {
   .airways-scene__title {
     margin-bottom: 0;
+  }
+}
+
+/* "сильный" + "достойной подачи." is ~400px at display-m / h4: on phones the
+   Russian heading takes one step down each (display-s / lead) to fit 390px. */
+@media (max-width: 519px) {
+  .airways-scene__title:lang(ru) {
+    font-size: var(--type-display-s-size);
+    line-height: var(--type-display-s-lh);
+    letter-spacing: var(--type-display-s-ls);
+  }
+
+  .airways-scene__title:lang(ru) .airways-scene__rest {
+    font-family: var(--app-font-sans);
+    font-size: var(--type-lead-size);
+    line-height: var(--type-lead-lh);
+    letter-spacing: var(--type-lead-ls);
+  }
+}
+
+@media (max-width: 359px) {
+  .airways-scene__rest > span {
+    white-space: normal;
   }
 }
 </style>

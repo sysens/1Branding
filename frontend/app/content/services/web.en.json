@@ -23,22 +23,52 @@
   "process": {
     "title": "How we work",
     "steps": [
-      { "name": "Brief and research", "text": "We learn your business, goals and customers, and look at your competitors' websites." },
-      { "name": "Structure and prototype", "text": "We plan the pages, the content and the path a visitor takes, and agree it with you as a prototype." },
-      { "name": "Design", "text": "We design the key pages in your brand's style, then the rest of the site, for every screen size." },
-      { "name": "Development and refinement", "text": "We build the site and refine it with your feedback; each stage includes rounds of revisions, and you approve it before we move on." },
-      { "name": "Launch", "text": "We test the site, set up the basic SEO, publish it and show your team how to manage the content." }
+      {
+        "name": "Brief and research",
+        "text": "We learn your business, goals and customers, and look at your competitors' websites."
+      },
+      {
+        "name": "Structure and prototype",
+        "text": "We plan the pages, the content and the path a visitor takes, and agree it with you as a prototype."
+      },
+      {
+        "name": "Design",
+        "text": "We design the key pages in your brand’s style, then the rest of the site, for every screen size."
+      },
+      {
+        "name": "Development and refinement",
+        "text": "We build the site and refine it with your feedback; each stage includes rounds of revisions, and you approve it before we move on."
+      },
+      {
+        "name": "Launch",
+        "text": "We test the site, set up the basic SEO, publish it and show your team how to manage the content."
+      }
     ]
   },
   "timeline": null,
   "faq": {
     "title": "Website questions",
     "items": [
-      { "q": "How much does a website cost in Tashkent?", "a": "The price depends on the scope: the number of pages and languages, the content, and what the site has to do beyond presenting your company. We agree on the price after the brief, when the structure and tasks are clear." },
-      { "q": "How long does it take to build a website?", "a": "It depends on the number of pages, the functions the site needs and how ready the texts and images are. We agree on the timeline together with the scope and price, before we start." },
-      { "q": "Can we update the website ourselves?", "a": "Yes. We set up content management so your team can change texts and images and add new material without a developer, and at hand-over we show you how it works." },
-      { "q": "Can you create the brand and the website together?", "a": "Yes. If your brand already has a brand book, we design the site to its rules. If not, we can develop the identity first, so the website and everything else look like one brand." },
-      { "q": "Will the website be ready for search engines?", "a": "We set up the basics: a clear structure, page titles and descriptions, and readable addresses, so Google and Yandex can index the site properly. Rankings then depend on the content and on regular work after launch." }
+      {
+        "q": "How much does a website cost in Tashkent?",
+        "a": "The price depends on the scope: the number of pages and languages, the content, and what the site has to do beyond presenting your company. We agree on the price after the brief, when the structure and tasks are clear."
+      },
+      {
+        "q": "How long does it take to build a website?",
+        "a": "It depends on the number of pages, the functions the site needs and how ready the texts and images are. We agree on the timeline together with the scope and price, before we start."
+      },
+      {
+        "q": "Can we update the website ourselves?",
+        "a": "Yes. We set up content management so your team can change texts and images and add new material without a developer, and at hand-over we show you how it works."
+      },
+      {
+        "q": "Can you create the brand and the website together?",
+        "a": "Yes. If your brand already has a brand book, we design the site to its rules. If not, we can develop the identity first, so the website and everything else look like one brand."
+      },
+      {
+        "q": "Will the website be ready for search engines?",
+        "a": "We set up the basics: a clear structure, page titles and descriptions, and readable addresses, so Google and Yandex can index the site properly. Rankings then depend on the content and on regular work after launch."
+      }
     ]
   },
   "cta": {

@@ -15,8 +15,9 @@
 .sticky-reveal__panel { display: flex; flex-direction: column; justify-content: center; min-height: max(100svh, 540px); padding-block: 100px; opacity: .3; transition: opacity 450ms ease; }
 .sticky-reveal__panel.is-active { opacity: 1; }
 .sticky-reveal__copy { width: 100%; max-width: 520px; }
-.sticky-reveal__copy h2 { margin: 0; font-family: var(--app-font-display); font-size: 60px; line-height: 1; font-weight: 700; letter-spacing: 0; white-space: pre-line; overflow-wrap: break-word; }
-.sticky-reveal__copy p { margin: 26px 0 0; font-family: var(--app-font-display); font-size: 18px; line-height: 1.2; font-weight: 400; letter-spacing: 0; }
+/* Type: the panel heading is the h2 step, its text the lead step. */
+.sticky-reveal__copy h2 { margin: 0; font-family: var(--app-font-display); font-size: var(--type-h2-size); line-height: var(--type-h2-lh); font-weight: 600; letter-spacing: var(--type-h2-ls); white-space: pre-line; overflow-wrap: break-word; }
+.sticky-reveal__copy p { margin: 26px 0 0; font-family: var(--app-font-sans); font-size: var(--type-lead-size); line-height: var(--type-lead-lh); font-weight: 400; letter-spacing: var(--type-lead-ls); }
 .sticky-reveal__mobile-image { display: none; }
 @media (min-width: 1920px) {
   /* Same proportions as at 1920px on wider screens (these sizes are in px). */
@@ -24,12 +25,9 @@
   .sticky-reveal__image--logo { width: clamp(370px, 19.27vw, 510px); }
   .sticky-reveal__image--artwork { width: clamp(520px, 27.08vw, 720px); }
   .sticky-reveal__copy { max-width: clamp(520px, 27.08vw, 720px); }
-  .sticky-reveal__copy h2 { font-size: clamp(60px, 3.125vw, 84px); }
-  .sticky-reveal__copy p { font-size: clamp(18px, 0.9375vw, 25px); }
 }
 @media (max-width: 1100px) {
   .sticky-reveal__layout { gap: 40px; width: calc(100% - 64px); }
-  .sticky-reveal__copy h2 { font-size: 48px; }
   .sticky-reveal__image--logo { width: 320px; }
 }
 @media (max-width: 767px), (orientation: portrait) {
@@ -40,12 +38,7 @@
   .sticky-reveal__mobile-image { display: block; align-self: center; width: 100%; max-width: 420px; height: auto; object-fit: contain; }
   .sticky-reveal__mobile-image.sticky-reveal__image--logo { width: 260px; max-width: 90%; }
   .sticky-reveal__copy { margin-inline: auto; }
-  .sticky-reveal__copy h2 { font-size: 40px; line-height: 1.05; }
-  .sticky-reveal__copy p { margin-top: 22px; font-size: 17px; line-height: 1.35; }
-}
-@media (max-width: 374px) {
-  .sticky-reveal__copy h2 { font-size: 34px; }
-  .sticky-reveal__copy p { font-size: 16px; }
+  .sticky-reveal__copy p { margin-top: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sticky-reveal__background, .sticky-reveal__media, .sticky-reveal__panel { transition: none; transform: none; }

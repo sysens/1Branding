@@ -97,16 +97,15 @@ const onLeave = (element: Element, done: () => void) => {
   padding: calc(83 * var(--u)) 1.25rem calc(120 * var(--u));
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .faq__title {
   margin: 0;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-align: center;
 }
 
@@ -157,14 +156,16 @@ const onLeave = (element: Element, done: () => void) => {
   gap: 1.5rem;
   width: 100%;
   min-height: calc(88 * var(--u));
-  padding: 0 calc(32 * var(--u));
+  padding: 0.5em calc(32 * var(--u));
   border: 0;
   background: none;
   color: #c9c9c9;
   font: inherit;
-  font-size: calc(21.5 * var(--u));
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-align: left;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -229,22 +230,21 @@ const onLeave = (element: Element, done: () => void) => {
   display: block;
 }
 
+/* A reading measure for the answer (65 characters), its side padding on top. */
 .faq__answer {
-  max-width: 62em;
+  max-width: calc(var(--type-measure) + 64 * var(--u));
   margin: 0;
   padding: 0 calc(32 * var(--u)) calc(30 * var(--u));
   color: #9a9da1;
-  font-size: calc(20 * var(--u));
-  line-height: 1.55;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 
 @media (max-width: 767px) {
   .faq {
     padding: 4rem 1.25rem 4.5rem;
-  }
-
-  .faq__title {
-    font-size: var(--section-title-size);
   }
 
   .faq__list {
@@ -260,7 +260,6 @@ const onLeave = (element: Element, done: () => void) => {
   .faq__question {
     min-height: 3.75rem;
     padding: 0.9rem 1.1rem;
-    font-size: 1rem;
   }
 
   .faq__icon {
@@ -276,7 +275,6 @@ const onLeave = (element: Element, done: () => void) => {
 
   .faq__answer {
     padding: 0 1.1rem 1.1rem;
-    font-size: 0.95rem;
   }
 }
 

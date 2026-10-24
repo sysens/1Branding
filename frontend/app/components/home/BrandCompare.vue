@@ -89,20 +89,20 @@ const go = (step: 1 | -1) => {
   padding: calc(110 * var(--u)) 0 calc(120 * var(--u));
   background: #fff;
   color: #0a0a0a;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
+/* The section heading: the h1 step (--section-title-size). */
 .compare-section__title {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0;
   padding-inline: 1.25rem;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 1.17;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-align: center;
 }
 
@@ -113,12 +113,16 @@ const go = (step: 1 | -1) => {
   color: transparent;
 }
 
+/* "*slide": the lead step. #737373 passes 4.5:1 on the white section (4.7:1;
+   #7c7c7c was 4.2:1). */
 .compare-section__hint {
   margin: calc(28 * var(--u)) 0 0;
-  color: #7c7c7c;
-  font-size: calc(34 * var(--u));
+  color: #737373;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
   font-weight: 600;
-  line-height: 1;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
 }
 
 .compare-section__stage {
@@ -211,9 +215,12 @@ const go = (step: 1 | -1) => {
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: var(--button-font);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  /* Button label: the lead step at the button weight (600). */
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -230,13 +237,8 @@ const go = (step: 1 | -1) => {
     padding: 4rem 0 4.5rem;
   }
 
-  .compare-section__title {
-    font-size: var(--section-title-size);
-  }
-
   .compare-section__hint {
     margin-top: 0.75rem;
-    font-size: 1rem;
   }
 
   .compare-section__stage {

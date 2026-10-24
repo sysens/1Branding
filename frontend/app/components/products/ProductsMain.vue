@@ -112,13 +112,13 @@ watch(
 
         <div class="text-white px-[24px] absolute bottom-[12%]">
           <p
-            class="font-light md:text-[16px] md:leading-[31.29px] md:tracking-[0] text-[#E3E3E3] text-[13px] leading-[22.93px] tracking-normal font-['Inter'] transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
+            class="type-small text-[#E3E3E3] transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
           >
             {{ yearOnly(item.createdAt) }}
           </p>
 
           <h2
-            class="font-['Inter'] font-medium md:text-[40px] line-clamp-1 md:leading-[31.29px] md:tracking-[0] text-[20px] leading-[22.93px] tracking-normal transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
+            class="type-h3 line-clamp-1 transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
           >
             {{ safeTitle(item) }}
           </h2>
@@ -129,7 +129,7 @@ watch(
     <div class="flex items-center justify-center mt-[90px]">
       <button
         v-if="hasMore"
-        class="showMore rounded-full bg-black text-white border-2 w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-center border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 font-['Poppins','Inter',sans-serif]"
+        class="showMore rounded-full bg-black text-white border-2 w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-center border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 type-body font-semibold"
         @click="showMore"
       >
         {{ $t("common.showMore") }}

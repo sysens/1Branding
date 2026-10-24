@@ -292,15 +292,17 @@ const loading = computed(() => pending.value || !data.value);
           >
             <div class="flex-1">
               <h1
-                class="hero-title flex-1 font-normal text-[#FFFFFF] md:text-[62px] leading-[120%] tracking-[0] text-[40px] md:text-start text-center md:pb-0 pb-[40px]"
+                class="hero-title type-h1 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[40px]"
               >
                 {{ section1.projectTitle }}
               </h1>
             </div>
 
+            <!-- The project's description is running text: left-aligned on
+                 phones too, at a reading measure. -->
             <div class="flex-1">
               <p
-                class="hero-text font-normal md:text-[16px] text-[#FFFFFF] md:tracking-[0] text-[13px] leading-[120%] tracking-normal md:text-start text-center md:pb-0 pb-[50px] font-['Poppins','Inter',sans-serif]"
+                class="hero-text type-body type-measure text-[#FFFFFF] text-left md:pb-0 pb-[50px]"
               >
                 {{ section1.text }}
               </p>
@@ -366,8 +368,11 @@ const loading = computed(() => pending.value || !data.value);
 .project-next h2 {
   margin: 0 0 28px;
   color: #fff;
-  font-size: clamp(2rem, 3.4vw, 3.5rem);
-  font-weight: 400;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-ls);
+  font-weight: 600;
 }
 
 .project-next p {
@@ -380,7 +385,10 @@ const loading = computed(() => pending.value || !data.value);
 
 .project-next a {
   color: #fff;
-  font-size: 18px;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -389,6 +397,7 @@ const loading = computed(() => pending.value || !data.value);
   padding: 16px 32px;
   border-radius: 32px;
   background: url("/home/Component3.png") 100% 50% / 120%;
+  font-weight: 600;
   text-decoration: none;
 }
 </style>

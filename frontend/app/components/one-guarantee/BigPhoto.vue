@@ -172,13 +172,13 @@ const onCtaClick = async (event: MouseEvent) => {
 
       <div>
         <h2
-          class="cta-title will-change-transform font-normal text-[#FFFFFF] md:text-[62px] text-[40px] leading-[120%] tracking-normal text-center"
+          class="cta-title will-change-transform type-h2 text-[#FFFFFF] text-center"
         >
           {{ section6.title }}
         </h2>
 
         <p
-          class="cta-text will-change-transform font-light text-[#FFFFFF] text-[20px] leading-[120%] py-[45px] tracking-normal text-center font-['Poppins','Inter',sans-serif]"
+          class="cta-text will-change-transform type-lead text-[#FFFFFF] py-[45px] text-center"
         >
           {{ section6.text }}
         </p>
@@ -187,7 +187,7 @@ const onCtaClick = async (event: MouseEvent) => {
           <NuxtLink
             :to="isExternalUrl(buttonUrl) ? buttonUrl : localePath(isSitePath(buttonUrl) ? buttonUrl : '/')"
             :external="isExternalUrl(buttonUrl)"
-            class="cta-btn inline-flex items-center justify-center text-white bg-[url('/home/Component3.png')] bg-no-repeat w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] bg-[length:120%] bg-[position:100%_50%] transition-all duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[length:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] text-[16px] font-['Inter']"
+            class="cta-btn inline-flex items-center justify-center text-white bg-[url('/home/Component3.png')] bg-no-repeat w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] bg-[length:120%] bg-[position:100%_50%] transition-all duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[length:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] type-body font-semibold"
             @click="onCtaClick"
           >
             {{ buttonText }}

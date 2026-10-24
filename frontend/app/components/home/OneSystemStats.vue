@@ -152,8 +152,6 @@ onBeforeUnmount(() => {
   height: 440vh;
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .stats__screen {
@@ -188,29 +186,33 @@ onBeforeUnmount(() => {
 .stats__line {
   display: block;
   max-width: 100%;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--app-font-display);
   text-wrap: balance;
 }
 
-/* Sizes follow the design: value 180, label 50, closing 65 (cap heights). */
+/* Steps: the figure display-xl, its label h2, the closing slogan h1. Each
+   letter of the wave (.stats__char) takes its line's size, tracking and the
+   blur in em, so the animation scales with the step. */
 .stats__line--value {
-  font-size: min(max(calc(14.7 * var(--fvw)), 5.5rem), 30vh);
-  line-height: 0.95;
-  letter-spacing: -0.015em;
+  font-size: var(--type-display-xl-size);
+  font-weight: 700;
+  line-height: var(--type-display-xl-lh);
+  letter-spacing: var(--type-display-xl-ls);
 }
 
 .stats__line--label {
   margin-top: 0.12em;
-  font-size: min(max(calc(4.1 * var(--fvw)), 1.45rem), 8.3vh);
+  font-size: var(--type-h2-size);
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-ls);
 }
 
 .stats__line--closing {
-  font-size: min(max(calc(5.3 * var(--fvw)), 2rem), 10.8vh);
-  line-height: 1.1;
+  font-size: var(--type-h1-size);
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
 }
 
 .stats__word {

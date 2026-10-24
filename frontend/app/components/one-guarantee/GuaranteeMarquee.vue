@@ -93,14 +93,12 @@ const rowsConfig = computed(() =>
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
-                  <div
-                    class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold md:mb-[12px]"
-                  >
-                    <img src="/OneGuarantee/group-2.png" alt="" >
+                  <div class="md:pb-[12px] pb-[20px] md:mb-[12px]">
+                    <img class="block" src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p
-                    class="font-normal text-[15px] leading-[120%] tracking-[0%] line-clamp-5 mb-[30px] text-[#808080] font-['Poppins','Inter',sans-serif]"
+                    class="type-small line-clamp-5 mb-[30px] text-[#8f8f8f]"
                   >
                     {{ item.text }}
                   </p>
@@ -108,13 +106,13 @@ const rowsConfig = computed(() =>
 
                 <div>
                   <p
-                    class="font-semibold text-[20px] leading-[100%] tracking-[0%] pb-[15px] text-[#FFFFFF] font-['Poppins','Inter',sans-serif]"
+                    class="type-h5 pb-[15px] text-[#FFFFFF]"
                   >
                     {{ item.author }}
                   </p>
                   <p
                     v-if="item.sub"
-                    class="font-normal text-[15px] leading-[120%] tracking-[0] text-[#808080] font-['Poppins','Inter',sans-serif]"
+                    class="type-small text-[#8f8f8f]"
                   >
                     {{ item.sub }}
                   </p>
@@ -143,14 +141,12 @@ const rowsConfig = computed(() =>
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
-                  <div
-                    class="text-[#03CB00] text-[56px] md:pb-[12px] pb-[20px] leading-none font-bold"
-                  >
-                    <img src="/OneGuarantee/group-2.png" alt="" >
+                  <div class="md:pb-[12px] pb-[20px]">
+                    <img class="block" src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p
-                    class="font-normal text-[15px] leading-[120%] tracking-[0%] line-clamp-5 mb-[30px] text-[#808080] font-['Poppins','Inter',sans-serif]"
+                    class="type-small line-clamp-5 mb-[30px] text-[#8f8f8f]"
                   >
                     {{ item.text }}
                   </p>
@@ -158,13 +154,13 @@ const rowsConfig = computed(() =>
 
                 <div>
                   <p
-                    class="font-semibold text-[20px] leading-[100%] tracking-[0%] pb-[15px] text-[#FFFFFF] font-['Poppins','Inter',sans-serif]"
+                    class="type-h5 pb-[15px] text-[#FFFFFF]"
                   >
                     {{ item.author }}
                   </p>
                   <p
                     v-if="item.sub"
-                    class="font-normal text-[15px] leading-[120%] tracking-[0] text-[#808080] font-['Poppins','Inter',sans-serif]"
+                    class="type-small text-[#8f8f8f]"
                   >
                     {{ item.sub }}
                   </p>

@@ -5,8 +5,6 @@
   position: relative;
   height: 420vh;
   background: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .parts__screen {
@@ -39,45 +37,61 @@
   white-space: nowrap;
 }
 
+/* Type: the brand name and the tagline are the caption step, the headline h1
+   and the lead h4, both uppercase with caps tracking. The two uppercase poster
+   lines keep weight 700 (the design's face is heavier than SF Pro Bold; the
+   faux-bold text stroke is gone). On short, wide screens (landscape phones)
+   the stage shrinks with the screen height (--u) while the steps follow the
+   width, so there the headline and lead are capped at the stage's scale
+   (~1.15x the design) instead of covering the render. */
 .parts__brand {
   left: calc(50% - 750 * var(--u));
   top: calc(50% + 2.5rem - 430 * var(--u));
-  font-size: max(11px, calc(19.5 * var(--u)));
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  font-weight: 600;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
 }
 
+/* The two uppercase lines are one block above the render: they keep the
+   scale's tight display leading (0.9) instead of h1's 1.05. */
 .parts__headline {
   left: calc(50% - 754 * var(--u));
   top: calc(50% + 2.5rem - 393 * var(--u));
   display: flex;
   flex-direction: column;
-  font-size: calc(105 * var(--u));
+  font-family: var(--app-font-display);
+  font-size: min(var(--type-h1-size), calc(120 * var(--u)));
   font-weight: 700;
-  line-height: 0.905;
-  letter-spacing: 0.02em;
+  line-height: var(--type-display-m-lh);
+  letter-spacing: var(--type-caps-ls);
   text-transform: uppercase;
-  /* The design's face is heavier and wider than SF Pro Bold. */
-  -webkit-text-stroke: calc(1.75 * var(--u)) #0a0a0a;
 }
 
+/* top: the design's spot plus the old cap-top offset (18.4u at the inherited
+   1.5 line height) minus the cap top at the h4 line height (0.25em), so the
+   line still starts where it did on the render. */
 .parts__lead {
   left: calc(50% + 175 * var(--u));
-  top: calc(50% + 2.5rem + 264 * var(--u));
-  font-size: calc(46 * var(--u));
+  top: calc(50% + 2.5rem + 282.4 * var(--u) - 0.25em);
+  font-family: var(--app-font-display);
+  font-size: min(var(--type-h4-size), calc(52 * var(--u)));
   font-weight: 700;
-  letter-spacing: 0.03em;
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-caps-ls);
   text-transform: uppercase;
-  -webkit-text-stroke: calc(1.2 * var(--u)) #0a0a0a;
 }
 
 .parts__tagline {
   left: calc(50% + 8 * var(--u));
   top: calc(50% + 2.5rem + 392 * var(--u));
   color: #2a2a2a;
-  font-size: max(11px, calc(18 * var(--u)));
-  font-weight: 500;
-  letter-spacing: 0.07em;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  font-weight: 400;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   translate: -50% 0;
 }
 
@@ -194,29 +208,34 @@
   .parts__brand {
     left: 1.25rem;
     top: 7rem;
-    font-size: 0.75rem;
   }
 
+  /* Phones: the fixed spots above and below the stage; the steps' phone
+     sizes (h1 36px, h4 22px), not the panning stage's scale. */
   .parts__headline {
     left: 1.25rem;
     top: 8rem;
-    font-size: 2.1rem;
-    letter-spacing: 0.01em;
-    -webkit-text-stroke: 0.03rem #0a0a0a;
+    font-size: var(--type-h1-size);
   }
 
   .parts__lead {
     left: 50%;
     top: calc(50% + 2.5rem + 9.5rem);
-    font-size: 1.15rem;
-    -webkit-text-stroke: 0.02rem #0a0a0a;
+    font-size: var(--type-h4-size);
     translate: -50% 0;
+  }
+
+  /* "YETAKCHILIKKA YARALGAN BREND." is ~390px at h4: one line on a phone
+     needs the lead step. */
+  .parts__lead:lang(uz) {
+    font-family: var(--app-font-sans);
+    font-size: var(--type-lead-size);
+    line-height: var(--type-lead-lh);
   }
 
   .parts__tagline {
     left: 50%;
     top: calc(50% + 2.5rem + 12rem);
-    font-size: 0.75rem;
   }
 }
 

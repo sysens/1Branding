@@ -80,36 +80,36 @@ useGsapContext(root, ({ gsap }) => {
            details; the labels are h2s, the details plain text and links. -->
       <address class="not-italic md:flex gap-[189px]">
         <div class="flex-1">
-          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
             {{ t("contacts.addressTitle") }}
           </h2>
-          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-[80px] pb-[40px]">
+          <p class="type-lead text-[#8f8f8f] md:pb-[80px] pb-[40px]">
             <a :href="COMPANY_MAP_URL" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ address }}</a>
           </p>
 
-          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
             {{ t("contacts.contactInfoTitle") }}
           </h2>
-          <p class="flex gap-[10px] pb-[15px]">
+          <p class="flex items-center gap-[10px] pb-[15px]">
             <img src="/Contacts/iconsax-call.png" alt="" width="24" height="24">
-            <a :href="`tel:${phone.e164}`" class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal hover:text-white transition-colors">{{ phone.display }}</a>
+            <a :href="`tel:${phone.e164}`" class="type-lead text-[#8f8f8f] hover:text-white transition-colors">{{ phone.display }}</a>
           </p>
-          <p class="flex gap-[10px] md:pb-[87px] pb-[40px]">
+          <p class="flex items-center gap-[10px] md:pb-[87px] pb-[40px]">
             <img src="/Contacts/sms.png" alt="" width="24" height="24">
-            <a :href="`https://${website}/`" class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal hover:text-white transition-colors">{{ website }}</a>
+            <a :href="`https://${website}/`" class="type-lead text-[#8f8f8f] hover:text-white transition-colors">{{ website }}</a>
           </p>
         </div>
 
         <div class="flex-1">
-          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
             {{ t("contacts.workTitle") }}
           </h2>
-          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-[80px] pb-[40px]">
+          <p class="type-lead text-[#8f8f8f] md:pb-[80px] pb-[40px]">
             {{ t("contacts.workHours") }}
           </p>
 
           <template v-if="profiles.length">
-            <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+            <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
               {{ t("common.socials") }}
             </h2>
             <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
@@ -131,22 +131,22 @@ useGsapContext(root, ({ gsap }) => {
 
       <div class="md:flex gap-[189px]">
         <div class="flex-1">
-          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
             {{ t("contacts.noteTitle") }}
           </h2>
-          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-0 pb-[40px]">
+          <p class="type-lead type-measure text-[#8f8f8f] md:pb-0 pb-[40px]">
             {{ t("contacts.noteText") }}
           </p>
         </div>
 
         <div class="flex-1">
-          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal pb-[30px]">
+          <p class="type-lead type-measure text-[#8f8f8f] pb-[30px]">
             {{ t("contacts.briefText") }}
           </p>
           <button
             type="button"
             :disabled="!briefFileUrl"
-            class="w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] text-[16px] text-white font-normal md:text-[19.57px] leading-[19.57px] capitalize font-['Inter'] bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] text-[16px] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
+            class="type-lead font-semibold w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap rounded-[32px] text-white capitalize bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center"
             @click="onDownloadBrief"
           >
             {{ $t("common.downloadBrief") }}

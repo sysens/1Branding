@@ -67,24 +67,21 @@ const renderLine = (line: string) => {
   padding-inline: 1rem;
   color: #303230;
   font-family: var(--app-font-display);
-  font-size: 5rem;
+  font-size: var(--type-h1-size);
   font-weight: 700;
-  line-height: 1.16;
-  letter-spacing: 0;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
 }
 .digital-experience__title > span { display: block; }
 /* #00aa30 instead of #00b534: same green, but 3.1:1 on white (WCAG AA large text). */
 .digital-experience__title strong { color: #00aa30; font-weight: inherit; }
-.digital-experience__description { max-width: 58rem; margin: 1.75rem auto 0; padding-inline: 1.25rem; color: #666b67; font-family: var(--app-font-sans); font-size: 1rem; font-weight: 400; line-height: 1.4; letter-spacing: 0; }
+.digital-experience__description { max-width: 58rem; margin: 1.75rem auto 0; padding-inline: 1.25rem; color: #666b67; font-family: var(--app-font-sans); font-size: var(--type-body-size); font-weight: 400; line-height: var(--type-body-lh); letter-spacing: var(--type-body-ls); }
 @media (min-width: 768px) and (max-width: 1023px) {
   .digital-experience { padding-top: 10rem; }
-  .digital-experience__title { font-size: 4rem; }
 }
 @media (max-width: 767px) {
   .digital-experience { padding-top: 4rem; }
   .digital-experience :deep(.macbook-scroll) { padding-block: 2.5rem 1rem; }
-  .digital-experience__title { font-size: 2.25rem; line-height: 1.18; }
-  .digital-experience__description { font-size: 0.875rem; margin-top: 1.25rem; }
+  .digital-experience__description { margin-top: 1.25rem; }
 }
-@media (max-width: 359px) { .digital-experience__title { font-size: 2rem; } }
 </style>

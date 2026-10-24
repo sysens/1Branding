@@ -129,7 +129,7 @@ onMounted(async () => {
               >
 
                 <h1
-                  class="text-[#FFFFFF] font-normal md:text-[50px] md:leading-[100%] md:tracking-[0] md:pt-[127px] pt-[137px] md:pb-[60px] pb-[30px] text-[40px] leading-[100%] tracking-normal text-center products"
+                  class="text-[#FFFFFF] md:pt-[127px] pt-[137px] md:pb-[60px] pb-[30px] text-center products"
                 ><span class="sr-only">{{ $t("seo.oneGuarantee.h1") }}</span></h1>
               </div>
             </div>
@@ -146,13 +146,13 @@ onMounted(async () => {
             <div class="containerr">
               <div class="md:px-0 px-[20px]">
                 <h2
-                  class="text-[#FFFFFF] md:px-0 md:mt-[130px] text-center pb-[29px] font-normal md:text-[62px] leading-[100%] md:tracking-normal text-[40px] tracking-[0%]"
+                  class="type-h2 text-[#FFFFFF] md:px-0 md:mt-[130px] text-center pb-[29px]"
                 >
                   {{ $t("oneGuarantee.clientsTitle") }}
                 </h2>
 
                 <p
-                  class="text-[#FFFFFF] font-light md:text-[16px] pb-[43px] md:leading-[28px] md:tracking-normal text-center text-[14px] leading-[120%] tracking-[0%] font-['Inter']"
+                  class="type-body type-measure mx-auto text-[#FFFFFF] pb-[43px] text-center"
                 >
                   {{ $t("oneGuarantee.clientsSubtitle") }}
                 </p>

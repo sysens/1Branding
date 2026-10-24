@@ -197,8 +197,13 @@ useHead(() => ({
   top: 50%;
   left: 50%;
   margin: 0;
-  color: #111111;
-  font: 500 1rem/1.4 "Poppins", "Inter", sans-serif;
+  /* Readable on the black wall (was #111111, invisible). */
+  color: #8f8f8f;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  font-weight: 400;
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   transform: translate(-50%, -50%);
 }
 

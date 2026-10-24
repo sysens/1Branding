@@ -96,12 +96,12 @@ const section2WithImages = computed(() =>
         >
           <div class="mission-text flex-1 will-change-transform">
             <h2
-              class="text-[#FFFFFF] font-normal md:pb-[60px] pb-[30px] text-[40px] leading-[100%] tracking-[0]"
+              class="type-h3 text-[#FFFFFF] md:pb-[60px] pb-[30px]"
             >
               {{ item.title }}
             </h2>
             <p
-              class="text-[#FFFFFF] pb-[80px] md:pb-0 font-normal text-[15px] leading-[28px] tracking-[0] font-['Poppins','Inter',sans-serif]"
+              class="type-body type-measure text-[#FFFFFF] pb-[80px] md:pb-0"
             >
               {{ item.text }}
             </p>

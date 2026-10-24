@@ -3,7 +3,7 @@
     <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[686px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[24px] min-[950px]:pr-[10px] border h-[76px] min-[950px]:h-[45px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[760px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[24px] min-[950px]:pr-[10px] border h-[76px] min-[950px]:h-[45px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
         <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
         <a
@@ -60,7 +60,7 @@
             >
               <div
                 v-show="isLangOpen"
-                class="absolute left-1/2 -translate-x-1/2 top-[31px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
+                class="absolute left-1/2 -translate-x-1/2 top-[35px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
               >
                 <!-- Links, not buttons: crawlers follow them to the other languages. -->
                 <a
@@ -158,7 +158,7 @@
           <div class="px-[20px]">
             <a
               :href="localePath('/services')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/services'))"
             >
               {{ $t("nav.services") }}
@@ -168,7 +168,7 @@
 
             <a
               :href="localePath('/about')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/about'))"
             >
               {{ $t("nav.about") }}
@@ -178,7 +178,7 @@
 
             <a
               :href="localePath('/projects')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/projects'))"
             >
               {{ $t("nav.projects") }}
@@ -187,7 +187,7 @@
 
             <a
               :href="localePath('/contact')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/contact'))"
             >
               {{ $t("nav.contacts") }}
@@ -196,7 +196,7 @@
 
             <a
               :href="localePath('/one-guarantee')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/one-guarantee'))"
             >
               <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
@@ -207,7 +207,7 @@
 
             <a
               :href="localePath('/pricing')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/pricing'))"
             >
               {{ $t("nav.prices") }}
@@ -216,7 +216,7 @@
 
             <a
               :href="localePath('/news')"
-              class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
+              class="type-h4 block py-[23px] p-[20px] text-white"
               @click="onNav($event, localePath('/news'))"
             >
               {{ $t("nav.news") }}
@@ -224,11 +224,11 @@
             <div class="h-px bg-white/10"/>
 
             <div>
-              <div class="block py-[23px] font-['Inter'] text-white text-[20px]">
+              <div class="block py-[23px] text-white">
                 <div class="relative w-full">
                   <button
                     type="button"
-                    class="w-full px-[20px] flex pb-[33px] items-center justify-between text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle"
+                    class="type-h4 w-full px-[20px] flex pb-[25px] items-center justify-between text-white align-middle"
                     @click="isLangOpen = !isLangOpen"
                   >
                     <span>{{ lang }}</span>
@@ -265,7 +265,7 @@
                           :href="langHref(code)"
                           :hreflang="code"
                           :lang="code"
-                          class="block w-full px-[20px] py-[18px] text-start text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
+                          class="type-h4 block w-full px-[20px] py-[14px] text-start text-white align-middle hover:bg-white/5"
                           :aria-current="code === lang ? 'true' : undefined"
                           @click="onLangLink($event, code)"
                         >{{ code }}</a>
@@ -467,22 +467,18 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-/* Header type, after the design: a semibold, slightly tracked face for the
-   links and the button, the wordmark larger. On desktop the whole bar is 70%
-   of the design's 2000px-frame sizes; wider screens scale it up (see the
-   1920px block). */
-.site-header {
-  --nav-size: 10.5px;
-  --logo-size: 19px;
-}
-
+/* Header type, on the site's type scale: the links, the language switcher
+   and the OneGuarantee pill are the caption step in semibold, the wordmark
+   the h5 step (it fits the 45px bar). The steps keep one size on every
+   desktop, so the bar keeps one size too. */
 .site-logo {
   flex-shrink: 0;
   color: #fff;
-  font-size: var(--logo-size);
+  font-family: var(--app-font-display);
+  font-size: var(--type-h5-size);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.01em;
+  line-height: var(--type-h5-lh);
+  letter-spacing: var(--type-h5-ls);
   white-space: nowrap;
   text-decoration: none;
 }
@@ -503,10 +499,11 @@ onBeforeUnmount(() => {
   border: 0;
   background: none;
   color: #efefef;
-  font-size: var(--nav-size);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.02em;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
@@ -521,15 +518,18 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 118px;
-  height: 24px;
+  /* Grown with its text (10.5px → 13px), same proportions as before. */
+  width: 136px;
+  height: 28px;
   border: 1px solid rgb(64 140 52 / 0.85);
   border-radius: 40px;
   background: #000;
   color: #fff;
-  font-size: var(--nav-size);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
   font-weight: 600;
-  letter-spacing: 0.02em;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   white-space: nowrap;
   text-decoration: none;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
@@ -545,10 +545,14 @@ onBeforeUnmount(() => {
   color: #36c536;
 }
 
+/* Phones and tablets: the 76px bar takes the wordmark a step up (h3, 26px on
+   a phone, as before). */
 @media (max-width: 949px) {
   .site-logo {
     margin-left: 14px;
-    font-size: 26px;
+    font-size: var(--type-h3-size);
+    line-height: var(--type-h3-lh);
+    letter-spacing: var(--type-h3-ls);
   }
 }
 
@@ -588,31 +592,12 @@ onBeforeUnmount(() => {
 
 /* Narrow desktops: the items close up. */
 @media (min-width: 950px) and (max-width: 1099px) {
-  .site-header {
-    --logo-size: 17px;
-  }
-
   .site-header .site-nav {
     gap: 11px;
   }
 }
 
-/* Keep the header's laptop proportions on 1920px+ monitors (sizes are px). */
-@media (min-width: 1920px) {
-  .site-header {
-    --nav-size: clamp(10.5px, 0.525vw, 14px);
-    --logo-size: clamp(19px, 0.945vw, 25px);
-    max-width: clamp(686px, 34.3vw, 910px);
-    height: clamp(45px, 2.24vw, 59px);
-  }
-
-  .site-header .site-nav {
-    gap: clamp(15px, 0.77vw, 21px);
-  }
-
-  .site-guarantee {
-    width: clamp(118px, 5.88vw, 154px);
-    height: clamp(24px, 1.19vw, 32px);
-  }
-}
+/* No 1920px+ block any more: the type steps stop growing at 1920px, so the
+   760px bar (sized for the longest labels, Uzbek) stays as it is on wider
+   monitors instead of spreading its items apart. */
 </style>

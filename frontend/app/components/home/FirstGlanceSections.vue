@@ -100,10 +100,12 @@ const sections = computed<ProductStorySection[]>(() => {
   mix-blend-mode: lighten;
 }
 
+/* Parked section. 700: the site has no 900 weight. The desktop sizes stay in
+   cqw (the design's measured composition); phones use the h1 / body steps. */
 .first-glance-section__copy h2 {
   margin: 0;
   color: #ffffff;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.98;
   letter-spacing: 0;
 }
@@ -249,14 +251,15 @@ const sections = computed<ProductStorySection[]>(() => {
   }
 
   .first-glance-section__copy h2 {
-    font-size: clamp(2.4rem, 9.5vw, 4.5rem);
+    font-size: var(--type-h1-size);
   }
 
   .first-glance-section__copy p {
     max-width: min(100%, 31rem);
     margin-top: 0.9rem;
-    font-size: 1rem;
-    line-height: 1.35;
+    font-size: var(--type-body-size);
+    line-height: var(--type-body-lh);
+    letter-spacing: var(--type-body-ls);
   }
 }
 </style>

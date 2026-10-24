@@ -115,6 +115,8 @@ useGsapContext(root, ({ gsap, ScrollTrigger }) => {
 const { aboutPage } = await useAboutPage();
 
 const section3 = computed(() => aboutPage.value?.section3 ?? null);
+// More than about two lines of running text reads better left-aligned.
+const subTitleIsLong = computed(() => (section3.value?.subTitle ?? "").trim().length > 180);
 
 const resolveImage = useCmsMedia();
 
@@ -140,13 +142,16 @@ const lastThree = computed(() => {
       <div v-if="section3" class="containerr">
         <div>
           <h2
-            class="team-heading text-[#FFFFFF] font-normal md:text-[50px] text-[40px] leading-[100%] tracking-[0] text-center"
+            class="team-heading type-h2 text-[#FFFFFF] text-center"
           >
             {{ section3.title }}
           </h2>
 
+          <!-- CMS copy: one or two lines stay centred, a longer text is
+               left-aligned at a reading measure (the block stays centred). -->
           <p
-            class="team-text font-normal text-[#FFFFFFCC]/80 pt-[20px] pb-[60px] md:text-[20px] md:leading-[31px] text-[14px] leading-[120%] tracking-[0] text-center font-['Poppins','Inter',sans-serif]"
+            class="team-text type-lead type-measure mx-auto text-[#FFFFFFCC]/80 pt-[20px] pb-[60px]"
+            :class="subTitleIsLong ? 'text-left' : 'text-center'"
           >
             {{ section3.subTitle }}
           </p>

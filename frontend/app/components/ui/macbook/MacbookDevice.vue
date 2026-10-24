@@ -50,7 +50,8 @@ const { deviceScale, deviceHeight, scaleX, scaleY, rotate, translate, textTransf
   padding-block: 2rem 0;
 }
 .macbook-scroll__title { flex-shrink: 0; width: 100%; margin-bottom: 5rem; text-align: center; }
-.macbook-scroll__title h2 { font-size: 1.875rem; line-height: 1.2; font-weight: 700; color: #262626; }
+/* Parked: the title is the h4 step. */
+.macbook-scroll__title h2 { font-family: var(--app-font-display); font-size: var(--type-h4-size); line-height: var(--type-h4-lh); letter-spacing: var(--type-h4-ls); font-weight: 700; color: #262626; }
 .macbook-scroll__device { position: relative; isolation: isolate; flex-shrink: 0; width: 32rem; height: 34rem; }
 .macbook-scroll__hardware { position: relative; width: 32rem; transform-origin: left top; }
 @media (max-width: 767px), (orientation: portrait) {

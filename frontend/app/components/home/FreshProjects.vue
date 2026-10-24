@@ -57,16 +57,15 @@ const localePath = useLocalePath();
   padding: calc(165 * var(--u)) 0 calc(85 * var(--u));
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .fresh__title {
   margin: 0;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   /* The gap between "Fresh" and "projects" is the design's: tighter than a plain space. */
   word-spacing: -0.07em;
 }
@@ -163,9 +162,13 @@ const localePath = useLocalePath();
   isolation: isolate;
   border-radius: 999px;
   background: linear-gradient(100deg, #26b830 0%, #3fe24a 45%, #63ff5c 100%);
-  color: #eaffea;
-  font-size: var(--button-font);
-  font-weight: 500;
+  /* Dark text on the bright green (about 9:1; the pale #eaffea was 1.5:1). */
+  color: #042a0c;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -209,10 +212,6 @@ const localePath = useLocalePath();
     --card-h: calc(70vw * 285 / 505);
     --gap: 0.6rem;
     padding: 4.5rem 0 3.5rem;
-  }
-
-  .fresh__title {
-    font-size: var(--section-title-size);
   }
 
   .fresh__rows {

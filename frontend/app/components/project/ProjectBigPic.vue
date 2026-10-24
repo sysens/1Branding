@@ -101,6 +101,8 @@ const section2 = computed(() => ({
 }));
 
 const s2Image = computed(() => props.image ?? props.fallbackImage);
+// More than about two lines of running text reads better left-aligned.
+const textIsLong = computed(() => (section2.value.text ?? "").trim().length > 180);
 </script>
 
 <template>
@@ -108,13 +110,16 @@ const s2Image = computed(() => props.image ?? props.fallbackImage);
     <div class="md:pt-[118px] pt-[100px]">
       <div v-if="section2" class="containerr">
         <h2
-          class="section-title text-[#FFFFFF] font-normal md:text-[62px] md:leading-[100%] md:tracking-[0] text-center text-[40px] leading-[120%] tracking-normal will-change-transform"
+          class="section-title type-h2 text-[#FFFFFF] text-center will-change-transform"
         >
           {{ section2.title }}
         </h2>
 
+        <!-- CMS copy: one or two lines stay centred, a longer text is
+             left-aligned at a reading measure (the block stays centred). -->
         <p
-          class="section-text text-[#FFFFFF] pt-[60px] md:pb-[118px] pb-[100px] font-light md:text-[16px] md:leading-[28px] md:tracking-[0] text-[14px] leading-[12 0%] tracking-normal text-center will-change-transform font-['Poppins','Inter',sans-serif]"
+          class="section-text type-body type-measure mx-auto text-[#FFFFFF] pt-[60px] md:pb-[118px] pb-[100px] will-change-transform"
+          :class="textIsLong ? 'text-left' : 'text-center'"
         >
           {{ section2.text }}
         </p>

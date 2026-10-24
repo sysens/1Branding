@@ -56,15 +56,13 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         <div
           class="flex gap-2 justify-center items-center md:pt-[120px] pt-[120px] md:pb-[60px] pb-[37px]"
         >
-          <p
-            class="font-normal text-[16px] text-white leading-[28px] tracking-normal font-['Poppins','Inter',sans-serif]"
-          >
+          <p class="type-small text-white">
             <time v-if="published" :datetime="published.iso">{{ published.label }}</time>
           </p>
         </div>
 
         <h1
-          class="text-white max-w-[1000px] mx-auto md:font-normal md:mb-[60px] mb-[40px] md:text-[62px] md:leading-[62px] md:tracking-normal font-normal text-[40px] leading-[120%] tracking-[0%] text-center px-[20px] md:px-0"
+          class="type-h1 text-white max-w-[1000px] mx-auto md:mb-[60px] mb-[40px] text-center px-[20px] md:px-0"
         >
           {{ title }}
         </h1>
@@ -80,7 +78,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
       </div>
 
       <p
-        class="leftBlock md:font-normal md:columns-2 my-[40px] gap-[100px] md:text-[16px] md:leading-[28px] md:tracking-normal text-[#FFFFFF] font-light text-[14px] leading-[28px] tracking-[0%] font-['Poppins','Inter',sans-serif]"
+        class="leftBlock type-body md:columns-2 my-[40px] gap-[100px] text-[#FFFFFF]"
       >
         {{ text }}
       </p>

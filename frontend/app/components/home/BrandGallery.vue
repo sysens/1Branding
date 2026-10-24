@@ -126,20 +126,21 @@ onBeforeUnmount(() => {
    its side paddings, and the section is one screen plus that overflow (x1.1 of
    scroll per pixel of travel, as in the reference). */
 .gallery {
-  --card-h: min(34vw, 42vh);
+  /* The third cap keeps the whole screen (header gap, heading, row, the
+     5-line description, bar) within short laptop windows (1366 x 768). */
+  --card-h: min(34vw, 42vh, 100svh - 33rem);
   --start-padding: max(1.5rem, 27vw);
-  /* The description's type size and the width of its text (also set on it
-     below): the row's travel ends with the last card's right edge on the
-     text's right edge, so the end padding is the text's side margin. */
-  --description-font: clamp(0.95rem, min(1.2vw, 2.1vh), 1.75rem);
-  --description-width: min(100vw - 3rem, 58 * var(--description-font));
+  /* The width of the description's text (also set on it below): the measure
+     of the body step (--type-measure, 36em), written in
+     the step's size because it is used here, on other elements. The row's
+     travel ends with the last card's right edge on the text's right edge,
+     so the end padding is the text's side margin. */
+  --description-width: min(100vw - 3rem, 36 * var(--type-body-size));
   --end-padding: calc((100vw - var(--description-width)) / 2);
   --travel: max(0px, calc(var(--card-h) * var(--track-units) + var(--start-padding) + var(--end-padding) - 100vw));
   position: relative;
   height: calc(100vh + var(--travel) * 1.1);
   background: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .gallery__screen {
@@ -157,14 +158,16 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
+/* The section heading: the h1 step (--section-title-size). */
 .gallery__heading {
   margin: 0 auto;
   padding-inline: 1.5rem;
   color: #000;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-align: center;
   text-wrap: balance;
 }
@@ -221,18 +224,20 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 
-/* Design: 24px on its 2000px frame (1.2vw), three lines ~58em wide, set below
-   the cards; the height cap keeps the whole screen within short windows. */
+/* Running text (~360 characters) below the cards: the body step,
+   left-aligned in a column of the text measure, centred on the screen. */
 .gallery__description {
   box-sizing: content-box;
   max-width: var(--description-width);
   margin: clamp(1.25rem, min(4vw, 6vh), 5rem) auto 0;
   padding-inline: 1.5rem;
   color: #606060;
-  font-size: var(--description-font);
-  line-height: 1.27;
-  letter-spacing: -0.005em;
-  text-align: center;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
+  text-align: left;
+  text-wrap: pretty;
 }
 
 .gallery__progress {
@@ -257,10 +262,14 @@ onBeforeUnmount(() => {
   transform-origin: left;
 }
 
+/* The caption step; #6b706c passes 4.5:1 on white (#8a8f8b was 3.3:1). */
 .gallery__progress-hint {
   flex-shrink: 0;
-  color: #8a8f8b;
-  font-size: 0.75rem;
+  color: #6b706c;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
 }
 
 @media (max-width: 767px) {

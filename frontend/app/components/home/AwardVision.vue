@@ -91,8 +91,6 @@ onBeforeUnmount(() => {
   padding-top: calc(120 * var(--u));
   background: #fff;
   color: #0a0a0a;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .vision__frame {
@@ -112,47 +110,58 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-/* Text boxes are placed by their cap tops (SF Pro: cap height 0.705em, the
-   line box adds (line-height - 0.705)/2 above it at line-height 1). */
+/* The frame is placed in design units, the type is on the site's scale, so
+   each line is placed by its cap top at the design's point, with the step's
+   own half-leading taken off in em (SF Pro: cap height 0.705em, a line box
+   adds (line-height - 0.705) / 2 above it). The big lines also start a side
+   bearing (~0.04em) left of the column, as their glyphs sit inside the box. */
 .vision__brand {
-  top: calc((45 - 0.148 * 49) * var(--u));
-  font-size: calc(49 * var(--u));
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.035em;
+  top: calc(45 * var(--u) - (var(--type-h4-lh) - 0.705) / 2 * 1em);
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  font-weight: 600;
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
 }
 
+/* The title is centred where the design's was (its two lines' caps spanned
+   design y 200..463): its cap top sits (lh + 0.705) / 2 em above that centre
+   and its box another (lh - 0.705) / 2 em higher, lh em in all. The gaps to
+   the brand above and the label below so stay even whichever step it takes.
+   It is display-s, not the design's larger size: a step up would run into
+   the numeral. */
 .vision__title {
-  /* SF Pro's side bearing: the glyphs start 7 units right of the box. */
-  left: calc(187 * var(--u));
-  top: calc((200 - 0.06 * 172) * var(--u));
+  --title-lh: var(--type-display-s-lh);
+  left: calc(194 * var(--u) - 0.04em);
+  top: calc(331.5 * var(--u) - var(--title-lh) * 1em);
   display: flex;
   flex-direction: column;
-  font-size: calc(172 * var(--u));
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-s-size);
   font-weight: 700;
-  line-height: 0.826;
-  letter-spacing: -0.05em;
-  /* The design's face is heavier than SF Pro Bold. */
-  -webkit-text-stroke: calc(4 * var(--u)) #0a0a0a;
+  line-height: var(--title-lh);
+  letter-spacing: var(--type-display-s-ls);
 }
 
 .vision__label {
-  top: calc((554 - 0.148 * 27) * var(--u));
+  top: calc(554 * var(--u) - (var(--type-lead-lh) - 0.705) / 2 * 1em);
   color: #1a1a1a;
-  font-size: calc(27 * var(--u));
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.215em;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-label-ls);
   text-transform: uppercase;
 }
 
 .vision__year {
-  left: calc(180 * var(--u));
-  top: calc(575 * var(--u));
-  font-size: calc(338 * var(--u));
+  left: calc(194 * var(--u) - 0.04em);
+  top: calc(625 * var(--u) - (var(--type-display-xl-lh) - 0.705) / 2 * 1em);
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-xl-size);
   font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.002em;
+  line-height: var(--type-display-xl-lh);
+  letter-spacing: var(--type-display-xl-ls);
   background: linear-gradient(22deg, #158030 0%, #0bb338 34%, #04e036 62%, #00ff38 86%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -197,9 +206,11 @@ onBeforeUnmount(() => {
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: var(--button-font);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -215,20 +226,22 @@ onBeforeUnmount(() => {
   outline-offset: 4px;
 }
 
-/* The Russian and Uzbek lines are longer than "Every solution.": a smaller
-   size keeps them clear of the numeral. */
-@media (min-width: 768px) {
-  .vision__title:lang(ru) {
-    font-size: calc(158 * var(--u));
-  }
-
+/* The Russian and Uzbek lines are longer than "Every solution.": where the
+   frame gets narrow for them (tablets, and wide short screens, where the
+   frame follows the height) they take the h1 step to stay clear of the
+   numeral. */
+@media (min-width: 768px) and (max-width: 1099px), (min-width: 768px) and (min-aspect-ratio: 9/5) {
+  .vision__title:lang(ru),
   .vision__title:lang(uz) {
-    font-size: calc(146 * var(--u));
+    --title-lh: var(--type-h1-lh);
+    font-size: var(--type-h1-size);
+    letter-spacing: var(--type-h1-ls);
   }
 }
 
-/* Phones: copy, 2026, the numeral and the button stack. */
-@media (max-width: 767px) {
+/* Phones (and screens too short for the frame, such as a phone held
+   sideways): copy, 2026, the numeral and the button stack. */
+@media (max-width: 767px), (max-height: 499px) {
   .vision {
     padding: 4.5rem 1.25rem 4rem;
   }
@@ -250,25 +263,17 @@ onBeforeUnmount(() => {
     position: static;
   }
 
-  .vision__brand {
-    font-size: 1.15rem;
-  }
-
   .vision__title {
     margin-top: 1.5rem;
-    font-size: 12.4vw;
-    -webkit-text-stroke: 0.25vw #0a0a0a;
   }
 
   .vision__label {
     margin-top: 1.4rem;
-    font-size: 0.72rem;
+    white-space: normal;
   }
 
   .vision__year {
     margin-top: 0.4rem;
-    font-size: 29vw;
-    line-height: 0.95;
   }
 
   .vision__numeral {
@@ -282,6 +287,15 @@ onBeforeUnmount(() => {
   .vision__button {
     align-self: center;
     margin-top: 1.5rem;
+  }
+}
+
+/* "Barcha yechimlar." does not fit a phone under 390px at display-s. */
+@media (max-width: 389px) {
+  .vision__title:lang(uz) {
+    --title-lh: var(--type-h1-lh);
+    font-size: var(--type-h1-size);
+    letter-spacing: var(--type-h1-ls);
   }
 }
 

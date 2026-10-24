@@ -63,16 +63,12 @@ const text = computed(() => {
           </svg>
         </div>
         <div>
-          <h2
-            class="text-[#808080]  font-normal text-[24px] leading-[25px] tracking-normal align-middle"
-          >
+          <h2 class="type-h5 align-middle text-[#8f8f8f]">
             {{ title }}
           </h2>
         </div>
       </div>
-      <p
-        class="text-[#FFFFFF]  font-normal text-[16px] leading-[120%] tracking-normal"
-      >
+      <p class="type-body type-measure text-[#FFFFFF]">
         {{ text }}
       </p>
     </div>

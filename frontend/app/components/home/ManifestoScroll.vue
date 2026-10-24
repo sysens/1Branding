@@ -100,8 +100,6 @@ onBeforeUnmount(() => {
   position: relative;
   height: 300vh;
   background: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .manifesto__screen {
@@ -113,7 +111,8 @@ onBeforeUnmount(() => {
 }
 
 /* Before the script runs only the first statement shows; the script then sets
-   every statement's opacity, blur and offset from the scroll position. */
+   every statement's opacity, blur and offset from the scroll position. The
+   statements are the h1 step. */
 .manifesto__message {
   position: absolute;
   inset: 0;
@@ -124,10 +123,11 @@ onBeforeUnmount(() => {
   margin: 0;
   padding-inline: 1.5rem;
   color: #000;
-  font-size: clamp(2rem, 1rem + 4.4 * var(--fvw), max(5rem, 9vh));
+  font-family: var(--app-font-display);
+  font-size: var(--type-h1-size);
   font-weight: 600;
-  line-height: 1.07;
-  letter-spacing: -0.015em;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-align: center;
   will-change: opacity, filter, transform;
 }

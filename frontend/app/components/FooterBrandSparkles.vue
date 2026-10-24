@@ -46,10 +46,12 @@ import Sparkles from "~/components/ui/Sparkles.vue";
   z-index: 2;
   margin: 0;
   color: #ffffff;
-  font-size: clamp(3.4rem, 7.2vw, 6.25rem);
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: 0;
+  /* The display-s step (96px at 1440, 44 on a phone). */
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-s-size);
+  font-weight: 700;
+  line-height: var(--type-display-s-lh);
+  letter-spacing: var(--type-display-s-ls);
 }
 
 .footer-brand-sparkles__title span {
@@ -134,10 +136,6 @@ import Sparkles from "~/components/ui/Sparkles.vue";
 }
 
 @media (max-width: 640px) {
-  .footer-brand-sparkles__title {
-    font-size: clamp(3rem, 17vw, 4.6rem);
-  }
-
   .footer-brand-sparkles__stage {
     width: min(34rem, 94vw);
     height: 8.5rem;

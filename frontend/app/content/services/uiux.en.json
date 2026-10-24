@@ -2,7 +2,7 @@
   "title": "UI/UX Design & Mobile App Design in Tashkent",
   "description": "UI/UX design for websites and mobile apps in Tashkent: user research, user flows, prototypes and interfaces ready for development. Discuss your product.",
   "h1": "UI/UX and app design in Tashkent",
-  "lead": "OneBranding designs interfaces for websites, web services and mobile apps: we work out how people will use the product, design every screen in your brand's visual language and hand it over ready for development.",
+  "lead": "OneBranding designs interfaces for websites, web services and mobile apps: we work out how people will use the product, design every screen in your brand’s visual language and hand it over ready for development.",
   "intro": [
     "UI/UX design decides whether people find what they came for or give up halfway. UX is the logic: what users need to do, the path they take and the job of each screen. UI is the visual layer that makes that logic clear: layout, typography, colours, buttons and their states. We design both together, starting from your users and business goals rather than from a template.",
     "An interface is part of your brand, so we build it on your identity, or develop the identity alongside it when the product is new. We design websites and web services, iOS and Android apps, new products and redesigns of existing ones, and work with teams in Uzbekistan and abroad in Uzbek, Russian and English."
@@ -23,22 +23,52 @@
   "process": {
     "title": "How we work",
     "steps": [
-      { "name": "Brief and research", "text": "We learn your product, business goals and audience, and study how competitors solve the same tasks." },
-      { "name": "Structure and flows", "text": "We map the user flows and the structure of the product, then sketch the key screens and build a clickable prototype." },
-      { "name": "Interface design", "text": "We design every screen in your brand's visual language and build the design system of components behind them." },
-      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
-      { "name": "Hand-over", "text": "Your developers receive the final layouts, the prototype, the design system, specifications and every asset in the formats they need." }
+      {
+        "name": "Brief and research",
+        "text": "We learn your product, business goals and audience, and study how competitors solve the same tasks."
+      },
+      {
+        "name": "Structure and flows",
+        "text": "We map the user flows and the structure of the product, then sketch the key screens and build a clickable prototype."
+      },
+      {
+        "name": "Interface design",
+        "text": "We design every screen in your brand’s visual language and build the design system of components behind them."
+      },
+      {
+        "name": "Refinement",
+        "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on."
+      },
+      {
+        "name": "Hand-over",
+        "text": "Your developers receive the final layouts, the prototype, the design system, specifications and every asset in the formats they need."
+      }
     ]
   },
   "timeline": null,
   "faq": {
     "title": "UI/UX design questions",
     "items": [
-      { "q": "How much does UI/UX design cost in Tashkent?", "a": "The price depends on the scope: how many screens and platforms the product has, how complex its logic is and whether you need research and a design system. We agree on the price after the brief, before the work starts." },
-      { "q": "What is the difference between UI and UX?", "a": "UX is how the product works: its structure, the paths users take and the logic of each screen. UI is how it looks and responds: layout, typography, colours, buttons and states. A good interface needs both, so we design them together." },
-      { "q": "Do you also develop the app?", "a": "We design the app and prepare everything developers need: layouts, prototype, design system and specifications, so your team or contractor builds exactly what you approved. If what you need is a website, we can design and develop it for you as well." },
-      { "q": "Can you redesign an existing app or website?", "a": "Yes. We start with an audit of the current interface, keep what already works and rework the screens where users get lost or give up. The redesign can follow the identity you have or come together with a renewal of your brand." },
-      { "q": "Do you design mobile apps for iOS and Android?", "a": "Yes. We design apps for both platforms, follow the conventions people expect on each one, and keep a single visual language across the app, your website and the rest of your brand." }
+      {
+        "q": "How much does UI/UX design cost in Tashkent?",
+        "a": "The price depends on the scope: how many screens and platforms the product has, how complex its logic is and whether you need research and a design system. We agree on the price after the brief, before the work starts."
+      },
+      {
+        "q": "What is the difference between UI and UX?",
+        "a": "UX is how the product works: its structure, the paths users take and the logic of each screen. UI is how it looks and responds: layout, typography, colours, buttons and states. A good interface needs both, so we design them together."
+      },
+      {
+        "q": "Do you also develop the app?",
+        "a": "We design the app and prepare everything developers need: layouts, prototype, design system and specifications, so your team or contractor builds exactly what you approved. If what you need is a website, we can design and develop it for you as well."
+      },
+      {
+        "q": "Can you redesign an existing app or website?",
+        "a": "Yes. We start with an audit of the current interface, keep what already works and rework the screens where users get lost or give up. The redesign can follow the identity you have or come together with a renewal of your brand."
+      },
+      {
+        "q": "Do you design mobile apps for iOS and Android?",
+        "a": "Yes. We design apps for both platforms, follow the conventions people expect on each one, and keep a single visual language across the app, your website and the rest of your brand."
+      }
     ]
   },
   "cta": {

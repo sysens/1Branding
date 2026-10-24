@@ -52,9 +52,11 @@ usePageSeo({
   background: #fff;
   color: #252525;
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.2);
-  font-size: 1rem;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
   font-weight: 600;
-  line-height: 1;
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -103,22 +105,28 @@ usePageSeo({
 .projects-heading h1 {
   margin: 0;
   overflow: hidden;
-  font-size: 0.95rem;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .projects-heading a {
   flex: none;
-  padding: 0.45rem 0.9rem;
+  /* The caption step's taller line (1.4) takes the place of the old padding,
+     so the green pill keeps its height. */
+  padding: 0.3rem 0.9rem;
   border-radius: 999px;
   background: #03cb00;
   color: #000;
-  font-size: 0.85rem;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
   font-weight: 600;
-  line-height: 1;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   text-decoration: none;
 }
 

@@ -38,7 +38,7 @@ usePageSeo({
       >
 
         <h1
-          class="products intro-slide-in px-4 pt-[137px] pb-[30px] text-center text-[40px] font-normal leading-[100%] tracking-normal text-[#FFFFFF] md:pt-[127px] md:pb-[60px] md:text-[50px] md:leading-[100%]"
+          class="products intro-slide-in type-h1 px-4 pt-[137px] pb-[30px] text-center text-[#FFFFFF] md:pt-[127px] md:pb-[60px]"
         >
           {{ $t("aboutPage.title") }}
         </h1>
@@ -64,8 +64,9 @@ usePageSeo({
       <ThreePic />
     </div>
 
+    <!-- The landing's "Fresh projects" heading: the same step (h1) as there. -->
     <h2
-      class="px-4 pt-[100px] pb-[30px] text-center text-[40px] font-normal uppercase leading-[100%] tracking-[0] text-white md:pt-[130px] md:pb-20 md:text-[62px]"
+      class="type-h2 type-caps px-4 pt-[100px] pb-[30px] text-center text-white md:pt-[130px] md:pb-20"
     >
       {{ $t("home.freshProjects") }}
     </h2>
@@ -84,11 +85,17 @@ usePageSeo({
   text-align: center;
 }
 
+/* Three lines and more (180+ characters): left-aligned at a reading measure,
+   the block itself centred under the title. */
 .about-lead p {
-  margin: 0;
+  max-width: var(--type-measure);
+  margin: 0 auto;
   color: #b9bcc0;
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
-  line-height: 1.6;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
+  text-align: left;
 }
 
 .about-lead nav {
@@ -104,7 +111,10 @@ usePageSeo({
   border: 1px solid rgb(255 255 255 / 0.18);
   border-radius: 999px;
   color: #fff;
-  font-size: 15px;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   text-decoration: none;
   transition: border-color 0.25s ease, color 0.25s ease;
 }

@@ -198,9 +198,13 @@ onBeforeUnmount(() => {
   animation: spline-loader-spin 0.85s linear infinite;
 }
 
+/* The small step. */
 .spline-scene-viewer__error {
   color: rgba(255, 255, 255, 0.62);
-  font-size: 0.875rem;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
 }
 
 @keyframes spline-loader-spin {

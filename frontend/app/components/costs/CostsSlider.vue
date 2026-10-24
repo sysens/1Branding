@@ -156,24 +156,27 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   padding-left: clamp(0.25rem, 1.5vw, 1.5rem);
 }
 
+/* The category's spaced-out uppercase title ("B R A N D I N G"): the h4 step
+   at the regular weight, with the widest tracking the scale allows. */
 .costs-cat__title {
   margin: 0 0 clamp(0.75rem, 1.6vw, 1.4rem);
   color: #ffffff;
-  font-family: var(--app-font-display, "SF Pro Display", sans-serif);
-  font-weight: 300;
-  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
-  letter-spacing: 0.34em;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  line-height: var(--type-h4-lh);
+  font-weight: 400;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  line-height: 1.1;
 }
 
 .costs-cat__desc {
   margin: 0;
-  max-width: 58rem;
+  max-width: var(--type-measure);
   color: rgba(255, 255, 255, 0.82);
-  font-family: var(--app-font-display, "SF Pro Display", sans-serif);
-  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
-  line-height: 1.55;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   white-space: pre-line;
 }
 
@@ -181,7 +184,10 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   display: inline-block;
   margin-top: 0.9rem;
   color: #03cb00;
-  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -247,11 +253,11 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
 }
 
 .costs-card__name {
-  font-family: "Oswald", "SF Pro Display", sans-serif;
+  font-family: var(--app-font-display);
   font-weight: 600;
-  font-size: clamp(1.3rem, 3vw, 2.75rem);
-  line-height: 1;
-  letter-spacing: 0.015em;
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-caps-ls);
   text-transform: uppercase;
   background: linear-gradient(96deg, #ffffff 0%, #ffffff 46%, #c9d2cd 100%);
   -webkit-background-clip: text;
@@ -270,18 +276,21 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
 }
 
 .costs-card__from {
-  font-family: "Poppins", "Inter", sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 400;
-  font-size: clamp(0.75rem, 1vw, 1.05rem);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   color: rgba(255, 255, 255, 0.85);
   text-transform: lowercase;
 }
 
 .costs-card__amount {
-  font-family: "Oswald", "SF Pro Display", sans-serif;
+  font-family: var(--app-font-display);
   font-weight: 600;
-  font-size: clamp(1.3rem, 3vw, 2.75rem);
-  line-height: 1;
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
   color: #ffffff;
 }
 
@@ -294,10 +303,11 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   padding-top: 0.85rem;
   border-top: 1px solid rgb(255 255 255 / 0.17);
   color: rgb(255 255 255 / 0.82);
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
   font-weight: 400;
-  line-height: 1.55;
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   text-transform: none;
 }
 
@@ -338,11 +348,6 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   .costs-card {
     border-radius: 1.1rem;
     padding: 1rem 1.1rem;
-  }
-
-  .costs-card__name,
-  .costs-card__amount {
-    font-size: clamp(1.15rem, 6.4vw, 1.6rem);
   }
 }
 </style>

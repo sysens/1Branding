@@ -187,8 +187,10 @@ const resolveMedia = useCmsMedia();
     >
 
     <div class="containerr relative z-1">
+      <!-- The section heading: the h1 step. The padding keeps the space its old
+           120px (68px on phones) line height left around it. -->
       <h2
-        class="font-normal md:text-[3.875rem] text-white md:leading-[7.5rem] text-center md:tracking-normal text-[40px] leading-[68px] tracking-[0%]"
+        class="type-h1 text-white text-center py-[0.875rem] md:py-[1.625rem]"
       >
         {{ sectionTitle }}
       </h2>
@@ -212,7 +214,7 @@ const resolveMedia = useCmsMedia();
             <div
               v-for="(card, i) in displayCards"
               :key="i"
-              class="row-item item md:h-[10rem] h-[130px] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[20px] md:rounded-[1.875rem] rounded-[20px] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[10px] md:py-[2.25rem] py-[20px] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
+              class="row-item item md:min-h-[10rem] min-h-[130px] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[20px] md:rounded-[1.875rem] rounded-[20px] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[10px] md:py-[2.25rem] py-[20px] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
             >
               <div class="shrink-0">
                 <img
@@ -224,12 +226,12 @@ const resolveMedia = useCmsMedia();
 
               <div>
                 <h2
-                  class="text-[#FFFFFF] font-semibold md:text-[1.25rem] leading-[100%] md:tracking-wider text-[16px] tracking-[0%]"
+                  class="type-lead text-[#FFFFFF] font-semibold"
                 >
                   {{ card.title }}
                 </h2>
                 <p
-                  class="text-[#808080] font-normal line-clamp-4 md:pt-[1.875rem] pt-[10px] md:text-[0.9375rem] leading-[120%] md:tracking-normal text-[13px] tracking-[0%]"
+                  class="type-small text-[#8f8f8f] line-clamp-4 md:pt-[1.875rem] pt-[10px]"
                 >
                   {{ card.description }}
                 </p>

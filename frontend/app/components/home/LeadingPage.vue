@@ -184,10 +184,14 @@ const heroCopy = computed<HeroCopy>(() => {
   }
 }
 
-/* Sizes follow the design (2000px-wide mockup): the lead-in is 0.74x and the
-   tagline 0.215x the headline (--hero-main-size, set on .leading-copy-position),
-   so the three lines keep the design's proportions at every screen size. The
-   tagline never drops below a readable 0.875rem. */
+/* The slogan is the one type exception on the site: its three lines are a
+   single poster composition fitted to the screen height, so they stay off the
+   type scale. Sizes follow the design (2000px-wide mockup): the lead-in is
+   0.74x and the tagline 0.215x the headline (--hero-main-size, set on
+   .leading-copy-position), so the three lines keep the design's proportions
+   at every screen size. The tagline never drops below a readable 0.875rem.
+   Their tight line heights (1 and 1.2) stack the lines into one block, as
+   designed. Only the eyebrow above them is ordinary text: the label step. */
 .hero-slogan {
   --hero-lead-size: calc(var(--hero-main-size) * 0.74);
   --hero-tagline-size: max(0.875rem, calc(var(--hero-main-size) * 0.215));
@@ -219,15 +223,16 @@ const heroCopy = computed<HeroCopy>(() => {
   mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
 }
 
-/* The keyword line: small, muted, centred over the slogan. */
+/* The keyword line: small, muted, centred over the slogan (the label step). */
 .hero-slogan__eyebrow {
   display: block;
   margin-bottom: 0.9em;
   color: #a3a6aa;
-  font-size: max(0.75rem, calc(var(--hero-main-size) * 0.075));
+  font-family: var(--app-font-sans);
+  font-size: var(--type-label-size);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.22em;
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-ls);
 }
 
 /* The design's dash is a wide outlined bar, heavier than a dash glyph. */
@@ -270,7 +275,16 @@ const heroCopy = computed<HeroCopy>(() => {
   font-size: var(--hero-tagline-size);
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: 0.008em;
+  letter-spacing: var(--type-caps-ls);
+}
+
+/* The tagline is 0.215x the headline, so it falls under 20px on phones and on
+   short windows (headline under ~93px): there it takes SF Pro Text, the
+   optical size drawn for small type. */
+@media (max-width: 569px), (max-height: 594px) {
+  .hero-slogan__tagline {
+    font-family: var(--app-font-sans);
+  }
 }
 
 /* The landing's heading reveal (utils/reveal.ts) in CSS, so the hero comes

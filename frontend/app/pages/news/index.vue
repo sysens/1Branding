@@ -68,7 +68,7 @@ useGsapContext(root, ({ gsap }) => {
         >
 
           <h1
-            class="hero-title text-white max-w-[1000px] md:pt-0 pt-[120px] md:mt-[159px] mt-[37px] md:pb-[50px] pb-[30px] mx-auto font-normal md:mb-[77px] md:text-[62px] md:leading-[62px] md:tracking-normal text-[40px] leading-[120%] tracking-[0%] text-center"
+            class="hero-title type-h1 text-white max-w-[1000px] md:pt-0 pt-[120px] md:mt-[159px] mt-[37px] md:pb-[50px] pb-[30px] mx-auto md:mb-[77px] text-center"
           >
             {{ $t("newsPage.title") }}
           </h1>

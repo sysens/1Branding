@@ -2,9 +2,9 @@
   "title": "Social Media Design & Campaigns in Tashkent",
   "description": "Social media for brands in Tashkent: Instagram and Telegram design, content plan, post and story templates, campaign concepts. Price agreed after the brief.",
   "h1": "Social media design and campaigns in Tashkent",
-  "lead": "OneBranding builds social media content systems and campaigns in your brand's voice: profile design, content plan, post and story templates and campaign concepts for Instagram, Telegram and other platforms. The price depends on scope and is agreed after the brief.",
+  "lead": "OneBranding builds social media content systems and campaigns in your brand’s voice: profile design, content plan, post and story templates and campaign concepts for Instagram, Telegram and other platforms. The price depends on scope and is agreed after the brief.",
   "intro": [
-    "A brand's feed works when every post is recognisably yours and has a reason to be there. We start from your brand and audience: what people should know, feel and do after seeing your content. From that we build a content system: themes and formats, a visual style for posts, stories and reels covers, and templates that keep the feed consistent whoever publishes it.",
+    "A brand’s feed works when every post is recognisably yours and has a reason to be there. We start from your brand and audience: what people should know, feel and do after seeing your content. From that we build a content system: themes and formats, a visual style for posts, stories and reels covers, and templates that keep the feed consistent whoever publishes it.",
     "Campaigns follow the same approach. For a launch, a season or an offer, we develop the idea and key message, then the key visual and its adaptations to every format and platform you use. Product photography, video and motion design are also among our services, so the content and the brand come from one team. We work with companies in Uzbekistan and abroad, in Uzbek, Russian and English."
   ],
   "includes": {
@@ -23,22 +23,52 @@
   "process": {
     "title": "How we work",
     "steps": [
-      { "name": "Brief and research", "text": "We learn your brand, goals and audience, and review your accounts and your competitors'." },
-      { "name": "Strategy", "text": "We define what the content should achieve, its themes, formats and tone of voice." },
-      { "name": "Design", "text": "We create the visual style, the templates and the first posts or the campaign key visual." },
-      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
-      { "name": "Hand-over", "text": "You receive the content plan, templates, usage guidelines and files ready to publish." }
+      {
+        "name": "Brief and research",
+        "text": "We learn your brand, goals and audience, and review your accounts and your competitors'."
+      },
+      {
+        "name": "Strategy",
+        "text": "We define what the content should achieve, its themes, formats and tone of voice."
+      },
+      {
+        "name": "Design",
+        "text": "We create the visual style, the templates and the first posts or the campaign key visual."
+      },
+      {
+        "name": "Refinement",
+        "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on."
+      },
+      {
+        "name": "Hand-over",
+        "text": "You receive the content plan, templates, usage guidelines and files ready to publish."
+      }
     ]
   },
   "timeline": null,
   "faq": {
     "title": "Social media questions",
     "items": [
-      { "q": "How much does SMM cost in Tashkent?", "a": "It depends on the scope: a one-off profile design with templates, a full content system and a campaign are priced differently. We agree the price after the brief, before any work starts." },
-      { "q": "Do you design Instagram profiles?", "a": "Yes. We design the avatar, highlight covers and the visual style of the feed, posts and stories, and prepare templates so the profile stays consistent as new content is published." },
-      { "q": "What is a content plan and do I need one?", "a": "It is a schedule of what you publish and why: themes, formats and dates linked to your goals. It keeps posting regular and stops the feed from turning into a string of random announcements." },
-      { "q": "Can you create a campaign for a product launch?", "a": "Yes. We develop the idea and key message, design the key visual and adapt it to social media, print, outdoor and any other formats you need, so the campaign looks the same everywhere." },
-      { "q": "Do you also produce photos and videos for the content?", "a": "Yes. Product photography, video and motion design are among our services, so the imagery is made to the same brief as the content system and fits the feed from the start." }
+      {
+        "q": "How much does SMM cost in Tashkent?",
+        "a": "It depends on the scope: a one-off profile design with templates, a full content system and a campaign are priced differently. We agree the price after the brief, before any work starts."
+      },
+      {
+        "q": "Do you design Instagram profiles?",
+        "a": "Yes. We design the avatar, highlight covers and the visual style of the feed, posts and stories, and prepare templates so the profile stays consistent as new content is published."
+      },
+      {
+        "q": "What is a content plan and do I need one?",
+        "a": "It is a schedule of what you publish and why: themes, formats and dates linked to your goals. It keeps posting regular and stops the feed from turning into a string of random announcements."
+      },
+      {
+        "q": "Can you create a campaign for a product launch?",
+        "a": "Yes. We develop the idea and key message, design the key visual and adapt it to social media, print, outdoor and any other formats you need, so the campaign looks the same everywhere."
+      },
+      {
+        "q": "Do you also produce photos and videos for the content?",
+        "a": "Yes. Product photography, video and motion design are among our services, so the imagery is made to the same brief as the content system and fits the feed from the start."
+      }
     ]
   },
   "cta": {

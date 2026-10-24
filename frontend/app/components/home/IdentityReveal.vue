@@ -147,8 +147,6 @@ onBeforeUnmount(() => {
   position: relative;
   height: 400vh;
   background: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .identity__screen {
@@ -185,13 +183,15 @@ onBeforeUnmount(() => {
   fill: #00eb3a;
 }
 
+/* The section heading: the h1 step (the landing's --section-title-size). */
 .identity__heading {
   margin: calc(-20 * var(--u)) 0 0;
   color: #000;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-align: center;
 }
 
@@ -201,17 +201,20 @@ onBeforeUnmount(() => {
   justify-content: center;
 }
 
+/* Running text (~500 characters): the lead step, left-aligned in a column of the text measure
+   that stays centred under the heading. */
 .identity__paragraph {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  width: min(100%, calc(1500 * var(--u)));
+  width: min(100%, var(--type-measure));
   margin: calc(55 * var(--u)) 0 0;
   color: #646464;
-  font-size: calc(37 * var(--u));
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
   font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: -0.005em;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
 }
 
 /* A word is its own box (inline-flex) so it can rise into place; it keeps its
@@ -222,8 +225,9 @@ onBeforeUnmount(() => {
   white-space: pre;
 }
 
+/* The brand green darkened to pass 4.5:1 on the white background. */
 .identity__word--accent {
-  color: #0ccc3c;
+  color: #0a8f2e;
 }
 
 .identity__word--strong {
@@ -246,15 +250,11 @@ onBeforeUnmount(() => {
 
   .identity__heading {
     margin-top: -0.5rem;
-    font-size: var(--section-title-size);
-    line-height: 1.04;
   }
 
   .identity__paragraph {
     width: 100%;
     margin-top: 1.5rem;
-    font-size: 0.95rem;
-    line-height: 1.4;
   }
 }
 

@@ -169,24 +169,26 @@ const highlightedText = computed(() => {
 <template>
   <div
     ref="root"
-    class="relative font-['Inter'] flex justify-center md:px-[40px] px-[20px]"
+    class="relative flex justify-center md:px-[40px] px-[20px]"
   >
     <div
-      class="pointer-events-none absolute top-0 font-['Inter'] left-0 w-full h-[80px] bg-gradient-to-b from-black/0 via-black/100 to-transparent"
+      class="pointer-events-none absolute top-0 left-0 w-full h-[80px] bg-gradient-to-b from-black/0 via-black/100 to-transparent"
     />
 
     <div class="max-w-[991px] mx-auto flex flex-col items-center text-center">
       <div>
+        <!-- One brand word on the display step; <wbr> lets it break after
+             "ONE" on the narrowest phones instead of running off the screen. -->
         <h2
-          class="og-title will-change-transform text-[#FFFFFF] text-center pt-20 pb-[38px] font-normal md:text-[96px] md:leading-[120%] md:tracking-tighter text-[40px] leading-[100%] tracking-[0%]"
+          class="og-title will-change-transform type-display-s type-caps text-[#FFFFFF] text-center pt-20 pb-[38px]"
         >
           <span class="text-[#15FF00]">{{ $t("brand.one").toUpperCase() }}</span
-          >{{ s2Title.replace(/^ONE/i, "") }}
+          ><wbr>{{ s2Title.replace(/^ONE/i, "") }}
         </h2>
 
         <div class="mx-auto block">
           <p
-            class="og-subtitle will-change-transform text-center text-[#FFFFFF] w-full max-w-[398px] font-light pb-[110px] md:text-[24px] text-[16px] leading-[100%] md:tracking-normal mx-auto font-['Inter'] tracking-[0%]"
+            class="og-subtitle will-change-transform type-lead text-center text-[#FFFFFF] w-full max-w-[398px] pb-[110px] mx-auto"
           >
             {{ highlightedText.before }}<span v-if="highlightedText.highlight" class="text-[#15FF00]">{{ highlightedText.highlight }}</span>{{ highlightedText.after }}
           </p>
@@ -194,39 +196,38 @@ const highlightedText = computed(() => {
       </div>
 
       <div
-        class="og-box will-change-transform relative font-['Inter'] font-light text-[#FFFFFF] text-[24px] leading-[100%] tracking-normal text-center max-w-[751px] border border-[#00FF0D] rounded-[20px] md:px-[75px] md:py-[40px] px-[10px] py-[20px] mb-[80px] mx-auto"
+        class="og-box will-change-transform relative text-[#FFFFFF] text-center max-w-[751px] border border-[#00FF0D] rounded-[20px] md:px-[75px] md:py-[40px] px-[10px] py-[20px] mb-[80px] mx-auto"
       >
         <img
           src="/OneGuarantee/subway-tick-1.png"
           alt=""
-          class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2 font-family: Inter;"
+          class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2"
         >
 
-        <p
-          class="font-['Inter'] font-light md:text-[24px] text-[14px] leading-[100%] tracking-[0%] text-center"
-        >
+        <!-- A short callout (about 160 characters): stays centred in its frame. -->
+        <p class="type-lead type-measure mx-auto text-center">
           {{ s2Text2 }}
         </p>
       </div>
 
+      <!-- Running text (180-210 characters each): left-aligned at a reading
+           measure, the column itself centred. -->
       <div class="max-w-[801px]">
         <p
-          class="og-p1 will-change-transform font-['Inter'] text-[#FFFFFF] font-light md:text-[20px] leading-[100%] md:tracking-normal text-center pb-[32px] text-[14px] tracking-[0%]"
+          class="og-p1 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[32px]"
         >
           {{ s2Text3 }}
         </p>
 
         <p
-          class="og-p2 will-change-transform font-['Inter'] text-[#FFFFFF] font-light md:text-[20px] leading-[100%] md:tracking-normal text-center pb-[32px] text-[14px] tracking-[0%]"
+          class="og-p2 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[32px]"
         >
           {{ s2Text4 }}
         </p>
       </div>
 
       <div class="og-divider will-change-transform w-full">
-        <div
-          class="borderGreen text-[#FFFFFF] font-['Inter'] font-light w-full max-w-[991px] text-[20px] leading-[100%] tracking-normal text-center"
-        />
+        <div class="borderGreen w-full max-w-[991px]" />
         <div
           class="text-[#FFFFFF] text-center w-full h-[2px] bg-gradient-to-r from-transparent via-[#00FF0D] to-transparent"
         />
@@ -234,11 +235,9 @@ const highlightedText = computed(() => {
 
       <div class="w-full max-w-[801px]">
         <p
-          class="og-last will-change-transform text-[#FFFFFF] pt-[32px] font-['Inter'] font-light md:text-[24px] text-[14px] leading-[100%] pb-[34px] tracking-normal text-center"
+          class="og-last will-change-transform type-lead type-measure mx-auto text-[#FFFFFF] pt-[32px] pb-[34px] text-center"
         >
-          <span
-            class="font-['Inter'] font-semibold md:text-[24px] text-[14px] leading-[100%] tracking-normal text-center"
-          >
+          <span class="font-semibold">
             <span class="text-[#15FF00]">{{ $t("brand.one") }}</span
             >{{ $t("brand.brandingSuffix") }}
           </span>

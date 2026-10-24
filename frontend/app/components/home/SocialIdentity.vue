@@ -113,22 +113,28 @@ onBeforeUnmount(() => {
   padding-top: clamp(5rem, 11vw, 14rem);
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
-/* ONE spans both lines; BRAND. on top, VISUAL LANGUAGE. under it. */
+/* ONE spans both lines; BRAND. on top, VISUAL LANGUAGE. under it. Steps:
+   ONE display-l, BRAND. display-s, VISUAL LANGUAGE. h2 (h1 / h4 on phones,
+   where the fluid steps would make the right column twice ONE's height).
+   Uppercase, so caps tracking on each line. The tight line heights (0.74 /
+   0.8) stay: the composition is three lines locked into ONE's height. The
+   right column is stretched to ONE's height and its lines pushed to the top
+   and bottom, so BRAND. starts at ONE's top and VISUAL LANGUAGE. ends on its
+   baseline at every step size. */
 .social__title {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   gap: 0.035em;
   margin: 0;
   padding-inline: 1.25rem;
-  font-size: clamp(4.5rem, calc(12.2 * var(--vw)), 15rem);
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-l-size);
   font-weight: 700;
   line-height: 0.74;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--type-caps-ls);
 }
 
 .social__one {
@@ -142,20 +148,21 @@ onBeforeUnmount(() => {
 .social__rest {
   display: flex;
   flex-direction: column;
-  gap: 0.075em;
+  justify-content: space-between;
+  gap: 0.02em;
   padding-top: 0.005em;
 }
 
 .social__brand {
-  font-size: 0.6em;
+  font-size: var(--type-display-s-size);
   line-height: 0.74;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--type-caps-ls);
 }
 
 .social__language {
-  font-size: 0.345em;
+  font-size: var(--type-h2-size);
   line-height: 0.8;
-  letter-spacing: -0.015em;
+  letter-spacing: var(--type-caps-ls);
   white-space: nowrap;
 }
 
@@ -166,24 +173,28 @@ onBeforeUnmount(() => {
   color: transparent;
 }
 
+/* Running text: the lead step, left-aligned in a column of the text measure, that stays
+   centred under the title (also on phones, where it now takes the full width
+   instead of half of it). */
 .social__copy {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: clamp(1rem, calc(1.6 * var(--vw)), 2rem);
-  /* 1000px of the 2000px design frame. */
-  max-width: min(100%, calc(50 * var(--vw)));
+  max-width: calc(var(--type-measure) + 2.5rem);
   margin: clamp(3rem, calc(6 * var(--vw)), 7.5rem) auto 0;
   padding-inline: 1.25rem;
-  font-size: clamp(1rem, calc(1.35 * var(--vw)), 1.9rem);
-  line-height: 1.2;
-  text-align: center;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
+  text-align: left;
 }
 
 .social__copy p {
   margin: 0;
   color: #a3a3a3;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .social__copy strong,
@@ -192,9 +203,10 @@ onBeforeUnmount(() => {
   font-weight: 400;
 }
 
-/* The closing line is narrower than the paragraph above it. */
+/* The closing line is narrower than the paragraph above it (0.7 of it, as in
+   the design). */
 .social__copy .social__lead {
-  max-width: min(100%, calc(35 * var(--vw)));
+  max-width: var(--type-measure-narrow);
 }
 
 /* The wall: five columns, the middle one centred, the outer two cut by the
@@ -255,6 +267,16 @@ onBeforeUnmount(() => {
 
   .social__language {
     white-space: normal;
+  }
+}
+
+@media (max-width: 599px) {
+  .social__brand {
+    font-size: var(--type-h1-size);
+  }
+
+  .social__language {
+    font-size: var(--type-h4-size);
   }
 }
 </style>

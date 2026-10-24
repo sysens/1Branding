@@ -127,11 +127,12 @@ onBeforeUnmount(() => clearTimeout(closer));
   border: 0;
   background: none;
   color: #efefef;
-  /* The header's link type (Header.vue sets --nav-size). */
-  font-size: var(--nav-size, 16px);
+  /* The header's link type: the caption step, semibold (as in Header.vue). */
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.02em;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -141,12 +142,13 @@ onBeforeUnmount(() => clearTimeout(closer));
   color: #03cb00;
 }
 
-/* Slidor's rolling label: a second copy slides up from below on hover. */
+/* Slidor's rolling label: a second copy slides up from below on hover. The
+   window is one line of the caption step, so descenders (у in Услуги) show. */
 .svc__label {
   position: relative;
   display: grid;
-  height: 1.15em;
-  line-height: 1.15em;
+  height: calc(var(--type-caption-lh) * 1em);
+  line-height: var(--type-caption-lh);
   overflow: hidden;
 }
 
@@ -227,7 +229,7 @@ onBeforeUnmount(() => clearTimeout(closer));
   border-bottom: 1px solid rgb(3 203 0 / 0.4);
   background: #000;
   box-shadow: 0 40px 80px rgb(0 0 0 / 0.5);
-  font-family: "Inter", sans-serif;
+  font-family: var(--app-font-sans);
 }
 
 .svc-panel-enter-active,
@@ -339,22 +341,17 @@ onBeforeUnmount(() => clearTimeout(closer));
 }
 
 .svc__name {
-  font-size: clamp(17px, 0.98vw, 22px);
+  font-size: var(--type-small-size);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
 }
 
 .svc__desc {
   color: rgb(255 255 255 / 0.62);
-  font-size: clamp(14px, 0.8vw, 18px);
-  line-height: 1.35;
-}
-
-@media (min-width: 1920px) {
-
-  .svc__panel {
-    --header-h: clamp(45px, 2.24vw, 59px);
-  }
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
 }
 
 @media (max-width: 1200px) {
@@ -397,8 +394,10 @@ onBeforeUnmount(() => clearTimeout(closer));
 
 .svc__more a {
   color: #efefef;
-  font-size: 14px;
+  font-size: var(--type-small-size);
   font-weight: 600;
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   text-decoration: none;
   transition: color 0.25s ease;
 }

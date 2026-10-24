@@ -125,17 +125,22 @@ usePageSeo({
 .pricing-intro h1 {
   margin: 0;
   color: #fff;
-  font-size: clamp(2rem, 3.6vw, 3.5rem);
-  font-weight: 400;
-  line-height: 1.1;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h1-size);
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
+  font-weight: 600;
 }
 
+/* One or two short lines (about 130 characters): stays centred. */
 .pricing-intro p {
-  max-width: 40em;
+  max-width: var(--type-measure);
   margin: 20px auto 0;
   color: #a3a6aa;
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
-  line-height: 1.6;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 
 .pricing-table {
@@ -147,8 +152,11 @@ usePageSeo({
 .pricing-table h2 {
   margin: 0 0 24px;
   color: #fff;
-  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
-  font-weight: 400;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
+  font-weight: 600;
   text-align: center;
 }
 
@@ -161,7 +169,10 @@ usePageSeo({
   min-width: 520px;
   border-collapse: collapse;
   color: #d5d7da;
-  font-size: 16px;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 
 .pricing-table th,
@@ -173,9 +184,10 @@ usePageSeo({
 
 .pricing-table th {
   color: #8f9297;
-  font-size: 13px;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-ls);
   font-weight: 600;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 

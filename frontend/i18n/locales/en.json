@@ -11,7 +11,7 @@
   "brand": {
     "one": "One",
     "brandingSuffix": "branding",
-    "oneGuaranteeSuffix": "Guarantee’s"
+    "oneGuaranteeSuffix": "Guarantee"
   },
   "seo": {
     "description": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy, naming, logo design, visual identity, brand books and packaging.",
@@ -206,7 +206,7 @@
       "titleLead": "Great products need ",
       "titleAccent": "more than quality.",
       "text": "A strong presentation should reflect the same level of quality, precision and ambition behind the product itself. At OneBranding, we transform information into a clear visual system where structure, typography, composition and storytelling work as one. Every detail is considered to communicate value with clarity, strengthen perception and present the brand at the level it deserves.",
-      "cta": "lets go!",
+      "cta": "Let’s go!",
       "more": "Learn more about Presentations"
     },
     "social": {
@@ -539,7 +539,7 @@
     "first": "Join the",
     "second": "Movement",
     "description": "Build your next chapter with OneBranding.",
-    "detail": "Your brand's future starts here.",
+    "detail": "Your brand’s future starts here.",
     "action": "See our projects",
     "copyright": "All rights reserved."
   },
@@ -587,7 +587,7 @@
     },
     "packaging": {
       "name": "Packaging design",
-      "summary": "Packaging built to stand out on the shelf and convey the product's value."
+      "summary": "Packaging built to stand out on the shelf and convey the product’s value."
     },
     "print": {
       "name": "Graphic & print design",
@@ -679,7 +679,7 @@
       {
         "h": "Where it is kept",
         "p": [
-          "Requests are stored in our website's content management system, and a notification with the request is sent to our team's private Telegram chat. Access is limited to the people who handle requests."
+          "Requests are stored in our website’s content management system, and a notification with the request is sent to our team’s private Telegram chat. Access is limited to the people who handle requests."
         ]
       },
       {
@@ -723,15 +723,15 @@
       },
       "logo": {
         "title": "Logo",
-        "description": "Logo design creates the brand's key symbol: it forms the first impression and sets the visual direction for the whole identity. We design logos based on strategy and positioning, so they are not only attractive but recognisable, relevant and lasting."
+        "description": "Logo design creates the brand’s key symbol: it forms the first impression and sets the visual direction for the whole identity. We design logos based on strategy and positioning, so they are not only attractive but recognisable, relevant and lasting."
       },
       "packaging": {
         "title": "Packaging",
-        "description": "Packaging is a key point of contact with the customer and one of the main reasons a product is chosen on the shelf. We design packaging that draws attention, conveys the product's value, strengthens the brand and stands out among competitors."
+        "description": "Packaging is a key point of contact with the customer and one of the main reasons a product is chosen on the shelf. We design packaging that draws attention, conveys the product’s value, strengthens the brand and stands out among competitors."
       },
       "presentation": {
         "title": "Presentation",
-        "description": "Presentation design turns your ideas into clear, well-structured slides that hold the audience's attention, whether for a sale, a project defence or a public talk. The price is calculated per slide, so the scope fits your needs."
+        "description": "Presentation design turns your ideas into clear, well-structured slides that hold the audience’s attention, whether for a sale, a project defence or a public talk. The price is calculated per slide, so the scope fits your needs."
       }
     },
     "lead": "Our prices are in US dollars and are starting prices: the final price depends on the scope we agree after the brief.",

@@ -402,6 +402,7 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
+/* "Before" / "After": the caption step at the label weight. */
 .compare__chip {
   position: absolute;
   top: 12px;
@@ -411,9 +412,11 @@ onBeforeUnmount(() => {
   border-radius: 999px;
   background: rgb(0 0 0 / 0.55);
   color: #fff;
-  font-size: 0.8rem;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
   font-weight: 600;
-  letter-spacing: 0.02em;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   backdrop-filter: blur(6px);
   pointer-events: none;
 }

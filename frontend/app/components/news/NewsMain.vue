@@ -95,25 +95,29 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
           :to="toNewsSlug(item.documentId)"
           class="block"
         >
-          <div class="Item flex items-center md:gap-[86px] gap-[15px]">
-            <div class="shrink-0 w-[148px] h-[127px] md:shrink md:w-[668px] md:h-[360px]">
+          <!-- On phones the text sits under the picture, at the full width:
+               beside a 148px thumbnail its column held only ~25 characters. -->
+          <div class="Item flex flex-col md:flex-row md:items-center md:gap-[86px] gap-[15px]">
+            <div class="w-full h-[200px] md:shrink md:w-[668px] md:h-[360px]">
               <img
                 v-if="item.image?.url"
-                class="w-[668px] object-cover h-full"
+                class="w-full md:w-[668px] object-cover h-full"
                 :src="resolveImage(item.image.url)"
                 alt=""
               >
             </div>
 
-            <div class="w-full">
+            <!-- min-w-0 lets the column shrink beside the picture; the right padding
+                 keeps the title clear of the page's dark edge gradient. -->
+            <div class="w-full min-w-0 md:pr-[clamp(2rem,9vw,9rem)]">
               <h2
-                class="md:pb-[50px] text-white md:text-[62px] leading-[120%] font-normal text-[18px] tracking-[0%] py-[8px]"
+                class="type-h3 md:pb-[32px] text-white py-[8px]"
               >
                 {{ item.title }}
               </h2>
 
               <p
-                class="md:text-[16px] text-white line-clamp-5 font-light text-[14px] leading-[120%] tracking-[0%] font-['Poppins','Inter',sans-serif]"
+                class="type-body type-measure text-white line-clamp-5"
               >
                 {{ item.text || "" }}
               </p>
@@ -125,7 +129,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
 
     <button
       :disabled="loadingMore || !canLoadMore"
-      class="rounded-full bg-black text-white block md:my-[100px] mt-[50px] mb-[100px] border-2 mx-auto w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-[0_0_20px_rgba(3,203,0,0.6)]"
+      class="type-body font-semibold rounded-full bg-black text-white block md:my-[100px] mt-[50px] mb-[100px] border-2 mx-auto w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-[0_0_20px_rgba(3,203,0,0.6)]"
       @click="loadMore"
     >
       {{ $t("common.showMore") }}

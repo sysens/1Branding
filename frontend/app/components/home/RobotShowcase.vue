@@ -44,8 +44,6 @@ const { t } = useI18n();
   background: #000;
   color: #fff;
   text-align: center;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 /* The robot rises out of the wordmark: its waist sits on the letters and its
@@ -75,9 +73,11 @@ const { t } = useI18n();
 }
 
 .robot__brand :deep(.footer-brand-sparkles__title) {
-  font-size: calc(205 * var(--u));
+  /* The display-m step; the looser line height keeps the clipped gradient
+     from cutting the descender of the "g". */
+  font-size: var(--type-display-m-size);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--type-display-m-ls);
   padding-bottom: 0.08em;
   background: linear-gradient(100deg, #b9b9b9 0%, #ffffff 28%, #ffffff 70%, #e6e6e6 100%);
   -webkit-background-clip: text;
@@ -104,12 +104,14 @@ const { t } = useI18n();
   margin-top: calc(-30 * var(--u));
 }
 
+/* Title: the h1 step; the two short lines under it: h4. */
 .robot__title {
   margin: 0;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-wrap: balance;
 }
 
@@ -123,9 +125,10 @@ const { t } = useI18n();
 .robot__text,
 .robot__support {
   margin: 0;
-  font-size: calc(41 * var(--u));
-  line-height: 1.38;
-  letter-spacing: -0.01em;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
   text-wrap: balance;
 }
 
@@ -152,10 +155,6 @@ const { t } = useI18n();
     margin-top: -6.75rem;
   }
 
-  .robot__brand :deep(.footer-brand-sparkles__title) {
-    font-size: 16vw;
-  }
-
   .robot__brand :deep(.footer-brand-sparkles__stage) {
     height: 8rem;
   }
@@ -163,15 +162,6 @@ const { t } = useI18n();
   .robot__copy {
     max-width: none;
     margin-top: 0;
-  }
-
-  .robot__title {
-    font-size: var(--section-title-size);
-  }
-
-  .robot__text,
-  .robot__support {
-    font-size: 1.05rem;
   }
 
   .robot__text {

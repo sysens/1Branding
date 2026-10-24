@@ -107,8 +107,6 @@ onBeforeUnmount(() => {
   padding: clamp(2rem, 3.5vw, 4.5rem) 0 clamp(1.5rem, 2.5vw, 3rem);
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 .pgallery__header {
@@ -121,14 +119,16 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
+/* The section heading: the h1 step (--section-title-size). */
 .pgallery__title {
   margin: 0;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
   /* A long line wraps rather than leave the site container. */
   max-width: min(100%, 1450px);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.005em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
   text-wrap: balance;
 }
 
@@ -139,15 +139,18 @@ onBeforeUnmount(() => {
   color: transparent;
 }
 
+/* Running text (~400 characters): the lead step, left-aligned in a column of the text measure
+   that stays centred under the title. */
 .pgallery__text {
-  /* Never wider than the site container (1450px). */
-  max-width: min(100%, 60em, 1450px);
+  max-width: min(100%, var(--type-measure));
   margin: 0;
   color: #b8b8b8;
-  font-size: clamp(1rem, calc(1.55 * var(--vw)), 2.1rem);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
   font-weight: 400;
-  line-height: 1.22;
-  /* Wide lines with a short last one, as in the design (not balanced). */
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
+  text-align: left;
   text-wrap: pretty;
 }
 
@@ -238,10 +241,12 @@ onBeforeUnmount(() => {
     linear-gradient(100deg, #00b52b 0%, #00e536 45%, #00f83c 70%, #00cf31 100%);
   box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35);
   color: #062b10;
-  font-size: var(--button-font);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  /* Button label: the lead step at the button weight (600). */
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -263,10 +268,11 @@ onBeforeUnmount(() => {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-size: clamp(1.15rem, 1.7vw, 2.35rem);
+  font-family: var(--app-font-display);
+  font-size: var(--type-h5-size);
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  line-height: var(--type-h5-lh);
+  letter-spacing: var(--type-h5-ls);
 }
 
 .pgallery__rule {

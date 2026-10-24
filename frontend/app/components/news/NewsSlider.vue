@@ -150,7 +150,7 @@ watch(locale, async () => {
     <div class="news-title flex items-center justify-between px-[8px] pb-[18px]">
       <div class="text-white w-full md:w-auto">
         <h2
-          class="font-normal text-center md:text-left md:text-[62px] text-[#FFFFFF] md:pb-[64px] pb-[12px] text-[40px] leading-[100%] tracking-[0%] will-change-transform"
+          class="type-h2 text-center md:text-left text-[#FFFFFF] md:pb-[64px] pb-[12px] will-change-transform"
         >
           {{ $t("news.otherNews") }}
         </h2>
@@ -210,22 +210,20 @@ watch(locale, async () => {
 
           <div class="px-[30px]">
             <div
-              class="flex items-center gap-[8px] pt-[24px] pb-[30px] text-[#bfbfbf] opacity-[0.9] text-[12px]"
+              class="flex items-center gap-[8px] pt-[24px] pb-[30px] text-[#bfbfbf] opacity-[0.9]"
             >
               <img
                 class="w-[14px] h-[14px] opacity-[0.9]"
                 src="/News/vector-9.png"
                 alt=""
               >
-              <p
-                class="font-normal text-base md:leading-7 md:tracking-normal text-[16px] leading-[28px] tracking-[0%] font-['Poppins','Inter',sans-serif]"
-              >
+              <p class="type-small">
                 {{ formatDate(pickDate(item)) }}
               </p>
             </div>
 
             <p
-              class="font-normal text-xl pb-[30px] md:leading-none md:tracking-normal line-clamp-2 text-[#FFFFFF] text-[20px] leading-[100%] tracking-[0%] font-['Poppins','Inter',sans-serif]"
+              class="type-h5 pb-[30px] line-clamp-2 text-[#FFFFFF]"
             >
               {{ item.title }}
             </p>

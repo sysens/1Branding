@@ -6,11 +6,13 @@
   padding: clamp(5rem, calc(10 * var(--vw)), 12rem) 0 clamp(4rem, calc(7 * var(--vw)), 9rem);
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
-/* ONE spans both lines; PARTNER. and EVERY SOLUTION. stack beside it. */
+/* ONE spans both lines; PARTNER. and EVERY SOLUTION. stack beside it. ONE is
+   the display-l step (display-m, then display-s, on phones too narrow for the
+   lockup). The two stacked lines are drawn at 0.47 of it and both line
+   heights are trimmed (0.74 / 0.76) so together they are exactly as tall as
+   ONE: the lockup is one shape, so these stay fractions of the step. */
 .services__title {
   display: flex;
   align-items: flex-start;
@@ -18,10 +20,23 @@
   gap: 0.03em;
   margin: 0;
   padding-inline: 1.25rem;
-  font-size: clamp(2.6rem, calc(12.2 * var(--vw)), 15rem);
+  font-family: var(--app-font-display);
+  font-size: var(--type-display-l-size);
   font-weight: 700;
   line-height: 0.74;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--type-caps-ls);
+}
+
+@media (max-width: 599px) {
+  .services__title {
+    font-size: var(--type-display-m-size);
+  }
+}
+
+@media (max-width: 374px) {
+  .services__title {
+    font-size: var(--type-display-s-size);
+  }
 }
 
 .services__one {
@@ -39,7 +54,6 @@
   padding-top: 0.01em;
   font-size: 0.47em;
   line-height: 0.76;
-  letter-spacing: -0.015em;
   white-space: nowrap;
 }
 
@@ -54,27 +68,32 @@
   margin: clamp(1rem, calc(1.6 * var(--vw)), 2rem) 0 0;
   padding-inline: 1.25rem;
   color: #b9b9b9;
-  font-size: clamp(1.05rem, calc(1.5 * var(--vw)), 2.1rem);
-  line-height: 1.25;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-align: center;
   text-wrap: balance;
 }
 
+/* Running text (three lines and more): left-aligned at a reading measure,
+   the block itself centred under the title. */
 .services__intro {
-  max-width: 52rem;
+  box-sizing: content-box;
+  max-width: var(--type-measure);
   margin: clamp(0.9rem, calc(1.2 * var(--vw)), 1.5rem) auto 0;
   padding-inline: 1.25rem;
   color: #8f9297;
-  font-size: clamp(0.95rem, calc(1 * var(--vw)), 1.25rem);
-  line-height: 1.55;
-  text-align: center;
-  text-wrap: balance;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
+  text-wrap: pretty;
 }
 
 .services__intro-links {
   display: inline-flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.35rem 1.1rem;
   margin-left: 0.4rem;
 }
@@ -126,7 +145,10 @@
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: clamp(0.95rem, calc(1.2 * var(--vw)), 1.6rem);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.25s ease;
@@ -147,14 +169,14 @@
 }
 
 .services__name {
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
 .services__description {
   color: #c4c4c4;
-  font-size: 0.8em;
-  line-height: 1.3;
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
 }
 
 .services__arrow {
@@ -181,7 +203,7 @@
 
 .services__item.is-selected .services__number {
   color: #00e536;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .services__item.is-selected .services__arrow {
@@ -222,9 +244,11 @@
   gap: 0.75em;
   margin: 0.2rem 0 clamp(0.8rem, calc(1 * var(--vw)), 1.2rem);
   color: #c4c4c4;
-  font-size: clamp(0.7rem, calc(0.75 * var(--vw)), 1rem);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-label-size);
   font-weight: 600;
-  letter-spacing: 0.22em;
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-ls);
   text-transform: uppercase;
 }
 
@@ -252,17 +276,20 @@
 
 .services__card-title {
   margin: clamp(0.9rem, calc(1.1 * var(--vw)), 1.4rem) 0 0;
-  font-size: clamp(1.6rem, calc(2.05 * var(--vw)), 2.9rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  font-weight: 600;
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
 }
 
 .services__tagline {
   margin: 0.3em 0 0;
   color: #c9c9c9;
-  font-size: clamp(1.05rem, calc(1.3 * var(--vw)), 1.8rem);
-  line-height: 1.25;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
 }
 
 .services__button {
@@ -279,8 +306,11 @@
   border-radius: 999px;
   background: linear-gradient(100deg, #00c92f 0%, #00ee38 55%, #00d634 100%);
   color: #062b10;
-  font-size: var(--button-font);
-  font-weight: 700;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  font-weight: 600;
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-decoration: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -310,10 +340,11 @@
   margin: 0;
   padding-top: clamp(1.25rem, calc(1.8 * var(--vw)), 2.25rem);
   border-top: 1px solid #1d1d1d;
-  font-size: clamp(1.5rem, calc(1.9 * var(--vw)), 2.6rem);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  font-weight: 600;
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
 }
 
 .services__closing-muted {
@@ -345,7 +376,6 @@
     grid-template-columns: 2.4em minmax(0, 1fr) 1.4em;
     row-gap: 0.15em;
     padding-block: 0.7em;
-    font-size: 1rem;
   }
 
   .services__description {
@@ -375,6 +405,9 @@
   .services__inline p {
     margin: 0.7rem 0 0;
     color: #c9c9c9;
+    font-size: var(--type-body-size);
+    line-height: var(--type-body-lh);
+    letter-spacing: var(--type-body-ls);
   }
 
   .services__inline-link {
@@ -382,7 +415,10 @@
     margin-top: 0.6rem;
     padding: 0.35rem 0;
     color: #03cb00;
+    font-size: var(--type-body-size);
     font-weight: 600;
+    line-height: var(--type-body-lh);
+    letter-spacing: var(--type-body-ls);
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }

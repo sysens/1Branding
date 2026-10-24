@@ -96,6 +96,7 @@ canvas:focus-visible {
   pointer-events: none;
   overflow: hidden;
 }
+/* City labels: the label step (12px, 600, uppercase, 0.08em). */
 .network-globe__labels :deep(.network-globe__label) {
   position: absolute;
   left: 0;
@@ -103,11 +104,11 @@ canvas:focus-visible {
   padding: 4px 7px;
   background: #101112e8;
   color: #efefea;
-  font-family: monospace;
-  font-weight: 700;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0;
+  font-family: var(--app-font-sans);
+  font-weight: 600;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-lh);
+  letter-spacing: var(--type-label-ls);
   text-transform: uppercase;
   white-space: nowrap;
   will-change: transform;

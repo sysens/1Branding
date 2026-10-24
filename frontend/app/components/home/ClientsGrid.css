@@ -11,8 +11,6 @@
   padding: calc(120 * var(--u)) calc(var(--frame-side) + 62 * var(--u)) calc(60 * var(--u));
   background: #000;
   color: #fff;
-  /* Outranks the global `body * { font-family: inherit !important }`. */
-  font-family: var(--app-font-display) !important;
 }
 
 /* The backdrop and its layers fill the section; a layer is shifted by its
@@ -127,22 +125,26 @@
 .clients__title {
   display: flex;
   flex-direction: column;
+  font-family: var(--app-font-display);
   font-size: var(--section-title-size);
-  font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-ls);
 }
 
 .clients__green {
   color: var(--green);
 }
 
+/* Never narrower than ~40 characters, on tablets too. */
 .clients__intro {
-  width: calc(600 * var(--u));
+  width: max(calc(600 * var(--u)), 20rem);
   margin-top: calc(14 * var(--u));
   color: #a7acaa;
-  font-size: calc(19.5 * var(--u));
-  line-height: 1.36;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 
 .clients__trust {
@@ -172,11 +174,13 @@
   list-style: none;
 }
 
+/* The row is at least 2.5 lines of its caption-step name tall, so it keeps
+   room around the name where the design's units get small (tablets). */
 .clients__cell {
   position: relative;
   display: flex;
   align-items: center;
-  height: calc(46.6 * var(--u));
+  height: max(calc(46.6 * var(--u)), calc(2.5 * var(--type-caption-size)));
   padding-left: calc(27 * var(--u));
   border-bottom: 1px solid rgb(255 255 255 / 0.07);
   border-left: 1px solid rgb(255 255 255 / 0.06);
@@ -237,8 +241,10 @@
   position: relative;
   z-index: 1;
   color: #b0bbb5;
-  font-size: calc(18.5 * var(--u));
-  line-height: 1;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   white-space: nowrap;
   transition: color 0.45s ease;
 }
@@ -281,14 +287,9 @@
     gap: 1.25rem;
   }
 
-  .clients__title {
-    font-size: var(--section-title-size);
-  }
-
   .clients__intro {
     width: auto;
     margin-top: 0;
-    font-size: 0.95rem;
   }
 
   .clients__trust {
@@ -322,7 +323,6 @@
 
   .clients__name {
     overflow: hidden;
-    font-size: 0.85rem;
     text-overflow: ellipsis;
   }
 
@@ -343,8 +343,11 @@
     background: rgb(34 227 82 / 0.08);
     color: var(--green);
     font: inherit;
-    font-size: var(--button-font);
+    font-family: var(--app-font-sans);
+    font-size: var(--type-lead-size);
     font-weight: 600;
+    line-height: var(--type-lead-lh);
+    letter-spacing: var(--type-lead-ls);
   }
 }
 

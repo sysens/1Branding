@@ -59,15 +59,20 @@ usePageSeo({
 
 .privacy-page__section h2 {
   margin: 0 0 16px;
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-family: var(--app-font-display);
+  font-size: var(--type-h4-size);
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
   font-weight: 600;
-  line-height: 1.2;
 }
 
 .privacy-page__section p {
+  max-width: var(--type-measure);
   margin: 0 0 14px;
   color: #c9cbce;
-  font-size: 17px;
-  line-height: 1.7;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
 }
 </style>
