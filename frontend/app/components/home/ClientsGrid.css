@@ -330,24 +330,11 @@
     display: none;
   }
 
-  /* The landing's shared button size (--button-*), outlined. */
+  /* The shared .ob-button, centred under the names. */
   .clients__more {
-    display: block;
-    width: var(--button-w);
-    height: var(--button-h);
-    white-space: nowrap;
+    display: flex;
+    width: fit-content;
     margin: 1.25rem auto 0;
-    padding: 0 var(--button-pad);
-    border: 1px solid rgb(34 227 82 / 0.5);
-    border-radius: 999px;
-    background: rgb(34 227 82 / 0.08);
-    color: var(--green);
-    font: inherit;
-    font-family: var(--app-font-sans);
-    font-size: var(--type-lead-size);
-    font-weight: 600;
-    line-height: var(--type-lead-lh);
-    letter-spacing: var(--type-lead-ls);
   }
 }
 

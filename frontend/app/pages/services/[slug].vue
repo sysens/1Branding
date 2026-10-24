@@ -153,7 +153,7 @@ usePageSeo({
           <h1 id="service-title" v-blur-reveal class="service-hero__title">{{ copy.h1 }}</h1>
           <p v-rise class="service-hero__lead">{{ copy.lead }}</p>
           <div v-rise class="service-hero__actions">
-            <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="service-button">{{ copy.cta.button }}</NuxtLink>
+            <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="ob-button">{{ copy.cta.button }}</NuxtLink>
             <a :href="`tel:${COMPANY.phone.e164}`" class="service-hero__phone">{{ COMPANY.phone.display }}</a>
           </div>
         </div>
@@ -240,7 +240,7 @@ usePageSeo({
       <section class="service-cta" aria-labelledby="service-cta">
         <h2 id="service-cta" v-blur-reveal>{{ copy.cta.title }}</h2>
         <p v-rise>{{ copy.cta.text }}</p>
-        <NuxtLink v-rise :to="`${localePath('/contact')}#contact-request`" class="service-button">{{ copy.cta.button }}</NuxtLink>
+        <NuxtLink v-rise :to="`${localePath('/contact')}#contact-request`" class="ob-button">{{ copy.cta.button }}</NuxtLink>
       </section>
     </div>
   </div>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import MovementClock from "./MovementClock.vue";
-import CinematicAction from "./CinematicAction.vue";
 
 const localePath = useLocalePath();
 
@@ -16,7 +15,7 @@ const year = new Date().getFullYear();
       <div class="movement-footer__content">
         <h2 id="movement-title">{{ t("movement.first") }}<br >{{ t("movement.second") }}</h2>
         <p>{{ t("movement.description") }}<br >{{ t("movement.detail") }}</p>
-        <CinematicAction :to="localePath('/projects')">{{ t("movement.action") }}</CinematicAction>
+        <NuxtLink :to="localePath('/projects')" class="ob-button">{{ t("movement.action") }}</NuxtLink>
       </div>
     </section>
     <div class="movement-footer__legal">

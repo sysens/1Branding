@@ -129,7 +129,7 @@ watch(
     <div class="flex items-center justify-center mt-[90px]">
       <button
         v-if="hasMore"
-        class="showMore rounded-full bg-black text-white border-2 w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-center border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 type-body font-semibold"
+        class="showMore ob-button"
         @click="showMore"
       >
         {{ $t("common.showMore") }}

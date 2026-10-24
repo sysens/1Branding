@@ -80,7 +80,7 @@ usePageSeo({
       <section class="service-cta" aria-labelledby="services-hub-cta">
         <h2 id="services-hub-cta" v-blur-reveal>{{ t("servicesHub.ctaTitle") }}</h2>
         <p v-rise>{{ t("servicesHub.ctaText") }}</p>
-        <NuxtLink v-rise :to="`${localePath('/contact')}#contact-request`" class="service-button">{{ t("servicesHub.ctaButton") }}</NuxtLink>
+        <NuxtLink v-rise :to="`${localePath('/contact')}#contact-request`" class="ob-button">{{ t("servicesHub.ctaButton") }}</NuxtLink>
       </section>
     </div>
   </div>

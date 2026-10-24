@@ -129,7 +129,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
 
     <button
       :disabled="loadingMore || !canLoadMore"
-      class="type-body font-semibold rounded-full bg-black text-white block md:my-[100px] mt-[50px] mb-[100px] border-2 mx-auto w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap border-[#03CB00] shadow-[0_0_20px_rgba(3,203,0,0.6)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-[0_0_20px_rgba(3,203,0,0.6)]"
+      class="ob-button flex w-fit mx-auto mt-[50px] mb-[100px] md:my-[100px]"
       @click="loadMore"
     >
       {{ $t("common.showMore") }}

@@ -207,7 +207,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       <span class="audit__green">{{ t("home.audit.planAccent") }}</span> {{ t("home.audit.planRest") }}
     </p>
     <p v-rise class="audit__text">{{ t("home.audit.text") }}</p>
-    <NuxtLink v-rise :to="localePath('/contact')" class="audit__button">
+    <NuxtLink v-rise :to="localePath('/contact')" class="audit__button ob-button">
       {{ t("home.audit.cta") }}
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
     </NuxtLink>

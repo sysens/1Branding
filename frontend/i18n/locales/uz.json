@@ -61,7 +61,7 @@
     "contacts": "Kontaktlar",
     "send": "Yuborish",
     "sending": "Yuborilmoqda...",
-    "downloadBrief": "brifni yuklab olish",
+    "downloadBrief": "Brifni yuklab olish",
     "socials": "IJTIMOIY TARMOQLAR",
     "graphqlUrlEmpty": "GRAPHQL_URL EMPTY",
     "noFileSelected": "Fayl tanlanmagan",
@@ -206,7 +206,7 @@
       "titleLead": "Ajoyib mahsulotga ",
       "titleAccent": "faqat sifat yetmaydi.",
       "text": "Kuchli taqdimot mahsulotning oʻzidagi sifat, aniqlik va intilish darajasini aks ettirishi kerak. OneBrandingda biz maʼlumotni aniq vizual tizimga aylantiramiz: unda tuzilma, tipografika, kompozitsiya va hikoya yagona boʻlib ishlaydi. Har bir detal qiymatni tushunarli yetkazish, taassurotni kuchaytirish va brendni munosib darajada koʻrsatish uchun puxta oʻylanadi.",
-      "cta": "ketdik!",
+      "cta": "Ketdik!",
       "more": "Taqdimotlar haqida batafsil"
     },
     "social": {
@@ -314,7 +314,7 @@
       "label": "Oldin va keyin",
       "prev": "Oldingi loyiha",
       "next": "Keyingi loyiha",
-      "cta": "loyihalarni koʻrish"
+      "cta": "Loyihalarni koʻrish"
     },
     "audit": {
       "eyebrow": "Biznes auditi va strategiya",
@@ -550,6 +550,7 @@
     "support": "Onebranding biznesingizni tanish, unga ishonish va uni tanlashni osonlashtiradi."
   },
   "a11y": {
+    "language": "Til",
     "openMenu": "Menyuni ochish",
     "closeMenu": "Menyuni yopish",
     "menu": "Menyu",

@@ -71,7 +71,7 @@ const go = (step: 1 | -1) => {
       </button>
     </div>
 
-    <NuxtLink v-rise :to="localePath('/projects')" class="compare-section__button">{{ t("home.compare.cta") }}</NuxtLink>
+    <NuxtLink v-rise :to="localePath('/projects')" class="compare-section__button ob-button ob-button--dark">{{ t("home.compare.cta") }}</NuxtLink>
   </section>
 </template>
 
@@ -196,39 +196,14 @@ const go = (step: 1 | -1) => {
   transform: translateX(calc(6 * var(--u)));
 }
 
-.compare-section__arrow:focus-visible,
-.compare-section__button:focus-visible {
+.compare-section__arrow:focus-visible {
   outline: 2px solid #00c936;
   outline-offset: 4px;
 }
 
+/* The shared .ob-button under the stage. */
 .compare-section__button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The landing's shared button size (--button-*). */
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
   margin-top: calc(70 * var(--u));
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  /* Button label: the lead step at the button weight (600). */
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.compare-section__button:hover,
-.compare-section__button:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgb(0 0 0 / 0.25);
 }
 
 /* Phones: the frame takes the width and the arrows sit inside the picture,
@@ -240,6 +215,10 @@ const go = (step: 1 | -1) => {
 
   .compare-section__hint {
     margin-top: 0.75rem;
+  }
+
+  .compare-section__button {
+    margin-top: 2rem;
   }
 
   .compare-section__stage {
@@ -295,10 +274,6 @@ const go = (step: 1 | -1) => {
 
   .compare-section__arrow:focus-visible {
     outline-offset: 2px;
-  }
-
-  .compare-section__button {
-    margin-top: 2rem;
   }
 }
 

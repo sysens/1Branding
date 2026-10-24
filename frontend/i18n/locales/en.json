@@ -61,7 +61,7 @@
     "contacts": "Contacts",
     "send": "Send",
     "sending": "Sending...",
-    "downloadBrief": "download brief",
+    "downloadBrief": "Download brief",
     "socials": "SOCIALS",
     "graphqlUrlEmpty": "GRAPHQL_URL EMPTY",
     "noFileSelected": "No file selected",
@@ -314,7 +314,7 @@
       "label": "Before and after",
       "prev": "Previous project",
       "next": "Next project",
-      "cta": "view projects"
+      "cta": "View projects"
     },
     "audit": {
       "eyebrow": "Business audit & strategy",
@@ -550,6 +550,7 @@
     "support": "Onebranding helps your business become easier to recognize, trust, and choose."
   },
   "a11y": {
+    "language": "Language",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "menu": "Menu",

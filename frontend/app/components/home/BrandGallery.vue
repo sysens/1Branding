@@ -126,16 +126,17 @@ onBeforeUnmount(() => {
    its side paddings, and the section is one screen plus that overflow (x1.1 of
    scroll per pixel of travel, as in the reference). */
 .gallery {
-  /* The third cap keeps the whole screen (header gap, heading, row, the
-     5-line description, bar) within short laptop windows (1366 x 768). */
-  --card-h: min(34vw, 42vh, 100svh - 33rem);
+  /* The height caps keep the whole screen (header gap, heading, row, the
+     intro-size description, bar) within the window, from 1920 x 1080 down
+     to short laptops (1366 x 768). */
+  --card-h: min(34vw, 36vh, 100svh - 36rem);
   --start-padding: max(1.5rem, 27vw);
-  /* The width of the description's text (also set on it below): the measure
-     of the body step (--type-measure, 36em), written in
-     the step's size because it is used here, on other elements. The row's
-     travel ends with the last card's right edge on the text's right edge,
-     so the end padding is the text's side margin. */
-  --description-width: min(100vw - 3rem, 36 * var(--type-body-size));
+  /* The width of the description's text (also set on it below): the intro
+     measure (--type-measure-intro, 40.5em), written in the step's size
+     because it is used here, on other elements. The row's travel ends with
+     the last card's right edge on the text's right edge, so the end padding
+     is the text's side margin. */
+  --description-width: min(100vw - 3rem, 40.5 * var(--type-intro-size));
   --end-padding: calc((100vw - var(--description-width)) / 2);
   --travel: max(0px, calc(var(--card-h) * var(--track-units) + var(--start-padding) + var(--end-padding) - 100vw));
   position: relative;
@@ -224,18 +225,19 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 
-/* Running text (~360 characters) below the cards: the body step,
-   left-aligned in a column of the text measure, centred on the screen. */
+/* Running text (~360 characters) below the cards: the intro step, as the
+   identity text above, left-aligned in a column of its measure, centred on
+   the screen. */
 .gallery__description {
   box-sizing: content-box;
   max-width: var(--description-width);
   margin: clamp(1.25rem, min(4vw, 6vh), 5rem) auto 0;
   padding-inline: 1.5rem;
   color: #606060;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
+  font-family: var(--type-intro-family);
+  font-size: var(--type-intro-size);
+  line-height: var(--type-intro-lh);
+  letter-spacing: var(--type-intro-ls);
   text-align: left;
   text-wrap: pretty;
 }

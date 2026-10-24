@@ -71,14 +71,13 @@
         /* The space left and right of the frame (0 up to 1920px): add it to a
            full-width section's side padding to keep its content in the frame. */
         --frame-side: max(0px, calc((100% - var(--frame-max)) / 2));
-        /* One fixed desktop size for every primary CTA. The 247 × 60px
-           footprint stays consistent across landing sections and has enough
-           room for the longest current label, "Start your project". */
-        --button-w: 247px;
+        /* The call-to-action button (.ob-button): 60px tall (52 on phones,
+           see the media query below), as wide as its label plus this
+           padding on each side. */
         --button-h: 60px;
         /* Button labels: the lead step at 600 (see .type-lead). */
         --button-font: var(--type-lead-size);
-        --button-pad: max(1.5rem, calc(1.5 * var(--fvw)));
+        --button-pad: 2.1em;
         /* ================== TYPE SCALE ==================
            Every text on the site uses one of these 15 steps (the .type-*
            classes below, or these variables in a component's CSS). Sizes are
@@ -133,15 +132,40 @@
         --type-display-xl-size: clamp(5.5rem, 1.6rem + 16vw, 20rem);        /* 88 / 256 / 320 */
         --type-display-xl-lh: 0.85;
         --type-display-xl-ls: -0.04em;
+        /* Intro step (SF Pro Display, 400): the large running text under a
+           landing section's heading ("The One in OneBranding", the brand
+           gallery, presentations, social identity), all one size. Design:
+           37px on the 2000px frame. It is also capped by the screen's height
+           (37/1005 of it less the header), so the full-screen sections that
+           use it still fit a short laptop window. Phones take the lead step
+           (see the media query below). */
+        --type-intro-size: clamp(1.25rem, min(0.25rem + 1.6vw, 3.68svh - 0.37rem), 2.25rem); /* 20 / 22-34 / 36 */
+        --type-intro-lh: 1.3;
+        --type-intro-ls: -0.005em;
+        --type-intro-family: var(--app-font-display);
         /* The measure of running text: 36em is 70-75 characters of SF Pro
-           (its "0" is wide, so 65ch would be ~85). The narrow one is ~50. */
+           (its "0" is wide, so 65ch would be ~85). The narrow one is ~50.
+           The intro's is wider (~80 characters at its size, as designed). */
         --type-measure: 36em;
         --type-measure-narrow: 25em;
+        --type-measure-intro: 40.5em;
         /* Uppercase headings take a little air instead of the tight default. */
         --type-caps-ls: 0.02em;
         /* The landing's section headings ("Fresh projects", "Frequently asked
            questions" ...): the h1 step. */
         --section-title-size: var(--type-h1-size);
+    }
+
+    /* Phones: buttons are 52px tall; the intro would be large type in a
+       narrow column, so it is the lead step there, in SF Pro Text. */
+    @media (max-width: 767px) {
+        :root {
+            --button-h: 52px;
+            --type-intro-size: var(--type-lead-size);
+            --type-intro-lh: var(--type-lead-lh);
+            --type-intro-ls: var(--type-lead-ls);
+            --type-intro-family: var(--app-font-sans);
+        }
     }
 
     /* Vertical panning only (no sideways drift on phones), but pinch-zoom stays
@@ -238,6 +262,7 @@
     .type-small { font-family: var(--app-font-sans); font-size: var(--type-small-size); line-height: var(--type-small-lh); letter-spacing: var(--type-small-ls); font-weight: 400; }
     .type-body { font-family: var(--app-font-sans); font-size: var(--type-body-size); line-height: var(--type-body-lh); letter-spacing: var(--type-body-ls); font-weight: 400; }
     .type-lead { font-family: var(--app-font-sans); font-size: var(--type-lead-size); line-height: var(--type-lead-lh); letter-spacing: var(--type-lead-ls); font-weight: 400; }
+    .type-intro { font-family: var(--type-intro-family); font-size: var(--type-intro-size); line-height: var(--type-intro-lh); letter-spacing: var(--type-intro-ls); font-weight: 400; }
     .type-h5 { font-family: var(--app-font-display); font-size: var(--type-h5-size); line-height: var(--type-h5-lh); letter-spacing: var(--type-h5-ls); font-weight: 600; }
     .type-h4 { font-family: var(--app-font-display); font-size: var(--type-h4-size); line-height: var(--type-h4-lh); letter-spacing: var(--type-h4-ls); font-weight: 600; }
     .type-h3 { font-family: var(--app-font-display); font-size: var(--type-h3-size); line-height: var(--type-h3-lh); letter-spacing: var(--type-h3-ls); font-weight: 600; }
@@ -251,6 +276,100 @@
     .type-caps { text-transform: uppercase; letter-spacing: var(--type-caps-ls); }
     /* A comfortable line length for running text (70-75 characters). */
     .type-measure { max-width: var(--type-measure); }
+
+    /* The site's one button for every call to action (links and buttons
+       alike), white label in the button weight of the lead step, as wide as
+       its label plus the same padding on every button. On dark sections it
+       is a green pill with a dark blob drifting through it; on light ones
+       (.ob-button--dark) a black pill with a faint green one. One height
+       everywhere (--button-h: 60, 52 on phones). Components only place it
+       (margins); they do not restyle it. */
+    .ob-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        box-sizing: border-box;
+        width: fit-content;
+        height: var(--button-h);
+        padding: 0 var(--button-pad);
+        overflow: hidden;
+        isolation: isolate;
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(100deg, #0b8a29 0%, #13a834 50%, #1fc242 100%);
+        color: #fff;
+        font-family: var(--app-font-sans);
+        font-size: var(--button-font);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: var(--type-lead-ls);
+        text-align: center;
+        text-decoration: none;
+        text-shadow: 0 1px 2px rgb(0 40 10 / 0.35);
+        white-space: nowrap;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    }
+
+    .ob-button::before {
+        content: "";
+        position: absolute;
+        inset: -40% -10%;
+        z-index: -1;
+        background:
+            radial-gradient(closest-side at 28% 60%, rgb(2 34 10 / 0.75), rgb(2 34 10 / 0) 100%),
+            radial-gradient(closest-side at 66% 38%, rgb(70 230 90 / 0.55), rgb(70 230 90 / 0) 100%);
+        filter: blur(6px);
+        animation: ob-button-blob 6s ease-in-out infinite alternate;
+        pointer-events: none;
+    }
+
+    /* On light sections: black, the drifting light a faint green. */
+    .ob-button--dark {
+        background: #000;
+    }
+
+    .ob-button--dark::before {
+        background:
+            radial-gradient(closest-side at 28% 60%, rgb(25 150 55 / 0.5), rgb(25 150 55 / 0) 100%),
+            radial-gradient(closest-side at 66% 38%, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0) 100%);
+    }
+
+    .ob-button svg {
+        flex: none;
+        width: 1em;
+        height: 1em;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.2;
+    }
+
+    .ob-button:hover,
+    .ob-button:focus-visible {
+        transform: scale(1.05);
+        box-shadow: 0 0 2.2rem rgb(31 194 66 / 0.45);
+    }
+
+    .ob-button--dark:hover,
+    .ob-button--dark:focus-visible {
+        box-shadow: 0 0.6rem 1.8rem rgb(0 0 0 / 0.25);
+    }
+
+    .ob-button:disabled,
+    .ob-button[aria-disabled="true"] {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ob-button::before {
+            animation: none;
+        }
+    }
 
     .containerr {
         max-width: 1450px;
@@ -330,6 +449,13 @@
  * Titles only slide (no fade): text that starts at opacity 0 is not counted as
  * painted, which made a small logo tile the page's Largest Contentful Paint.
  */
+/* The blob of .ob-button. */
+@keyframes ob-button-blob {
+    0% { transform: translate3d(-18%, 4%, 0) scale(0.9) rotate(-8deg); }
+    50% { transform: translate3d(8%, -6%, 0) scale(1.1) rotate(6deg); }
+    100% { transform: translate3d(22%, 6%, 0) scale(0.95) rotate(-4deg); }
+}
+
 @keyframes intro-slide-in {
     from {
         transform: translate3d(-160px, 0, 0);

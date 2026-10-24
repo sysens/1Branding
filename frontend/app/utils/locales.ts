@@ -19,5 +19,8 @@ export const localizedPath = (path: string, locale: SiteLocale) => {
   return path === "/" || !path ? prefix : `${prefix}${path}`;
 };
 
+/** Each language by its own name, for the language switcher. */
+export const LANGUAGE_NAMES: Record<SiteLocale, string> = { en: "English", ru: "Русский", uz: "Oʻzbekcha" };
+
 /** BCP 47 tags for <html lang>, hreflang and JSON-LD inLanguage. */
 export const LANGUAGE_TAGS: Record<SiteLocale, string> = { en: "en", ru: "ru", uz: "uz" };

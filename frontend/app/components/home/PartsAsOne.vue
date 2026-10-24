@@ -16,7 +16,7 @@ import { revealTo } from "~/utils/reveal";
 // render by scripts/parts-seams.py) and light up from where the tubes plug in,
 // the front of the light running out through the O, the N and the E.
 // Each card lights up as it lands: it comes out as a dim, unlit slab, flashes
-// (a sheen runs across it) and keeps a lime glow; at the end all of them glow
+// (a sheen runs across it) and keeps a green glow; at the end all of them glow
 // brighter together.
 
 type Rect = readonly [x: number, y: number, w: number, h: number];
@@ -75,7 +75,8 @@ const SEAM_SOFT = 80;
 // A card lights up over the second half of its slide and a little after.
 const CARD_LIGHT = cardWindows.map(([from, to]) => [from + (to - from) * 0.5, to + 0.03] as const);
 const ALL_LIT = [0.84, 0.93] as const;
-const LIME = "181 230 29";
+// The brand green (#0ccc3c), the green of the headings' accents.
+const GLOW_GREEN = "12 204 60";
 // The copy's cues: past them the headline and the taglines come in on the
 // shared timed reveal (utils/reveal.ts), and go again when scrolled back.
 const HEADLINE_CUE = 0.78;
@@ -267,7 +268,7 @@ const render = () => {
       : `translate3d(${(72 * (1 - shown)).toFixed(2)}%, 0, 0)`;
 
     // Unlit it is a dim slab; it brightens with a flash while it lights, and the
-    // lime glow stays: two drop shadows that follow the card's outline, and a
+    // green glow stays: two drop shadows that follow the card's outline, and a
     // wide one lifted above it so the haze fills the white between the cards' tops.
     const light = span(progress, CARD_LIGHT[index]!);
     const lit = ease(light);
@@ -279,9 +280,9 @@ const render = () => {
     if (Math.abs(brightness - 1) > 0.001) filters.push(`brightness(${brightness.toFixed(3)})`);
     if (glow > 0.002) {
       filters.push(
-        `drop-shadow(0 0 ${(3 * u).toFixed(2)}px rgb(${LIME} / ${(0.85 * glow).toFixed(3)}))`,
-        `drop-shadow(0 0 ${(16 * u).toFixed(2)}px rgb(${LIME} / ${(0.6 * glow).toFixed(3)}))`,
-        `drop-shadow(0 ${(-14 * u).toFixed(2)}px ${(36 * u).toFixed(2)}px rgb(${LIME} / ${(0.45 * glow).toFixed(3)}))`,
+        `drop-shadow(0 0 ${(3 * u).toFixed(2)}px rgb(${GLOW_GREEN} / ${(0.85 * glow).toFixed(3)}))`,
+        `drop-shadow(0 0 ${(16 * u).toFixed(2)}px rgb(${GLOW_GREEN} / ${(0.6 * glow).toFixed(3)}))`,
+        `drop-shadow(0 ${(-14 * u).toFixed(2)}px ${(36 * u).toFixed(2)}px rgb(${GLOW_GREEN} / ${(0.45 * glow).toFixed(3)}))`,
       );
     }
     card.style.filter = filters.length ? filters.join(" ") : "none";

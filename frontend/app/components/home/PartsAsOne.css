@@ -131,13 +131,13 @@
   will-change: transform, opacity, filter;
 }
 
-/* The light running across a card as it lights up: a lime-white band, clipped
+/* The light running across a card as it lights up: a green-white band, clipped
    to the card's own outline (its image as the mask), moved by JS. */
 .parts__sheen {
   position: absolute;
   inset: 0;
   opacity: 0;
-  background: linear-gradient(100deg, transparent 38%, rgb(236 255 190 / 0.9) 50%, transparent 62%) no-repeat;
+  background: linear-gradient(100deg, transparent 38%, rgb(206 255 218 / 0.9) 50%, transparent 62%) no-repeat;
   background-size: 250% 100%;
   background-position: 0 0;
   mix-blend-mode: overlay;

@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
             <span>{{ `${t("footerNew.pitchFirst")} ` }}</span>
             <span>{{ t("footerNew.pitchSecond") }}</span>
           </p>
-          <NuxtLink :to="localePath('/contact')" class="site-footer__start">
+          <NuxtLink :to="localePath('/contact')" class="site-footer__start ob-button">
             {{ t("footerNew.start") }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
           </NuxtLink>
@@ -226,42 +226,17 @@ onBeforeUnmount(() => {
   letter-spacing: var(--type-lead-ls);
 }
 
+/* The shared .ob-button under the call to action. */
 .site-footer__start {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  /* The landing's shared button size (--button-*). */
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
   margin-top: calc(42 * var(--u));
-  border-radius: 999px;
-  background: var(--green);
-  color: #031c0b;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.site-footer__start svg,
 .site-footer__link svg {
   width: 0.95em;
   height: 0.95em;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.2;
-}
-
-.site-footer__start:hover,
-.site-footer__start:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 0 calc(40 * var(--u)) rgb(8 226 79 / 0.45);
 }
 
 .site-footer__columns {

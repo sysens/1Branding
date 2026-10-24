@@ -96,17 +96,18 @@ const selected = computed(() => services.value.find((service) => service.id === 
               <p class="services__tagline">{{ selected.tagline }}</p>
             </div>
           </Transition>
-          <NuxtLink :to="selected.path" class="services__button">
+          <NuxtLink :to="selected.path" class="services__button ob-button">
             {{ t("home.services.explore") }}<span class="sr-only">: {{ selected.name }}</span>
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>
           </NuxtLink>
         </div>
-        <p v-rise class="services__closing" lang="en">
-          <span>{{ `${t("home.services.closingFirst")} ` }}</span>
-          <span class="services__closing-muted">{{ t("home.services.closingLead") }}<span class="services__accent">{{ t("home.services.closingAccent") }}</span></span>
-        </p>
       </aside>
     </div>
+
+    <!-- The section's last line, centred under the list and the card. -->
+    <p v-rise class="services__closing" lang="en">
+      <span>{{ t("home.services.closingFirst") }}</span> <span class="services__closing-muted">{{ t("home.services.closingLead") }}<span class="services__accent">{{ t("home.services.closingAccent") }}</span></span>
+    </p>
   </section>
 </template>
 

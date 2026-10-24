@@ -15,6 +15,8 @@ The layers are exact only on a white page (the source's backdrop). The lime is
 found by its blue-yellow chroma (the body is neutral grey), grown into the
 anti-aliased fringe, and the gap is filled by a harmonic luma solve, so a
 different render needs the thresholds below retuned.
+The files in public/home/parts are since recoloured to the brand green by
+scripts/parts-recolor.py: run this on the original lime render, then that.
 """
 import json
 import os

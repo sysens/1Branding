@@ -112,16 +112,22 @@
 }
 
 /* The list (52%) and the card (28%) of a frame 82% wide, as in the design;
-   on very wide screens no wider than the site container (1450px). */
+   on very wide screens no wider than the site container (1450px). Both
+   columns take the row's height, so the table and the card end on one line:
+   the list's rows share the extra height, the card's button sits on its
+   bottom. */
 .services__body {
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 28fr);
+  align-items: stretch;
   gap: calc(2.3 * var(--vw));
   width: min(calc(82.5 * var(--vw)), 100% - 2.5rem);
   margin: clamp(2rem, calc(3.2 * var(--vw)), 4rem) auto 0;
 }
 
 .services__list {
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -129,6 +135,9 @@
 }
 
 .services__item {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   border-bottom: 1px solid #222;
 }
 
@@ -137,6 +146,7 @@
   grid-template-columns: 3.4em minmax(0, 1fr) minmax(0, 1.25fr) 2em;
   align-items: center;
   gap: 1em;
+  flex: 1 1 auto;
   width: 100%;
   min-height: 2.75em;
   padding: 0.35em 0.75em;
@@ -219,18 +229,14 @@
   display: none;
 }
 
-/* The card and the closing line stay in view together while the list scrolls. */
 .services__side {
-  position: sticky;
-  top: 7rem;
-  align-self: start;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.25rem, calc(1.8 * var(--vw)), 2.25rem);
 }
 
 .services__card {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   padding: clamp(0.9rem, calc(1 * var(--vw)), 1.4rem);
   border: 1px solid #1d1d1d;
@@ -266,6 +272,11 @@
   background: #151515;
 }
 
+/* The picked service grows with the card, so the button stays at its bottom. */
+.services__selected {
+  flex: 1 1 auto;
+}
+
 /* :deep: the <img> is inside OptImage's <picture>. */
 .services__picture :deep(img) {
   display: block;
@@ -292,59 +303,32 @@
   letter-spacing: var(--type-lead-ls);
 }
 
+/* The card's button: the shared .ob-button, placed at the card's start. */
 .services__button {
-  display: inline-flex;
-  align-items: center;
   align-self: flex-start;
-  justify-content: center;
-  gap: 0.45em;
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
   margin-top: clamp(1.1rem, calc(1.4 * var(--vw)), 1.8rem);
-  border-radius: 999px;
-  background: linear-gradient(100deg, #00c92f 0%, #00ee38 55%, #00d634 100%);
-  color: #062b10;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.services__button svg,
 .services__row svg {
   flex: none;
 }
 
-.services__button svg {
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-}
-
-.services__button:hover,
-.services__button:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 0 1.8rem rgb(0 240 58 / 0.4);
-}
-
+/* The section's last line: the h3 step, one line centred under the list and
+   the card. Each sentence is a box of its own, so a narrow screen breaks
+   the line between them, never inside one. */
 .services__closing {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding-top: clamp(1.25rem, calc(1.8 * var(--vw)), 2.25rem);
-  border-top: 1px solid #1d1d1d;
+  margin: clamp(2.5rem, calc(4.5 * var(--vw)), 5.5rem) 0 0;
+  padding-inline: 1.25rem;
   font-family: var(--app-font-display);
-  font-size: var(--type-h4-size);
+  font-size: var(--type-h3-size);
   font-weight: 600;
-  line-height: var(--type-h4-lh);
-  letter-spacing: var(--type-h4-ls);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
+  text-align: center;
+}
+
+.services__closing > span {
+  display: inline-block;
 }
 
 .services__closing-muted {
@@ -424,15 +408,7 @@
   }
 
   .services__side {
-    position: static;
-  }
-
-  .services__card {
     display: none;
-  }
-
-  .services__closing {
-    border-top: 0;
   }
 }
 

@@ -3,7 +3,7 @@
     <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[760px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[24px] min-[950px]:pr-[10px] border h-[76px] min-[950px]:h-[45px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[900px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[28px] min-[950px]:pr-[11px] border h-[76px] min-[950px]:h-[56px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
         <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
         <a
@@ -30,38 +30,26 @@
             {{ $t("nav.contacts") }}
           </a>
 
-          <!-- Not in the design, but the only way to the Russian site on desktop. -->
-          <div class="relative">
+          <!-- The language switcher, a select in the shadcn style: the trigger
+               shows the current language, the list each language by its own
+               name. Escape or a click outside closes it. -->
+          <div ref="langRoot" class="lang-select" @keydown.esc="closeDeskLang(true)">
             <button
+              ref="langTrigger"
               type="button"
-              class="site-nav__link site-nav__lang"
-              :aria-expanded="isLangOpen"
-              @click="isLangOpen = !isLangOpen"
+              class="lang-select__trigger"
+              aria-haspopup="true"
+              aria-controls="lang-select-list"
+              :aria-expanded="isDeskLangOpen"
+              :aria-label="`${$t('a11y.language')}: ${LANGUAGE_NAMES[lang]}`"
+              @click="isDeskLangOpen = !isDeskLangOpen"
             >
-              <span>{{ lang }}</span>
-              <svg
-                class="w-2.5 h-2.5 transition-transform duration-200"
-                :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
+              <span>{{ lang.toUpperCase() }}</span>
+              <svg class="lang-select__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>
             </button>
 
-            <transition
-              enter-active-class="transition-all duration-200 ease-out"
-              enter-from-class="opacity-0 translate-y-2 scale-95"
-              enter-to-class="opacity-100 translate-y-0 scale-100"
-              leave-active-class="transition-all duration-150 ease-in"
-              leave-from-class="opacity-100 translate-y-0 scale-100"
-              leave-to-class="opacity-0 translate-y-2 scale-95"
-            >
-              <div
-                v-show="isLangOpen"
-                class="absolute left-1/2 -translate-x-1/2 top-[35px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
-              >
+            <Transition name="lang-select">
+              <div v-show="isDeskLangOpen" id="lang-select-list" class="lang-select__content">
                 <!-- Links, not buttons: crawlers follow them to the other languages. -->
                 <a
                   v-for="code in LANGS"
@@ -69,12 +57,15 @@
                   :href="langHref(code)"
                   :hreflang="code"
                   :lang="code"
-                  class="site-nav__link block w-full py-2 text-center"
+                  class="lang-select__item"
                   :aria-current="code === lang ? 'true' : undefined"
                   @click="onLangLink($event, code)"
-                >{{ code }}</a>
+                >
+                  <span>{{ LANGUAGE_NAMES[code] }}</span>
+                  <svg v-if="code === lang" class="lang-select__check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5" /></svg>
+                </a>
               </div>
-            </transition>
+            </Transition>
           </div>
         </nav>
 
@@ -284,9 +275,9 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onBeforeUnmount, nextTick, computed, ref } from "vue";
+import { watch, onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
-import { SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
+import { LANGUAGE_NAMES, SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
 import { serviceBySlug, servicePath } from "~/utils/servicePages";
 
 type AppLocale = SiteLocale;
@@ -331,8 +322,23 @@ const lang = computed<AppLocale>({
   },
 });
 
+// The desktop language select; the phone menu has its own list (isLangOpen).
+const isDeskLangOpen = ref(false);
+const langRoot = ref<HTMLElement | null>(null);
+const langTrigger = ref<HTMLButtonElement | null>(null);
+const closeDeskLang = (refocus = false) => {
+  if (!isDeskLangOpen.value) return;
+  isDeskLangOpen.value = false;
+  if (refocus) langTrigger.value?.focus();
+};
+const onDocPointerDown = (event: PointerEvent) => {
+  if (isDeskLangOpen.value && !langRoot.value?.contains(event.target as Node)) closeDeskLang();
+};
+onMounted(() => document.addEventListener("pointerdown", onDocPointerDown));
+
 const pickLang = async (val: AppLocale) => {
   isLangOpen.value = false;
+  isDeskLangOpen.value = false;
   await nextTick();
   lang.value = val;
 };
@@ -461,15 +467,16 @@ const removeAfterEach = router.afterEach(() => {
 });
 
 onBeforeUnmount(() => {
+  document.removeEventListener("pointerdown", onDocPointerDown);
   unlockBodyScroll();
   removeAfterEach?.();
 });
 </script>
 
 <style>
-/* Header type, on the site's type scale: the links, the language switcher
-   and the OneGuarantee pill are the caption step in semibold, the wordmark
-   the h5 step (it fits the 45px bar). The steps keep one size on every
+/* Header type, on the site's type scale: the links, the language select
+   and the OneGuarantee pill are the small step (15px) in semibold, the
+   wordmark the h5 step, in a 56px bar. The steps keep one size on every
    desktop, so the bar keeps one size too. */
 .site-logo {
   flex-shrink: 0;
@@ -488,7 +495,7 @@ onBeforeUnmount(() => {
 }
 
 .site-nav {
-  gap: 15px;
+  gap: 22px;
 }
 
 .site-nav__link {
@@ -500,10 +507,10 @@ onBeforeUnmount(() => {
   background: none;
   color: #efefef;
   font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
+  font-size: var(--type-small-size);
   font-weight: 600;
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
@@ -518,18 +525,17 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Grown with its text (10.5px → 13px), same proportions as before. */
-  width: 136px;
-  height: 28px;
+  height: 36px;
+  padding: 0 18px;
   border: 1px solid rgb(64 140 52 / 0.85);
   border-radius: 40px;
   background: #000;
   color: #fff;
   font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
+  font-size: var(--type-small-size);
   font-weight: 600;
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   white-space: nowrap;
   text-decoration: none;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
@@ -543,6 +549,118 @@ onBeforeUnmount(() => {
 
 .site-guarantee__one {
   color: #36c536;
+}
+
+/* The language select, in the shadcn style (dark theme): an outlined
+   trigger with a chevron, and a popover list with a check on the current
+   language. */
+.lang-select {
+  position: relative;
+}
+
+.lang-select__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 8px 0 11px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.04);
+  color: #fafafa;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--type-small-ls);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-select__trigger:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.lang-select__trigger[aria-expanded="true"],
+.lang-select__trigger:focus-visible {
+  border-color: rgb(3 203 0 / 0.7);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(3 203 0 / 0.2);
+}
+
+.lang-select__chevron,
+.lang-select__check {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.lang-select__chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+
+.lang-select__trigger[aria-expanded="true"] .lang-select__chevron {
+  transform: rotate(180deg);
+}
+
+.lang-select__content {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 10;
+  min-width: 10rem;
+  padding: 4px;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  background: #09090b;
+  box-shadow: 0 10px 38px -10px rgb(0 0 0 / 0.65), 0 10px 20px -15px rgb(0 0 0 / 0.45);
+}
+
+.lang-select__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 8px;
+  border-radius: 5px;
+  color: #fafafa;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-small-size);
+  font-weight: 400;
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.lang-select__item:hover,
+.lang-select__item:focus-visible {
+  background: #27272a;
+}
+
+.lang-select__check {
+  width: 16px;
+  height: 16px;
+  color: #03cb00;
+}
+
+.lang-select-enter-active,
+.lang-select-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.lang-select-enter-from,
+.lang-select-leave-to {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.97);
 }
 
 /* Phones and tablets: the 76px bar takes the wordmark a step up (h3, 26px on
@@ -593,11 +711,11 @@ onBeforeUnmount(() => {
 /* Narrow desktops: the items close up. */
 @media (min-width: 950px) and (max-width: 1099px) {
   .site-header .site-nav {
-    gap: 11px;
+    gap: 14px;
   }
 }
 
-/* No 1920px+ block any more: the type steps stop growing at 1920px, so the
-   760px bar (sized for the longest labels, Uzbek) stays as it is on wider
-   monitors instead of spreading its items apart. */
+/* No 1920px+ block: the type steps stop growing at 1920px, so the 900px bar
+   (sized for the longest labels, Uzbek) stays as it is on wider monitors
+   instead of spreading its items apart. */
 </style>

@@ -20,7 +20,8 @@
   padding: 150px 40px 120px;
 }
 
-.service-page a {
+/* Text links take the page's colour (the buttons are .ob-button). */
+.service-page a:not(.ob-button) {
   color: inherit;
 }
 
@@ -132,34 +133,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* The site's primary button: the green gradient picture that slides on hover. */
-.service-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--button-w);
-  height: var(--button-h);
-  padding: 0 var(--button-pad);
-  border-radius: 32px;
-  background: url("/home/Component3.png") 100% 50% / 120%;
-  color: #fff;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: background-position 1s cubic-bezier(0.4, 0, 0.2, 1), background-size 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.service-button:hover,
-.service-button:focus-visible {
-  background-position: 0% 50%;
-  background-size: 140%;
-  box-shadow: 0 0 30px rgb(3 203 0 / 0.9);
 }
 
 .service-section {
@@ -545,12 +518,6 @@
 
   .service-hero__actions {
     margin-top: 32px;
-  }
-
-  .service-button {
-    min-width: 0;
-    width: 100%;
-    max-width: 360px;
   }
 
   .service-section {

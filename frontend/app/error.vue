@@ -24,7 +24,7 @@ const goHome = () => clearError({ redirect: localePath("/") });
     <p class="error-page__text">
       {{ notFound ? t("errorPage.notFoundText") : t("errorPage.text") }}
     </p>
-    <button type="button" class="error-page__button" @click="goHome">
+    <button type="button" class="error-page__button ob-button" @click="goHome">
       {{ t("errorPage.home") }}
     </button>
   </main>
@@ -71,29 +71,8 @@ const goHome = () => clearError({ redirect: localePath("/") });
   letter-spacing: var(--type-body-ls);
 }
 
+/* The shared .ob-button under the text. */
 .error-page__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: var(--button-w);
-  height: var(--button-h);
   margin-top: 1.5rem;
-  padding: 0.9rem 2.25rem;
-  border: 2px solid #03cb00;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  font-weight: 600;
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
-  box-shadow: 0 0 20px rgb(3 203 0 / 0.6);
-  transition: box-shadow 0.3s ease;
-}
-
-.error-page__button:hover {
-  box-shadow: 0 0 30px rgb(3 203 0 / 0.9);
 }
 </style>

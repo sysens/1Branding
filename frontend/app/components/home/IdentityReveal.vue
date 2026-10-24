@@ -201,20 +201,20 @@ onBeforeUnmount(() => {
   justify-content: center;
 }
 
-/* Running text (~500 characters): the lead step, left-aligned in a column of the text measure
-   that stays centred under the heading. */
+/* Running text (~500 characters): the intro step, left-aligned in a column
+   of its measure (1500 design px) that stays centred under the heading. */
 .identity__paragraph {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  width: min(100%, var(--type-measure));
+  width: min(100%, var(--type-measure-intro));
   margin: calc(55 * var(--u)) 0 0;
   color: #646464;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
+  font-family: var(--type-intro-family);
+  font-size: var(--type-intro-size);
   font-weight: 400;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
+  line-height: var(--type-intro-lh);
+  letter-spacing: var(--type-intro-ls);
 }
 
 /* A word is its own box (inline-flex) so it can rise into place; it keeps its
@@ -225,9 +225,9 @@ onBeforeUnmount(() => {
   white-space: pre;
 }
 
-/* The brand green darkened to pass 4.5:1 on the white background. */
+/* The brand green of the design. */
 .identity__word--accent {
-  color: #0a8f2e;
+  color: #0ccc3c;
 }
 
 .identity__word--strong {

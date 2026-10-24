@@ -173,21 +173,21 @@ onBeforeUnmount(() => {
   color: transparent;
 }
 
-/* Running text: the lead step, left-aligned in a column of the text measure, that stays
-   centred under the title (also on phones, where it now takes the full width
-   instead of half of it). */
+/* Running text: the intro step, as the landing's other section texts,
+   left-aligned in a column of its measure that stays centred under the title
+   (also on phones, where it takes the full width). */
 .social__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: clamp(1rem, calc(1.6 * var(--vw)), 2rem);
-  max-width: calc(var(--type-measure) + 2.5rem);
+  max-width: calc(var(--type-measure-intro) + 2.5rem);
   margin: clamp(3rem, calc(6 * var(--vw)), 7.5rem) auto 0;
   padding-inline: 1.25rem;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
+  font-family: var(--type-intro-family);
+  font-size: var(--type-intro-size);
+  line-height: var(--type-intro-lh);
+  letter-spacing: var(--type-intro-ls);
   text-align: left;
 }
 
@@ -206,7 +206,7 @@ onBeforeUnmount(() => {
 /* The closing line is narrower than the paragraph above it (0.7 of it, as in
    the design). */
 .social__copy .social__lead {
-  max-width: var(--type-measure-narrow);
+  max-width: 28em;
 }
 
 /* The wall: five columns, the middle one centred, the outer two cut by the

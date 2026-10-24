@@ -34,10 +34,7 @@ const localePath = useLocalePath();
       </div>
     </div>
 
-    <NuxtLink v-rise :to="localePath('/projects')" class="fresh__more">
-      <span class="fresh__blob" aria-hidden="true" />
-      <span class="fresh__more-label">{{ t("home.fresh.more") }}</span>
-    </NuxtLink>
+    <NuxtLink v-rise :to="localePath('/projects')" class="fresh__more ob-button">{{ t("home.fresh.more") }}</NuxtLink>
   </section>
 </template>
 
@@ -148,62 +145,9 @@ const localePath = useLocalePath();
   to { transform: translate3d(0, 0, 0); }
 }
 
-/* "More": a green pill with a dark blob drifting through it. */
+/* "All projects": the shared .ob-button under the rows. */
 .fresh__more {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
   margin-top: calc(84 * var(--u));
-  overflow: hidden;
-  isolation: isolate;
-  border-radius: 999px;
-  background: linear-gradient(100deg, #26b830 0%, #3fe24a 45%, #63ff5c 100%);
-  /* Dark text on the bright green (about 9:1; the pale #eaffea was 1.5:1). */
-  color: #042a0c;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.fresh__blob {
-  position: absolute;
-  inset: -40% -10%;
-  z-index: -1;
-  background:
-    radial-gradient(closest-side at 28% 60%, rgb(4 40 12 / 0.9), rgb(4 40 12 / 0) 100%),
-    radial-gradient(closest-side at 62% 35%, rgb(20 120 30 / 0.7), rgb(20 120 30 / 0) 100%);
-  filter: blur(calc(6 * var(--u)));
-  animation: fresh-blob 6s ease-in-out infinite alternate;
-}
-
-@keyframes fresh-blob {
-  0% { transform: translate3d(-18%, 4%, 0) scale(0.9) rotate(-8deg); }
-  50% { transform: translate3d(8%, -6%, 0) scale(1.1) rotate(6deg); }
-  100% { transform: translate3d(22%, 6%, 0) scale(0.95) rotate(-4deg); }
-}
-
-.fresh__more-label {
-  position: relative;
-  text-shadow: 0 0 calc(8 * var(--u)) rgb(0 0 0 / 0.25);
-}
-
-.fresh__more:hover,
-.fresh__more:focus-visible {
-  transform: scale(1.05);
-  box-shadow: 0 0 calc(40 * var(--u)) rgb(63 226 74 / 0.45);
-}
-
-.fresh__more:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
 }
 
 @media (max-width: 767px) {
@@ -233,8 +177,7 @@ const localePath = useLocalePath();
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fresh__track,
-  .fresh__blob {
+  .fresh__track {
     animation: none;
   }
 }

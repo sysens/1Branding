@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
                 >
                 <button
                   type="button"
-                  class="type-lead font-semibold capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap text-[#FFFFFF] rounded-[32px] text-center align-middle bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
+                  class="ob-button"
                   @click="onPickFile"
                 >
                   {{ $t("common.addFile") }}
@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
           type="submit"
           form="contact-request-form"
           :disabled="sending"
-          class="form-send will-change-transform type-lead font-semibold capitalize w-[var(--button-w)] h-[var(--button-h)] whitespace-nowrap mb-[6px] text-[#FFFFFF] rounded-[32px] text-center align-middle disabled:opacity-60 disabled:cursor-not-allowed bg-[url('/home/Component3.png')] bg-[size:120%] bg-[position:100%_50%] transition-[background-position,background-size,box-shadow] duration-1000 ease-[cubic-bezier(.4,0,.2,1)] hover:bg-[size:140%] hover:bg-[position:0%_50%] hover:shadow-[0_0_30px_rgba(3,203,0,0.9)] flex items-center justify-center"
+          class="form-send will-change-transform ob-button mb-[6px]"
         >
           {{ sending ? $t("common.sending") : $t("common.send") }}
         </button>

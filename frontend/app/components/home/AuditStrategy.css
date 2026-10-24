@@ -398,46 +398,10 @@
   text-wrap: pretty;
 }
 
+/* The shared .ob-button under the text. */
 .audit__button {
-  display: inline-flex;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4em;
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
   margin-top: calc(37 * var(--u));
-  border-radius: 999px;
-  background: var(--green);
-  color: #052b12;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.audit__button svg {
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.4;
-}
-
-.audit__button:hover,
-.audit__button:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 0 calc(40 * var(--u)) rgb(0 245 98 / 0.45);
-}
-
-.audit__button:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
 }
 
 .audit__track {

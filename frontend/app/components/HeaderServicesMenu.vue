@@ -127,12 +127,12 @@ onBeforeUnmount(() => clearTimeout(closer));
   border: 0;
   background: none;
   color: #efefef;
-  /* The header's link type: the caption step, semibold (as in Header.vue). */
+  /* The header's link type: the small step, semibold (as in Header.vue). */
   font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
+  font-size: var(--type-small-size);
   font-weight: 600;
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -143,12 +143,12 @@ onBeforeUnmount(() => clearTimeout(closer));
 }
 
 /* Slidor's rolling label: a second copy slides up from below on hover. The
-   window is one line of the caption step, so descenders (у in Услуги) show. */
+   window is one line of the small step, so descenders (у in Услуги) show. */
 .svc__label {
   position: relative;
   display: grid;
-  height: calc(var(--type-caption-lh) * 1em);
-  line-height: var(--type-caption-lh);
+  height: calc(var(--type-small-lh) * 1em);
+  line-height: var(--type-small-lh);
   overflow: hidden;
 }
 
@@ -212,19 +212,24 @@ onBeforeUnmount(() => clearTimeout(closer));
   opacity: 0;
 }
 
-/* The panel is the full width of the screen, flush under the header. */
+/* The panel is the full width of the screen, flush under the header. As on
+   slidor, its sizes are rem, not screen units: the list sets its height
+   (six rows of two) and the picture stretches to it, so a wide or tall
+   screen gets the same compact panel instead of a taller one. Past the
+   1920px frame the content stays in the frame. */
 .svc__panel {
   position: fixed;
   z-index: 1001;
-  top: calc(30px + var(--header-h, 45px) + 14px);
+  top: calc(30px + var(--header-h, 56px) + 14px);
   left: 0;
   display: grid;
-  grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
-  gap: 3.2vw;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 5fr);
+  align-items: stretch;
+  gap: 2.5rem;
   width: 100vw;
-  max-height: calc(100vh - 30px - var(--header-h, 45px) - 14px);
+  max-height: calc(100vh - 30px - var(--header-h, 56px) - 14px);
   overflow: auto;
-  padding: clamp(24px, 2.2vw, 44px) clamp(24px, 2.4vw, 48px);
+  padding: 2rem calc(2.5rem + var(--frame-side));
   border-top: 1px solid rgb(255 255 255 / 0.08);
   border-bottom: 1px solid rgb(3 203 0 / 0.4);
   background: #000;
@@ -251,7 +256,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 
 .svc__picture {
   position: relative;
-  min-height: clamp(360px, 33vw, 700px);
+  min-height: 20rem;
   overflow: hidden;
   border-radius: 8px;
   background: #111;
@@ -303,8 +308,8 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__item {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  padding: clamp(18px, 1.5vw, 30px);
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
   border-radius: 8px;
   color: #fff;
   text-decoration: none;
@@ -337,7 +342,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__text {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.4rem;
 }
 
 .svc__name {
@@ -354,13 +359,27 @@ onBeforeUnmount(() => clearTimeout(closer));
   letter-spacing: var(--type-caption-ls);
 }
 
-@media (max-width: 1200px) {
+/* Narrower desktops: the picture gives the list room, then goes; the list
+   keeps its two columns. */
+@media (max-width: 1280px) {
   .svc__panel {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-inline: 1.5rem;
   }
 
   .svc__item {
-    padding: 14px;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .svc__panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .svc__picture {
+    display: none;
   }
 }
 

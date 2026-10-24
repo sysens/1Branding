@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
     </div>
     <!-- No presentations page yet: the button leads to the projects. -->
     <div class="pgallery__cta">
-      <NuxtLink v-rise :to="localePath('/projects')" class="pgallery__button">{{ t("home.presentations.cta") }}</NuxtLink>
+      <NuxtLink v-rise :to="localePath('/projects')" class="ob-button">{{ t("home.presentations.cta") }}</NuxtLink>
       <p v-rise class="pgallery__more">{{ t("home.presentations.more") }}</p>
     </div>
     <div class="pgallery__rule" aria-hidden="true" />
@@ -139,17 +139,18 @@ onBeforeUnmount(() => {
   color: transparent;
 }
 
-/* Running text (~400 characters): the lead step, left-aligned in a column of the text measure
-   that stays centred under the title. */
+/* Running text (~400 characters): the intro step, as the landing's other
+   section texts, left-aligned in a column of its measure that stays centred
+   under the title. */
 .pgallery__text {
-  max-width: min(100%, var(--type-measure));
+  max-width: min(100%, var(--type-measure-intro));
   margin: 0;
   color: #b8b8b8;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
+  font-family: var(--type-intro-family);
+  font-size: var(--type-intro-size);
   font-weight: 400;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
+  line-height: var(--type-intro-lh);
+  letter-spacing: var(--type-intro-ls);
   text-align: left;
   text-wrap: pretty;
 }
@@ -224,42 +225,6 @@ onBeforeUnmount(() => {
   margin-top: clamp(2.75rem, 4.8vw, 6rem);
   padding-inline: 1.25rem;
   text-align: center;
-}
-
-.pgallery__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* The landing's shared button size (--button-*). */
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
-  border-radius: 999px;
-  background:
-    radial-gradient(ellipse 70% 60% at 70% 10%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 70%),
-    linear-gradient(100deg, #00b52b 0%, #00e536 45%, #00f83c 70%, #00cf31 100%);
-  box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35);
-  color: #062b10;
-  /* Button label: the lead step at the button weight (600). */
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.pgallery__button:hover,
-.pgallery__button:focus-visible {
-  transform: scale(1.04);
-  box-shadow: inset 0 -0.08em 0.18em rgb(0 60 15 / 0.35), 0 0 2.2rem rgb(0 240 58 / 0.45);
-}
-
-.pgallery__button:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
 }
 
 .pgallery__more {

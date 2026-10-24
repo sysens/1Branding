@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
       <div ref="box" class="vision__numeral" :class="{ 'is-ready': ready }" role="img" aria-label="A chrome and black numeral one">
         <canvas ref="canvas" class="vision__canvas" aria-hidden="true" />
       </div>
-      <NuxtLink v-rise :to="localePath('/about')" class="vision__button">{{ t("home.vision.cta") }}</NuxtLink>
+      <NuxtLink v-rise :to="localePath('/about')" class="vision__button ob-button ob-button--dark">{{ t("home.vision.cta") }}</NuxtLink>
     </div>
   </section>
 </template>
@@ -192,40 +192,6 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
-.vision__button {
-  position: absolute;
-  left: calc(798 * var(--u));
-  top: calc(996 * var(--u));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--button-w);
-  height: var(--button-h);
-  padding-inline: var(--button-pad);
-  white-space: nowrap;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  font-weight: 600;
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.vision__button:hover,
-.vision__button:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgb(0 0 0 / 0.25);
-}
-
-.vision__button:focus-visible {
-  outline: 2px solid #00c936;
-  outline-offset: 4px;
-}
-
 /* The Russian and Uzbek lines are longer than "Every solution.": where the
    frame gets narrow for them (tablets, and wide short screens, where the
    frame follows the height) they take the h1 step to stay clear of the
@@ -237,6 +203,13 @@ onBeforeUnmount(() => {
     font-size: var(--type-h1-size);
     letter-spacing: var(--type-h1-ls);
   }
+}
+
+/* The shared .ob-button, placed on the frame. */
+.vision__button {
+  position: absolute;
+  left: calc(798 * var(--u));
+  top: calc(996 * var(--u));
 }
 
 /* Phones (and screens too short for the frame, such as a phone held
@@ -258,8 +231,7 @@ onBeforeUnmount(() => {
   .vision__title,
   .vision__label,
   .vision__year,
-  .vision__numeral,
-  .vision__button {
+  .vision__numeral {
     position: static;
   }
 
@@ -272,6 +244,15 @@ onBeforeUnmount(() => {
     white-space: normal;
   }
 
+  /* Back in the flow (relative: the button's blob is placed in it). */
+  .vision__button {
+    position: relative;
+    left: auto;
+    top: auto;
+    align-self: center;
+    margin-top: 1.5rem;
+  }
+
   .vision__year {
     margin-top: 0.4rem;
   }
@@ -282,11 +263,6 @@ onBeforeUnmount(() => {
     height: auto;
     aspect-ratio: 800 / 960;
     margin-top: 0.5rem;
-  }
-
-  .vision__button {
-    align-self: center;
-    margin-top: 1.5rem;
   }
 }
 

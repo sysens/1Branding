@@ -346,7 +346,7 @@ const loading = computed(() => pending.value || !data.value);
         <h2 id="project-next-title">{{ $t("project.more") }}</h2>
         <p>
           <NuxtLink :to="localePath('/services')">{{ $t("project.services") }}</NuxtLink>
-          <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="project-next__cta">{{ $t("project.contact") }}</NuxtLink>
+          <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="project-next__cta ob-button">{{ $t("project.contact") }}</NuxtLink>
         </p>
       </section>
 
@@ -383,7 +383,8 @@ const loading = computed(() => pending.value || !data.value);
   align-items: center;
 }
 
-.project-next a {
+/* The text links (the call to action is the shared .ob-button). */
+.project-next a:not(.ob-button) {
   color: #fff;
   font-family: var(--app-font-sans);
   font-size: var(--type-body-size);
@@ -391,13 +392,5 @@ const loading = computed(() => pending.value || !data.value);
   letter-spacing: var(--type-body-ls);
   text-decoration: underline;
   text-underline-offset: 0.2em;
-}
-
-.project-next a.project-next__cta {
-  padding: 16px 32px;
-  border-radius: 32px;
-  background: url("/home/Component3.png") 100% 50% / 120%;
-  font-weight: 600;
-  text-decoration: none;
 }
 </style>
