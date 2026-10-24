@@ -42,8 +42,8 @@ if (!copy.value) {
 const setI18nParams = useSetI18nParams();
 setI18nParams(Object.fromEntries(SITE_LOCALES.map((code) => [code, { slug: service.slugs[code] }])));
 
-type PriceCategory = { title?: string | null; pricing?: Array<{ title?: string | null; price?: string | null } | null> | null };
-const { data: prices } = await useCmsQuery<{ priceCategories?: PriceCategory[] | null }>(
+type PriceListCategory = { title?: string | null; pricing?: Array<{ title?: string | null; price?: string | null } | null> | null };
+const { data: prices } = await useCmsQuery<{ priceCategories?: PriceListCategory[] | null }>(
   "service-prices",
   `query ServicePrices { priceCategories(locale: "en") { title pricing { title price } } }`,
 );

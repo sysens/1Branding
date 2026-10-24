@@ -231,7 +231,8 @@ const go = (step: 1 | -1) => {
   box-shadow: 0 calc(10 * var(--u)) calc(30 * var(--u)) rgb(0 0 0 / 0.25);
 }
 
-/* Phones: the frame takes the width; the arrows sit under it. */
+/* Phones: the frame takes the width and the arrows sit inside the picture,
+   at its left and right edges: round dark buttons that read on any image. */
 @media (max-width: 767px) {
   .compare-section {
     padding: 4rem 0 4.5rem;
@@ -242,17 +243,14 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__stage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem 3rem;
+    position: relative;
+    display: block;
     width: 100%;
     margin-top: 1.25rem;
     padding-inline: 1.25rem;
   }
 
   .compare-section__frame {
-    grid-column: 1 / -1;
-    grid-row: 1;
     width: 100%;
     border-radius: 1.1rem;
   }
@@ -262,13 +260,41 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__arrow {
-    justify-self: end;
-    width: 2.2rem;
-    height: 2.8rem;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: calc(1.25rem + 0.625rem);
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.8rem 0.95rem;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.45);
+    color: #fff;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    transform: translateY(-50%);
   }
 
   .compare-section__arrow--next {
-    justify-self: start;
+    right: calc(1.25rem + 0.625rem);
+    left: auto;
+  }
+
+  .compare-section__arrow svg {
+    stroke-width: 9;
+  }
+
+  .compare-section__arrow:hover,
+  .compare-section__arrow:focus-visible,
+  .compare-section__arrow--next:hover,
+  .compare-section__arrow--next:focus-visible {
+    background: rgb(0 0 0 / 0.65);
+    color: #fff;
+    transform: translateY(-50%);
+  }
+
+  .compare-section__arrow:focus-visible {
+    outline-offset: 2px;
   }
 
   .compare-section__button {

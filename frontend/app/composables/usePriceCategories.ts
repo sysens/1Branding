@@ -8,8 +8,8 @@ import { toSiteLocale } from "~/utils/locales";
  * names and texts of i18n pricing.categories.<category>, keeping the package
  * names and prices.
  */
-export type PricingItem = { title: string; price: string; priceText: string; description: string };
-export type PriceCategory = { title: string; pricing: PricingItem[] };
+export type CmsPricingItem = { title: string; price: string; priceText: string; description: string };
+export type CmsPriceCategory = { title: string; pricing: CmsPricingItem[] };
 
 const QUERY = `
   query PriceCategories($locale: I18NLocaleCode!, $withFallback: Boolean!) {
@@ -25,8 +25,8 @@ const QUERY = `
 `;
 
 type PriceCategoriesResponse = {
-  priceCategories?: PriceCategory[];
-  fallbackPriceCategories?: PriceCategory[];
+  priceCategories?: CmsPriceCategory[];
+  fallbackPriceCategories?: CmsPriceCategory[];
 };
 
 /** "$5900.00" -> 5900 (NaN when there is no number). */
@@ -38,23 +38,23 @@ export const usePriceCategories = async () => {
   const { data } = await useCmsQuery<PriceCategoriesResponse>("price-categories", QUERY);
 
   const own = computed(() => (data.value?.data?.priceCategories || []).length > 0);
-  const categories = computed<PriceCategory[]>(() => {
+  const categories = computed<CmsPriceCategory[]>(() => {
     const current = data.value?.data?.priceCategories || [];
     return current.length ? current : data.value?.data?.fallbackPriceCategories || [];
   });
 
-  const key = (category: PriceCategory) => `pricing.categories.${category.title?.trim().toLowerCase()}`;
-  const localCopy = (category: PriceCategory, field: "title" | "description") =>
+  const key = (category: CmsPriceCategory) => `pricing.categories.${category.title?.trim().toLowerCase()}`;
+  const localCopy = (category: CmsPriceCategory, field: "title" | "description") =>
     !own.value && te(`${key(category)}.${field}`) ? t(`${key(category)}.${field}`) : "";
 
-  const categoryTitle = (category: PriceCategory) => localCopy(category, "title") || category.title;
-  const categoryDescription = (category: PriceCategory) =>
+  const categoryTitle = (category: CmsPriceCategory) => localCopy(category, "title") || category.title;
+  const categoryDescription = (category: CmsPriceCategory) =>
     localCopy(category, "description") ||
     category.pricing?.[0]?.description?.trim() ||
     category.pricing?.[0]?.priceText?.trim() ||
     "";
   // The service page each category belongs to (Branding -> /services/branding).
-  const categoryPage = (category: PriceCategory) => {
+  const categoryPage = (category: CmsPriceCategory) => {
     const page = SERVICE_PAGES.find((item) => item.priceCategory?.toLowerCase() === category.title?.trim().toLowerCase());
     return page ? { path: servicePath(page.key, toSiteLocale(locale.value)), name: t(`servicePages.${page.key}.name`), perSlide: page.priceUnit === "slide" } : null;
   };

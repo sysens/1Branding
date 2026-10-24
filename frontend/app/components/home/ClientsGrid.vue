@@ -7,19 +7,36 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 // the table. The cells fade in as a wave when the table first comes into view.
 // The green light behind it floats (each glow drifts slowly on its own loop)
 // and lags the scroll a little, at its own depth, for a gentle parallax.
-// The names are the brands of the partner logo strip (public/home/partners,
-// from the owner's "Logos White" set); add a name here with its logo there.
+// The names: the design's client list together with the brands of the
+// partner logo strip (public/home/partners, the owner's "Logos White" set),
+// in alphabetical order.
 
 const CLIENTS = [
-  "202 Burger", "Anvar Usta", "Apex Pizza", "Art-Anor", "Asakabank", "Barberra",
-  "Bliss", "Brono 360", "Burger King", "Cyber Nat", "Deco 360", "Dodo Kids",
-  "Gloss Maxx", "Grechno", "Hayaati", "Lemon Art", "Luqmam", "Marinno",
-  "Mayda Manti", "Nescafé", "Nivea", "OMAF", "Overspray", "OzPermit",
-  "Perfect Candy", "Poyqadam", "Raviosta", "Red Bull", "Starbucks", "Street 77",
+  "202 Burger", "AccorHotels", "Acer", "Air France", "Amazon Web Services", "Amundi",
+  "Anvar Usta", "Apex Pizza", "Arianespace", "Art-Anor", "Asakabank", "AXA",
+  "Barberra", "BearingPoint", "Biomerieux", "Bjorg", "Bliss", "BMW",
+  "BNP Paribas", "Bolloré", "Boston Consulting Group", "Bouygues Immobilier", "Brono 360", "Burger King",
+  "Cartier", "Caudalie", "Chanel", "Christian Dior", "Clarins", "Club Med",
+  "CMA CGM", "Coca-Cola", "Criteo", "Crédit agricole", "Cyber Nat", "Danone",
+  "Dassault", "Deco 360", "Disney", "Dodo Kids", "Dom Pérignon", "EDF",
+  "Eiffage", "Faurecia", "Ferrari", "FFR", "FFT", "FIFA",
+  "Fnac Darty", "France TV", "Galeries Lafayette", "Generali", "Gloss Maxx", "Google",
+  "Grechno", "Groupe Lactalis", "Groupe Lagardere", "Groupe SEB", "Havas", "Hayaati",
+  "Heineken", "HyperloopTT", "IKEA", "Interparfums", "Kenzo", "L'Occitane",
+  "L'Oréal", "La Poste", "Lacoste", "Lemon Art", "LinkedIn", "Luqmam",
+  "LVMH", "Marinno", "Marriott", "Mayda Manti", "Michelin", "Microsoft",
+  "Moët Hennessy", "Murex", "N26", "Natixis", "Nescafé", "Nespresso",
+  "Nestlé", "Nivea", "OMAF", "Overspray", "OVH", "OzPermit",
+  "Paris Saint-Germain", "Patek Philippe", "Perfect Candy", "Pernod Ricard", "Poyqadam", "Publicis Groupe",
+  "Puma", "PwC", "Rakuten", "RATP", "Raviosta", "Red Bull",
+  "Renault", "Rolex", "Rothschild & Co", "Saint-Gobain", "SeLoger.com", "Sephora",
+  "SNCF", "Sodexo", "Sopexa", "Sopra Steria", "Starbucks", "Street 77",
+  "Tag Heuer", "TCL", "Thalès", "The Fork", "Total Energies", "Toyota",
+  "Ubisoft", "Unibail Rodamco", "Valeo", "Veepee", "Vinci", "Warner Media",
   "WOK",
 ];
 // Lit from the start, as in the design.
-const PRELIT = ["Apex Pizza", "Asakabank", "Burger King", "Nescafé", "Nivea", "Red Bull", "Starbucks"];
+const PRELIT = ["AccorHotels", "Air France", "Apex Pizza", "Asakabank", "BMW", "Burger King", "Ferrari", "Google", "L'Oréal", "Nescafé", "Nespresso", "Nivea", "Puma", "Red Bull", "Sephora", "Starbucks", "Total Energies"];
 const COLUMNS = 6;
 const PHONE_PREVIEW = 24;
 
