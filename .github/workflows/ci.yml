@@ -33,6 +33,10 @@ jobs:
         run: bun run typecheck
       - name: Unit tests
         run: bun run test
+      # Every language complete: same keys and placeholders as English, no
+      # string left untranslated (scripts/check-i18n.mjs).
+      - name: Languages
+        run: node scripts/check-i18n.mjs
       - name: Build
         run: bun run build
         env:

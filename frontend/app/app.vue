@@ -9,13 +9,18 @@ import {
 } from "vue";
 import GradualBlur from "./components/GradualBlur.vue";
 import BrandCursor from "./components/ui/BrandCursor.vue";
-import { organizationGraph, withSiteName, type SeoLocale } from "~/utils/seo";
+import { organizationGraph, withSiteName } from "~/utils/seo";
+import { COMPANY, companyProfiles } from "~/utils/company";
+import { LANGUAGE_TAGS, toSiteLocale } from "~/utils/locales";
+import { SERVICE_PAGES, servicePath } from "~/utils/servicePages";
 
 const route = useRoute();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const runtimeConfig = useRuntimeConfig();
 const siteOrigin = useSiteOrigin();
-const seoLocale = computed<SeoLocale>(() => (locale.value === "en" ? "en" : "ru"));
+const siteLocale = computed(() => toSiteLocale(locale.value));
+// Shared with the footer (same query key), so it costs no extra request.
+const { socialMedia } = await useFooterSocials();
 
 const listFromEnv = (value: unknown) => String(value || "")
   .split(",")
@@ -25,24 +30,42 @@ const listFromEnv = (value: unknown) => String(value || "")
 // Organization + WebSite graph on every page; page-level JSON-LD references it by @id.
 const organizationJsonLd = computed(() => JSON.stringify({
   "@context": "https://schema.org",
-  "@graph": organizationGraph(siteOrigin, seoLocale.value, {
-    telephone: String(runtimeConfig.public.orgPhone || "").trim(),
+  "@graph": organizationGraph(siteOrigin, siteLocale.value, {
+    telephone: String(runtimeConfig.public.orgPhone || "").trim() || COMPANY.phone.e164,
     email: String(runtimeConfig.public.orgEmail || "").trim(),
-    sameAs: listFromEnv(runtimeConfig.public.orgSameAs),
+    sameAs: [...new Set([
+      ...companyProfiles(socialMedia.value).map((profile) => profile.url),
+      ...listFromEnv(runtimeConfig.public.orgSameAs),
+    ])],
+    services: SERVICE_PAGES.map((page) => ({
+      name: t(`servicePages.${page.key}.name`),
+      url: `${siteOrigin}${servicePath(page.key, siteLocale.value)}`,
+    })),
   }),
 }).replace(/</g, "\\u003c"));
 
+// Ownership checks for Search Console, Yandex Webmaster and Bing Webmaster,
+// set from the environment once the owner has the codes.
+const verificationMeta = [
+  ["google-site-verification", runtimeConfig.public.googleSiteVerification],
+  ["yandex-verification", runtimeConfig.public.yandexVerification],
+  ["msvalidate.01", runtimeConfig.public.bingSiteVerification],
+]
+  .map(([name, content]) => ({ name: String(name), content: String(content || "").trim() }))
+  .filter((meta) => meta.content);
+
 useHead({
   titleTemplate: (titleChunk) => withSiteName(titleChunk || ""),
-  htmlAttrs: { lang: () => seoLocale.value, dir: "ltr" },
+  htmlAttrs: { lang: () => LANGUAGE_TAGS[siteLocale.value], dir: "ltr" },
 });
-// Crawlers read it from the server HTML; no need to rebuild it while hydrating.
+// Crawlers read these from the server HTML; no need to rebuild them while hydrating.
 if (import.meta.server) {
   useServerHead({
+    meta: verificationMeta,
     script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
   });
 }
-const showPageBlur = computed(() => !/^\/(?:en|ru)?\/?$/.test(route.path) && !route.path.endsWith("/projects"));
+const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !route.path.endsWith("/projects"));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/contact")
 );

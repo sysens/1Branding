@@ -1,0 +1,48 @@
+{
+  "title": "Taqdimot dizayni Toshkentda: slayd narxi",
+  "description": "Toshkentda taqdimot dizayni: pitch-deklar, kompaniya va mahsulot taqdimotlari. Narx har bir slayd uchun: Start $35 dan, Product $65 dan, Global $99 dan.",
+  "h1": "Toshkentda taqdimot dizayni",
+  "lead": "OneBranding tushunarli va ishonarli taqdimotlar tayyorlaydi: investorlar uchun pitch-deklar, kompaniya, mahsulot va tijorat takliflari taqdimotlari. Narx har bir slayd uchun hisoblanadi: Start — $35 dan, Product — $65 dan, Global — $99 dan.",
+  "intro": [
+    "Taqdimot koʻpincha investor, hamkor yoki yirik mijoz bilan boʻladigan birinchi jiddiy suhbatga aylanadi va u siz yonida boʻlmaganingizda ham eʼtiborni ushlab turishi kerak. Biz nimani va qaysi tartibda aytishni hal qilishga yordam beramiz, soʻng buni har bir grafik, raqam va tasvir oson oʻqiladigan hamda kerakli xulosaga olib boradigan slaydlarga aylantiramiz.",
+    "Har bir taqdimot brendingiz uslubida — uning ranglari, shriftlari va vizual tilida tayyorlanadi, shuning uchun u shablon emas, kompaniyaning bir qismi boʻlib koʻrinadi. Yangi taqdimot buyurtma qilishingiz yoki mavjud taqdimotingizni qaytadan bezatishingiz mumkin. Oʻzbekiston va xorijdagi mijozlar bilan oʻzbek, rus va ingliz tillarida ishlaymiz; slaydlar soni va tarif brifdan keyin kelishiladi."
+  ],
+  "includes": {
+    "title": "Taqdimot dizayniga nimalar kiradi",
+    "items": [
+      "Taqdimot tuzilmasi va ssenariysi",
+      "Matn ustida ishlash: qisqa, aniq, mazmunli",
+      "Brendingiz uslubidagi slayd dizayni",
+      "Grafiklar, jadvallar, sxemalar va infografika",
+      "Yagona uslubdagi ikonkalar, tasvirlar va illyustratsiyalar",
+      "Titul, boʻlim va yakuniy slaydlar",
+      "Namoyish va tahrirlash uchun tayyor fayl hamda yuborish uchun PDF"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va materiallar", "text": "Taqdimot kim uchun, nimaga erishishi va qayerda koʻrsatilishini aniqlaymiz, materiallaringizni oʻrganamiz." },
+      { "name": "Tuzilma va konsepsiya", "text": "Syujetni slaydma-slayd quramiz va vizual yechimni tanlaymiz." },
+      { "name": "Dizayn", "text": "Avval asosiy slaydlarni, soʻng butun taqdimotni grafiklar va infografika bilan birga tayyorlaymiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikr-mulohazalaringiz asosida tuzatishlar kiritiladi; bosqichni tasdiqlaganingizdan soʻng keyingisiga oʻtamiz." },
+      { "name": "Topshirish", "text": "Namoyish qilish, tahrirlash va yuborishga tayyor taqdimotni olasiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Taqdimot dizayni boʻyicha savollar",
+    "items": [
+      { "q": "Taqdimot dizayni qancha turadi?", "a": "Narx har bir slayd uchun hisoblanadi: Start — $35 dan, Product — $65 dan, Global — $99 dan. Umumiy summa slaydlar soni va tarifga bogʻliq. Ikkalasini ham brifdan keyin kelishamiz, shuning uchun narx ish boshlanishidan oldin maʼlum boʻladi." },
+      { "q": "Taqdimotda nechta slayd boʻlishi kerak?", "a": "Bu vazifaga bogʻliq: investorlar uchun pitch qisqa va aniq boʻlishi kerak, kompaniya taqdimoti yoki mahsulot katalogi esa uzunroq boʻlishi mumkin. Tuzilmani brifdan keyin taklif qilamiz, shunda faqat haqiqatan ish beradigan slaydlar uchun toʻlaysiz." },
+      { "q": "Investorlar uchun pitch-dek tayyorlaysizmi?", "a": "Ha. Investorlar eshitishni kutadigan hikoyani qurishga yordam beramiz: muammo, yechim, bozor, biznes-model, jamoa va sizning soʻrovingiz. Soʻng uni asosiy raqamlar va xulosalar bir qarashda tushunarli boʻladigan qilib bezaymiz." },
+      { "q": "Mavjud taqdimotimizni qayta ishlab bera olasizmi?", "a": "Ha. Joriy taqdimotingizni yuboring: tuzilmasini tahlil qilamiz, matnni qisqartiramiz va slaydlarni brendingiz uslubida qaytadan bezaymiz. Narx xuddi shunday — har bir slayd uchun hisoblanadi va materiallar bilan tanishib chiqqanimizdan keyin kelishiladi." },
+      { "q": "Taqdimotni oʻzimiz tahrirlay olamizmi?", "a": "Ha. Yuborish uchun PDF bilan birga taqdimotning manba faylini ham olasiz — jamoangiz matnni tuzatishi va raqamlarni yangilashi mumkin. Keyinchalik xuddi shu uslubda yangi slaydlar kerak boʻlsa, ularni ham tayyorlab beramiz; narx odatdagidek har bir slayd uchun hisoblanadi." }
+    ]
+  },
+  "cta": {
+    "title": "Taqdimotingiz haqida aytib bering",
+    "text": "Materiallarni yuboring yoki vazifani qisqacha tasvirlab bering — biz slaydlar soni, tarif va narx koʻrsatilgan taklif yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

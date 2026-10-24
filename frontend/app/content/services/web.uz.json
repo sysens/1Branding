@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda sayt yaratish va veb-dizayn",
+  "description": "Toshkentda veb-sayt yaratish: tuzilma, individual dizayn, moslashuvchan sahifalar, kontentni boshqarish va ishga tushirish. Narx brifdan keyin kelishiladi.",
+  "h1": "Toshkentda veb-sayt yaratish",
+  "lead": "OneBranding biznesingiz va brendingiz uchun individual veb-saytlar loyihalaydi va ishlab chiqadi: tuzilma va dizayndan tortib moslashuvchan sahifalar, kontentni boshqarish va ishga tushirishgacha. Narx ish hajmiga bogʻliq va brifdan keyin kelishiladi.",
+  "intro": [
+    "Sayt koʻpincha mijoz sizga ishonish yoki ishonmaslikni hal qiladigan joy boʻladi. U nimani taklif qilayotganingizni aniq tushuntirishi, brendingizga mos koʻrinishi va tashrif buyuruvchini keyingi qadamga — qoʻngʻiroq, xabar yoki arizaga olib borishi kerak. Shuning uchun biz dizayndan emas, biznesingizdan boshlaymiz: mijozlaringiz kim, ular nimani qidiradi va sayt qanday vazifani bajarishi kerak.",
+    "Har bir saytni shablondan yigʻmaymiz, balki aniq bir kompaniya uchun loyihalaymiz: tuzilma, dizayn va sahifalar kontentingiz hamda firma uslubingiz asosida quriladi va telefonda ham, katta ekranda ham birdek yaxshi ishlaydi. Oʻzbekiston va xorijdagi kompaniyalar bilan oʻzbek, rus va ingliz tillarida ishlaymiz, saytni bir necha tilda ham tayyorlay olamiz."
+  ],
+  "includes": {
+    "title": "Sayt yaratishga nimalar kiradi",
+    "items": [
+      "Maqsadlar, auditoriya va raqobatchilar tahlili",
+      "Sayt tuzilmasi: sahifalar, boʻlimlar va navigatsiya",
+      "Dizayndan oldin asosiy sahifalar prototipi",
+      "Firma uslubingizdagi dizayn",
+      "Telefon, planshet va kompyuterga moslashuvchan sahifalar",
+      "Kontentni boshqarish: jamoangiz matn va rasmlarni oʻzi yangilaydi",
+      "Asosiy SEO sozlamalari: sarlavhalar, tavsiflar va qidiruv tizimlariga tushunarli tuzilma",
+      "Sinovdan oʻtkazish va ishga tushirish"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Biznesingiz, maqsadlaringiz va mijozlaringizni oʻrganamiz, raqobatchilar saytlarini koʻrib chiqamiz." },
+      { "name": "Tuzilma va prototip", "text": "Sahifalar, kontent va tashrif buyuruvchining yoʻlini rejalashtiramiz va prototip koʻrinishida siz bilan kelishamiz." },
+      { "name": "Dizayn", "text": "Avval asosiy sahifalarni brend uslubida, soʻng saytning qolgan qismini har qanday oʻlchamdagi ekran uchun tayyorlaymiz." },
+      { "name": "Ishlab chiqish va takomillashtirish", "text": "Saytni dasturlaymiz va fikr-mulohazalaringiz asosida takomillashtiramiz: har bir bosqichda tuzatishlar kiritiladi, keyingisiga esa siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Ishga tushirish", "text": "Saytni sinovdan oʻtkazamiz, asosiy SEO sozlamalarini oʻrnatamiz, uni ishga tushiramiz va jamoangizga kontentni qanday boshqarishni koʻrsatamiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Sayt yaratish boʻyicha savollar",
+    "items": [
+      { "q": "Sayt yaratish qancha turadi?", "a": "Narx ish hajmiga bogʻliq: sahifalar va tillar soni, kontent hamda sayt kompaniya haqida maʼlumot berishdan tashqari yana nimalarni bajarishi kerakligi. Tuzilma va vazifalar aniq boʻlgach, narxni brifdan keyin kelishamiz." },
+      { "q": "Sayt qancha vaqtda tayyor boʻladi?", "a": "Bu sahifalar soniga, kerakli funksiyalarga hamda matn va rasmlar qanchalik tayyorligiga bogʻliq. Muddatni ish hajmi va narx bilan birga loyiha boshlanishidan oldin kelishamiz, shunda reja birinchi kundanoq aniq boʻladi." },
+      { "q": "Saytni oʻzimiz yangilay olamizmi?", "a": "Ha. Kontentni boshqarishni sozlaymiz: jamoangiz dasturchi yordamisiz oʻzi matn va rasmlarni oʻzgartirishi, yangi materiallar qoʻshishi mumkin boʻladi. Saytni topshirishda bularning barchasi qanday qilinishini sizga koʻrsatib beramiz." },
+      { "q": "Brend va saytni birga buyurtma qilsa boʻladimi?", "a": "Ha. Agar brendingizda brendbuk boʻlsa, saytni uning qoidalari asosida loyihalaymiz. Boʻlmasa, avval firma uslubini ishlab chiqishimiz mumkin — shunda sayt va boshqa barcha narsalar bitta brend boʻlib koʻrinadi." },
+      { "q": "Sayt qidiruv tizimlarida ilgari surishga tayyor boʻladimi?", "a": "Asosiy sozlamalarni oʻrnatamiz: tushunarli tuzilma, sahifa sarlavhalari va tavsiflari, oʻqiladigan manzillar — Google va Yandex saytni toʻgʻri indekslashi uchun. Qidiruvdagi oʻrinlar esa keyinchalik kontentga va ishga tushirilgandan keyingi muntazam ishga bogʻliq." }
+    ]
+  },
+  "cta": {
+    "title": "Saytingiz haqida aytib bering",
+    "text": "Biznesingiz va sayt vazifalarini tasvirlab bering — biz ish hajmi, muddat va narx koʻrsatilgan taklif yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "title": "Motion dizayn, 3D va video Toshkentda",
+  "description": "Toshkentda motion dizayn va 3D vizualizatsiya: logotip animatsiyasi, mahsulot renderlari, ijtimoiy tarmoqlar uchun video. Narx brifdan keyin kelishiladi.",
+  "h1": "Toshkentda video, 3D va motion dizayn",
+  "lead": "OneBranding Oʻzbekiston va xorijdagi brendlar uchun motion dizayn, 3D vizualizatsiya va animatsiya yaratadi: jonlantirilgan logotiplar, mahsulot renderlari, tushuntiruvchi roliklar va ijtimoiy tarmoqlar uchun kontent. Narx ish hajmiga bogʻliq va brifdan keyin kelishiladi.",
+  "intro": [
+    "Harakat brendni koʻzga tashlanadigan va esda qoladigan qiladi. Ekranda jonlanadigan logotip, hali ishlab chiqarilmasdan turib har tomondan koʻrsatilgan mahsulot, gʻoyani bir necha soniyada tushuntirib beradigan qisqa rolik — animatsiya va 3D brendingizga ijtimoiy tarmoqlarda, taqdimotlarda va ekranlarda ovoz beradi. Oddiy statik rasmni esa u yerda koʻpincha eʼtibor bermay varaqlab oʻtib ketishadi.",
+    "Animatsiyani brendning oʻzi — uning ranglari, shriftlari va xarakteri asosida quramiz, shuning uchun har bir rolik bitta tizimning qismi boʻlib koʻrinadi. Oʻzbekiston va xorijdagi kompaniyalar bilan oʻzbek, rus va ingliz tillarida, masofadan yoki Toshkentdagi Amir Temur koʻchasida joylashgan ofisimizda ishlaymiz. Agar brendingizda hali firma uslubi boʻlmasa, avval uni yaratamiz, keyin esa jonlantiramiz."
+  ],
+  "includes": {
+    "title": "Nimalar yaratamiz",
+    "items": [
+      "Logotip va firma uslubi elementlari animatsiyasi",
+      "Mahsulot va qadoqning 3D vizualizatsiyasi",
+      "Motion grafika va tushuntiruvchi animatsion roliklar",
+      "Ijtimoiy tarmoqlar uchun qisqa video va animatsion kontent",
+      "Taqdimotlar, tadbirlar va koʻrgazmalar uchun animatsiya",
+      "Animatsiyadan oldin storiboard va asosiy kadrlar",
+      "Har bir platforma uchun kerakli format va oʻlchamdagi tayyor roliklar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Rolik nima uchun kerakligini, uni kim va qayerda koʻrishini aniqlaymiz, bozoringizda auditoriya bilan qanday muloqot qilinishini oʻrganamiz." },
+      { "name": "Gʻoya va ssenariy", "text": "Animatsiya quriladigan konsepsiya, ssenariy va vizual uslubni taklif qilamiz." },
+      { "name": "Storiboard va dizayn", "text": "Hali hech narsa harakatlanmasdan oldin asosiy kadrlarni chizamiz, sahnalar va 3D modellarni tayyorlaymiz." },
+      { "name": "Animatsiya va takomillashtirish", "text": "Animatsiya qilamiz va fikr-mulohazalaringiz asosida takomillashtiramiz: har bir bosqichda tuzatishlar bor, keyingisiga esa siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Topshirish", "text": "Barcha kerakli format va oʻlchamlardagi tayyor roliklarni olasiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Motion dizayn boʻyicha savollar",
+    "items": [
+      { "q": "Motion dizayn qancha turadi?", "a": "Narx ish hajmiga bogʻliq: rolik davomiyligi, 3D va animatsiya miqdori, versiyalar va formatlar soniga qarab belgilanadi. Video qanday vazifani bajarishi va qayerda koʻrsatilishi aniq boʻlgach, narxni brifdan keyin kelishib olamiz." },
+      { "q": "Motion dizayn nima?", "a": "Bu harakatdagi grafik dizayn: jonlantirilgan logotiplar, matn, ikonkalar, illyustratsiyalar va 3D obyektlar. Motion dizayn gʻoyalarni tushuntiradi, mahsulotni koʻrsatadi va brendni videolarda, ijtimoiy tarmoqlarda, taqdimotlarda hamda ekranlarda taniladigan qiladi." },
+      { "q": "Hali ishlab chiqarilmagan mahsulotning 3D vizualizatsiyasini qila olasizmi?", "a": "Ha. Chizmalar, eskizlar yoki qadoq dizayni asosida 3D model yaratamiz va mahsulotni render yoki animatsiyada koʻrsatamiz. Shu tariqa uni ishlab chiqarishdan oldin taqdim etish, tashqi koʻrinishini baholash va reklama qilishni boshlash mumkin." },
+      { "q": "Rolik tayyorlash qancha vaqt oladi?", "a": "Bu rolikning davomiyligi va murakkabligiga bogʻliq: qisqa logotip animatsiyasi va mahsulot haqidagi 3D rolik hajmi jihatidan butunlay boshqa-boshqa ishlar. Muddatni ish hajmi va narx bilan birga loyiha boshlanishidan oldin kelishib olamiz." },
+      { "q": "Mavjud logotipimizni jonlantira olasizmi?", "a": "Ha. Brendbukingiz va manba fayllaringiz asosida ishlaymiz: brendning ranglari, shriftlari va xarakterini saqlab qolib, ularga mos harakat qoʻshamiz. Agar brend qoidalari hali boʻlmasa, avval firma uslubini ishlab chiqishimiz mumkin." }
+    ]
+  },
+  "cta": {
+    "title": "Brendingizni jonlantiramiz",
+    "text": "Rolik qanday vazifani bajarishi va qayerda koʻrsatilishini aytib bering — biz ish hajmi, muddat va narx koʻrsatilgan taklif yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

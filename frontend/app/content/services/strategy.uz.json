@@ -1,0 +1,49 @@
+{
+  "title": "Brend strategiyasi va neyming Toshkentda",
+  "description": "Toshkentda brend strategiyasi va neyming: bozor tadqiqoti, pozitsiyalash, brend platformasi va kompaniya nomini yaratish. Narx brifdan soʻng kelishiladi.",
+  "h1": "Toshkentda brend strategiyasi va neyming",
+  "lead": "OneBranding brend tayanadigan strategiyani ishlab chiqadi va u bozorga chiqadigan nomni topadi: tadqiqot, pozitsiyalash, brend platformasi hamda kompaniya va mahsulotlar uchun neyming. Narx ish hajmiga bogʻliq va brifdan soʻng kelishiladi.",
+  "intro": [
+    "Brend strategiyasi keyingi barcha qarorlar bogʻliq boʻlgan savollarga javob beradi: brend kim uchun, u nimani vaʼda qiladi, raqobatchilardan nimasi bilan farq qiladi va qanday ohangda gapiradi. Biz bozor, auditoriya va raqobatchilarni oʻrganishdan boshlaymiz, soʻng xulosalarni pozitsiyalash va brend platformasiga aylantiramiz. Bu jamoangiz dizaynerlarga topshiriq berishda, matn yozishda va reklamani rejalashtirishda tayanadigan amaliy hujjatdir.",
+    "Neyming ham xuddi shu mantiqqa asoslanadi. Nom strategiyaga mos kelishi, oʻzbek, rus va ingliz tillarida tabiiy yangrashi, oson aytilishi, yozilishi va esda qolishi kerak. Biz bir nechta yoʻnalish taklif qilamiz, har birining gʻoyasini tushuntiramiz va siz bilan birga qisqa roʻyxatgacha saralaymiz. Oʻzbekiston va xorijdagi kompaniyalar bilan masofadan yoki Toshkentdagi ofisimizda ishlaymiz."
+  ],
+  "includes": {
+    "title": "Strategiya va neymingga nimalar kiradi",
+    "items": [
+      "Bozor, raqobatchilar va auditoriya tadqiqoti",
+      "Brend pozitsiyasi va asosiy gʻoya",
+      "Brend platformasi: missiya, qadriyatlar, vaʼda, xarakter",
+      "Muloqot ohangi va asosiy xabarlar",
+      "Bir nechta mahsulot yoki liniya uchun brend arxitekturasi",
+      "Nom variantlari va har birining gʻoyasi",
+      "Qisqa roʻyxatni oʻxshash nomlar, domenlar va ijtimoiy tarmoq akkauntlari boʻyicha tekshirish",
+      "Dizayn va marketingga topshiriq berish uchun strategik hujjat"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Biznesingiz, maqsadlaringiz va auditoriyangizni oʻrganamiz, bozor va raqobatchilarni tahlil qilamiz." },
+      { "name": "Pozitsiyalash", "text": "Brendning bozordagi oʻrnini, auditoriyasini va boshqalardan farqini aniqlab, siz bilan kelishib olamiz." },
+      { "name": "Platforma va neyming", "text": "Brend platformasini yozamiz va unga tayangan holda nom variantlarini ishlab chiqamiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritiladi; keyingi bosqichga siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Topshirish", "text": "Strategik hujjat, tanlangan nom va uning asoslanishi hamda qisqa roʻyxat tekshiruvi natijalarini olasiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Strategiya va neyming boʻyicha savollar",
+    "items": [
+      { "q": "Kompaniya nomini yaratish qancha turadi?", "a": "Neyming va strategiyaning qatʼiy narxi yoʻq: hammasi vazifaga bogʻliq — masalan, bitta mahsulot uchun nom kerakmi yoki brendlar guruhi uchun toʻliq platforma. Narxni brifdan soʻng, ish boshlanishidan oldin siz bilan kelishib olamiz." },
+      { "q": "Brend strategiyasi nima va u nega kerak?", "a": "Bu brend kim uchun, nimani vaʼda qiladi va raqobatchilardan nimasi bilan farq qiladi degan savollarga kelishilgan javobdir. Usiz dizayn va marketingdagi qarorlar didga qarab qabul qilinadi, u bilan esa har bir aloqa nuqtasi bir yoʻnalishda ishlaydi." },
+      { "q": "Nom oʻzbek, rus va ingliz tillarida qanday yangraydi?", "a": "Qisqa roʻyxatdagi har bir nomni uch tilda tekshiramiz: qanday yangrashi, qanday yozilishi va nomaqbul maʼnosi yoʻqligi. Agar brend faqat bitta bozorda ishlasa, asosiy eʼtiborni oʻsha bozor tiliga qaratamiz." },
+      { "q": "Tovar belgisini roʻyxatdan oʻtkazasizmi?", "a": "Qisqa roʻyxatni aniq oʻxshashliklar, boʻsh domenlar va ijtimoiy tarmoqlardagi akkaunt nomlari boʻyicha tekshiramiz. Tovar belgisini roʻyxatdan oʻtkazish esa huquqiy jarayon boʻlib, uni patent vakili amalga oshiradi, shuning uchun tanlangan nomni ishga tushirishdan oldin unga tekshirtirib olishni tavsiya qilamiz." },
+      { "q": "Strategiyadan keyin logotip va firma uslubini ham buyurtma qilsa boʻladimi?", "a": "Ha, albatta. Strategiya va neyming koʻpincha toʻliq brending loyihasining birinchi bosqichi boʻladi. Logotip, firma uslubi va brendbuk keyin aynan ularga asoslanib yaratiladi, shuning uchun brendning tashqi koʻrinishi uning vaʼdasidan ajralib qolmaydi." }
+    ]
+  },
+  "cta": {
+    "title": "Brendingiz haqida aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx boʻyicha taklifimizni yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

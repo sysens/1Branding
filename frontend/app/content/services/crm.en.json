@@ -1,0 +1,48 @@
+{
+  "title": "CRM, ERP & Odoo Implementation in Tashkent",
+  "description": "CRM, ERP and Odoo implementation in Tashkent, set up around your processes: process mapping, configuration, integrations, data migration and team training.",
+  "h1": "CRM, ERP and Odoo implementation in Tashkent",
+  "lead": "OneBranding sets up CRM and ERP systems, including Odoo, around the way your company actually works: customers, sales, inventory and operations in one connected system instead of scattered spreadsheets and chats.",
+  "intro": [
+    "When customers live in one spreadsheet, orders in a messenger and stock levels in someone's head, the business depends on people remembering everything. A CRM keeps every customer, deal and conversation in one place; an ERP connects sales with inventory, purchasing, production and finance. Odoo does both on one modular platform: you start with the modules you need and add more as the company grows.",
+    "We don't start by installing software. First we map how your processes run today, where information gets lost and what each team needs, then configure the system around that. Each stage is agreed with you before the next one starts. We work with companies in Uzbekistan and abroad, in Uzbek, Russian and English, at your office or remotely."
+  ],
+  "includes": {
+    "title": "What a CRM or ERP project includes",
+    "items": [
+      "Mapping of your current sales and operating processes",
+      "Choice of the platform and Odoo modules that fit your tasks",
+      "Configuration of pipelines, stages, roles and access rights",
+      "Reports and dashboards for management",
+      "Integration with your website and the services you already use",
+      "Migration of customers, products and history from spreadsheets or your current system",
+      "Training for each role before launch"
+    ]
+  },
+  "process": {
+    "title": "How a project runs",
+    "steps": [
+      { "name": "Brief and process review", "text": "We talk to the owners and to the people who will use the system, and map how requests, orders and data move today." },
+      { "name": "Solution design", "text": "We choose the platform and modules and describe how the system will work: stages, roles, fields, reports and integrations." },
+      { "name": "Configuration and integration", "text": "We set up the system, connect it to the services you use and move your data in." },
+      { "name": "Testing and refinement", "text": "Your team tries the system on real tasks; we make revisions based on the feedback, and you approve each stage before the next." },
+      { "name": "Training and launch", "text": "We train each role, hand over access and instructions, and move the team onto the new system." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "CRM and Odoo questions",
+    "items": [
+      { "q": "How much does CRM implementation cost in Tashkent?", "a": "It depends on the scope: how many processes and teams the system covers, which modules and integrations you need and how much data has to be migrated. We agree on the price after the brief, before any work starts." },
+      { "q": "What is the difference between CRM and ERP?", "a": "A CRM manages customers and sales: leads, deals, contacts and the history of every conversation. An ERP runs the rest of the company: inventory, purchasing, production, finance and staff. Odoo combines both, so sales and operations work from the same data." },
+      { "q": "Why Odoo?", "a": "Odoo is a modular business platform: CRM, sales, inventory, purchasing, accounting, website and other apps work in one system. You can start with one or two modules and add more later without changing systems or moving your data again." },
+      { "q": "Can you move our data from Excel or another system?", "a": "Yes, data migration is part of the project. We clean up and structure your customers, products, prices and history, import them into the new system and check the result with your team before launch." },
+      { "q": "How long does CRM implementation take?", "a": "It depends on the number of processes, modules and integrations: a CRM for one sales team is a smaller project than an ERP for the whole company. We agree on the timeline together with the scope, before we start." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us how your business runs",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

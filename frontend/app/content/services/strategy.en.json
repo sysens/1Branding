@@ -1,0 +1,49 @@
+{
+  "title": "Brand Strategy & Naming in Tashkent",
+  "description": "Brand strategy and naming in Tashkent: market research, positioning, brand platform and a company or product name. Price agreed after the brief. Talk to us.",
+  "h1": "Brand strategy and naming in Tashkent",
+  "lead": "OneBranding builds the strategy a brand stands on and finds the name it will carry: research, positioning, brand platform and naming for companies and products. The price depends on scope and is agreed after the brief.",
+  "intro": [
+    "A brand strategy answers the questions every later decision depends on: who the brand is for, what it promises, how it differs from competitors and how it speaks. We start with research into your market, audience and competitors, then turn the findings into a positioning and a brand platform your team can actually use when briefing design, writing copy or planning a campaign.",
+    "Naming follows the same logic. A name has to suit the strategy, sound right in Uzbek, Russian and English, and stay easy to say, spell and remember. We develop several directions, explain the idea behind each and narrow them down with you to a shortlist. We work with companies in Uzbekistan and abroad, remotely or at our office in Tashkent."
+  ],
+  "includes": {
+    "title": "What strategy and naming include",
+    "items": [
+      "Market, competitor and audience research",
+      "Brand positioning and the key idea",
+      "Brand platform: mission, values, promise, personality",
+      "Tone of voice and key messages",
+      "Brand architecture for several products or lines",
+      "Name directions with the idea behind each",
+      "Shortlist checked for clashes, domains and social handles",
+      "Strategy document to brief design and marketing"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief and research", "text": "We learn your business, goals and audience, and study the market and your competitors." },
+      { "name": "Positioning", "text": "We define where the brand stands, whom it speaks to and what makes it different, and agree it with you." },
+      { "name": "Platform and naming", "text": "We write the brand platform and develop name directions that grow out of it." },
+      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
+      { "name": "Hand-over", "text": "You receive the strategy document, the chosen name with its rationale and the shortlist checks." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Strategy and naming questions",
+    "items": [
+      { "q": "How much does naming cost in Tashkent?", "a": "Naming and strategy have no fixed price: it depends on the scope, for example a name for one product or a full platform for a group of brands. We agree the price after the brief, before any work starts." },
+      { "q": "What is a brand strategy and why do I need one?", "a": "It is the agreed answer to who the brand is for, what it promises and how it differs from competitors. Without it, design and marketing decisions come down to personal taste; with it, every touchpoint pulls in the same direction." },
+      { "q": "Will the name work in Uzbek, Russian and English?", "a": "We check every shortlisted name in all three languages: how it sounds, how it is spelled and whether it carries unwanted meanings. If the brand is aimed at one market only, we focus on that language." },
+      { "q": "Do you register the trademark?", "a": "We check the shortlist for obvious clashes, free domains and social handles. Trademark registration itself is a legal procedure carried out by a patent attorney, so we recommend having the chosen name checked by one before launch." },
+      { "q": "Can you do the logo and identity after the strategy?", "a": "Yes. Strategy and naming are often the first stage of a full branding project, and the logo, identity and brand book are then built directly on them." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your brand",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

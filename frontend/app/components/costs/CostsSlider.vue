@@ -16,10 +16,13 @@
           />
 
           <div class="costs-cat__head">
-            <h2 class="costs-cat__title">{{ category.title }}</h2>
+            <h2 class="costs-cat__title">{{ categoryTitle(category) }}</h2>
             <p v-if="categoryDescription(category)" class="costs-cat__desc">
               {{ categoryDescription(category) }}
             </p>
+            <NuxtLink v-if="categoryPage(category)" :to="categoryPage(category)!.path" class="costs-cat__link">
+              {{ t("pricing.serviceLink", { name: categoryPage(category)!.name }) }}
+            </NuxtLink>
           </div>
 
           <div class="costs-cards">
@@ -47,8 +50,9 @@
                 <span class="costs-card__name">{{ item.title }}</span>
 
                 <span class="costs-card__price">
-                  <span class="costs-card__from">{{ fromLabel }}</span>
+                  <span v-if="!fromAfter" class="costs-card__from">{{ fromLabel }}</span>
                   <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
+                  <span v-if="fromAfter" class="costs-card__from">{{ fromLabel }}</span>
                 </span>
               </span>
 
@@ -58,7 +62,7 @@
                   :id="`costs-details-${categoryIndex}-${itemIndex}`"
                   class="costs-card__details"
                 >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {{ t("pricing.details") }}
                 </span>
               </Transition>
             </button>
@@ -72,65 +76,14 @@
 import { computed, reactive, watch } from "vue";
 import CostsOrbitalGlow from "~/components/costs/CostsOrbitalGlow.vue";
 
-type PricingItem = {
-  title: string;
-  price: string;
-  priceText: string;
-  description: string;
-};
-
-type PriceCategory = {
-  title: string;
-  pricing: PricingItem[];
-};
-
-type PriceCategoriesResponse = {
-  data?: {
-    priceCategories?: PriceCategory[];
-    fallbackPriceCategories?: PriceCategory[];
-  };
-  errors?: Array<{ message: string }>;
-};
-
 const { t } = useI18n();
+const { categories: priceCategories, categoryTitle, categoryDescription, categoryPage } = await usePriceCategories();
 
-const query = `
-  query PriceCategories($locale: I18NLocaleCode!, $withFallback: Boolean!) {
-    priceCategories(locale: $locale) {
-      title
-      pricing {
-        title
-        price
-        priceText
-        description
-      }
-    }
-    fallbackPriceCategories: priceCategories(locale: "en") @include(if: $withFallback) {
-      title
-      pricing {
-        title
-        price
-        priceText
-        description
-      }
-    }
-  }
-`;
-
-const { data: priceRes } = await useCmsQuery<NonNullable<PriceCategoriesResponse["data"]>>("price-categories", query);
-
-const priceCategories = computed<PriceCategory[]>(() => {
-  const current = priceRes.value?.data?.priceCategories || [];
-  if (current.length) return current;
-  return priceRes.value?.data?.fallbackPriceCategories || [];
-});
-
-const fromLabel = computed(() => t("common.from"));
-
-const categoryDescription = (category: PriceCategory) =>
-  category.pricing?.[0]?.description?.trim() ||
-  category.pricing?.[0]?.priceText?.trim() ||
-  "";
+// "from" before the price, or after it where the language puts it there
+// (Uzbek "$900 dan"), as servicesPage.priceFrom ("from {price}") says.
+const priceFrom = computed(() => t("servicesPage.priceFrom", { price: "%PRICE%" }));
+const fromAfter = computed(() => priceFrom.value.trim().startsWith("%PRICE%"));
+const fromLabel = computed(() => priceFrom.value.replace("%PRICE%", "").trim() || t("common.from"));
 
 const formatPrice = (value: string) => {
   const raw = String(value || "").trim();
@@ -222,6 +175,20 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   font-size: clamp(0.95rem, 1.15vw, 1.15rem);
   line-height: 1.55;
   white-space: pre-line;
+}
+
+.costs-cat__link {
+  display: inline-block;
+  margin-top: 0.9rem;
+  color: #03cb00;
+  font-size: clamp(0.95rem, 1.05vw, 1.05rem);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.costs-cat__link:hover,
+.costs-cat__link:focus-visible {
+  color: #fff;
 }
 
 /* ---------- cards ---------- */

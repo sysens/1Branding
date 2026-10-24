@@ -49,7 +49,9 @@ const statements = computed(() => {
       return { kind: line.kind, words };
     });
     const text = lines.map((line) => line.segments.map((segment) => segment.text).join("")).join(" ");
-    return { lines: built, total: index, text };
+    // The closing line is the brand's English slogan in every language.
+    const lang = lines[0]?.kind === "closing" ? "en" : undefined;
+    return { lines: built, total: index, text, lang };
   });
 });
 const LAST = 3;
@@ -112,8 +114,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section ref="root" class="stats" lang="en">
+  <section ref="root" class="stats">
     <div class="stats__screen">
       <p
         v-for="(statement, index) in statements"
@@ -122,7 +123,7 @@ onBeforeUnmount(() => {
         :data-statement="index"
         :style="{ '--n': statement.total }"
       >
-        <span class="sr-only">{{ statement.text }}</span>
+        <span class="sr-only" :lang="statement.lang">{{ statement.text }}</span>
         <span
           v-for="(line, lineIndex) in statement.lines"
           :key="lineIndex"

@@ -400,6 +400,15 @@
     -webkit-text-stroke-width: 0.45vw;
   }
 
+  /* "К РЕЗУЛЬТАТУ." and "RIVOJLANISHGA." are longer than "TO PROGRESS.". */
+  .audit__heading:lang(ru) {
+    font-size: 10.6vw;
+  }
+
+  .audit__heading:lang(uz) {
+    font-size: 9.4vw;
+  }
+
   .audit__aside {
     font-size: 1rem;
     white-space: normal;

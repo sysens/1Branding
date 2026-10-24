@@ -20,7 +20,7 @@ const year = new Date().getFullYear();
       </div>
     </section>
     <div class="movement-footer__legal">
-      <small>Copyright &copy; {{ year }} One Branding. {{ t("movement.copyright") }}</small>
+      <small>Copyright &copy; {{ year }} OneBranding. {{ t("movement.copyright") }}</small>
     </div>
   </footer>
 </template>

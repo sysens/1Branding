@@ -107,8 +107,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section id="audit" class="audit" lang="en" aria-labelledby="audit-title">
+  <section id="audit" class="audit" aria-labelledby="audit-title">
     <p class="audit__title">{{ t("home.audit.eyebrow") }}</p>
 
     <!-- The path lights up while this block is pinned to the screen. -->
@@ -118,11 +117,11 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       <p v-rise class="audit__eyebrow">{{ t("home.audit.eyebrow") }}</p>
       <div class="audit__hero">
         <h2 id="audit-title" class="audit__heading">
-          <span v-blur-reveal>{{ t("home.audit.lineFirst") }}</span>
+          <span v-blur-reveal>{{ `${t("home.audit.lineFirst")} ` }}</span>
           <span v-blur-reveal class="audit__green">{{ t("home.audit.lineSecond") }}</span>
         </h2>
         <p v-rise class="audit__aside">
-          <span>{{ t("home.audit.asideFirst") }}</span>
+          <span>{{ `${t("home.audit.asideFirst")} ` }}</span>
           <span>{{ t("home.audit.asideSecond") }}</span>
         </p>
       </div>

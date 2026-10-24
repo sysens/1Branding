@@ -4,7 +4,7 @@
     "about": "About Us",
     "projects": "Projects",
     "contacts": "Contact",
-    "prices": "PriceList",
+    "prices": "Pricing",
     "news": "News",
     "services": "Services"
   },
@@ -26,18 +26,18 @@
     },
     "projects": {
       "title": "Branding & Identity Portfolio {'|'} OneBranding",
-      "description": "OneBranding case studies: logos, visual identity, packaging and brand books for Uzbek brands such as Makva, Luqman, Apex Pizza and Dodo Kids.",
-      "h1": "OneBranding branding agency portfolio"
+      "description": "OneBranding portfolio: logos, visual identity, packaging, brand books and campaigns created by our branding team in Tashkent, Uzbekistan.",
+      "h1": "OneBranding portfolio: branding, packaging and identity"
     },
     "price": {
       "title": "Branding & Logo Design Prices in Tashkent {'|'} OneBranding",
-      "description": "Branding prices in Tashkent: logo design, visual identity, brand books, naming and packaging design. Service packages, timelines and deliverables.",
+      "description": "Branding prices in Tashkent: packages from $1,900, logo design from $900, packaging from $500, presentation design from $35 per slide. See what each includes.",
       "h1": "Branding, logo and visual identity prices in Tashkent"
     },
     "oneGuarantee": {
-      "title": "OneGuarantee — Branding Results Guarantee {'|'} OneBranding",
-      "description": "OneGuarantee by OneBranding: design your audience is guaranteed to like. We test our solutions with a live audience before your brand launches.",
-      "h1": "OneGuarantee — branding results guarantee"
+      "title": "OneGuarantee: Design Tested Before Launch {'|'} OneBranding",
+      "description": "OneGuarantee by OneBranding: before your brand launches, we test our design solutions with a live audience of designers so they work for your target audience.",
+      "h1": "OneGuarantee: design tested before launch"
     },
     "contacts": {
       "title": "Contact Our Branding Agency in Tashkent {'|'} OneBranding",
@@ -164,7 +164,7 @@
     "awards": {
       "year": "2026",
       "title": "Awwward",
-      "subtitle": "built the best brands of Uzbekistan"
+      "subtitle": "for the brands we build across Uzbekistan"
     },
     "brandStories": {
       "ariaLabel": "Brand stories",
@@ -290,7 +290,11 @@
           "description": "Your identity, brought into physical spaces.",
           "tagline": "Your brand, life-size."
         }
-      }
+      },
+      "intro": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy and naming, logo design, brand identity, packaging, websites and more, from one team.",
+      "allLink": "All services",
+      "pricesLink": "Prices",
+      "contactLink": "Contact us"
     },
     "vision": {
       "brand": "OneBranding",
@@ -298,7 +302,7 @@
       "lineSecond": "Every solution.",
       "label": "Awwwards / Design concept",
       "year": "2026",
-      "cta": "Learn more"
+      "cta": "About OneBranding"
     },
     "compare": {
       "titleFirst": "Make your brand look better",
@@ -329,16 +333,16 @@
       "planAccent": "One plan.",
       "planRest": "Clear priorities. Measurable goals.",
       "text": "We examine your business, identify what is holding it back, and map a clear path from point A to point B. Through audit and analysis, we turn data into precise priorities, practical solutions, and a strategy built around measurable goals. You get a roadmap that defines what to change, why it matters, and how to move forward.",
-      "cta": "Learn more"
+      "cta": "Discuss your project"
     },
     "clients": {
-      "titleFirst": "More than",
-      "count": "3000",
-      "titleRest": "clients",
-      "text": "We are lucky to have produced presentation materials for all sectors of activity and sizes of companies, in all graphic worlds.",
-      "trustStrong": "200+ listed companies",
-      "trustRest": "have placed their trust in us.",
-      "showAll": "Show all {count} clients"
+      "titleFirst": "Brands that",
+      "count": "trust",
+      "titleRest": "us",
+      "text": "Restaurant chains, banks, FMCG and retail brands: we create brand identities, packaging, campaigns and presentation materials for companies of every size.",
+      "trustStrong": "From Tashkent to international markets,",
+      "trustRest": "in Uzbek, Russian and English.",
+      "showAll": "Show all {count} brands"
     },
     "faq": {
       "titleLead": "Frequently asked",
@@ -350,7 +354,11 @@
         },
         {
           "q": "How long does it take to develop a brand?",
-          "a": "It depends on the scope. A focused identity usually takes 2 to 6 weeks; a full brand system with naming, packaging or a website takes longer. We agree on the timeline before we start and keep to it."
+          "a": "It depends on the scope. A focused identity usually takes 2 to 6 weeks; a full brand system with naming, packaging or a website takes longer. We agree on the timeline before we start."
+        },
+        {
+          "q": "How much does branding cost in Tashkent?",
+          "a": "Branding packages start from $1,900 (Launch Base), $2,900 (One Pro) and $5,900 (Global ultimate); logo design alone starts from $900 and packaging design from $500. The final price depends on the scope we agree after the brief."
         },
         {
           "q": "What does branding include?",
@@ -381,7 +389,7 @@
     "fresh": {
       "accent": "Fresh",
       "rest": "projects",
-      "more": "More"
+      "more": "All projects"
     }
   },
   "productSlug": {
@@ -390,7 +398,24 @@
   },
   "aboutPage": {
     "title": "Meet our team",
-    "moreButton": "More"
+    "moreButton": "More",
+    "cms": {
+      "section1Title": "Meet our team",
+      "section2": [
+        {
+          "title": "Our mission",
+          "text": "We create brands that don’t just exist: they influence.\n\nEvery project is a strategic effort for us, where design becomes a tool for growth and competitive advantage.\n\nWe combine marketing thinking, deep analysis and strong visual execution to build brands with character. From the idea to the final implementation, every detail is refined and works toward results.\n\nOur mission is to create brands that speak loudly, look confident and sell without unnecessary words."
+        },
+        {
+          "title": "Our vision",
+          "text": "We see the future of branding in simplicity, clarity and meaning.\n\nIn a world overloaded with information, the brands that win are precise, honest and visually strong.\n\nOneBranding creates identities that stay in memory and build trust.\n\nWe believe in minimalism with character, where every line, colour and shape has meaning.\n\nThe future belongs to brands that understand their audience and speak its language. That is exactly what we create."
+        }
+      ],
+      "section3Title": "OneBranding Creators",
+      "section3Text": "At OneBranding there are no random decisions, only a thoughtful approach, character and responsibility for the result.\n\nThat is why our projects don’t just look good: they make an impact."
+    },
+    "lead": "OneBranding is a full-cycle branding agency in Tashkent. We build brands from strategy to every touchpoint for companies in Uzbekistan and abroad, in Uzbek, Russian and English.",
+    "servicesTitle": "What we do"
   },
   "newsPage": {
     "title": "Our studio blog"
@@ -410,14 +435,45 @@
       "text5": "Onebranding brings the agency and client closer, makes the relationship partner-based and clear, and the result of the work effective!",
       "highlightToken": "guaranteed*"
     },
-    "reasonsTitle": "WHY DOES THIS WORK EFFECTIVELY?"
+    "reasonsTitle": "WHY DOES THIS WORK EFFECTIVELY?",
+    "cms": {
+      "section4": {
+        "title": "We work with brands from all over the world.",
+        "cards": [
+          {
+            "title": "Global branding",
+            "description": "We create strong, recognisable brands that meet international standards and stand out in any market."
+          },
+          {
+            "title": "Design without boundaries",
+            "description": "We work with clients around the world on projects of any complexity, from an idea to a complete brand system."
+          },
+          {
+            "title": "World-class quality",
+            "description": "Every solution is thought through to the smallest detail, so the brand looks confident, premium and competitive on the global stage."
+          }
+        ]
+      },
+      "section5": {
+        "items": [
+          "We measure how the target audience perceives the brand at the start",
+          "Strategic oversight of the whole project",
+          "Several teams work on one task in parallel"
+        ]
+      },
+      "section6": {
+        "title": "We work with brands that want more.",
+        "text": "If you need more than design, results that bring in revenue, you are in the right place.",
+        "buttonText": "Write to us on Telegram"
+      }
+    }
   },
   "warning": {
     "title": "Dear customers",
     "text": "We value your time and want to note that pricing is calculated individually and depends on project complexity, timelines, and scope of work. Before we start, we clarify goals, stages, and budget to propose the best solution and a transparent plan. Please leave up-to-date contact details — this will speed up coordination and preparation of a commercial proposal. If you have any questions, write to us and we will consult in detail. Thank you for your understanding and trust."
   },
   "contacts": {
-    "title": "CONTACTS",
+    "title": "Contact OneBranding in Tashkent",
     "addressTitle": "ADDRESS",
     "addressText": "Tashkent, Shaykhantakhur district, Amir Temur St., 18A, office 5, Uzbekistan, 100047",
     "workTitle": "WORKING HOURS",
@@ -425,9 +481,9 @@
     "contactInfoTitle": "CONTACT INFORMATION",
     "noteTitle": "NOTE",
     "noteText": "The agency works mainly with legal entities and large projects. Please provide working contact details when reaching out.",
-    "briefText": "You can email us or fill out the form below.",
+    "briefText": "Fill in the form below or call us, and we will come back with a proposal.",
     "form": {
-      "title": "Contact One branding",
+      "title": "Contact OneBranding",
       "description": "Before starting work on a project, we ask clients to answer a few questions. Your answers help us choose the most suitable tools to solve your task. The more details you provide about your project, the more accurate our proposal will be. This helps us understand how we can be useful. Our first conversation can be much more focused if we collect information and prepare for the meeting. And if we see that your task is not within our profile, we will recommend suitable partners.",
       "topicTitle": "Subject",
       "topicInput": "Name your project*",
@@ -438,7 +494,8 @@
       "company": "Company*",
       "phone": "Phone*",
       "email": "E-mail*",
-      "agreement": "By submitting the request, you agree to the user agreement"
+      "agreement": "By sending the request, you agree to the processing of your personal data as described in our",
+      "privacyLink": "privacy policy"
     }
   },
   "footerNew": {
@@ -462,12 +519,14 @@
     "web": "Web & Systems",
     "information": "Information",
     "process": "Our process",
-    "guarantee": "One’s Guarantee",
+    "guarantee": "OneGuarantee",
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions",
     "social": "Social",
     "tagline": "One vision. Every solution.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "blog": "Blog",
+    "pricing": "Pricing"
   },
   "errorPage": {
     "notFoundTitle": "Page not found",
@@ -479,9 +538,9 @@
   "movement": {
     "first": "Join the",
     "second": "Movement",
-    "description": "Build your next chapter with One Branding.",
+    "description": "Build your next chapter with OneBranding.",
     "detail": "Your brand's future starts here.",
-    "action": "See in Action",
+    "action": "See our projects",
     "copyright": "All rights reserved."
   },
   "robot": {
@@ -502,6 +561,194 @@
     "globeImage": "World globe with illuminated continents",
     "pauseGlobe": "Pause rotation",
     "resumeGlobe": "Resume rotation",
-    "resetGlobe": "Reset globe"
+    "resetGlobe": "Reset globe",
+    "projectImageNamed": "{title}: OneBranding project, image {position}"
+  },
+  "servicePages": {
+    "branding": {
+      "name": "Branding & rebranding",
+      "summary": "Strategy, logo, visual identity and brand book: a complete brand, new or renewed."
+    },
+    "logo": {
+      "name": "Logo design",
+      "summary": "A logo built on your strategy and positioning, recognisable and made to last."
+    },
+    "identity": {
+      "name": "Brand identity",
+      "summary": "Colours, typography and graphic elements that make every touchpoint look like you."
+    },
+    "brandbook": {
+      "name": "Brand book",
+      "summary": "The rules that keep your logo and identity consistent wherever they appear."
+    },
+    "strategy": {
+      "name": "Brand strategy & naming",
+      "summary": "Research, positioning and names with purpose."
+    },
+    "packaging": {
+      "name": "Packaging design",
+      "summary": "Packaging built to stand out on the shelf and convey the product's value."
+    },
+    "print": {
+      "name": "Graphic & print design",
+      "summary": "Menus, catalogues and branded print materials in one visual language."
+    },
+    "social": {
+      "name": "Social media & campaigns",
+      "summary": "Content systems and campaigns that keep one voice across every feed."
+    },
+    "photo": {
+      "name": "Product photography & retouching",
+      "summary": "Premium brand and product imagery that helps the product sell."
+    },
+    "motion": {
+      "name": "Video, 3D & motion design",
+      "summary": "Visualisation and animation that bring ideas to life."
+    },
+    "presentation": {
+      "name": "Presentation design",
+      "summary": "Clear stories and convincing presentations, from pitch decks to product decks."
+    },
+    "web": {
+      "name": "Website development",
+      "summary": "Custom websites designed and built around your business."
+    },
+    "uiux": {
+      "name": "UI/UX & app design",
+      "summary": "Intuitive experiences for web and mobile."
+    },
+    "crm": {
+      "name": "CRM, ERP & Odoo",
+      "summary": "Connected systems for smarter operations, set up around your processes."
+    },
+    "signage": {
+      "name": "Signage & exhibition design",
+      "summary": "Your identity, brought into physical spaces."
+    }
+  },
+  "servicesPage": {
+    "breadcrumb": "Services",
+    "breadcrumbLabel": "Breadcrumbs",
+    "eyebrow": "OneBranding service",
+    "pricesTitle": "{name}: prices",
+    "pricesNote": "Packages from our price list. The final price depends on the scope we agree in the brief.",
+    "allPrices": "See all prices",
+    "relatedTitle": "Related services",
+    "allServices": "All services",
+    "viewProjects": "See our projects",
+    "priceFrom": "from {price}",
+    "pricePerSlide": "{price} per slide"
+  },
+  "servicesHub": {
+    "title": "Branding & Design Services in Tashkent",
+    "description": "OneBranding services in Tashkent: branding, logo design, brand identity, packaging, websites, photography and more. Prices, process and timelines.",
+    "eyebrow": "Services",
+    "h1": "Branding and design services in Tashkent",
+    "lead": "Strategy, design, content and technology from one team: choose a service to see what it includes, how we work and what it costs.",
+    "listTitle": "All services",
+    "ctaTitle": "Not sure where to start?",
+    "ctaText": "Tell us about your business and goals, and we will suggest the right scope, timeline and price.",
+    "ctaButton": "Discuss your project"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "How OneBranding collects, uses and protects the personal data you send through the contact form on onebrandingworld.com, and how to reach us about it.",
+    "h1": "Privacy Policy",
+    "updatedLabel": "Last updated",
+    "updated": "2026-10-23",
+    "sections": [
+      {
+        "h": "Who we are",
+        "p": [
+          "OneBranding is a branding agency at 18A Amir Temur St., office 5, Tashkent, Uzbekistan. This policy covers the website onebrandingworld.com and the requests sent through its contact form."
+        ]
+      },
+      {
+        "h": "What we collect",
+        "p": [
+          "When you send a request, we receive what you enter in the form: your name, job title, company, phone number, e-mail, the subject and message of your request and the file you attach.",
+          "With the request we also record where your visit came from: the referring website, the first page you opened (with any campaign tags in its address) and the page with the form. It helps us understand which of our pages and channels bring requests."
+        ]
+      },
+      {
+        "h": "Why we use it",
+        "p": [
+          "Only to answer your request: to contact you, prepare a proposal and agree on the work. We do not sell your data or pass it to third parties for their own marketing."
+        ]
+      },
+      {
+        "h": "Where it is kept",
+        "p": [
+          "Requests are stored in our website's content management system, and a notification with the request is sent to our team's private Telegram chat. Access is limited to the people who handle requests."
+        ]
+      },
+      {
+        "h": "Analytics",
+        "p": [
+          "If web analytics (Google Analytics or Yandex Metrica) are enabled on the site, they record visits and actions such as sending the form or tapping our phone number, using cookies. They help us improve the site; the data is aggregated and not used to identify you."
+        ]
+      },
+      {
+        "h": "How long we keep it",
+        "p": [
+          "We keep requests while we work with you and for as long as is needed to keep a record of our communication, then delete them."
+        ]
+      },
+      {
+        "h": "Your rights",
+        "p": [
+          "You can ask us what data we hold about you, ask us to correct it or delete it, or withdraw your consent at any time. Call us at +998 93 560 80 00 or write to us through the contact form."
+        ]
+      },
+      {
+        "h": "Changes",
+        "p": [
+          "We may update this policy when the site or our processes change. The date at the top shows the latest version."
+        ]
+      }
+    ]
+  },
+  "projectsPage": {
+    "back": "Back to Home",
+    "services": "Our services",
+    "unavailable": "Projects are unavailable right now."
+  },
+  "pricing": {
+    "serviceLink": "What {name} includes",
+    "details": "The exact scope, timeline and price are agreed in the brief before we start.",
+    "categories": {
+      "branding": {
+        "title": "Branding",
+        "description": "Branding is the complete development of your business as a strong, recognisable brand. It includes strategy, positioning, logo, corporate identity and the whole visual system that builds trust and sets you apart from competitors."
+      },
+      "logo": {
+        "title": "Logo",
+        "description": "Logo design creates the brand's key symbol: it forms the first impression and sets the visual direction for the whole identity. We design logos based on strategy and positioning, so they are not only attractive but recognisable, relevant and lasting."
+      },
+      "packaging": {
+        "title": "Packaging",
+        "description": "Packaging is a key point of contact with the customer and one of the main reasons a product is chosen on the shelf. We design packaging that draws attention, conveys the product's value, strengthens the brand and stands out among competitors."
+      },
+      "presentation": {
+        "title": "Presentation",
+        "description": "Presentation design turns your ideas into clear, well-structured slides that hold the audience's attention, whether for a sale, a project defence or a public talk. The price is calculated per slide, so the scope fits your needs."
+      }
+    },
+    "lead": "Our prices are in US dollars and are starting prices: the final price depends on the scope we agree after the brief.",
+    "tableTitle": "Price list",
+    "tableService": "Service",
+    "tablePackage": "Package",
+    "tablePrice": "Price",
+    "perSlide": "per slide"
+  },
+  "project": {
+    "palette": "Colour palette",
+    "more": "Want a project like this?",
+    "services": "Our services",
+    "contact": "Discuss your project"
+  },
+  "header": {
+    "allServices": "All services",
+    "blog": "Blog"
   }
 }

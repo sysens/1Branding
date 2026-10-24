@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
       class="branded-robot__canvas"
       :class="{ 'branded-robot__canvas--ready': ready }"
       role="img"
-      aria-label="One Branding robot"
+      aria-label="OneBranding robot"
     />
     <span v-if="failed" class="branded-robot__error" role="status">3D scene unavailable</span>
   </div>

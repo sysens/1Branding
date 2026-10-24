@@ -1,35 +1,25 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-// "More than 3000 clients" (after slidor.agency/agence): a 6-column table of
+// "Brands that trust us" (after slidor.agency/agence): a 6-column table of
 // client names. As on slidor, a name lights up when the pointer passes over it
 // (or it is tapped) and stays lit; once every name is lit, confetti bursts over
 // the table. The cells fade in as a wave when the table first comes into view.
 // The green light behind it floats (each glow drifts slowly on its own loop)
 // and lags the scroll a little, at its own depth, for a gentle parallax.
-// NOTE: the names are the placeholder list from the design (slidor's clients)
-// and must be replaced with OneBranding's own.
+// The names are the brands of the partner logo strip (public/home/partners,
+// from the owner's "Logos White" set); add a name here with its logo there.
 
 const CLIENTS = [
-  "AccorHotels", "Acer", "Air France", "Amazon Web Services", "Amundi", "Arianespace",
-  "AXA", "BearingPoint", "Biomerieux", "Bjorg", "BMW", "BNP Paribas",
-  "Bolloré", "Boston Consulting Group", "Bouygues Immobilier", "Cartier", "Caudalie", "Chanel",
-  "Christian Dior", "Clarins", "Club Med", "CMA CGM", "Coca-Cola", "Crédit agricole",
-  "Criteo", "Danone", "Dassault", "Disney", "Dom Pérignon", "EDF",
-  "Eiffage", "Faurecia", "Ferrari", "FFR", "FFT", "FIFA",
-  "Fnac Darty", "France TV", "Galeries Lafayette", "Generali", "Google", "Groupe Lactalis",
-  "Groupe Lagardere", "Groupe SEB", "Havas", "Heineken", "HyperloopTT", "IKEA",
-  "Interparfums", "Kenzo", "Lacoste", "La Poste", "LinkedIn", "L'Occitane",
-  "L'Oréal", "LVMH", "Marriott", "Michelin", "Microsoft", "Moët Hennessy",
-  "Murex", "N26", "Natixis", "Nespresso", "Nestlé", "OVH",
-  "Paris Saint-Germain", "Patek Philippe", "Pernod Ricard", "Publicis Groupe", "Puma", "PwC",
-  "Rakuten", "RATP", "Renault", "Rolex", "Rothschild & Co", "Saint-Gobain",
-  "SeLoger.com", "Sephora", "SNCF", "Sodexo", "Sopexa", "Sopra Steria",
-  "Tag Heuer", "TCL", "Thalès", "The Fork", "Total Energies", "Toyota",
-  "Ubisoft", "Unibail Rodamco", "Valeo", "Veepee", "Vinci", "Warner Media",
+  "202 Burger", "Anvar Usta", "Apex Pizza", "Art-Anor", "Asakabank", "Barberra",
+  "Bliss", "Brono 360", "Burger King", "Cyber Nat", "Deco 360", "Dodo Kids",
+  "Gloss Maxx", "Grechno", "Hayaati", "Lemon Art", "Luqmam", "Marinno",
+  "Mayda Manti", "Nescafé", "Nivea", "OMAF", "Overspray", "OzPermit",
+  "Perfect Candy", "Poyqadam", "Raviosta", "Red Bull", "Starbucks", "Street 77",
+  "WOK",
 ];
 // Lit from the start, as in the design.
-const PRELIT = ["AccorHotels", "Air France", "BMW", "Ferrari", "Google", "L'Oréal", "Nespresso", "Puma", "Sephora", "Total Energies"];
+const PRELIT = ["Apex Pizza", "Asakabank", "Burger King", "Nescafé", "Nivea", "Red Bull", "Starbucks"];
 const COLUMNS = 6;
 const PHONE_PREVIEW = 24;
 
@@ -194,8 +184,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section ref="section" class="clients" :class="{ 'is-live': live }" lang="en" aria-labelledby="clients-title">
+  <section ref="section" class="clients" :class="{ 'is-live': live }" aria-labelledby="clients-title">
     <!-- The floating light: three soft glows and the diagonal sweep, each on
          its own drift loop and parallax depth (--depth). -->
     <div class="clients__backdrop" aria-hidden="true">
@@ -227,7 +216,7 @@ onBeforeUnmount(() => {
 
     <div class="clients__head">
       <h2 id="clients-title" class="clients__title">
-        <span v-blur-reveal>{{ t("home.clients.titleFirst") }}</span>
+        <span v-blur-reveal>{{ `${t("home.clients.titleFirst")} ` }}</span>
         <span v-blur-reveal><span class="clients__green">{{ t("home.clients.count") }}</span> {{ t("home.clients.titleRest") }}</span>
       </h2>
       <div class="clients__intro">

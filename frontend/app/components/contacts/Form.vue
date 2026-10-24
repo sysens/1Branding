@@ -4,11 +4,11 @@ import { ref, onBeforeUnmount, computed } from "vue";
 const root = ref<HTMLElement | null>(null);
 
 const { t } = useI18n();
-const { own: contactsPage } = await useContactsPage();
-
-const formCopy = computed(() => contactsPage.value?.section2);
-const formTitle = computed(() => formCopy.value?.title || t("contacts.form.title"));
-const formDescription = computed(() => formCopy.value?.text || t("contacts.form.description"));
+const localePath = useLocalePath();
+// The form's copy is the page's own in each language (the CMS entry spelled
+// the brand "One branding").
+const formTitle = computed(() => t("contacts.form.title"));
+const formDescription = computed(() => t("contacts.form.description"));
 const topicTitle = computed(() => t("contacts.form.topicTitle"));
 const topicInput = computed(() => t("contacts.form.topicInput"));
 const servicesTitle = computed(() => t("contacts.form.servicesTitle"));
@@ -343,6 +343,7 @@ onBeforeUnmount(() => {
           class="form-agree will-change-transform font-inter text-[#FFFFFF] font-normal md:text-[20px] md:leading-[20px] mb-[29px] mt-[48px] md:tracking-normal text-[14px] leading-[100%] tracking-[0%]"
         >
           {{ $t("contacts.form.agreement") }}
+          <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
         </p>
 
         <button

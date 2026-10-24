@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { COMPANY, COMPANY_ADDRESS, COMPANY_MAP_URL, companyProfiles, type SocialKind } from "~/utils/company";
+import { toSiteLocale } from "~/utils/locales";
 
 const root = ref<HTMLElement | null>(null);
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const GRAPHQL_URL = useGraphqlUrl();
 
 const { own: contactsPage, fallback: fallbackContactsPage } = await useContactsPage();
@@ -11,52 +13,14 @@ const { own: contactsPage, fallback: fallbackContactsPage } = await useContactsP
 const { socialMedia } = await useFooterSocials();
 
 const section1 = computed(() => contactsPage.value?.section1);
-// Headings and notes keep their i18n copy when the locale has no entry; the
-// contact details themselves (address, hours, phone, site, brief file) are the
-// same in every language, so they come from the English entry instead.
+// Only the brief file comes from the CMS (the English entry off English): the
+// address, hours and phone are the company's own details (utils/company.ts),
+// and the headings and notes are the page's copy in its language.
 const fallbackSection1 = computed(() => fallbackContactsPage.value?.section1);
 
-const addressTitle = computed(
-  () => section1.value?.location?.title || t("contacts.addressTitle")
-);
-const addressText = computed(
-  () =>
-    section1.value?.location?.location ||
-    fallbackSection1.value?.location?.location ||
-    t("contacts.addressText")
-);
-
-const workTitle = computed(
-  () => section1.value?.workingHours?.title || t("contacts.workTitle")
-);
-const workHours = computed(
-  () =>
-    section1.value?.workingHours?.hour ||
-    fallbackSection1.value?.workingHours?.hour ||
-    t("contacts.workHours")
-);
-
-const contactInfoTitle = computed(() => t("contacts.contactInfoTitle"));
-const phoneNumber = computed(
-  () =>
-    section1.value?.contactInfo?.phoneNumber ||
-    fallbackSection1.value?.contactInfo?.phoneNumber ||
-    // Same number as the footer, rather than a placeholder.
-    "+998 93 560 80 00"
-);
-const websiteUrl = computed(
-  () =>
-    section1.value?.contactInfo?.websiteUrl ||
-    fallbackSection1.value?.contactInfo?.websiteUrl ||
-    "onebrandingworld.com"
-);
-
-const noteTitle = computed(() => section1.value?.note?.title || t("contacts.noteTitle"));
-const noteText = computed(() => section1.value?.note?.text || t("contacts.noteText"));
-
-const briefText = computed(
-  () => section1.value?.downloadBrief?.text || t("contacts.briefText")
-);
+const address = computed(() => COMPANY_ADDRESS[toSiteLocale(locale.value)].full);
+const phone = COMPANY.phone;
+const website = COMPANY.website;
 
 const briefFileUrl = computed(() => {
   const url =
@@ -72,14 +36,14 @@ const briefFileUrl = computed(() => {
   }
 });
 
-const telegramLink = computed(() => socialMedia.value?.telegramLink || "");
-const instagramLink = computed(() => socialMedia.value?.instagramLink || "");
-const behanceLink = computed(() => socialMedia.value?.behanceLink || "");
-const linkedinLink = computed(() => {
-  const raw = socialMedia.value?.linkedinLink || "";
-  if (!raw) return "";
-  return raw.startsWith("http") ? raw : `https://${raw.replace(/^\/+/, "")}`;
-});
+const ICONS: Record<SocialKind, { src: string; label: string }> = {
+  telegram: { src: "/Contacts/vector-7.png", label: "Telegram" },
+  instagram: { src: "/Contacts/vector-8.png", label: "Instagram" },
+  behance: { src: "/Contacts/wpf_behance.png", label: "Behance" },
+  linkedin: { src: "/Contacts/group-1.png", label: "LinkedIn" },
+};
+// Only real company profiles get an icon (no links to a bare instagram.com).
+const profiles = computed(() => companyProfiles(socialMedia.value).map((profile) => ({ ...profile, ...ICONS[profile.kind] })));
 
 const onDownloadBrief = () => {
   if (!briefFileUrl.value) return;
@@ -112,120 +76,72 @@ useGsapContext(root, ({ gsap }) => {
 <template>
   <div ref="root">
     <div class="products">
-      <div class="md:flex gap-[189px]">
+      <!-- The company's name, address and phone (NAP), marked up as contact
+           details; the labels are h2s, the details plain text and links. -->
+      <address class="not-italic md:flex gap-[189px]">
         <div class="flex-1">
-          <h3
-            class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
-          >
-            {{ addressTitle }}
-          </h3>
-          <p
-            class="font-['Inter'] font-normal text-[#808080] md:pb-[80px] pb-[40px] text-[20px] leading-[1] tracking-normal"
-          >
-            {{ addressText }}
+          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+            {{ t("contacts.addressTitle") }}
+          </h2>
+          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-[80px] pb-[40px]">
+            <a :href="COMPANY_MAP_URL" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ address }}</a>
           </p>
 
-          <h3
-            class="md:pb-[32px] pb-[20px] font-['Inter'] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
-          >
-            {{ contactInfoTitle }}
-          </h3>
-          <div class="flex gap-[10px] pb-[15px]">
-            <img src="/Contacts/iconsax-call.png" alt="" >
-            <h2
-              class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
-            >
-              {{ phoneNumber }}
-            </h2>
-          </div>
-          <div class="flex gap-[10px] md:pb-[87px] pb-[40px]">
-            <img src="/Contacts/sms.png" alt="" >
-            <h2
-              class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
-            >
-              {{ websiteUrl }}
-            </h2>
-          </div>
+          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+            {{ t("contacts.contactInfoTitle") }}
+          </h2>
+          <p class="flex gap-[10px] pb-[15px]">
+            <img src="/Contacts/iconsax-call.png" alt="" width="24" height="24">
+            <a :href="`tel:${phone.e164}`" class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal hover:text-white transition-colors">{{ phone.display }}</a>
+          </p>
+          <p class="flex gap-[10px] md:pb-[87px] pb-[40px]">
+            <img src="/Contacts/sms.png" alt="" width="24" height="24">
+            <a :href="`https://${website}/`" class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal hover:text-white transition-colors">{{ website }}</a>
+          </p>
         </div>
 
         <div class="flex-1">
-          <h3
-            class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
-          >
-            {{ workTitle }}
-          </h3>
-          <h2
-            class="font-['Inter'] md:pb-[80px] pb-[40px] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal"
-          >
-            {{ workHours }}
+          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+            {{ t("contacts.workTitle") }}
           </h2>
+          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-[80px] pb-[40px]">
+            {{ t("contacts.workHours") }}
+          </p>
 
-          <h3
-            class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
-          >
-            {{ $t("common.socials") }}
-          </h3>
-          <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
-            <a
-              class="telegram"
-              aria-label="Telegram"
-              :href="telegramLink || undefined"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/Contacts/vector-7.png" alt="" >
-            </a>
-            <a
-              class="instagream"
-              aria-label="Instagram"
-              :href="instagramLink || undefined"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/Contacts/vector-8.png" alt="" >
-            </a>
-
-            <a
-              class="be"
-              aria-label="Behance"
-              :href="behanceLink || undefined"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/Contacts/wpf_behance.png" alt="" >
-            </a>
-            <a
-              class="linkedIn"
-              aria-label="LinkedIn"
-              :href="linkedinLink || undefined"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/Contacts/group-1.png" alt="" >
-            </a>
-          </div>
+          <template v-if="profiles.length">
+            <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+              {{ t("common.socials") }}
+            </h2>
+            <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
+              <a
+                v-for="profile in profiles"
+                :key="profile.kind"
+                :class="profile.kind"
+                :aria-label="profile.label"
+                :href="profile.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img :src="profile.src" alt="">
+              </a>
+            </div>
+          </template>
         </div>
-      </div>
+      </address>
 
       <div class="md:flex gap-[189px]">
         <div class="flex-1">
-          <h3
-            class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]"
-          >
-            {{ noteTitle }}
-          </h3>
-          <h2
-            class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-0 pb-[40px]"
-          >
-            {{ noteText }}
+          <h2 class="font-['Inter'] md:pb-[32px] pb-[20px] text-[#FFFFFF] font-normal md:text-[24px] md:leading-[1] md:tracking-normal text-[16px] leading-[100%] tracking-[0%]">
+            {{ t("contacts.noteTitle") }}
           </h2>
+          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal md:pb-0 pb-[40px]">
+            {{ t("contacts.noteText") }}
+          </p>
         </div>
 
         <div class="flex-1">
-          <p
-            class="font-['Inter'] font-normal pb-[30px] text-[#808080] text-[20px] leading-[1] tracking-normal"
-          >
-            {{ briefText }}
+          <p class="font-['Inter'] font-normal text-[#808080] text-[20px] leading-[1] tracking-normal pb-[30px]">
+            {{ t("contacts.briefText") }}
           </p>
           <button
             type="button"

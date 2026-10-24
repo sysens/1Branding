@@ -17,38 +17,38 @@
     "description": "OneBranding — брендинговое агентство полного цикла в Ташкенте: стратегия и нейминг, разработка логотипа, фирменный стиль, брендбук и дизайн упаковки.",
     "heroEyebrow": "Брендинговое агентство в Ташкенте",
     "home": {
-      "title": "Брендинговое агентство в Ташкенте — OneBranding",
+      "title": "Брендинговое агентство в Ташкенте {'|'} OneBranding",
       "description": "OneBranding — брендинговое агентство полного цикла в Ташкенте: стратегия и нейминг, разработка логотипа, фирменный стиль, брендбук и дизайн упаковки."
     },
     "about": {
       "title": "О брендинговом агентстве OneBranding в Ташкенте",
-      "description": "Команда OneBranding: стратеги, дизайнеры и маркетологи, которые создают сильные бренды для бизнеса в Узбекистане — от идеи и нейминга до айдентики."
+      "description": "Команда OneBranding: стратеги, дизайнеры и маркетологи, которые создают сильные бренды для бизнеса в Узбекистане — от идеи и нейминга до фирменного стиля."
     },
     "projects": {
-      "title": "Портфолио: кейсы брендинга и айдентики {'|'} OneBranding",
-      "description": "Кейсы OneBranding: логотипы, фирменный стиль, упаковка и брендбуки для брендов Узбекистана — Makva, Luqman, Apex Pizza, Dodo Kids и других.",
-      "h1": "Портфолио брендингового агентства OneBranding"
+      "title": "Портфолио брендинга и фирменного стиля {'|'} OneBranding",
+      "description": "Портфолио OneBranding: логотипы, фирменный стиль, дизайн упаковки, брендбуки и рекламные кампании, созданные командой брендингового агентства в Ташкенте.",
+      "h1": "Портфолио OneBranding: брендинг, упаковка и фирменный стиль"
     },
     "price": {
       "title": "Цены на брендинг и логотип в Ташкенте {'|'} OneBranding",
-      "description": "Стоимость брендинга в Ташкенте: разработка логотипа, фирменного стиля, брендбука, нейминга и дизайна упаковки. Пакеты услуг, сроки и состав работ.",
+      "description": "Цены на брендинг в Ташкенте: пакеты от $1 900, логотип от $900, упаковка от $500, дизайн презентаций от $35 за слайд. Узнайте, что входит в каждую услугу.",
       "h1": "Цены на брендинг, логотип и фирменный стиль в Ташкенте"
     },
     "oneGuarantee": {
-      "title": "OneGuarantee — гарантия результата брендинга {'|'} OneBranding",
-      "description": "OneGuarantee от OneBranding: дизайн, который гарантированно понравится вашей аудитории. Проверяем решения на живой аудитории до запуска бренда.",
-      "h1": "OneGuarantee — гарантия результата брендинга"
+      "title": "OneGuarantee: дизайн, проверенный до запуска {'|'} OneBranding",
+      "description": "OneGuarantee от OneBranding: до запуска бренда мы проверяем дизайн-решения на живой аудитории дизайнеров, чтобы они работали на вашу целевую аудиторию.",
+      "h1": "OneGuarantee: дизайн, проверенный до запуска"
     },
     "contacts": {
-      "title": "Контакты брендингового агентства в Ташкенте {'|'} OneBranding",
+      "title": "Контакты OneBranding — брендинговое агентство в Ташкенте",
       "description": "Свяжитесь с OneBranding: офис в Ташкенте, ул. Амира Темура, 18А. Расскажите о задаче — подготовим предложение по брендингу, логотипу и упаковке."
     },
     "news": {
-      "title": "Блог и новости о брендинге {'|'} OneBranding",
-      "description": "Статьи и новости OneBranding о брендинге, разработке логотипов, фирменном стиле, упаковке и маркетинге для бизнеса в Узбекистане."
+      "title": "Блог о брендинге и новости агентства {'|'} OneBranding",
+      "description": "Статьи и новости OneBranding: брендинг, разработка логотипа, фирменный стиль, дизайн упаковки и маркетинг для бизнеса в Ташкенте и по всему Узбекистану."
     },
     "project": "кейс брендинга",
-    "projectDescription": "Кейс брендингового агентства OneBranding: {title}. Стратегия, логотип, фирменный стиль и дизайн для бренда из Узбекистана.",
+    "projectDescription": "Кейс OneBranding: {title}. Стратегия бренда, логотип, фирменный стиль и дизайн для бренда из Узбекистана.",
     "category": "Услуги брендинга"
   },
   "common": {
@@ -82,44 +82,44 @@
     "earthDives": {
       "title": "Наши возможности",
       "fallbackTitle": "Логотип и фирменный стиль",
-      "fallbackDesc": "Мы создаем запоминающиеся визуальные идентичности, отражающие ценности вашего бренда."
+      "fallbackDesc": "Создаём запоминающийся фирменный стиль, который отражает ценности вашего бренда."
     },
     "manifesto": {
-      "m1Line1": "We see the whole.",
-      "m1Line2": "ONE masters",
-      "m1Line2Accent": "every detail.",
-      "m2Line1": "The ONE makes your brand",
-      "m2Line2": "turn market leaders into followers",
-      "m3Line1": "we build brands that",
-      "m3Line2": "turn leaders into followers."
+      "m1Line1": "Мы видим целое.",
+      "m1Line2": "ONE выверяет",
+      "m1Line2Accent": "каждую деталь.",
+      "m2Line1": "Вместе с ONE ваш бренд",
+      "m2Line2": "делает лидеров рынка догоняющими",
+      "m3Line1": "мы создаём бренды,",
+      "m3Line2": "за которыми идут лидеры."
     },
     "identity": {
-      "headingLead": "The",
-      "headingAccent": "“One”",
-      "headingRest": "in OneBranding",
-      "headingSecond": "defines",
-      "headingSecondAccent": "how we work:",
-      "body": "one partner, one vision, and a complete solution from start to finish. We bring",
-      "bodyStrong": "strategy, naming, branding, design, photography, websites, and CRM & ERP",
-      "bodyRest": "systems together through one connected process. From the first idea to launch and beyond, we take care of every stage. Your identity, content, digital presence, and business systems are developed around the same vision, with precise attention to detail and consistently high standards of quality. Every element belongs to the bigger picture. Every solution strengthens the whole."
+      "headingLead": "Слово",
+      "headingAccent": "«One»",
+      "headingRest": "в OneBranding",
+      "headingSecond": "определяет",
+      "headingSecondAccent": "наш подход:",
+      "body": "один партнёр, одно видение и комплексное решение от начала до конца. Мы объединяем",
+      "bodyStrong": "стратегию, нейминг, брендинг, дизайн, фотосъёмку, сайты, CRM- и ERP-системы",
+      "bodyRest": "в единый связный процесс. От первой идеи до запуска и дальше мы ведём каждый этап. Айдентика, контент, присутствие в цифровой среде и бизнес-системы развиваются вокруг одного видения — с точным вниманием к деталям и неизменно высоким стандартом качества. Каждый элемент — часть большой картины. Каждое решение усиливает целое."
     },
     "gallery": {
       "title": "Фирменный стиль — ключ к узнаваемости продукта.",
-      "description": "Именно единый визуальный язык формирует первое впечатление и закрепляется в памяти клиента. Когда бренд последователен в цветах, форме и подаче, его легко узнать среди сотен конкурентов.",
+      "description": "Единый визуальный язык формирует первое впечатление и остаётся в памяти клиента. Когда бренд последователен в цветах, формах и подаче, его легко узнать среди сотен конкурентов. Клиенты запоминают не только продукт — они запоминают стиль. И именно этот стиль становится причиной выбирать его снова и снова.",
       "hint": "↓ Прокручивайте — лента движется вбок"
     },
     "parts": {
       "headlineFirst": "Every part.",
       "headlineSecond": "Working as one.",
-      "lead": "A brand built to lead.",
-      "tagline": "One vision. Quality in every detail.",
+      "lead": "Бренд, который ведёт.",
+      "tagline": "Одно видение. Качество в каждой детали.",
       "cards": {
-        "naming": "Naming",
-        "branding": "Branding",
-        "design": "Design",
-        "photography": "Photography",
-        "websites": "Websites",
-        "crm": "CRM & ERP"
+        "naming": "Нейминг",
+        "branding": "Брендинг",
+        "design": "Дизайн",
+        "photography": "Фотосъёмка",
+        "websites": "Сайты",
+        "crm": "CRM и ERP"
       }
     },
     "rowShorteners": {
@@ -131,20 +131,20 @@
       ]
     },
     "world": {
-      "eyebrow": "Создаем бренды по всему",
+      "eyebrow": "Создаём бренды по всему",
       "word": "МИРУ",
-      "lead": "Мы создаем сильные и узнаваемые бренды, отвечающие",
+      "lead": "Мы создаём сильные и узнаваемые бренды, которые отвечают",
       "strong": "стандартам",
-      "closing": "и выделяющиеся на любом рынке."
+      "closing": "и выделяются на любом рынке."
     },
     "digitalExperience": {
       "titleLines": [
-        "Мы создаем цифровые",
-        "впечатления, которые",
-        "ощущаются премиально",
+        "Мы создаём цифровые",
+        "продукты, которые",
+        "выглядят премиально",
         "и работают безупречно"
       ],
-      "titleAccentWord": "ощущаются премиально",
+      "titleAccentWord": "выглядят премиально",
       "description": "и превращают каждое взаимодействие в более прочную связь между брендом и его аудиторией."
     },
     "firstGlance": {
@@ -155,16 +155,16 @@
           "description": "Решения принимаются за секунды. Именно дизайн определяет, останутся ли люди с вами или пойдут дальше."
         },
         {
-          "titleLead": "Прежде чем прочитать,",
-          "titleAccent": "они чувствуют.",
-          "description": "Дизайн создает первое впечатление, и именно это впечатление решает всё."
+          "titleLead": "Ещё не прочитав,",
+          "titleAccent": "уже чувствуют.",
+          "description": "Дизайн создаёт первое впечатление, а оно решает всё."
         }
       ]
     },
     "awards": {
       "year": "2026",
       "title": "Awwward",
-      "subtitle": "создавшие лучшие бренды Узбекистана"
+      "subtitle": "за бренды, которые мы создаём по всему Узбекистану"
     },
     "brandStories": {
       "ariaLabel": "Истории брендов",
@@ -176,212 +176,220 @@
         },
         {
           "title": "Маленькая конфета.\nБольшое чувство.",
-          "description": "Perfect Candy превращает маленькое лакомство в запоминающийся момент. Выразительные цвета, характерная упаковка и игривая айдентика дарят одно и то же чувство каждой части бренда.",
+          "description": "Perfect Candy превращает маленькое лакомство в запоминающийся момент. Выразительные цвета, характерная упаковка и игривая айдентика передают одно и то же чувство в каждой части бренда.",
           "alt": "Айдентика Perfect Candy: фиолетовая упаковка и шоколадные сердца"
         },
         {
           "title": "Свежее направление.\nЭто GreenGo.",
-          "description": "GreenGo заряжает энергией каждое движение. Ясный визуальный язык, уверенная типографика и яркая зеленая палитра делают бренд мгновенно узнаваемым — в любом путешествии.",
+          "description": "GreenGo заряжает энергией каждое движение. Ясный визуальный язык, уверенная типографика и яркая зелёная палитра делают бренд мгновенно узнаваемым — куда бы ни вёл путь.",
           "alt": "Айдентика GreenGo: электротранспорт"
         }
       ]
     },
     "stats": {
       "brandsValue": "2500+",
-      "brandsLabel": "Brands & Projects Created",
+      "brandsLabel": "Созданных брендов и проектов",
       "yearsValue": "10+",
-      "yearsLabel": "Years - Branding expertise.",
+      "yearsLabel": "Лет опыта в брендинге.",
       "servicesValue": "25+",
-      "servicesLabel": "Creative services.",
+      "servicesLabel": "Креативных услуг.",
       "closingBefore": "Everything - ",
       "closingAccent": "One",
       "closingAfter": "System."
     },
     "airways": {
-      "strong": "strong",
-      "rest1": "product needs",
-      "rest2": "presentation."
+      "strong": "сильный",
+      "rest1": "продукт требует",
+      "rest2": "достойной подачи."
     },
     "presentations": {
-      "titleLead": "Great products need ",
-      "titleAccent": "more than quality.",
-      "text": "A strong presentation should reflect the same level of quality, precision and ambition behind the product itself. At OneBranding, we transform information into a clear visual system where structure, typography, composition and storytelling work as one. Every detail is considered to communicate value with clarity, strengthen perception and present the brand at the level it deserves.",
-      "cta": "lets go!",
-      "more": "Learn more about Presentations"
+      "titleLead": "Сильному продукту мало ",
+      "titleAccent": "одного качества.",
+      "text": "Сильная презентация должна отражать тот же уровень качества, точности и амбиций, что и сам продукт. В OneBranding мы превращаем информацию в ясную визуальную систему, где структура, типографика, композиция и логика повествования работают как единое целое. Каждая деталь продумана, чтобы ясно доносить ценность, усиливать восприятие и представлять бренд на том уровне, которого он заслуживает.",
+      "cta": "поехали!",
+      "more": "Подробнее о презентациях"
     },
     "social": {
       "one": "ONE",
-      "brand": "BRAND.",
-      "visual": "VISUAL",
-      "language": "LANGUAGE.",
-      "text": "Social media is one of the most important touchpoints between a brand and its audience. Every post, story, campaign and advertising creative should feel like part of one strong visual system. At OneBranding, we create Social Identity systems where typography, colors, photography, composition and graphic elements work together consistently across every format.",
-      "textStrong": "The result is more than a beautiful Instagram feed.",
-      "text2": "It is a distinctive visual language that strengthens recognition, builds trust and makes your brand look professional at every interaction."
+      "brand": "БРЕНД.",
+      "visual": "ВИЗУАЛЬНЫЙ",
+      "language": "ЯЗЫК.",
+      "text": "Соцсети — одна из главных точек контакта бренда с аудиторией. Каждый пост, сторис, кампания и рекламный креатив должны восприниматься как часть одной сильной визуальной системы. В OneBranding мы создаём айдентику для соцсетей, в которой типографика, цвета, фотографии, композиция и графические элементы согласованно работают в любом формате.",
+      "textStrong": "Результат — больше, чем красивая лента в Instagram.",
+      "text2": "Это самобытный визуальный язык, который делает бренд узнаваемее, вызывает доверие и придаёт ему профессиональный вид в каждой точке контакта."
     },
     "services": {
       "one": "ONE",
       "partner": "PARTNER.",
       "every": "EVERY",
       "solution": "SOLUTION.",
-      "subtitle": "Strategy, design, content and technology. Connected around one vision.",
-      "selected": "Selected service",
-      "explore": "Explore service",
+      "subtitle": "Стратегия, дизайн, контент и технологии — вокруг одного видения.",
+      "selected": "Выбранная услуга",
+      "explore": "Подробнее об услуге",
       "closingFirst": "Every part connected.",
       "closingLead": "Working as ",
       "closingAccent": "one.",
       "items": {
         "01": {
-          "name": "Brand Strategy & Naming",
-          "description": "Research, positioning and names with purpose.",
-          "tagline": "Clear strategy. A name that lasts."
+          "name": "Бренд-стратегия и нейминг",
+          "description": "Исследования, позиционирование и названия со смыслом.",
+          "tagline": "Чёткая стратегия. Имя на годы."
         },
         "02": {
-          "name": "Branding & Rebranding",
-          "description": "Logos, identity systems and brand guidelines.",
-          "tagline": "One identity. Every touchpoint."
+          "name": "Брендинг и ребрендинг",
+          "description": "Логотипы, фирменный стиль и брендбуки.",
+          "tagline": "Единый стиль в каждой точке контакта."
         },
         "03": {
-          "name": "Packaging Design",
-          "description": "Packaging built to stand out on the shelf.",
-          "tagline": "Designed to be picked up first."
+          "name": "Дизайн упаковки",
+          "description": "Упаковка, которая выделяется на полке.",
+          "tagline": "Создана, чтобы её брали первой."
         },
         "04": {
-          "name": "Graphic & Print Design",
-          "description": "Menus, catalogs and branded print materials.",
-          "tagline": "Every page in one visual language."
+          "name": "Графический дизайн и полиграфия",
+          "description": "Меню, каталоги и фирменная полиграфия.",
+          "tagline": "Каждая страница — на одном визуальном языке."
         },
         "05": {
-          "name": "Social Media & Campaigns",
-          "description": "Content systems and campaigns that connect.",
-          "tagline": "One voice across every feed."
+          "name": "SMM и рекламные кампании",
+          "description": "Контент-системы и кампании, которые находят отклик.",
+          "tagline": "Один голос во всех лентах."
         },
         "06": {
-          "name": "Photography & Retouching",
-          "description": "Premium brand and product imagery.",
-          "tagline": "Images that make the product sell."
+          "name": "Фотосъёмка и ретушь",
+          "description": "Премиальные имиджевые и предметные снимки.",
+          "tagline": "Кадры, которые продают продукт."
         },
         "07": {
-          "name": "Video, 3D & Motion Design",
-          "description": "Visualization and animation that bring ideas to life.",
-          "tagline": "Ideas that move."
+          "name": "Видео, 3D и моушн-дизайн",
+          "description": "Визуализация и анимация, которые оживляют идеи.",
+          "tagline": "Идеи в движении."
         },
         "08": {
-          "name": "Presentation Design",
-          "description": "Clear stories. Convincing presentations.",
-          "tagline": "Stories that win the room."
+          "name": "Дизайн презентаций",
+          "description": "Ясные истории. Убедительные презентации.",
+          "tagline": "Истории, которые покоряют зал."
         },
         "09": {
-          "name": "Website Design & Development",
-          "description": "Custom websites built around your business.",
-          "tagline": "Your brand, live on the web."
+          "name": "Дизайн и разработка сайтов",
+          "description": "Индивидуальные сайты под задачи вашего бизнеса.",
+          "tagline": "Ваш бренд оживает в сети."
         },
         "10": {
-          "name": "UI/UX & App Design",
-          "description": "Intuitive experiences for web and mobile.",
-          "tagline": "Simple to use. Hard to forget."
+          "name": "UI/UX и дизайн приложений",
+          "description": "Понятные интерфейсы для веба и мобильных устройств.",
+          "tagline": "Просто пользоваться. Трудно забыть."
         },
         "11": {
-          "name": "CRM, ERP & Odoo Solutions",
-          "description": "Connected systems. Smarter operations.",
-          "tagline": "Every process in one system."
+          "name": "Решения CRM, ERP и Odoo",
+          "description": "Связанные системы. Слаженная работа.",
+          "tagline": "Все процессы в одной системе."
         },
         "12": {
-          "name": "Signage & Exhibition Design",
-          "description": "Your identity, brought into physical spaces.",
-          "tagline": "Your brand, life-size."
+          "name": "Вывески и выставочный дизайн",
+          "description": "Ваш фирменный стиль — в физическом пространстве.",
+          "tagline": "Ваш бренд в натуральную величину."
         }
-      }
+      },
+      "intro": "OneBranding — брендинговое агентство полного цикла в Ташкенте: бренд-стратегия и нейминг, разработка логотипа, фирменный стиль, упаковка, сайты и многое другое — силами одной команды.",
+      "allLink": "Все услуги",
+      "pricesLink": "Цены",
+      "contactLink": "Связаться с нами"
     },
     "vision": {
       "brand": "OneBranding",
-      "lineFirst": "One vision.",
-      "lineSecond": "Every solution.",
-      "label": "Awwwards / Design concept",
+      "lineFirst": "Одно видение.",
+      "lineSecond": "Все решения.",
+      "label": "Awwwards / Дизайн-концепция",
       "year": "2026",
-      "cta": "Learn more"
+      "cta": "Об агентстве"
     },
     "compare": {
-      "titleFirst": "Make your brand look better",
-      "titleLead": "with ",
-      "titleAccent": "character identity",
-      "hint": "*slide",
-      "before": "Before",
-      "after": "After",
-      "label": "Before and after",
-      "prev": "Previous project",
-      "next": "Next project",
-      "cta": "view projects"
+      "titleFirst": "Сделайте бренд выразительнее",
+      "titleLead": "с ",
+      "titleAccent": "характерной айдентикой",
+      "hint": "*потяните",
+      "before": "До",
+      "after": "После",
+      "label": "До и после",
+      "prev": "Предыдущий проект",
+      "next": "Следующий проект",
+      "cta": "все проекты"
     },
     "audit": {
-      "eyebrow": "Business audit & strategy",
-      "lineFirst": "From problem",
-      "lineSecond": "to progress.",
-      "asideFirst": "A clear view of your business.",
-      "asideSecond": "A precise plan for what comes next.",
-      "current": "Current state",
-      "target": "Target state",
+      "eyebrow": "Аудит бизнеса и стратегия",
+      "lineFirst": "От проблемы",
+      "lineSecond": "к результату.",
+      "asideFirst": "Ясный взгляд на ваш бизнес.",
+      "asideSecond": "Точный план следующих шагов.",
+      "current": "Текущее состояние",
+      "target": "Целевое состояние",
       "steps": {
-        "audit": "Audit",
-        "analysis": "Analysis",
-        "strategy": "Strategy",
-        "action": "Action"
+        "audit": "Аудит",
+        "analysis": "Анализ",
+        "strategy": "Стратегия",
+        "action": "Действия"
       },
-      "planAccent": "One plan.",
-      "planRest": "Clear priorities. Measurable goals.",
-      "text": "We examine your business, identify what is holding it back, and map a clear path from point A to point B. Through audit and analysis, we turn data into precise priorities, practical solutions, and a strategy built around measurable goals. You get a roadmap that defines what to change, why it matters, and how to move forward.",
-      "cta": "Learn more"
+      "planAccent": "Один план.",
+      "planRest": "Ясные приоритеты. Измеримые цели.",
+      "text": "Мы изучаем ваш бизнес, выявляем, что сдерживает его, и прокладываем ясный путь из точки А в точку Б. Через аудит и анализ мы превращаем данные в точные приоритеты, практичные решения и стратегию, построенную вокруг измеримых целей. Вы получаете дорожную карту: что менять, почему это важно и как двигаться дальше.",
+      "cta": "Обсудить проект"
     },
     "clients": {
-      "titleFirst": "More than",
-      "count": "3000",
-      "titleRest": "clients",
-      "text": "We are lucky to have produced presentation materials for all sectors of activity and sizes of companies, in all graphic worlds.",
-      "trustStrong": "200+ listed companies",
-      "trustRest": "have placed their trust in us.",
-      "showAll": "Show all {count} clients"
+      "titleFirst": "Бренды, которые",
+      "count": "доверяют",
+      "titleRest": "нам",
+      "text": "Сети ресторанов, банки, FMCG- и ретейл-бренды: мы создаём айдентику, упаковку, рекламные кампании и презентационные материалы для компаний любого масштаба.",
+      "trustStrong": "От Ташкента до международных рынков —",
+      "trustRest": "на узбекском, русском и английском.",
+      "showAll": "Показать все бренды ({count})"
     },
     "faq": {
-      "titleLead": "Frequently asked",
-      "titleAccent": "questions",
+      "titleLead": "Часто задаваемые",
+      "titleAccent": "вопросы",
       "items": [
         {
-          "q": "How does the project process work?",
-          "a": "Every project runs in clear stages: a brief and research into your market, strategy and concept, design, refinement with your feedback, and the final hand-over. You see progress at each step and approve it before we move on."
+          "q": "Как проходит работа над проектом?",
+          "a": "Каждый проект идёт по понятным этапам: бриф и исследование вашего рынка, стратегия и концепция, дизайн, доработка по вашим комментариям и финальная передача материалов. Вы видите результат на каждом шаге и утверждаете его, прежде чем мы двинемся дальше."
         },
         {
-          "q": "How long does it take to develop a brand?",
-          "a": "It depends on the scope. A focused identity usually takes 2 to 6 weeks; a full brand system with naming, packaging or a website takes longer. We agree on the timeline before we start and keep to it."
+          "q": "Сколько времени занимает разработка бренда?",
+          "a": "Зависит от объёма работ. Разработка фирменного стиля обычно занимает от 2 до 6 недель; полная бренд-система с неймингом, упаковкой или сайтом — дольше. Сроки мы согласуем до начала работы."
         },
         {
-          "q": "What does branding include?",
-          "a": "Strategy and positioning, naming if needed, the logo and identity system, colours, typography, graphic elements and a brand book with clear rules — plus the applications you need, from packaging to social media and the website."
+          "q": "Сколько стоит брендинг в Ташкенте?",
+          "a": "Пакеты брендинга: Launch Base — от $1 900, One Pro — от $2 900, Global ultimate — от $5 900. Отдельный логотип стоит от $900, дизайн упаковки — от $500. Итоговая стоимость зависит от объёма работ, который мы согласуем после брифа."
         },
         {
-          "q": "Can changes be made during the process?",
-          "a": "Yes. Each stage includes rounds of revisions, and we work closely with you so the result reflects your goals. Larger changes in direction are discussed openly and planned in."
+          "q": "Что входит в брендинг?",
+          "a": "Стратегия и позиционирование, при необходимости нейминг, логотип и система айдентики, цвета, шрифты, графические элементы и брендбук с понятными правилами — а также нужные вам носители: от упаковки до соцсетей и сайта."
         },
         {
-          "q": "Do you work with international projects?",
-          "a": "Yes. We work with clients in Uzbekistan and abroad, remotely or on site, in Uzbek, Russian and English, and we design with international markets and standards in mind."
+          "q": "Можно ли вносить изменения по ходу работы?",
+          "a": "Да. Каждый этап включает раунды правок, и мы тесно работаем с вами, чтобы результат отвечал вашим целям. Серьёзные изменения направления мы открыто обсуждаем и закладываем в план."
         },
         {
-          "q": "What is required to start?",
-          "a": "A short conversation about your business, goals and audience. We send you a brief, agree on scope, timeline and price, sign a contract — and start with research."
+          "q": "Вы работаете с международными проектами?",
+          "a": "Да. Мы работаем с клиентами в Узбекистане и за рубежом — удалённо или на месте, на узбекском, русском и английском языках — и проектируем с учётом международных рынков и стандартов."
         },
         {
-          "q": "Why is the cost above average?",
-          "a": "Because you get a complete system rather than a single logo: research, strategy, a team of specialists and a brand that works across every touchpoint. It is an investment that keeps paying off as your business grows."
+          "q": "Что нужно, чтобы начать?",
+          "a": "Короткий разговор о вашем бизнесе, целях и аудитории. Мы отправляем вам бриф, согласуем объём работ, сроки и стоимость, подписываем договор — и начинаем с исследования."
         },
         {
-          "q": "What materials will I receive at the end?",
-          "a": "All final files in the formats you need (vector, print and web), the brand book with usage rules, source files and the agreed applications — everything your team and partners need to use the brand correctly."
+          "q": "Почему стоимость выше средней?",
+          "a": "Потому что вы получаете не один логотип, а целостную систему: исследование, стратегию, команду специалистов и бренд, который работает во всех точках контакта. Это вложение, которое продолжает окупаться по мере роста вашего бизнеса."
+        },
+        {
+          "q": "Какие материалы я получу в итоге?",
+          "a": "Все финальные файлы в нужных форматах (вектор, для печати и для веба), брендбук с правилами использования, исходники и согласованные носители — всё, что нужно вашей команде и партнёрам, чтобы правильно применять бренд."
         }
       ]
     },
     "fresh": {
-      "accent": "Fresh",
-      "rest": "projects",
-      "more": "More"
+      "accent": "Свежие",
+      "rest": "проекты",
+      "more": "Все проекты"
     }
   },
   "productSlug": {
@@ -390,7 +398,24 @@
   },
   "aboutPage": {
     "title": "Познакомьтесь с нашей командой",
-    "moreButton": "Подробнее"
+    "moreButton": "Подробнее",
+    "cms": {
+      "section1Title": "Познакомьтесь с нашей командой",
+      "section2": [
+        {
+          "title": "Наша миссия",
+          "text": "Мы создаём бренды, которые не просто существуют, а влияют.\n\nКаждый проект для нас — стратегическая задача, в которой дизайн становится инструментом роста и конкурентным преимуществом.\n\nМы соединяем маркетинговое мышление, глубокий анализ и сильное визуальное исполнение, чтобы создавать бренды с характером. От идеи до финальной реализации каждая деталь выверена и работает на результат.\n\nНаша миссия — создавать бренды, которые говорят громко, выглядят уверенно и продают без лишних слов."
+        },
+        {
+          "title": "Наше видение",
+          "text": "Мы видим будущее брендинга в простоте, ясности и смысле.\n\nВ мире, перегруженном информацией, побеждают точные, честные и визуально сильные бренды.\n\nOneBranding создаёт айдентику, которая остаётся в памяти и вызывает доверие.\n\nМы верим в минимализм с характером, где каждая линия, цвет и форма имеют значение.\n\nБудущее за брендами, которые понимают свою аудиторию и говорят на её языке. Именно такие бренды мы и создаём."
+        }
+      ],
+      "section3Title": "Команда OneBranding",
+      "section3Text": "В OneBranding нет случайных решений — только продуманный подход, характер и ответственность за результат.\n\nПоэтому наши проекты не просто хорошо выглядят — они дают результат."
+    },
+    "lead": "OneBranding — брендинговое агентство полного цикла в Ташкенте. Мы создаём бренды — от стратегии до каждой точки контакта — для компаний в Узбекистане и за рубежом, на узбекском, русском и английском языках.",
+    "servicesTitle": "Чем мы занимаемся"
   },
   "newsPage": {
     "title": "Блог нашей студии"
@@ -404,47 +429,79 @@
     "section2": {
       "title": "ONEGUARANTEE",
       "text1": "Дизайн, который гарантированно* понравится целевой аудитории бренда!",
-      "text2": "Мы проверяем наши решения посредством онлайн группы топ дизайнеров (в каждом группе около 5 - тыс. живых людей, которые готовы оценивать наши решения)",
-      "text3": "Есть много компаний, предлагающих креативные решения вместо эффективных. Такие решения привлекают внимание, выглядят интересно, смело и новаторски, но зачастую не отвечают бизнес-целям клиента.",
-      "text4": "В этом подходе креатив и красота идут вразрез с эффективностью. Происходит влияние креативного видения агентства вместо совместной работы на территории бизнес-интересов клиента.",
-      "text5": "Onebranding сближает позиции агентства и клиента, делает отношения партнерскими, понятными, а результат работы - эффективным!",
+      "text2": "Мы проверяем свои решения в онлайн-группе ведущих дизайнеров (в каждой группе около 5 тысяч реальных людей, готовых оценивать наши решения).",
+      "text3": "Многие компании предлагают креативные решения вместо эффективных. Такие решения привлекают внимание, выглядят интересно, смело и новаторски, но зачастую не отвечают бизнес-целям клиента.",
+      "text4": "При таком подходе креатив и красота идут вразрез с эффективностью. На результат влияет творческое видение агентства, а не совместная работа в интересах бизнеса клиента.",
+      "text5": "Onebranding сближает позиции агентства и клиента, делает отношения партнёрскими и понятными, а результат работы — эффективным!",
       "highlightToken": "гарантированно*"
     },
-    "reasonsTitle": "ПОЧЕМУ ЭТО ЭФФЕКТИВНО РАБОТАЕТ?"
+    "reasonsTitle": "ПОЧЕМУ ЭТО РАБОТАЕТ?",
+    "cms": {
+      "section4": {
+        "title": "Мы работаем с брендами со всего мира.",
+        "cards": [
+          {
+            "title": "Глобальный брендинг",
+            "description": "Создаём сильные, узнаваемые бренды, которые отвечают международным стандартам и выделяются на любом рынке."
+          },
+          {
+            "title": "Дизайн без границ",
+            "description": "Работаем с клиентами по всему миру над проектами любой сложности — от идеи до целостной бренд-системы."
+          },
+          {
+            "title": "Качество мирового уровня",
+            "description": "Каждое решение продумано до мелочей, чтобы бренд выглядел уверенно, премиально и конкурентоспособно на мировой арене."
+          }
+        ]
+      },
+      "section5": {
+        "items": [
+          "Измеряем, как целевая аудитория воспринимает бренд на старте",
+          "Стратегический контроль всего проекта",
+          "Над одной задачей параллельно работают несколько команд"
+        ]
+      },
+      "section6": {
+        "title": "Мы работаем с брендами, которые хотят большего.",
+        "text": "Если вам нужен не просто дизайн, а результат, который приносит выручку, — вы по адресу.",
+        "buttonText": "Написать в Telegram"
+      }
+    }
   },
   "warning": {
-    "title": "Уважаемые покупатели",
+    "title": "Уважаемые клиенты",
     "text": "Мы ценим ваше время и заранее сообщаем, что стоимость услуг рассчитывается индивидуально и зависит от сложности проекта, сроков и объёма работ. Перед началом работы мы уточняем задачи, этапы и бюджет, чтобы предложить оптимальное решение и прозрачный план. Пожалуйста, оставляйте актуальные контактные данные — это ускорит согласование и подготовку коммерческого предложения. Если у вас остались вопросы, напишите нам, и мы подробно проконсультируем. Спасибо за понимание и доверие."
   },
   "contacts": {
-    "title": "КОНТАКТЫ",
+    "title": "Контакты OneBranding в Ташкенте",
     "addressTitle": "АДРЕС",
     "addressText": "г. Ташкент, Шайхантахурский район, ул. Амира Темура, 18А, офис 5, Узбекистан, 100047",
     "workTitle": "ВРЕМЯ РАБОТЫ",
-    "workHours": "Понедельник — Пятница 10:00 — 19:00",
+    "workHours": "Понедельник — пятница, 10:00–19:00",
     "contactInfoTitle": "КОНТАКТНАЯ ИНФОРМАЦИЯ",
     "noteTitle": "ПРИМЕЧАНИЕ",
     "noteText": "Агентство работает в основном с юридическими лицами и крупными проектами. Пожалуйста, указывайте рабочие контактные данные при обращении.",
-    "briefText": "Вы можете написать нам на почту или заполнить форму ниже.",
+    "briefText": "Заполните форму ниже или позвоните нам — мы подготовим для вас предложение.",
     "form": {
-      "title": "Написать на One branding",
-      "description": "Перед началом работы над проектом мы просим клиентов ответить на пару вопросов. Ваши ответы помогут нам выбрать наиболее подходящие инструменты, решающие вашу задачу. Чем подробнее вы напишете про ваш проект, тем точнее мы сможем вам сделать предложение. Так мы быстрее сможем понять, чем можем вам быть полезны. Наш первый разговор может быть гораздо более предметным, если мы соберём информацию и подготовимся ко встрече. А если мы увидим, что ваша задача не нашего профиля — посоветуем подходящих партнеров.",
+      "title": "Написать в OneBranding",
+      "description": "Перед началом работы над проектом мы просим клиентов ответить на несколько вопросов. Ваши ответы помогут нам выбрать инструменты, которые лучше всего решат вашу задачу. Чем подробнее вы расскажете о проекте, тем точнее будет наше предложение. Так нам проще понять, чем мы можем быть полезны. Первый разговор будет гораздо предметнее, если мы заранее соберём информацию и подготовимся к встрече. А если окажется, что ваша задача не по нашему профилю, мы порекомендуем подходящих партнёров.",
       "topicTitle": "Тема",
       "topicInput": "Назовите ваш проект*",
-      "servicesTitle": "Какие услуги вы бы хотели у нас заказать",
+      "servicesTitle": "Какие услуги вы хотели бы у нас заказать",
       "servicesInput": "Сообщение",
       "fullName": "Имя и фамилия*",
       "jobTitle": "Должность",
       "company": "Компания*",
       "phone": "Телефон*",
       "email": "E-mail*",
-      "agreement": "Отправляя заявку, вы соглашаетесь с пользовательским соглашением"
+      "agreement": "Отправляя заявку, вы соглашаетесь на обработку персональных данных в соответствии с",
+      "privacyLink": "политикой конфиденциальности"
     }
   },
   "footerNew": {
-    "headlineFirst": "Let’s build",
-    "headlineLead": "what’s",
-    "headlineAccent": "next.",
+    "headlineFirst": "Создадим",
+    "headlineLead": "что-то",
+    "headlineAccent": "новое.",
     "ready": "Готовы собрать всё воедино?",
     "pitchFirst": "Брендинг, дизайн и технологии.",
     "pitchSecond": "Один партнёр от идеи до запуска.",
@@ -461,13 +518,15 @@
     "photography": "Фотосъёмка",
     "web": "Веб и системы",
     "information": "Информация",
-    "process": "Наш процесс",
-    "guarantee": "One’s Guarantee",
+    "process": "Как мы работаем",
+    "guarantee": "OneGuarantee",
     "privacy": "Политика конфиденциальности",
     "terms": "Условия использования",
     "social": "Соцсети",
     "tagline": "One vision. Every solution.",
-    "rights": "Все права защищены."
+    "rights": "Все права защищены.",
+    "blog": "Блог",
+    "pricing": "Цены"
   },
   "errorPage": {
     "notFoundTitle": "Страница не найдена",
@@ -477,18 +536,18 @@
     "home": "На главную"
   },
   "movement": {
-    "first": "Создадим",
-    "second": "будущее.",
-    "description": "Новая глава вашего бренда начинается с One Branding.",
-    "detail": "Давайте сделаем следующий шаг вместе.",
+    "first": "Вливайтесь",
+    "second": "в движение",
+    "description": "Откройте новую главу вместе с OneBranding.",
+    "detail": "Будущее вашего бренда начинается здесь.",
     "action": "Смотреть проекты",
     "copyright": "Все права защищены."
   },
   "robot": {
-    "lead": "Сильный бренд не создается",
+    "lead": "Сильный бренд не создаётся",
     "accent": "случайно.",
-    "description": "Он строится через понятную систему, точную стратегию и сильные дизайн-решения.",
-    "support": "Onebranding помогает бизнесу стать узнаваемее, понятнее и ближе к выбору клиента."
+    "description": "Он строится на продуманной системе, ясной стратегии и сильных дизайн-решениях.",
+    "support": "С Onebranding ваш бизнес легче узнать, ему проще доверять и его легче выбрать."
   },
   "a11y": {
     "openMenu": "Открыть меню",
@@ -502,6 +561,194 @@
     "globeImage": "Глобус с подсвеченными континентами",
     "pauseGlobe": "Остановить вращение",
     "resumeGlobe": "Продолжить вращение",
-    "resetGlobe": "Сбросить глобус"
+    "resetGlobe": "Сбросить глобус",
+    "projectImageNamed": "{title}: проект OneBranding, изображение {position}"
+  },
+  "servicePages": {
+    "branding": {
+      "name": "Брендинг и ребрендинг",
+      "summary": "Стратегия, логотип, фирменный стиль и брендбук: целостный бренд — новый или обновлённый."
+    },
+    "logo": {
+      "name": "Разработка логотипа",
+      "summary": "Логотип на основе вашей стратегии и позиционирования — узнаваемый и рассчитанный на годы."
+    },
+    "identity": {
+      "name": "Фирменный стиль",
+      "summary": "Цвета, шрифты и графические элементы, по которым вас узнают в каждой точке контакта."
+    },
+    "brandbook": {
+      "name": "Разработка брендбука",
+      "summary": "Правила, благодаря которым логотип и фирменный стиль выглядят единообразно везде, где они появляются."
+    },
+    "strategy": {
+      "name": "Бренд-стратегия и нейминг",
+      "summary": "Исследования, позиционирование и названия со смыслом."
+    },
+    "packaging": {
+      "name": "Дизайн упаковки",
+      "summary": "Упаковка, которая выделяется на полке и передаёт ценность продукта."
+    },
+    "print": {
+      "name": "Графический дизайн и полиграфия",
+      "summary": "Меню, каталоги и фирменная полиграфия на одном визуальном языке."
+    },
+    "social": {
+      "name": "SMM и рекламные кампании",
+      "summary": "Контент-системы и кампании, в которых бренд говорит одним голосом во всех лентах."
+    },
+    "photo": {
+      "name": "Предметная съёмка и ретушь",
+      "summary": "Премиальные имиджевые и предметные снимки, которые помогают продавать."
+    },
+    "motion": {
+      "name": "Видео, 3D и моушн-дизайн",
+      "summary": "Визуализация и анимация, которые оживляют идеи."
+    },
+    "presentation": {
+      "name": "Дизайн презентаций",
+      "summary": "Понятные истории и убедительные презентации — от питч-деков до презентаций продукта."
+    },
+    "web": {
+      "name": "Разработка сайтов",
+      "summary": "Индивидуальные сайты, спроектированные и разработанные под ваш бизнес."
+    },
+    "uiux": {
+      "name": "UI/UX и дизайн приложений",
+      "summary": "Понятные интерфейсы для веба и мобильных устройств."
+    },
+    "crm": {
+      "name": "Внедрение CRM, ERP и Odoo",
+      "summary": "Связанные системы для слаженной работы, настроенные под ваши процессы."
+    },
+    "signage": {
+      "name": "Вывески и выставочный дизайн",
+      "summary": "Ваш фирменный стиль — в физическом пространстве."
+    }
+  },
+  "servicesPage": {
+    "breadcrumb": "Услуги",
+    "breadcrumbLabel": "Навигационная цепочка",
+    "eyebrow": "Услуга OneBranding",
+    "pricesTitle": "{name}: цены",
+    "pricesNote": "Пакеты из нашего прайс-листа. Итоговая стоимость зависит от объёма работ, который мы согласуем в брифе.",
+    "allPrices": "Все цены",
+    "relatedTitle": "Смежные услуги",
+    "allServices": "Все услуги",
+    "viewProjects": "Наши проекты",
+    "priceFrom": "от {price}",
+    "pricePerSlide": "{price} за слайд"
+  },
+  "servicesHub": {
+    "title": "Услуги брендинга и дизайна в Ташкенте",
+    "description": "Услуги OneBranding в Ташкенте: брендинг, разработка логотипа, фирменный стиль, дизайн упаковки, сайты, фотосъёмка и не только. Цены, этапы и сроки.",
+    "eyebrow": "Услуги",
+    "h1": "Услуги брендинга и дизайна в Ташкенте",
+    "lead": "Стратегия, дизайн, контент и технологии от одной команды: выберите услугу, чтобы узнать, что в неё входит, как мы работаем и сколько это стоит.",
+    "listTitle": "Все услуги",
+    "ctaTitle": "Не знаете, с чего начать?",
+    "ctaText": "Расскажите о бизнесе и целях — мы предложим подходящий объём работ, сроки и стоимость.",
+    "ctaButton": "Обсудить проект"
+  },
+  "privacy": {
+    "title": "Политика конфиденциальности",
+    "description": "Как OneBranding собирает, использует и защищает персональные данные, которые вы отправляете через форму на сайте onebrandingworld.com, и как с нами связаться.",
+    "h1": "Политика конфиденциальности",
+    "updatedLabel": "Обновлено",
+    "updated": "2026-10-23",
+    "sections": [
+      {
+        "h": "Кто мы",
+        "p": [
+          "OneBranding — брендинговое агентство по адресу: г. Ташкент, ул. Амира Темура, 18А, офис 5, Узбекистан. Настоящая политика распространяется на сайт onebrandingworld.com и на заявки, отправленные через форму обратной связи на нём."
+        ]
+      },
+      {
+        "h": "Какие данные мы получаем",
+        "p": [
+          "Когда вы отправляете заявку, мы получаем то, что вы указали в форме: имя, должность, компанию, номер телефона, e-mail, тему и текст заявки, а также прикреплённый файл.",
+          "Вместе с заявкой мы также фиксируем, откуда вы к нам пришли: сайт, с которого был сделан переход, первую открытую страницу (с рекламными метками в её адресе, если они есть) и страницу с формой. Это помогает нам понять, какие страницы и каналы приносят заявки."
+        ]
+      },
+      {
+        "h": "Зачем мы их используем",
+        "p": [
+          "Только для ответа на вашу заявку: чтобы связаться с вами, подготовить предложение и согласовать работу. Мы не продаём ваши данные и не передаём их третьим лицам для их собственного маркетинга."
+        ]
+      },
+      {
+        "h": "Где они хранятся",
+        "p": [
+          "Заявки хранятся в системе управления контентом нашего сайта, а уведомление с заявкой отправляется в закрытый Telegram-чат нашей команды. Доступ к ним есть только у сотрудников, которые обрабатывают заявки."
+        ]
+      },
+      {
+        "h": "Аналитика",
+        "p": [
+          "Если на сайте подключена веб-аналитика (Google Analytics или Яндекс Метрика), она с помощью файлов cookie фиксирует посещения и действия — например, отправку формы или нажатие на наш номер телефона. Это помогает нам улучшать сайт; данные обрабатываются в обобщённом виде и не используются для того, чтобы установить вашу личность."
+        ]
+      },
+      {
+        "h": "Как долго мы их храним",
+        "p": [
+          "Мы храним заявки, пока работаем с вами, и столько, сколько нужно, чтобы сохранить историю нашего общения, а затем удаляем их."
+        ]
+      },
+      {
+        "h": "Ваши права",
+        "p": [
+          "Вы можете узнать, какие данные о вас у нас есть, попросить исправить или удалить их, а также в любой момент отозвать своё согласие. Позвоните нам по номеру +998 93 560 80 00 или напишите через форму обратной связи."
+        ]
+      },
+      {
+        "h": "Изменения",
+        "p": [
+          "Мы можем обновлять эту политику, когда меняется сайт или наши процессы. Дата вверху страницы указывает на актуальную версию."
+        ]
+      }
+    ]
+  },
+  "projectsPage": {
+    "back": "На главную",
+    "services": "Наши услуги",
+    "unavailable": "Проекты временно недоступны."
+  },
+  "pricing": {
+    "serviceLink": "{name}: что входит",
+    "details": "Точный объём работ, сроки и стоимость согласуются в брифе до начала работы.",
+    "categories": {
+      "branding": {
+        "title": "Брендинг",
+        "description": "Брендинг — это комплексная разработка вашего бизнеса как сильного, узнаваемого бренда. Он включает стратегию, позиционирование, логотип, фирменный стиль и всю визуальную систему, которая вызывает доверие и выделяет вас среди конкурентов."
+      },
+      "logo": {
+        "title": "Логотип",
+        "description": "Разработка логотипа создаёт ключевой символ бренда: он формирует первое впечатление и задаёт визуальное направление всей айдентике. Мы создаём логотипы на основе стратегии и позиционирования, поэтому они не только привлекательны, но и узнаваемы, актуальны и долговечны."
+      },
+      "packaging": {
+        "title": "Упаковка",
+        "description": "Упаковка — ключевая точка контакта с покупателем и одна из главных причин, по которой товар выбирают на полке. Мы разрабатываем упаковку, которая привлекает внимание, передаёт ценность продукта, усиливает бренд и выделяется среди конкурентов."
+      },
+      "presentation": {
+        "title": "Презентации",
+        "description": "Дизайн презентаций превращает ваши идеи в понятные, хорошо структурированные слайды, которые удерживают внимание аудитории, — будь то продажа, защита проекта или публичное выступление. Стоимость рассчитывается за слайд, поэтому объём работ соответствует вашим задачам."
+      }
+    },
+    "lead": "Цены указаны в долларах США и являются минимальными: итоговая стоимость зависит от объёма работ, который мы согласуем после брифа.",
+    "tableTitle": "Прайс-лист",
+    "tableService": "Услуга",
+    "tablePackage": "Пакет",
+    "tablePrice": "Цена",
+    "perSlide": "за слайд"
+  },
+  "project": {
+    "palette": "Цветовая палитра",
+    "more": "Хотите похожий проект?",
+    "services": "Наши услуги",
+    "contact": "Обсудить проект"
+  },
+  "header": {
+    "allServices": "Все услуги",
+    "blog": "Блог"
   }
 }

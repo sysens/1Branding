@@ -1,0 +1,48 @@
+{
+  "title": "Toshkentda CRM, ERP va Odoo joriy etish",
+  "description": "Toshkentda CRM, ERP va Odoo tizimini jarayonlaringizga moslab joriy etamiz: jarayonlar tahlili, sozlash, integratsiya, maʼlumotlarni koʻchirish va oʻqitish.",
+  "h1": "Toshkentda CRM, ERP va Odoo tizimlarini joriy etish",
+  "lead": "OneBranding CRM va ERP tizimlarini, jumladan, Odoo platformasini kompaniyangiz aslida qanday ishlashiga moslab joriy etadi: mijozlar, sotuv, ombor va operatsiyalar tarqoq jadvallar va chatlar oʻrniga bitta bogʻlangan tizimda.",
+  "intro": [
+    "Mijozlar bir jadvalda, buyurtmalar messenjerda, ombordagi qoldiq esa xodimning xotirasida boʻlsa, biznes odamlarning eslab qolishiga bogʻliq boʻlib qoladi. CRM har bir mijoz, bitim va muloqot tarixini bir joyda saqlaydi, ERP esa sotuvni ombor, xaridlar, ishlab chiqarish va moliya bilan bogʻlaydi. Odoo ikkalasini bitta modulli platformada birlashtiradi: kerakli modullardan boshlaysiz va kompaniya oʻsgani sari yangilarini qoʻshasiz.",
+    "Biz dasturni oʻrnatishdan boshlamaymiz. Avval jarayonlaringiz hozir qanday kechayotganini, maʼlumotlar qayerda yoʻqolayotganini va har bir boʻlimga nima kerakligini oʻrganamiz, keyin tizimni shunga moslab sozlaymiz. Har bir bosqichni siz bilan kelishib olganimizdan keyingina keyingisiga oʻtamiz. Oʻzbekiston va xorijdagi kompaniyalar bilan ofisingizda yoki masofadan, oʻzbek, rus va ingliz tillarida ishlaymiz."
+  ],
+  "includes": {
+    "title": "Joriy etishga nimalar kiradi",
+    "items": [
+      "Sotuv va ish jarayonlaringizni oʻrganib, tavsiflab chiqish",
+      "Vazifalaringizga mos platforma va Odoo modullarini tanlash",
+      "Savdo voronkalari, bosqichlar, rollar va kirish huquqlarini sozlash",
+      "Rahbariyat uchun hisobotlar va koʻrsatkichlar paneli",
+      "Saytingiz va siz foydalanayotgan servislar bilan integratsiya",
+      "Mijozlar, mahsulotlar va tarixni jadvallardan yoki joriy tizimdan koʻchirish",
+      "Ishga tushirishdan oldin har bir rol uchun xodimlarni oʻqitish"
+    ]
+  },
+  "process": {
+    "title": "Loyiha qanday kechadi",
+    "steps": [
+      { "name": "Brif va jarayonlar auditi", "text": "Rahbariyat va tizimda ishlaydigan xodimlar bilan suhbatlashamiz, arizalar, buyurtmalar va maʼlumotlar hozir qanday harakatlanishini tavsiflaymiz." },
+      { "name": "Yechimni loyihalash", "text": "Platforma va modullarni tanlaymiz, tizim qanday ishlashini belgilaymiz: bosqichlar, rollar, maydonlar, hisobotlar va integratsiyalar." },
+      { "name": "Sozlash va integratsiya", "text": "Tizimni sozlaymiz, uni servislaringizga ulaymiz va maʼlumotlarni koʻchiramiz." },
+      { "name": "Sinov va takomillashtirish", "text": "Jamoangiz tizimni real vazifalarda sinab koʻradi; fikrlar asosida tuzatishlar kiritamiz, har bir bosqichni tasdiqlaganingizdan soʻng keyingisiga oʻtamiz." },
+      { "name": "Oʻqitish va ishga tushirish", "text": "Xodimlarni rollariga qarab oʻqitamiz, kirish maʼlumotlari va yoʻriqnomalarni topshiramiz, jamoani yangi tizimga oʻtkazamiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "CRM va Odoo boʻyicha savollar",
+    "items": [
+      { "q": "CRM tizimini joriy etish qancha turadi?", "a": "Narx ish hajmiga bogʻliq: tizim nechta jarayon va boʻlimni qamrab oladi, qaysi modullar va integratsiyalar kerak, qancha maʼlumot koʻchirilishi lozim. Narxni brifdan soʻng, ish boshlanishidan oldin kelishib olamiz." },
+      { "q": "CRM va ERP oʻrtasida qanday farq bor?", "a": "CRM mijozlar va sotuv bilan ishlaydi: arizalar, bitimlar, kontaktlar va muloqot tarixi. ERP kompaniyaning qolgan ishini qamrab oladi: ombor, xaridlar, ishlab chiqarish, moliya va xodimlar. Odoo ikkalasini birlashtiradi, shuning uchun sotuv va operatsion ish bir xil maʼlumotlarga tayanadi." },
+      { "q": "Nega aynan Odoo?", "a": "Odoo — biznesni boshqarish uchun modulli platforma: CRM, sotuv, ombor, xaridlar, buxgalteriya, sayt va boshqa ilovalar bitta tizimda ishlaydi. Bir-ikkita moduldan boshlab, keyinroq tizimni almashtirmasdan va maʼlumotlarni qayta koʻchirmasdan yangilarini qoʻshish mumkin." },
+      { "q": "Maʼlumotlarni Excel yoki boshqa tizimdan koʻchirsa boʻladimi?", "a": "Ha, maʼlumotlarni koʻchirish loyihaning bir qismi. Mijozlar, mahsulotlar, narxlar va tarix bazasini tozalab, tartibga keltiramiz, yangi tizimga yuklaymiz va ishga tushirishdan oldin natijani jamoangiz bilan birga tekshiramiz." },
+      { "q": "CRM joriy etish qancha vaqt oladi?", "a": "Bu jarayonlar, modullar va integratsiyalar soniga bogʻliq: bitta sotuv boʻlimi uchun CRM butun kompaniya uchun ERP joriy etishga qaraganda kichikroq loyiha. Muddatni ish hajmi bilan birga, ish boshlanishidan oldin kelishib olamiz." }
+    ]
+  },
+  "cta": {
+    "title": "Biznesingiz qanday ishlashini aytib bering",
+    "text": "Brifni toʻldiring, biz ish hajmi, muddat va narx boʻyicha taklif yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

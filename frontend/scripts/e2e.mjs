@@ -67,10 +67,14 @@ try {
   const other = await res.text();
   check("other host gets its own cache entry", other.includes('href="https://onebranding.up.railway.app/"'), (other.match(/rel="canonical"[^>]*/) || [""])[0]);
 
+  check("no x-powered-by header", !res.headers.get("x-powered-by"), res.headers.get("x-powered-by") || "");
+  check("home lists every language", ["en", "ru", "uz", "x-default"].every((code) => first.includes(`hreflang="${code}"`)), "");
   res = await fetch(`${BASE}/ru`, { headers });
   check("/ru renders", res.status === 200 && (await res.text()).includes('lang="ru'), String(res.status));
+  res = await fetch(`${BASE}/uz`, { headers });
+  check("/uz renders", res.status === 200 && (await res.text()).includes('lang="uz'), String(res.status));
 
-  for (const page of ["/about", "/projects", "/contact", "/pricing", "/one-guarantee", "/news"]) {
+  for (const page of ["/about", "/projects", "/contact", "/pricing", "/one-guarantee", "/news", "/services", "/privacy", "/uz/about", "/uz/contact"]) {
     res = await fetch(BASE + page, { headers, redirect: "manual" });
     check(`${page} renders`, res.status === 200, String(res.status));
   }
@@ -88,11 +92,37 @@ try {
     ["/News", "/news"],
     ["/NewsSlug/abc", "/news/abc"],
     ["/ProjectSlug/abc", "/projects/abc"],
-    ["/ProductSlug/abc", "/services/abc"],
+    ["/ProductSlug/abc", "/services"],
+    // One hop from the old /en prefix, a trailing slash and the old CMS category.
+    ["/en/About", "/about"],
+    ["/en/ProjectSlug/abc", "/projects/abc"],
+    ["/ru/", "/ru"],
+    ["/about/", "/about"],
+    ["/services/rq51r0st097n29olxjbe1q5h", "/services/branding"],
+    ["/ru/services/branding", "/ru/services/brending"],
+    ["/uz/services/razrabotka-logotipa", "/uz/services/logotip-yaratish"],
   ]) {
     res = await fetch(BASE + from, { redirect: "manual", headers });
     check(`redirect ${from}`, res.status === 301 && res.headers.get("location") === to, `${res.status} ${res.headers.get("location")}`);
   }
+  res = await fetch(`${BASE}/about`, { redirect: "manual", headers: { "x-forwarded-host": "www.onebrandingworld.com", "x-forwarded-proto": "https" } });
+  check("www redirects to the bare domain", res.status === 301 && res.headers.get("location") === "https://onebrandingworld.com/about", `${res.status} ${res.headers.get("location")}`);
+
+  // Service pages: one per service in each language, with its own slug.
+  for (const page of ["/services/logo-design", "/ru/services/razrabotka-logotipa", "/uz/services/logotip-yaratish"]) {
+    res = await fetch(BASE + page, { headers, redirect: "manual" });
+    const html = await res.text();
+    check(`${page} renders a service page`, res.status === 200 && html.includes('"@type":"Service"') && html.includes("<h1"), String(res.status));
+  }
+  res = await fetch(`${BASE}/ru/services/razrabotka-logotipa`, { headers });
+  const servicePage = await res.text();
+  check("service hreflang uses each language's slug", servicePage.includes('hreflang="uz" href="https://onebrandingworld.com/uz/services/logotip-yaratish"') && servicePage.includes('hreflang="en" href="https://onebrandingworld.com/services/logo-design"'), "");
+  res = await fetch(`${BASE}/services/not-a-service`, { headers });
+  check("unknown service is a 404", res.status === 404, String(res.status));
+  res = await fetch(`${BASE}/sitemap.xml`, { headers });
+  const sitemap = await res.text();
+  check("sitemap lists the service pages in every language", res.status === 200 && sitemap.includes("/uz/services/logotip-yaratish") && sitemap.includes("/ru/services/razrabotka-logotipa"), String(res.status));
+
   res = await fetch(`${BASE}/OneGuarantee/image95.webp`, { redirect: "manual" });
   check("asset folder not redirected", res.status === 200, String(res.status));
   res = await fetch(`${BASE}/pricing`, { headers });

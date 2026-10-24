@@ -1,0 +1,49 @@
+{
+  "title": "Product Photography & Retouching in Tashkent",
+  "description": "Product photography and retouching in Tashkent: packshots on white, styled shots, colour correction and cut-outs for your site, catalogue and social media.",
+  "h1": "Product photography in Tashkent",
+  "lead": "OneBranding shoots and retouches product imagery that matches your brand: packshots, styled scenes and images for websites, marketplaces, catalogues and social media. The price depends on the number of products and shots and is agreed after the brief.",
+  "intro": [
+    "Product photography is often the first thing a buyer sees, long before they hold the product. A good shot shows the shape, material and colour as they really are, and makes the product look like part of your brand rather than one more item in a marketplace. We plan every shoot from the brief: where the images will be used, which angles and details matter and what style your brand needs.",
+    "We shoot clean packshots on a white or coloured background for catalogues and online stores, and styled scenes with props and light that tell the product's story for social media, advertising and packaging. Every image goes through retouching: dust and defects removed, colour corrected to match the real product, backgrounds cut out where needed. You receive files sized for each place they will appear."
+  ],
+  "includes": {
+    "title": "What product photography includes",
+    "items": [
+      "Shoot plan: shot list, angles, style and props",
+      "Packshots on white or coloured backgrounds",
+      "Styled shots with props and set design",
+      "Close-ups of texture, material and finish",
+      "Retouching of dust, defects and reflections",
+      "Colour correction to match the real product",
+      "Background removal and cut-outs",
+      "Files sized for web, marketplaces, print and social media"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief", "text": "We agree where the images will be used and which products, angles and style you need." },
+      { "name": "Shoot plan", "text": "We prepare the shot list, references, props and lighting and agree them with you." },
+      { "name": "Shoot", "text": "We photograph each product according to the plan, including the details that matter." },
+      { "name": "Retouching", "text": "We retouch the selected shots; rounds of revisions with your feedback come before you approve them." },
+      { "name": "Hand-over", "text": "You receive the final images in every size and format you need." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Product photography questions",
+    "items": [
+      { "q": "How much does product photography cost in Tashkent?", "a": "It depends on the number of products, the number of shots per product and the style: clean packshots and styled scenes take different amounts of work. We agree the price after the brief, before the shoot." },
+      { "q": "Do you shoot product photos for marketplaces?", "a": "Yes. We shoot packshots on a white background and prepare the images in the sizes and formats the marketplace asks for. Tell us where you sell, and we include those requirements in the shoot plan." },
+      { "q": "Can you retouch photos we already have?", "a": "Yes, if the originals are good enough: we remove defects, correct the colours and cut out backgrounds. If the source shots are too weak for the result you need, we will tell you and suggest a reshoot." },
+      { "q": "What do you need from us for the shoot?", "a": "The products themselves, in the condition they should appear in, and the brief: where the images will be used, examples you like and any brand rules. If you have a brand book, we follow it." },
+      { "q": "Do you also make product videos?", "a": "Yes, video, 3D and motion design are among our services: we can show the product in a 3D visualisation or an animated video. If you need both, we plan the photos and the video together, so they share one look." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your products",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your shoot"
+  }
+}

@@ -1,7 +1,7 @@
 /**
  * The About Us single type, fetched once for the page (BigPhoto, TwoFlex and
- * ThreePic share this query). Off English, an empty Russian entry falls back
- * to the English one as a whole.
+ * ThreePic share this query). A language without its own entry shows the
+ * English entry's pictures with its own copy from i18n (aboutPage.cms).
  */
 export type AboutImage = { url?: string | null; alternativeText?: string | null };
 
@@ -32,8 +32,32 @@ type AboutPageResponse = {
 };
 
 export const useAboutPage = async () => {
+  // Before the await: after it a composable has no current component instance.
+  const { t, tm, rt } = useI18n();
   const { data } = await useCmsQuery<AboutPageResponse>("about-page", QUERY);
   return {
-    aboutPage: computed(() => data.value?.data?.aboutPage ?? data.value?.data?.fallbackAboutPage ?? null),
+    aboutPage: computed<AboutPageEntry | null>(() => {
+      const own = data.value?.data?.aboutPage;
+      if (own) return own;
+      const fallback = data.value?.data?.fallbackAboutPage;
+      if (!fallback) return null;
+      // Another language without its own entry: the English entry's pictures
+      // with the page's own copy (i18n aboutPage.cms), not English text.
+      const blocks = tm("aboutPage.cms.section2") as Array<{ title: unknown; text: unknown }>;
+      return {
+        ...fallback,
+        section1: fallback.section1 ? { ...fallback.section1, title: t("aboutPage.cms.section1Title") } : fallback.section1,
+        section2: (fallback.section2 ?? []).map((block, index) => ({
+          ...block,
+          title: blocks[index] ? rt(blocks[index].title as never) : block.title,
+          text: blocks[index] ? rt(blocks[index].text as never) : block.text,
+        })),
+        section3: fallback.section3 ? {
+          ...fallback.section3,
+          title: t("aboutPage.cms.section3Title"),
+          subTitle: t("aboutPage.cms.section3Text"),
+        } : fallback.section3,
+      };
+    }),
   };
 };

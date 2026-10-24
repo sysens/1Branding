@@ -1,0 +1,49 @@
+{
+  "title": "Website Design & Development in Tashkent",
+  "description": "Custom website design and development in Tashkent: structure, design, responsive layout, content management and launch. Price agreed after the brief.",
+  "h1": "Website development in Tashkent",
+  "lead": "OneBranding designs and builds custom websites around your business and brand: from structure and design to responsive layout, content management and launch. The price depends on the scope and is agreed after the brief.",
+  "intro": [
+    "A website is often where a customer decides whether to trust you. It has to explain clearly what you offer, look like your brand and lead visitors to the next step: a call, a message or a request. That is why we start not with the design but with your business: who your customers are, what they are looking for and what the site must achieve.",
+    "Every site we make is designed for one company, not assembled from a template: the structure, design and layout are built around your content and brand identity, and work as well on a phone as on a large screen. We work with companies in Uzbekistan and abroad, in Uzbek, Russian and English, and can build the site in several languages."
+  ],
+  "includes": {
+    "title": "What website development includes",
+    "items": [
+      "Research into your goals, audience and competitors",
+      "Site structure: pages, sections and navigation",
+      "Prototypes of the key pages before design",
+      "Design in your brand identity",
+      "Responsive layout for phones, tablets and desktops",
+      "Content management, so your team can update texts and images",
+      "Basic SEO setup: page titles, descriptions and a clear structure for search engines",
+      "Testing and launch"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief and research", "text": "We learn your business, goals and customers, and look at your competitors' websites." },
+      { "name": "Structure and prototype", "text": "We plan the pages, the content and the path a visitor takes, and agree it with you as a prototype." },
+      { "name": "Design", "text": "We design the key pages in your brand's style, then the rest of the site, for every screen size." },
+      { "name": "Development and refinement", "text": "We build the site and refine it with your feedback; each stage includes rounds of revisions, and you approve it before we move on." },
+      { "name": "Launch", "text": "We test the site, set up the basic SEO, publish it and show your team how to manage the content." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Website questions",
+    "items": [
+      { "q": "How much does a website cost in Tashkent?", "a": "The price depends on the scope: the number of pages and languages, the content, and what the site has to do beyond presenting your company. We agree on the price after the brief, when the structure and tasks are clear." },
+      { "q": "How long does it take to build a website?", "a": "It depends on the number of pages, the functions the site needs and how ready the texts and images are. We agree on the timeline together with the scope and price, before we start." },
+      { "q": "Can we update the website ourselves?", "a": "Yes. We set up content management so your team can change texts and images and add new material without a developer, and at hand-over we show you how it works." },
+      { "q": "Can you create the brand and the website together?", "a": "Yes. If your brand already has a brand book, we design the site to its rules. If not, we can develop the identity first, so the website and everything else look like one brand." },
+      { "q": "Will the website be ready for search engines?", "a": "We set up the basics: a clear structure, page titles and descriptions, and readable addresses, so Google and Yandex can index the site properly. Rankings then depend on the content and on regular work after launch." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your website",
+    "text": "Describe your business and what the site should do, and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

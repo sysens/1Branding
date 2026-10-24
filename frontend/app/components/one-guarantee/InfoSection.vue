@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { toSiteLocale } from "~/utils/locales";
 import { ref, computed } from "vue";
 
-type AppLocale = "ru" | "en";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -139,9 +139,7 @@ useGsapContext(root, ({ gsap, ScrollTrigger }) => {
   }, { scrollTrigger: true, whenVisible: { threshold: 0.01, rootMargin: "200px 0px 200px 0px" } });
 
 const { t, locale } = useI18n();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
+const gqlLocale = computed(() => toSiteLocale(locale.value));
 
 const { own: guarantee } = await useOneGuaranteePage();
 

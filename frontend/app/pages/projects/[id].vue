@@ -7,14 +7,10 @@ import ProjectBigPic from "~/components/project/ProjectBigPic.vue";
 import ProjectGrid from "~/components/project/ProjectGrid.vue";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { isPlaceholderCopy } from "~/utils/seo";
+import { isPlaceholderCopy, toMetaDescription } from "~/utils/seo";
+import { isSiteLocale } from "~/utils/locales";
 
-type AppLocale = "ru" | "en";
-
-const { t, locale } = useI18n();
-const gqlLocale = computed<AppLocale>(() =>
-  (locale.value as AppLocale) === "en" ? "en" : "ru"
-);
+const { t } = useI18n();
 
 const root = ref<HTMLElement | null>(null);
 
@@ -59,6 +55,8 @@ if (!GRAPHQL_URL) {
 type Media = { url: string | null; documentId?: string | null };
 
 type ProjectsPage = {
+  locale?: string | null;
+  localizations?: Array<{ locale?: string | null } | null> | null;
   projectColor?: string | null;
 
   section1: {
@@ -93,6 +91,8 @@ type GqlRes = {
 const query = `
   query ProjectsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     projectsPage(documentId: $documentId, locale: $locale) {
+      locale
+      localizations { locale }
       projectColor
       section1 {
         projectTitle
@@ -180,10 +180,15 @@ const seoTitle = computed(() =>
   projectName.value ? `${projectName.value} — ${t("seo.project")}` : t("seo.projects.title")
 );
 const seoDescription = computed(() =>
-  (section1.value?.text || section2.value?.text || "")
-    .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) ||
+  toMetaDescription(section1.value?.text || section2.value?.text) ||
   t("seo.projectDescription", { title: projectName.value || "OneBranding" })
 );
+// The languages this case study is written in (its hreflang alternates).
+const projectLocales = computed(() => {
+  const own = data.value?.data?.projectsPage;
+  if (!own) return [];
+  return [own.locale, ...(own.localizations ?? []).map((entry) => entry?.locale)].filter(isSiteLocale);
+});
 const seoImage = computed(() => cmsMedia(
   section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url
 ));
@@ -206,7 +211,7 @@ usePageSeo({
     description: seoDescription.value,
     url: `${origin}${route.path}`,
     ...(seoImage.value ? { image: seoImage.value } : {}),
-    inLanguage: gqlLocale.value,
+    inLanguage: page.value?.locale || "en",
     creator: { "@id": `${origin}/#organization` },
   })),
   // Dummy case studies ("Lorem ipsum…") stay out of the index until filled in.
@@ -215,6 +220,7 @@ usePageSeo({
     !!data.value?.data?.projectsPage &&
     !isPlaceholderCopy(`${projectName.value} ${seoDescription.value}`)
   ),
+  alternates: projectLocales,
 });
 
 const resolveMedia = cmsMedia;
@@ -293,11 +299,11 @@ const loading = computed(() => pending.value || !data.value);
             </div>
 
             <div class="flex-1">
-              <h2
+              <p
                 class="hero-text font-normal md:text-[16px] text-[#FFFFFF] md:tracking-[0] text-[13px] leading-[120%] tracking-normal md:text-start text-center md:pb-0 pb-[50px] font-['Poppins','Inter',sans-serif]"
               >
                 {{ section1.text }}
-              </h2>
+              </p>
             </div>
           </div>
         </div>
@@ -311,6 +317,7 @@ const loading = computed(() => pending.value || !data.value);
       <div>
         <ProjectGrid
           v-if="!loading"
+          :title="projectName"
           :images="projectImages"
           :top-src="topSrc"
           :bottom-left-src="bottomLeftSrc"
@@ -332,6 +339,15 @@ const loading = computed(() => pending.value || !data.value);
         :colors="section3?.colorCard"
       />
 
+      <!-- From a case study to the services behind it and to a brief. -->
+      <section v-if="!loading" class="containerr project-next" aria-labelledby="project-next-title">
+        <h2 id="project-next-title">{{ $t("project.more") }}</h2>
+        <p>
+          <NuxtLink :to="localePath('/services')">{{ $t("project.services") }}</NuxtLink>
+          <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="project-next__cta">{{ $t("project.contact") }}</NuxtLink>
+        </p>
+      </section>
+
       <div v-if="!GRAPHQL_URL || error || gqlErrors" class="hidden">
         {{ !GRAPHQL_URL ? $t("common.graphqlUrlEmpty") : "" }}
         {{ (error as any)?.message || "" }}
@@ -340,3 +356,39 @@ const loading = computed(() => pending.value || !data.value);
     </div>
   </div>
 </template>
+
+<style scoped>
+.project-next {
+  padding-bottom: 120px;
+  text-align: center;
+}
+
+.project-next h2 {
+  margin: 0 0 28px;
+  color: #fff;
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  font-weight: 400;
+}
+
+.project-next p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 28px;
+  align-items: center;
+}
+
+.project-next a {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.project-next a.project-next__cta {
+  padding: 16px 32px;
+  border-radius: 32px;
+  background: url("/home/Component3.png") 100% 50% / 120%;
+  text-decoration: none;
+}
+</style>

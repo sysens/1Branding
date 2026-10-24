@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda UI/UX dizayn va mobil ilova dizayni",
+  "description": "Toshkentda veb-sayt va mobil ilovalar uchun UI/UX dizayn: tadqiqot, ssenariylar, prototip va dasturlashga tayyor interfeys. Loyihani muhokama qiling.",
+  "h1": "Toshkentda UI/UX va mobil ilova dizayni",
+  "lead": "OneBranding veb-saytlar, veb-servislar va mobil ilovalar uchun interfeys loyihalaydi: odamlar mahsulotdan qanday foydalanishini oʻylab chiqamiz, har bir ekranni brendingizning vizual tilida chizamiz va dasturlashga tayyor holda topshiramiz.",
+  "intro": [
+    "Foydalanuvchi kerakli narsani topadimi yoki yarim yoʻlda tashlab ketadimi — bu interfeysga bogʻliq. UX — bu mantiq: foydalanuvchining vazifalari qanday, u qaysi yoʻldan boradi va har bir ekran nima uchun javob beradi. UI esa shu mantiqni tushunarli qiladigan vizual qism: joylashuv, shriftlar, ranglar, tugmalar va ularning holatlari. Biz ikkalasini birga loyihalaymiz va shablondan emas, foydalanuvchilaringiz hamda biznes maqsadlaringizdan kelib chiqamiz.",
+    "Interfeys ham brendning bir qismi, shuning uchun uni firma uslubingiz asosida quramiz, mahsulot yangi boʻlsa, korporativ uslubni ham parallel ishlab chiqishimiz mumkin. Veb-saytlar va veb-servislar, iOS va Android uchun mobil ilova dizaynini qilamiz — yangi mahsulotlar uchun ham, mavjudlarini qayta dizayn qilish uchun ham. Oʻzbekiston va xorijdagi jamoalar bilan oʻzbek, rus va ingliz tillarida ishlaymiz."
+  ],
+  "includes": {
+    "title": "UI/UX dizaynga nimalar kiradi",
+    "items": [
+      "Foydalanuvchilar, ularning vazifalari va raqobatchi mahsulotlarni oʻrganish",
+      "Redizayn boʻlsa, joriy interfeys auditi",
+      "Mahsulot tuzilmasi va foydalanuvchi ssenariylari",
+      "Asosiy ekranlarning sxemalari",
+      "Mantiqni vizual dizayndan oldin tekshirish uchun interaktiv prototip",
+      "Veb va mobil qurilmalar uchun barcha ekranlar dizayni",
+      "Dizayn tizimi: komponentlar, uslublar va holatlar",
+      "Dasturchilar uchun spetsifikatsiyalar, grafika va manba fayllar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Mahsulotingiz, biznes maqsadlaringiz va auditoriyangizni oʻrganamiz, raqobatchilar xuddi shu vazifalarni qanday hal qilishini koʻrib chiqamiz." },
+      { "name": "Tuzilma va ssenariylar", "text": "Foydalanuvchi yoʻllari va mahsulot tuzilmasini ishlab chiqamiz, asosiy ekranlar sxemasi va interaktiv prototipni tayyorlaymiz." },
+      { "name": "Interfeys dizayni", "text": "Har bir ekranni brendingizning vizual tilida chizamiz va ular uchun komponentlardan iborat dizayn tizimini yaratamiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritamiz; bosqichni tasdiqlaganingizdan keyingina keyingisiga oʻtamiz." },
+      { "name": "Topshirish", "text": "Dasturchilaringiz yakuniy maketlar, prototip, dizayn tizimi, spetsifikatsiyalar va barcha grafikani kerakli formatlarda oladi." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "UI/UX dizayn boʻyicha savollar",
+    "items": [
+      { "q": "Mobil ilova dizayni qancha turadi?", "a": "Narx ish hajmiga bogʻliq: mahsulotda nechta ekran va platforma bor, mantiq qanchalik murakkab, tadqiqot va dizayn tizimi kerakmi. Narxni brifdan soʻng, ish boshlanishidan oldin kelishib olamiz — nima uchun toʻlayotganingizni oldindan bilasiz." },
+      { "q": "UI va UX oʻrtasida qanday farq bor?", "a": "UX — mahsulot qanday ishlashi: tuzilma, foydalanuvchi yoʻli va har bir ekran mantiqi. UI — u qanday koʻrinishi va harakatlarga qanday javob berishi: joylashuv, shriftlar, ranglar, tugmalar va holatlar. Yaxshi interfeysga ikkalasi ham kerak, shuning uchun ularni birga loyihalaymiz." },
+      { "q": "Ilovani dasturlab ham berasizmi?", "a": "Biz ilovani loyihalaymiz va dasturchilarga kerakli hamma narsani topshiramiz: maketlar, prototip, dizayn tizimi va spetsifikatsiyalar. Shunda jamoangiz yoki pudratchingiz aynan siz tasdiqlagan dizaynni yaratadi. Agar sizga veb-sayt kerak boʻlsa, uni loyihalab, ishlab chiqib ham beramiz." },
+      { "q": "Mavjud ilova yoki saytni qayta dizayn qilsa boʻladimi?", "a": "Ha. Joriy interfeys auditidan boshlaymiz: yaxshi ishlayotgan qismlarni saqlab qolamiz, foydalanuvchilar adashadigan yoki ishni chala tashlab ketadigan ekranlarni qayta ishlaymiz. Redizaynni hozirgi firma uslubingizda yoki brendni yangilash bilan birga qilish mumkin." },
+      { "q": "iOS va Android uchun ilova dizaynini qilasizmi?", "a": "Ha. Ilovalarni ikkala platforma uchun ham, har biridagi foydalanuvchilar oʻrganib qolgan qoidalarni hisobga olib loyihalaymiz, vizual tilni esa saytingiz va brendingizning boshqa materiallari bilan yagona saqlaymiz." }
+    ]
+  },
+  "cta": {
+    "title": "Mahsulotingiz haqida aytib bering",
+    "text": "Brifni toʻldiring, biz ish hajmi, muddat va narx boʻyicha taklif yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

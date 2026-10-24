@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda poligrafiya va menyu dizayni",
+  "description": "Toshkentda poligrafiya dizayni: menyu, kataloglar, bukletlar, vizitkalar va brendli bosma mahsulotlar yagona uslubda. Narx brifdan soʻng kelishiladi.",
+  "h1": "Toshkentda grafik dizayn va poligrafiya",
+  "lead": "OneBranding menyu, kataloglar va brendli poligrafiyani brendingiz bilan yagona vizual tilda ishlab chiqadi va maketlarni chop etishga tayyorlab beradi. Narx ish hajmiga bogʻliq va brifdan soʻng kelishiladi.",
+  "intro": [
+    "Poligrafiya — bu qoʻlda ushlab turiladigan brend: stol ustidagi menyu, uchrashuvdagi katalog, undan keyin qoladigan vizitka. Har bir materialning oʻz vazifasi bor. Menyu oson oʻqilishi va mehmonni kerakli taomlarga yoʻnaltirishi, katalog esa assortimentni tanlash oson boʻladigan qilib koʻrsatishi kerak. Biz har bir formatni shu vazifa va firma uslubingiz asosida loyihalaymiz, shunda barcha materiallaringiz bitta kompaniyaniki ekani koʻrinib turadi.",
+    "Alohida materiallarni ham, toʻliq toʻplamlarni ham tayyorlaymiz: restoran va kafelar uchun menyu, mahsulot kataloglari, bukletlar, plakatlar, vizitkalar, blankalar va boshqa brendli poligrafiya. Har bir fayl siz foydalanadigan bosma usuliga mos oʻlcham, kesish uchun zaxira (bleed) va rang sozlamalari bilan tayyorlanadi. Agar firma uslubi hali boʻlmasa, avval uni yaratishimiz mumkin, shunda poligrafiya tasodifiy qarorlarga emas, aniq qoidalarga tayanadi."
+  ],
+  "includes": {
+    "title": "Poligrafiya dizayniga nimalar kiradi",
+    "items": [
+      "Restoran, kafe va barlar uchun menyu",
+      "Mahsulot kataloglari va narxnomalar",
+      "Bukletlar, broshyuralar va varaqalar",
+      "Plakatlar, flayerlar va bosma reklama",
+      "Vizitkalar, firma blankalari va konvertlar",
+      "Brendli mahsulotlar: papkalar, bloknotlar, stikerlar, sertifikatlar",
+      "Maketlarni kerakli barcha format va oʻlchamlarga moslashtirish",
+      "Kesish zaxirasi va rang sozlamalari bilan bosmaga tayyor fayllar, manba fayllar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif", "text": "Har bir material qanday vazifani bajarishi, uni kim oʻqishi va qanday chop etilishini aniqlaymiz." },
+      { "name": "Tuzilma", "text": "Kontentingizni boʻlimlarga ajratamiz va har bir sahifa yoki yuzada nima joylashishini belgilaymiz." },
+      { "name": "Dizayn", "text": "Firma uslubi asosida asosiy sahifalarni ishlab chiqamiz, soʻng qolgan materialni sahifalaymiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritiladi; keyingi bosqichga siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Chop etish uchun fayllar", "text": "Maketlarni siz foydalanadigan bosma usuliga moslab tayyorlaymiz va manba fayllarni topshiramiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Poligrafiya dizayni boʻyicha savollar",
+    "items": [
+      { "q": "Menyu dizayni qancha turadi?", "a": "Qatʼiy narx yoʻq: u sahifalar va formatlar soniga, shuningdek sizga bitta material kerakmi yoki butun toʻplammi — shunga bogʻliq. Narxni brifdan soʻng, ish boshlanishidan oldin siz bilan kelishib olamiz." },
+      { "q": "Maketlar bosmaxonam uchun tayyor boʻladimi?", "a": "Ha. Fayllarni bosmaxonangiz talab qiladigan oʻlcham, kesish zaxirasi va rang sozlamalari boʻyicha tayyorlaymiz, shunda ular qayta ishlovsiz chop etishga ketadi. Tahrirlanadigan manba fayllarni ham topshiramiz." },
+      { "q": "Bizning brendbuk asosida dizayn qila olasizmi?", "a": "Ha. Logotip, ranglar va shriftlar boʻyicha brendbukingiz qoidalariga amal qilamiz. Agar kerakli material unda koʻzda tutilmagan boʻlsa, xuddi shu ruhdagi yechim taklif qilib, uni siz bilan kelishamiz." },
+      { "q": "Matn va fotosuratlarni kim tayyorlaydi?", "a": "Odatda matnlar, narxlar va mahsulot haqidagi maʼlumotlarni siz berasiz, biz esa ularni sahifada tartibga solamiz. Agar menyu yoki katalogga yangi suratlar kerak boʻlsa, mahsulotlarni suratga olish ham xizmatlarimiz qatoriga kiradi." },
+      { "q": "Keyinchalik menyuni oʻzimiz yangilay olamizmi?", "a": "Yakuniy maketlar bilan birga manba fayllarni ham olasiz, shuning uchun narx va taomlarni keyinchalik oʻzgartirish mumkin. Agar muntazam oʻzgarishlar rejalashtirilgan boʻlsa, buni brifda ayting — menyuni yangilash oson boʻladigan qilib sahifalaymiz." }
+    ]
+  },
+  "cta": {
+    "title": "Nimani chop etish kerakligini aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx boʻyicha taklifimizni yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

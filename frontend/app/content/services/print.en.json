@@ -1,0 +1,49 @@
+{
+  "title": "Graphic & Print Design in Tashkent",
+  "description": "Graphic and print design in Tashkent: menus, catalogues, brochures, business cards and branded print in one visual language. Price agreed after the brief.",
+  "h1": "Graphic and print design in Tashkent",
+  "lead": "OneBranding designs menus, catalogues and branded print in one visual language with the rest of your brand, laid out and ready for the printer. The price depends on the scope and is agreed after the brief.",
+  "intro": [
+    "Print is where people hold your brand in their hands: a menu at the table, a catalogue at a meeting, a business card afterwards. Each piece has its own job. A menu has to be easy to read and lead the guest to the right dishes; a catalogue has to present the range so that choosing is simple. We design every format around that job and around your brand identity, so all your materials look like one company.",
+    "We design single items and complete sets: menus for restaurants and cafés, product catalogues, brochures, posters, business cards, letterheads and other branded print. Every file is prepared for the printing method you use, with the right sizes, bleeds and colour settings. If you don't have an identity yet, we can develop it first, so your print is built on clear rules rather than one-off decisions."
+  ],
+  "includes": {
+    "title": "What graphic and print design includes",
+    "items": [
+      "Menus for restaurants, cafés and bars",
+      "Product catalogues and price lists",
+      "Brochures, booklets and leaflets",
+      "Posters, flyers and printed advertising",
+      "Business cards, letterheads and envelopes",
+      "Branded print: folders, notebooks, stickers, certificates",
+      "Layouts adapted to every size and format you need",
+      "Print-ready files with bleeds and colour settings, plus sources"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief", "text": "We learn what each piece has to do, who will read it and how it will be printed." },
+      { "name": "Structure", "text": "We organise your content into sections and decide what goes on each page or panel." },
+      { "name": "Design", "text": "We design the key pages on your identity, then lay out the rest of the material." },
+      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
+      { "name": "Files for print", "text": "We prepare print-ready files for your printing method and hand over the source files." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Print design questions",
+    "items": [
+      { "q": "How much does menu design cost?", "a": "There is no fixed price: it depends on the number of pages and formats, and on whether you need one item or a whole set of materials. We agree the price after the brief, before the work starts." },
+      { "q": "Will the files be ready for my printing house?", "a": "Yes. We prepare the files to the size, bleed and colour settings your printer asks for, so they can go to print without rework, and we hand over the editable sources as well." },
+      { "q": "Can you design to our existing brand book?", "a": "Yes. We follow your brand book's rules for the logo, colours and typography. If something you need is not covered, we propose a solution in the same spirit and agree it with you." },
+      { "q": "Who prepares the texts and photos?", "a": "Usually you provide the texts, prices and product information, and we organise them on the page. If the menu or catalogue needs new images, product photography is one of our services." },
+      { "q": "Can we update the menu ourselves later?", "a": "You receive the source files together with the final layouts, so prices and items can be changed later. If you plan regular updates, mention it in the brief and we will lay out the menu so that changes are easy to make." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us what you need to print",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda SMM xizmati va reklama kampaniyalari",
+  "description": "Toshkentda brendlar uchun SMM xizmati: Instagram va Telegram dizayni, kontent-reja, post va stories shablonlari, reklama kampaniyalari. Narx brifdan soʻng.",
+  "h1": "Toshkentda SMM va reklama kampaniyalari",
+  "lead": "OneBranding brendingiz uslubi va ohangida kontent tizimi va reklama kampaniyalarini yaratadi: profil dizayni, kontent-reja, post va stories shablonlari hamda Instagram, Telegram va boshqa platformalar uchun kampaniya konsepsiyalari. Narx ish hajmiga bogʻliq va brifdan soʻng kelishiladi.",
+  "intro": [
+    "Har bir post birinchi qarashdanoq tanilsa va bejiz chiqmasa, brend sahifasi natija beradi. Biz brendingiz va auditoriyangizdan kelib chiqamiz: kontentingizni koʻrgan odam nimani bilishi, nimani his qilishi va nima qilishi kerak. Shu asosda kontent tizimini quramiz — mavzular va formatlar, postlar, stories va reels muqovalari uchun vizual uslub hamda sahifani kim yuritishidan qatʼi nazar uni yaxlit saqlaydigan shablonlar.",
+    "Reklama kampaniyalarini ham xuddi shu tamoyil asosida ishlab chiqamiz. Yangi mahsulot, mavsum yoki aksiya uchun gʻoya va asosiy xabarni, soʻng asosiy vizual va uning siz foydalanadigan barcha format hamda platformalarga moslashtirilgan variantlarini tayyorlaymiz. Mahsulotlarni suratga olish, video va motion dizayn ham xizmatlarimiz qatoriga kiradi, shuning uchun kontent va brendni bitta jamoa yaratadi. Oʻzbekiston va xorijdagi kompaniyalar bilan oʻzbek, rus va ingliz tillarida ishlaymiz."
+  ],
+  "includes": {
+    "title": "Ijtimoiy tarmoqlar bilan ishlashga nimalar kiradi",
+    "items": [
+      "Mavjud akkauntlaringiz va raqobatchilar tahlili",
+      "Kontent strategiyasi: maqsadlar, auditoriya, mavzular va formatlar",
+      "Instagram va Telegram profillari dizayni",
+      "Postlar, stories va reels muqovalari uchun vizual uslub",
+      "Tahrirlanadigan post va stories shablonlari",
+      "Mavzular va doimiy ruknlar bilan kontent-reja",
+      "Kampaniya konsepsiyasi: gʻoya, asosiy xabar, asosiy vizual",
+      "Asosiy vizualni barcha formatlarga moslashtirish"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Brendingiz, maqsadlaringiz va auditoriyangizni oʻrganamiz, sizning va raqobatchilaringiz akkauntlarini tahlil qilamiz." },
+      { "name": "Strategiya", "text": "Kontent nimaga erishishi kerakligini, uning mavzulari, formatlari va muloqot ohangini belgilaymiz." },
+      { "name": "Dizayn", "text": "Vizual uslub, shablonlar va birinchi postlarni yoki kampaniyaning asosiy vizualini yaratamiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritiladi; keyingi bosqichga siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Topshirish", "text": "Kontent-reja, shablonlar, ulardan foydalanish qoidalari va joylashga tayyor fayllarni olasiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "SMM boʻyicha savollar",
+    "items": [
+      { "q": "SMM xizmati qancha turadi?", "a": "Hammasi ish hajmiga bogʻliq: shablonlari bilan bir martalik profil dizayni, toʻliq kontent tizimi va reklama kampaniyasi turlicha baholanadi. Narxni brifdan soʻng, ish boshlanishidan oldin siz bilan kelishib olamiz." },
+      { "q": "Instagram sahifasini bezab berasizmi?", "a": "Ha. Avatar, highlights muqovalari, lenta, postlar va stories uchun vizual uslubni ishlab chiqamiz hamda yangi postlar chiqqanda ham profil yaxlit koʻrinishda qolishi uchun shablonlar tayyorlaymiz." },
+      { "q": "Kontent-reja nima va u kerakmi?", "a": "Bu nimani va nima uchun joylashtirishingizni belgilaydigan jadval: maqsadlaringizga bogʻlangan mavzular, formatlar va sanalar. U muntazam post qilishga yordam beradi va sahifaning tasodifiy eʼlonlar toʻplamiga aylanib qolishiga yoʻl qoʻymaydi." },
+      { "q": "Yangi mahsulot uchun kampaniya ishlab chiqa olasizmi?", "a": "Ha. Gʻoya va asosiy xabarni taklif qilamiz, asosiy vizualni yaratamiz va uni ijtimoiy tarmoqlar, poligrafiya, tashqi reklama hamda kerakli boshqa formatlarga moslashtiramiz, shunda kampaniya hamma joyda bir xil koʻrinadi." },
+      { "q": "Kontent uchun foto va video ham tayyorlaysizmi?", "a": "Ha. Mahsulotlarni suratga olish, video va motion dizayn xizmatlarimiz qatoriga kiradi, shuning uchun vizual materiallar kontent tizimi bilan bir xil brif asosida yaratiladi va boshidanoq sahifangizga mos tushadi." }
+    ]
+  },
+  "cta": {
+    "title": "Brendingiz haqida aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx boʻyicha taklifimizni yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

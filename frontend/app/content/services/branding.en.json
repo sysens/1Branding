@@ -1,0 +1,82 @@
+{
+  "title": "Branding Agency in Tashkent: Packages & Prices",
+  "description": "Full-cycle branding in Tashkent: strategy, logo, visual identity and brand book. Packages from $1,900, an identity in 2–6 weeks. Talk to OneBranding.",
+  "h1": "Branding in Tashkent",
+  "lead": "OneBranding builds brands from strategy to the last touchpoint: positioning, logo, visual identity and the rules that hold it together. Branding packages start at $1,900; a focused identity takes 2 to 6 weeks.",
+  "intro": [
+    "Branding is the complete development of your business as a strong, recognisable brand. It starts with research into your market and audience, turns that into a strategy and positioning, and only then into a logo, colours, typography and the visual system that sets you apart from competitors.",
+    "We work with companies in Uzbekistan and abroad, in Uzbek, Russian and English, remotely or at our office on Amir Temur Street in Tashkent. Whether you are launching a new brand or renewing one that no longer fits, you get one team for strategy, design and the applications your brand needs."
+  ],
+  "includes": {
+    "title": "What branding includes",
+    "items": [
+      "Market, competitor and audience research",
+      "Brand strategy and positioning",
+      "Naming, when the brand needs a name",
+      "Logo design",
+      "Visual identity: colours, typography, graphic elements",
+      "Brand book with clear usage rules",
+      "Applications you need: packaging, print, social media, website",
+      "Final files for print and web, plus source files"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      {
+        "name": "Brief and research",
+        "text": "We learn your business, goals and audience, and study the market and your competitors."
+      },
+      {
+        "name": "Strategy and concept",
+        "text": "We define the positioning and the idea the whole brand is built on."
+      },
+      {
+        "name": "Design",
+        "text": "We design the logo and the identity system around that idea."
+      },
+      {
+        "name": "Refinement",
+        "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on."
+      },
+      {
+        "name": "Hand-over",
+        "text": "You receive the brand book, final files in every format you need and the source files."
+      }
+    ]
+  },
+  "timeline": {
+    "title": "How long it takes",
+    "text": "A focused identity usually takes 2 to 6 weeks. A full brand system with naming, packaging or a website takes longer. We agree on the timeline with you before we start."
+  },
+  "faq": {
+    "title": "Branding questions",
+    "items": [
+      {
+        "q": "How much does branding cost in Tashkent?",
+        "a": "Our branding packages are Launch Base from $1,900, One Pro from $2,900 and Global ultimate from $5,900. The final price depends on the scope we agree in the brief; a logo on its own starts at $900."
+      },
+      {
+        "q": "What is the difference between branding and a logo?",
+        "a": "A logo is one sign. Branding is the whole system around it: strategy, positioning, visual identity and the brand book whose rules keep every touchpoint consistent, from packaging to your website."
+      },
+      {
+        "q": "Do you do rebranding?",
+        "a": "Yes. We start with an audit of your current brand and market, keep what still works and renew what no longer fits your business or your audience, so customers still recognise you."
+      },
+      {
+        "q": "What do I receive at the end?",
+        "a": "All final files in the formats you need (vector, print and web), the brand book with usage rules, the source files and every application we agreed on at the start."
+      },
+      {
+        "q": "What do you need from us to start?",
+        "a": "A short conversation about your business, goals and audience. We send you a brief, agree on scope, timeline and price, sign a contract and start with research."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your brand",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

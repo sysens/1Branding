@@ -60,6 +60,38 @@
   text-wrap: balance;
 }
 
+.services__intro {
+  max-width: 52rem;
+  margin: clamp(0.9rem, calc(1.2 * var(--vw)), 1.5rem) auto 0;
+  padding-inline: 1.25rem;
+  color: #8f9297;
+  font-size: clamp(0.95rem, calc(1 * var(--vw)), 1.25rem);
+  line-height: 1.55;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.services__intro-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.1rem;
+  margin-left: 0.4rem;
+}
+
+.services__intro-links a {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgb(3 203 0 / 0.7);
+  text-underline-offset: 0.2em;
+  transition: color 0.25s ease;
+}
+
+.services__intro-links a:hover,
+.services__intro-links a:focus-visible {
+  color: #03cb00;
+}
+
 /* The list (52%) and the card (28%) of a frame 82% wide, as in the design;
    on very wide screens no wider than the site container (1450px). */
 .services__body {
@@ -343,6 +375,16 @@
   .services__inline p {
     margin: 0.7rem 0 0;
     color: #c9c9c9;
+  }
+
+  .services__inline-link {
+    display: inline-block;
+    margin-top: 0.6rem;
+    padding: 0.35rem 0;
+    color: #03cb00;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .services__side {

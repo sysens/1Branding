@@ -104,7 +104,7 @@ const colors = computed(() => props.colors ?? []);
         <h2
           class="cp-title text-white font-normal md:text-[62px] md:leading-[1] mb-[27px] md:px-0 px-[20px] text-[40px] leading-[100%] tracking-normal text-center will-change-transform"
         >
-          {{ section3?.title || "Color palette" }}
+          {{ section3?.title || $t("project.palette") }}
         </h2>
 
         <div
@@ -120,11 +120,11 @@ const colors = computed(() => props.colors ?? []);
               :style="{ backgroundColor: c.HexColorCode || '#000' }"
             />
 
-            <h2
+            <p
               class="text-white font-medium md:text-[22px] md:leading-[31.29px] text-center text-[14.67px] leading-[20.86px] tracking-normal font-['Poppins','Inter',sans-serif]"
             >
               {{ c.HexColorCode || "" }}
-            </h2>
+            </p>
           </div>
         </div>
       </div>

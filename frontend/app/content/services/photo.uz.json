@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda mahsulotlarni suratga olish va retush",
+  "description": "Toshkentda mahsulotlarni suratga olish va retush: oq fonda kadrlar, sahnalashtirilgan suratlar, rang tuzatish va fonni olib tashlash — sayt va katalog uchun.",
+  "h1": "Toshkentda mahsulotlarni suratga olish",
+  "lead": "OneBranding mahsulotlaringizni brendingiz uslubida suratga oladi va retush qiladi: katalog kadrlari, sahnalashtirilgan suratlar hamda sayt, marketpleyslar, kataloglar va ijtimoiy tarmoqlar uchun fotosuratlar. Narx mahsulotlar va kadrlar soniga bogʻliq va brifdan soʻng kelishiladi.",
+  "intro": [
+    "Mahsulot fotosurati koʻpincha xaridor mahsulotni qoʻliga olishidan ancha oldin koʻradigan birinchi narsadir. Yaxshi kadr shakl, material va rangni qanday boʻlsa, shundayligicha koʻrsatadi va mahsulotni marketpleysdagi navbatdagi tovar emas, balki brendingizning bir qismi sifatida taqdim etadi. Har bir suratga olishni brif asosida rejalashtiramiz: suratlar qayerda ishlatiladi, qaysi rakurs va detallar muhim, brendga qanday uslub kerak.",
+    "Kataloglar va internet-doʻkonlar uchun oq yoki rangli fonda toza katalog kadrlarini, ijtimoiy tarmoqlar, reklama va qadoq uchun esa rekvizit va yorugʻlik yordamida mahsulot hikoyasini soʻzlab beradigan sahnalashtirilgan kadrlarni suratga olamiz. Har bir surat retushdan oʻtadi: chang va nuqsonlar tozalanadi, rang haqiqiy mahsulotga moslab tuzatiladi, kerak boʻlsa fon olib tashlanadi. Fayllarni ular joylashtiriladigan har bir platforma uchun kerakli oʻlchamlarda olasiz."
+  ],
+  "includes": {
+    "title": "Mahsulotlarni suratga olishga nimalar kiradi",
+    "items": [
+      "Suratga olish rejasi: kadrlar roʻyxati, rakurslar, uslub va rekvizit",
+      "Oq yoki rangli fonda katalog kadrlari",
+      "Rekvizit va dekoratsiyali sahnalashtirilgan kadrlar",
+      "Tekstura, material va pardozning yaqin planlari",
+      "Retush: chang, nuqson va yaltirashlarni tozalash",
+      "Haqiqiy mahsulot rangiga moslab rang tuzatish",
+      "Fonni olib tashlash va kesib olish",
+      "Sayt, marketpleys, bosma va ijtimoiy tarmoqlar uchun fayllar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif", "text": "Suratlar qayerda ishlatilishini, qaysi mahsulotlar, rakurslar va uslub kerakligini kelishib olamiz." },
+      { "name": "Suratga olish rejasi", "text": "Kadrlar roʻyxati, namunalar, rekvizit va yorugʻlik sxemasini tayyorlab, siz bilan kelishamiz." },
+      { "name": "Suratga olish", "text": "Har bir mahsulotni reja boʻyicha, xaridor uchun muhim detallari bilan birga suratga olamiz." },
+      { "name": "Retush", "text": "Tanlangan kadrlarni retush qilamiz; siz tasdiqlashingizdan oldin fikrlaringiz asosida tuzatishlar kiritiladi." },
+      { "name": "Topshirish", "text": "Tayyor fotosuratlarni kerakli barcha oʻlcham va formatlarda olasiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Mahsulotlarni suratga olish boʻyicha savollar",
+    "items": [
+      { "q": "Mahsulotlarni suratga olish qancha turadi?", "a": "Narx mahsulotlar soniga, har biri uchun kadrlar soniga va uslubga bogʻliq: oddiy katalog kadrlari va sahnalashtirilgan suratlar turlicha mehnat talab qiladi. Narxni brifdan soʻng, suratga olishdan oldin siz bilan kelishib olamiz." },
+      { "q": "Marketpleyslar uchun mahsulot suratga olasizmi?", "a": "Ha. Mahsulotlarni oq fonda suratga olamiz va rasmlarni platforma talab qiladigan oʻlcham va formatlarda tayyorlaymiz. Qayerda sotishingizni ayting — biz bu talablarni suratga olish rejasiga kiritamiz." },
+      { "q": "Bizdagi tayyor suratlarni retush qila olasizmi?", "a": "Ha, agar asl suratlar yetarli sifatda boʻlsa: nuqsonlarni tozalaymiz, rangni tuzatamiz va fonni olib tashlaymiz. Agar ular kerakli natija uchun juda zaif boʻlsa, buni ochiq aytamiz va qayta suratga olishni taklif qilamiz." },
+      { "q": "Suratga olish uchun bizdan nima kerak?", "a": "Suratda qanday koʻrinishi kerak boʻlsa, shu holatdagi mahsulotlarning oʻzi va brif: suratlar qayerda ishlatilishi, sizga yoqqan namunalar va brend qoidalari. Agar brendbukingiz boʻlsa, unga tayanamiz." },
+      { "q": "Mahsulot videosini ham tayyorlaysizmi?", "a": "Ha, video, 3D va motion dizayn ham xizmatlarimiz qatoriga kiradi: mahsulotni 3D vizualizatsiya yoki animatsion rolikda koʻrsatishimiz mumkin. Agar ikkalasi ham kerak boʻlsa, foto va videoni birga rejalashtiramiz, shunda ular bir uslubda boʻladi." }
+    ]
+  },
+  "cta": {
+    "title": "Mahsulotlaringiz haqida aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx boʻyicha taklifimizni yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

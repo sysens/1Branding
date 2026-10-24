@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toSiteLocale } from "~/utils/locales";
 import { computed, ref } from "vue";
 import { useAmbientSurfaces } from "~/composables/useAmbientSurfaces";
 import LeadingPage from "~/components/home/LeadingPage.vue";
@@ -46,7 +47,7 @@ usePageSeo({
     url: `${origin}${route.path}`,
     name: seoTitle.value,
     description: seoDesc.value,
-    inLanguage: locale.value === "en" ? "en" : "ru",
+    inLanguage: toSiteLocale(locale.value),
     isPartOf: { "@id": `${origin}/#website` },
     about: { "@id": `${origin}/#organization` },
     primaryImageOfPage: `${origin}/og-image.jpg`,

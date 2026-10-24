@@ -1,0 +1,82 @@
+{
+  "title": "Toshkentda brending agentligi: narxlar",
+  "description": "Toshkentda toʻliq brending: strategiya, logotip, firma uslubi va brendbuk. Paketlar $1 900 dan, firma uslubi 2–6 haftada tayyor. OneBranding bilan bogʻlaning.",
+  "h1": "Toshkentda brending",
+  "lead": "OneBranding brendni strategiyadan tortib mijoz bilan har bir aloqa nuqtasigacha yaratadi: pozitsiyalash, logotip, firma uslubi va ularni yagona tizimga bogʻlovchi qoidalar. Brending paketlari $1 900 dan, firma uslubi 2 haftadan 6 haftagacha tayyorlanadi.",
+  "intro": [
+    "Brending — biznesingizni taniqli va kuchli brend sifatida toʻliq shakllantirish jarayoni. Ish bozor va auditoriyani chuqur oʻrganishdan boshlanadi, xulosalar strategiya va pozitsiyalashga aylanadi va shundan keyingina logotip, ranglar, shriftlar hamda sizni raqobatchilardan ajratib turadigan vizual tizim yaratiladi. Shu bois dizayn bu yerda shunchaki bezak emas, balki aniq gʻoyaning natijasidir.",
+    "Biz Oʻzbekiston va boshqa mamlakatlardagi kompaniyalar bilan oʻzbek, rus va ingliz tillarida ishlaymiz — masofadan yoki Toshkentda, Amir Temur koʻchasida joylashgan ofisimizda. Yangi brendni ishga tushiryapsizmi yoki biznesingizga endi mos kelmay qolgan eski brendni yangilayapsizmi — strategiya, dizayn va brendingizga kerak boʻladigan barcha materiallar bilan bitta jamoa shugʻullanadi."
+  ],
+  "includes": {
+    "title": "Brending nimalarni oʻz ichiga oladi",
+    "items": [
+      "Bozor, raqobatchilar va auditoriya tadqiqoti",
+      "Brend strategiyasi va pozitsiyalash",
+      "Brendga nom kerak boʻlsa, neyming",
+      "Logotip yaratish",
+      "Firma uslubi: ranglar, shriftlar, grafik elementlar",
+      "Aniq foydalanish qoidalari bilan brendbuk",
+      "Kerakli brend materiallari: qadoq, poligrafiya, ijtimoiy tarmoqlar, veb-sayt",
+      "Chop etish va veb uchun yakuniy fayllar hamda manba fayllar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      {
+        "name": "Brif va tadqiqot",
+        "text": "Biznesingiz, maqsadlaringiz va auditoriyangizni oʻrganamiz, bozor va raqobatchilarni tahlil qilamiz."
+      },
+      {
+        "name": "Strategiya va konsepsiya",
+        "text": "Pozitsiyalashni va butun brend quriladigan asosiy gʻoyani belgilaymiz."
+      },
+      {
+        "name": "Dizayn",
+        "text": "Shu gʻoya atrofida logotip va firma uslubi tizimini yaratamiz."
+      },
+      {
+        "name": "Takomillashtirish",
+        "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritiladi; keyingi bosqichga siz tasdiqlaganingizdan soʻng oʻtamiz."
+      },
+      {
+        "name": "Topshirish",
+        "text": "Siz brendbuk, barcha kerakli formatlardagi yakuniy fayllar va manba fayllarni olasiz."
+      }
+    ]
+  },
+  "timeline": {
+    "title": "Muddatlar",
+    "text": "Firma uslubi odatda 2 haftadan 6 haftagacha vaqt oladi. Neyming, qadoq yoki veb-sayt bilan toʻliq brend tizimi koʻproq vaqt talab qiladi. Muddatlarni ish boshlanishidan oldin siz bilan kelishib olamiz."
+  },
+  "faq": {
+    "title": "Brending boʻyicha savollar",
+    "items": [
+      {
+        "q": "Toshkentda brending qancha turadi?",
+        "a": "Bizda uchta brending paketi bor: Launch Base ($1 900 dan), One Pro ($2 900 dan) va Global ultimate ($5 900 dan). Yakuniy narx brifdan keyin kelishilgan ish hajmiga bogʻliq; alohida logotip $900 dan boshlanadi."
+      },
+      {
+        "q": "Brending logotipdan nimasi bilan farq qiladi?",
+        "a": "Logotip — bitta belgi. Brending esa uning atrofidagi butun tizim: strategiya, pozitsiyalash, firma uslubi va brendbuk. Brendbuk qoidalari qadoqdan tortib veb-saytgacha har bir aloqa nuqtasida brendni bir xil va taniqli qiladi."
+      },
+      {
+        "q": "Rebrending qilasizmi?",
+        "a": "Ha. Avval mavjud brendingiz va bozorni audit qilamiz, oʻzini oqlayotgan narsalarni saqlab qolamiz, biznes yoki auditoriyaga endi mos kelmaydiganlarini yangilaymiz — mijozlar sizni avvalgidek taniydigan qilib."
+      },
+      {
+        "q": "Ish yakunida nimalarni olaman?",
+        "a": "Kerakli formatlardagi barcha yakuniy fayllar (vektor, chop etish va veb uchun), foydalanish qoidalari batafsil yozilgan brendbuk, tahrirlash uchun manba fayllar hamda loyiha boshida siz bilan kelishilgan barcha brend materiallari."
+      },
+      {
+        "q": "Ishni boshlash uchun bizdan nima kerak?",
+        "a": "Avvalo biznesingiz, maqsadlaringiz va auditoriyangiz haqida qisqa suhbat. Soʻng sizga toʻldirish uchun brif yuboramiz, ish hajmi, muddat va narxni kelishamiz, shartnoma imzolaymiz va ishni bozor tadqiqotidan boshlaymiz."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Brendingiz haqida aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx koʻrsatilgan taklifimizni yuboramiz.",
+    "button": "Loyihani muhokama qilish"
+  }
+}

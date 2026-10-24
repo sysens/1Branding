@@ -6,7 +6,10 @@
  * creates the request with that file's id (POST /api/contacts-requests). The
  * backend binds an upload to the client that sent it and refuses bots through
  * `meta` (an empty hidden "website" field and the time the form was open).
+ * `Source` says where the visit came from (utils/leadSource.ts).
  */
+import { describeLeadSource, readAttribution } from "~/utils/leadSource";
+
 type Notify = (message: string, type: "error" | "success") => void;
 
 type ContactRequestPayload = {
@@ -18,6 +21,7 @@ type ContactRequestPayload = {
   Company: string;
   PhoneNumber: string;
   email: string;
+  Source?: string;
 };
 
 // What a failed $fetch / upload error carries (all optional).
@@ -37,6 +41,8 @@ const isValidPhone = (value: string) => /^\+?[0-9\s().-]{7,32}$/.test(value.trim
 
 export const useContactForm = (notify: Notify) => {
   const { t } = useI18n();
+  // Taken now: after an await the composable has no current Nuxt instance.
+  const track = useNuxtApp().$track as ((name: string, params?: Record<string, unknown>) => void) | undefined;
   const graphqlUrl = useGraphqlUrl();
   const apiOrigin = (() => {
     try {
@@ -122,12 +128,27 @@ export const useContactForm = (notify: Notify) => {
     return id;
   };
 
-  const createRequest = (data: ContactRequestPayload) =>
+  const postRequest = (data: ContactRequestPayload) =>
     $fetch(`${apiOrigin}/api/contacts-requests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: { data, meta: { website: honeypotVal.value, elapsedMs: Date.now() - formOpenedAt } },
     });
+
+  // A backend from before the Source field refuses unknown fields (400): the
+  // request then goes again without it, so no lead is lost while the two
+  // services deploy.
+  const createRequest = async (data: ContactRequestPayload) => {
+    try {
+      return await postRequest(data);
+    } catch (error) {
+      const e = error as RequestError;
+      const status = Number(e?.status ?? e?.statusCode ?? e?.response?.status ?? 0);
+      if (status !== 400 || !data.Source || !/invalid contact submission/i.test(String(e?.data?.error?.message || ""))) throw error;
+      const { Source: _source, ...rest } = data;
+      return postRequest(rest);
+    }
+  };
 
   const reset = () => {
     for (const field of [topicVal, servicesVal, fullNameVal, jobTitleVal, companyVal, phoneVal, emailVal]) field.value = "";
@@ -163,9 +184,14 @@ export const useContactForm = (notify: Notify) => {
         PhoneNumber: phoneVal.value.trim(),
         email: emailVal.value.trim(),
         requestedServicesMessageFile: fileId,
+        Source: describeLeadSource(readAttribution(), `${location.pathname}${location.search}`, location.hostname),
       });
       reset();
       notify(t("common.sent"), "success");
+      track?.("generate_lead", {
+        form: "contact",
+        page_path: location.pathname,
+      });
       return true;
     } catch (error) {
       // The server refused the attached upload (expired, or the server

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
+import { servicePath, servicesHubPath } from "~/utils/servicePages";
+import { toSiteLocale } from "~/utils/locales";
 
 // The header's "Services" item and its giant menu (after slidor.agency's): a
 // wide panel under the header with a large picture on the left and the twelve
@@ -8,18 +10,19 @@ import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
 // its picture; the panel opens on hover or click and closes a moment after the
 // pointer leaves both, on Escape, or on navigation.
 
-const { t } = useI18n();
-const localePath = useLocalePath();
+const { t, locale } = useI18n();
 const route = useRoute();
+const localePath = useLocalePath();
+const siteLocale = computed(() => toSiteLocale(locale.value));
 const img = useImage();
 
 const services = computed(() => SERVICE_CATALOG.map((service) => ({
   ...service,
   name: t(`home.services.items.${service.id}.name`),
   description: t(`home.services.items.${service.id}.description`),
+  path: servicePath(service.page, siteLocale.value),
   picture: img(service.image, { width: 1200, height: 900, fit: "cover", format: "webp", quality: 80 }),
 })));
-const target = computed(() => `${localePath("/")}#services`);
 
 const open = ref(false);
 const active = ref(SERVICE_CATALOG[1]!.id);
@@ -79,10 +82,11 @@ onBeforeUnmount(() => clearTimeout(closer));
             :class="{ 'is-active': service.id === active }"
           >
         </div>
+        <div class="svc__column">
         <ul class="svc__list">
           <li v-for="(service, index) in services" :key="service.id" :style="{ '--i': index }">
             <NuxtLink
-              :to="target"
+              :to="service.path"
               class="svc__item"
               :class="{ 'is-active': service.id === active }"
               @mouseenter="active = service.id"
@@ -97,6 +101,11 @@ onBeforeUnmount(() => clearTimeout(closer));
             </NuxtLink>
           </li>
         </ul>
+        <p class="svc__more">
+          <NuxtLink :to="servicesHubPath(siteLocale)" @click="hide">{{ t("header.allServices") }}</NuxtLink>
+          <NuxtLink :to="localePath('/news')" @click="hide">{{ t("header.blog") }}</NuxtLink>
+        </p>
+        </div>
       </div>
     </Transition>
     </Teleport>
@@ -368,5 +377,34 @@ onBeforeUnmount(() => clearTimeout(closer));
   .svc__label > span {
     transition: none;
   }
+}
+
+.svc__column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.svc__more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 0;
+  padding: 14px 14px 0;
+  border-top: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.svc__more a {
+  color: #efefef;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.svc__more a:hover,
+.svc__more a:focus-visible {
+  color: #03cb00;
 }
 </style>

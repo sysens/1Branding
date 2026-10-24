@@ -28,7 +28,19 @@ type NewsItem = {
 const props = defineProps<{ news: NewsItem | null }>();
 const resolveImage = useCmsMedia();
 
+const { locale } = useI18n();
 const title = computed(() => (props.news?.title ?? "").toString());
+// The visible publication date (and its machine-readable form for crawlers).
+// A fixed time zone keeps the server and the browser on the same day.
+const published = computed(() => {
+  const value = props.news?.publishedAt || props.news?.createdAt;
+  if (!value || Number.isNaN(Date.parse(value))) return null;
+  const date = new Date(value);
+  return {
+    iso: date.toISOString(),
+    label: new Intl.DateTimeFormat(locale.value, { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Tashkent" }).format(date),
+  };
+});
 const text = computed(() => (props.news?.text ?? "").toString());
 const heroImageSrc = computed(() => resolveImage(props.news?.image?.url));
 
@@ -46,7 +58,9 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         >
           <p
             class="font-normal text-[16px] text-white leading-[28px] tracking-normal font-['Poppins','Inter',sans-serif]"
-          />
+          >
+            <time v-if="published" :datetime="published.iso">{{ published.label }}</time>
+          </p>
         </div>
 
         <h1

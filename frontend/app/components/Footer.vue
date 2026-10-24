@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { COMPANY, COMPANY_ADDRESS, COMPANY_MAP_URL, companyProfiles, type SocialKind } from "~/utils/company";
+import { servicePath, servicesHubPath, type ServiceKey } from "~/utils/servicePages";
+import { toSiteLocale } from "~/utils/locales";
 
 // Site footer: "Let's build what's next." with the start-a-project call, four
 // link columns and the brand line. It is revealed like jsoft.vercel.app's: the
@@ -7,47 +10,50 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 // the footer scrolls in, while a black veil over it fades out.
 
 const localePath = useLocalePath();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { socialMedia: social } = await useFooterSocials();
+const siteLocale = computed(() => toSiteLocale(locale.value));
+const address = computed(() => COMPANY_ADDRESS[siteLocale.value]);
+
+const SOCIAL_NAMES: Record<SocialKind, string> = {
+  instagram: "Instagram",
+  telegram: "Telegram",
+  behance: "Behance",
+  linkedin: "LinkedIn",
+};
 
 type FooterLink = { label: string; to?: string; href?: string };
+const service = (key: ServiceKey) => ({ label: t(`servicePages.${key}.name`), to: servicePath(key, siteLocale.value) });
 const columns = computed<Array<{ title: string; links: FooterLink[] }>>(() => [
   {
     title: t("footerNew.explore"),
     links: [
       { label: t("footerNew.work"), to: localePath("/projects") },
-      { label: t("footerNew.services"), to: `${localePath("/")}#services` },
+      { label: t("footerNew.services"), to: servicesHubPath(siteLocale.value) },
       { label: t("footerNew.about"), to: localePath("/about") },
+      { label: t("footerNew.blog"), to: localePath("/news") },
       { label: t("footerNew.contact"), to: localePath("/contact") },
     ],
   },
   {
     title: t("footerNew.expertise"),
-    links: [
-      { label: t("footerNew.branding"), to: `${localePath("/")}#services` },
-      { label: t("footerNew.packaging"), to: `${localePath("/")}#services` },
-      { label: t("footerNew.photography"), to: `${localePath("/")}#services` },
-      { label: t("footerNew.web"), to: `${localePath("/")}#services` },
-    ],
+    links: [service("branding"), service("logo"), service("identity"), service("packaging"), service("web")],
   },
   {
     title: t("footerNew.information"),
     links: [
+      { label: t("footerNew.pricing"), to: localePath("/pricing") },
       { label: t("footerNew.process"), to: `${localePath("/")}#audit` },
       { label: t("footerNew.guarantee"), to: localePath("/one-guarantee") },
-      // No privacy or terms pages exist yet: plain labels until they do.
-      { label: t("footerNew.privacy") },
-      { label: t("footerNew.terms") },
+      { label: t("footerNew.privacy"), to: localePath("/privacy") },
     ],
   },
   {
     title: t("footerNew.social"),
-    links: [
-      { label: "Instagram", href: social.value?.instagramLink || "https://www.instagram.com/" },
-      { label: "Telegram", href: social.value?.telegramLink || "https://t.me/" },
-    ],
+    // Only real company profiles: no link to a bare instagram.com or t.me.
+    links: companyProfiles(social.value).map((profile) => ({ label: SOCIAL_NAMES[profile.kind], href: profile.url })),
   },
-]);
+].filter((column) => column.links.length));
 
 const year = new Date().getFullYear();
 
@@ -94,7 +100,7 @@ onBeforeUnmount(() => {
   <footer ref="root" class="site-footer">
     <div ref="inner" class="site-footer__inner">
       <p class="site-footer__headline">
-        <span>{{ t("footerNew.headlineFirst") }}</span>
+        <span>{{ `${t("footerNew.headlineFirst")} ` }}</span>
         <span>{{ t("footerNew.headlineLead") }} <span class="site-footer__green">{{ t("footerNew.headlineAccent") }}</span></span>
       </p>
 
@@ -102,7 +108,7 @@ onBeforeUnmount(() => {
         <div class="site-footer__cta">
           <p class="site-footer__ready">{{ t("footerNew.ready") }}</p>
           <p class="site-footer__pitch">
-            <span>{{ t("footerNew.pitchFirst") }}</span>
+            <span>{{ `${t("footerNew.pitchFirst")} ` }}</span>
             <span>{{ t("footerNew.pitchSecond") }}</span>
           </p>
           <NuxtLink :to="localePath('/contact')" class="site-footer__start">
@@ -131,12 +137,13 @@ onBeforeUnmount(() => {
       <div class="site-footer__bottom">
         <div>
           <p class="site-footer__logo"><span class="site-footer__green">One</span>Branding</p>
-          <p class="site-footer__tagline">{{ t("footerNew.tagline") }}</p>
+          <p class="site-footer__tagline" lang="en">{{ t("footerNew.tagline") }}</p>
         </div>
-        <div class="site-footer__contact">
-          <a href="tel:+998935608000" class="site-footer__phone">+998 93 560 80 00</a>
+        <address class="site-footer__contact">
+          <a :href="`tel:${COMPANY.phone.e164}`" class="site-footer__phone">{{ COMPANY.phone.display }}</a>
+          <a :href="COMPANY_MAP_URL" target="_blank" rel="noopener noreferrer" class="site-footer__address">{{ address.full }}</a>
           <p class="site-footer__copyright">© {{ year }} OneBranding. {{ t("footerNew.rights") }}</p>
-        </div>
+        </address>
       </div>
     </div>
     <div ref="veil" class="site-footer__veil" aria-hidden="true" />
@@ -260,7 +267,7 @@ onBeforeUnmount(() => {
 
 .site-footer__label {
   color: #9b9ea2;
-  font-size: calc(18 * var(--u));
+  font-size: max(12px, calc(18 * var(--u)));
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -321,6 +328,10 @@ a.site-footer__link:focus-visible {
 }
 
 .site-footer__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-style: normal;
   text-align: right;
 }
 
@@ -330,10 +341,23 @@ a.site-footer__link:focus-visible {
   text-decoration: none;
 }
 
+.site-footer__address {
+  max-width: 34em;
+  margin-top: calc(14 * var(--u));
+  color: #9b9ea2;
+  font-size: max(12px, calc(19 * var(--u)));
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.site-footer__address:hover {
+  color: #fff;
+}
+
 .site-footer__copyright {
   margin-top: calc(22 * var(--u)) !important;
   color: #9b9ea2;
-  font-size: calc(19 * var(--u));
+  font-size: max(12px, calc(19 * var(--u)));
 }
 
 .site-footer a:focus-visible {
@@ -376,7 +400,7 @@ a.site-footer__link:focus-visible {
   }
 
   .site-footer__label {
-    font-size: 0.72rem;
+    font-size: 0.8rem;
   }
 
   .site-footer__column ul {
@@ -385,6 +409,7 @@ a.site-footer__link:focus-visible {
   }
 
   .site-footer__link {
+    min-height: 24px;
     font-size: 1.05rem;
   }
 
@@ -405,7 +430,12 @@ a.site-footer__link:focus-visible {
   }
 
   .site-footer__contact {
+    align-items: flex-start;
     text-align: left;
+  }
+
+  .site-footer__address {
+    font-size: 0.85rem;
   }
 
   .site-footer__copyright {

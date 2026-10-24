@@ -1,0 +1,48 @@
+{
+  "title": "Video, 3D & Motion Design in Tashkent",
+  "description": "Motion design, 3D visualisation and animated video for brands in Tashkent: logo animation, product renders, social media content. Price agreed after the brief.",
+  "h1": "Video, 3D and motion design in Tashkent",
+  "lead": "OneBranding creates motion design, 3D visualisation and animation for brands in Uzbekistan and abroad: animated logos, product renders, explainer videos and content for social media. The price depends on the scope and is agreed after the brief.",
+  "intro": [
+    "Motion makes a brand easier to notice and to remember. A logo that comes alive on screen, a product shown from every angle before it is even produced, a short video that explains an idea in a few seconds: animation and 3D give your brand a voice in social feeds, at presentations and on screens, where a static image is easily scrolled past.",
+    "We build motion on the brand itself, on its colours, typography and character, so every video looks like part of one system. We work with companies in Uzbekistan and abroad, in Uzbek, Russian and English, remotely or at our office on Amir Temur Street in Tashkent. If your brand does not have an identity yet, we can create one first and then bring it to life."
+  ],
+  "includes": {
+    "title": "What we create",
+    "items": [
+      "Logo animation and animated brand elements",
+      "3D visualisation of products and packaging",
+      "Motion graphics and animated explainer videos",
+      "Short videos and animated content for social media",
+      "Animation for presentations, events and exhibitions",
+      "Storyboards and style frames before animation starts",
+      "Final videos in the formats and sizes each platform needs"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief and research", "text": "We learn what the video is for, who will watch it and where, and look at how your market communicates." },
+      { "name": "Idea and script", "text": "We propose the concept, the script and the visual style the animation will follow." },
+      { "name": "Storyboard and design", "text": "We draw the key frames and design the scenes and 3D models before anything starts to move." },
+      { "name": "Animation and refinement", "text": "We animate and refine with your feedback; each stage includes rounds of revisions, and you approve it before we move on." },
+      { "name": "Hand-over", "text": "You receive the final videos in every format and size you need." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Motion design questions",
+    "items": [
+      { "q": "How much does motion design cost in Tashkent?", "a": "The price depends on the scope: the length of the video, the amount of 3D and animation, the number of versions and formats. We agree on the price after the brief, once we know what the video has to do and where it will be shown." },
+      { "q": "What is motion design?", "a": "Motion design is graphic design set in motion: animated logos, text, icons, illustrations and 3D objects. It explains ideas, shows products and makes a brand recognisable in video, on social media, in presentations and on screens." },
+      { "q": "Can you make a 3D visualisation of a product that is not produced yet?", "a": "Yes. From drawings, sketches or a packaging design we build a 3D model and show the product in renders or animation, so you can present it, judge how it looks and start promoting it before production." },
+      { "q": "How long does it take to make a video?", "a": "It depends on the length and complexity: a short logo animation and a 3D product video are very different jobs. We agree on the timeline together with the scope and price, before we start." },
+      { "q": "Can you animate our existing logo?", "a": "Yes. We work from your brand book and files, keep the colours, typography and character of the brand and add motion that suits them. If there are no brand rules yet, we can develop the identity first." }
+    ]
+  },
+  "cta": {
+    "title": "Bring your brand to life",
+    "text": "Tell us what the video should do and where it will be shown, and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

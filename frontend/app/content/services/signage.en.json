@@ -1,0 +1,49 @@
+{
+  "title": "Signage & Exhibition Stand Design in Tashkent",
+  "description": "Signage and exhibition stand design in Tashkent: storefront signs, wayfinding, branded interiors and stands, with production-ready files. Discuss your project.",
+  "h1": "Signage and exhibition stand design in Tashkent",
+  "lead": "OneBranding designs signs, wayfinding and exhibition stands that carry your identity into physical spaces, from the sign above your door to an office interior or a stand at a trade show. We design them and prepare the files your manufacturer needs to produce them.",
+  "intro": [
+    "A sign is often the first piece of your brand a customer sees, and it is seen from across the street, at night and next to a dozen others. Designing for a physical space means thinking about viewing distance, scale, materials, lighting and the building itself, not just placing a logo on a board. That is why we treat signage as part of your identity rather than as a separate print job.",
+    "We design exterior signs and storefronts, interior branding and wayfinding for offices, shops, restaurants and showrooms, as well as stands for exhibitions and events in Uzbekistan and abroad. Our part is the design: production and installation are carried out by the manufacturer you choose, working from our layouts and specifications so the result matches what you approved."
+  ],
+  "includes": {
+    "title": "What signage and stand design includes",
+    "items": [
+      "Study of the site: facade or interior, dimensions and viewing points",
+      "Concept of signs and branded elements built on your identity",
+      "Exterior sign and storefront design",
+      "Interior branding and wayfinding: directions, door and floor signs",
+      "Exhibition stand concept, layout and graphics",
+      "3D visualisation of the sign or stand in its real setting",
+      "Sizes, materials and colours specified for every element",
+      "Production-ready files for the manufacturer you choose"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief and site study", "text": "We learn your goals and audience and study the location from photos, dimensions or a visit: the facade, the interior or the stand space." },
+      { "name": "Concept", "text": "We decide how your identity will live in the space: what people see first, how they find their way and what the stand should say." },
+      { "name": "Design and visualisation", "text": "We design every element and show it in 3D in its real setting, so you can judge scale and placement before anything is made." },
+      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
+      { "name": "Production files", "text": "You receive layouts with sizes, materials and colours, ready for a manufacturer to quote and produce." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Signage and stand questions",
+    "items": [
+      { "q": "How much does sign design cost in Tashkent?", "a": "The price depends on the scope: one storefront sign, a full set of exterior and interior signage, or a stand of a given size are different projects. We agree on the design price after the brief, before the work starts; production and installation are priced by the manufacturer." },
+      { "q": "Do you make and install the signs?", "a": "No, we design them. Production and installation are done by the manufacturer you choose. We prepare layouts with sizes, materials and colours, so any manufacturer can quote and produce exactly what you approved." },
+      { "q": "What do you need from us to start?", "a": "A short conversation about your goals, photos and dimensions of the facade, interior or stand space, and your logo or brand book. For an exhibition, the organiser's technical requirements for stands help as well." },
+      { "q": "Can you design a sign if we don't have a brand identity yet?", "a": "Yes. We can develop the logo and identity first and then carry them into your signage and interior, so the sign, the space and the rest of your brand speak one visual language from the start." },
+      { "q": "Do you design stands for exhibitions abroad?", "a": "Yes. We work remotely with clients in Uzbekistan and abroad, in Uzbek, Russian and English, and design the stand to the dimensions and technical requirements of the specific exhibition." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your space",
+    "text": "Fill in the brief and we will come back with a proposal: scope, timeline and price.",
+    "button": "Discuss your project"
+  }
+}

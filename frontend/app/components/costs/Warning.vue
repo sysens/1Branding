@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { isPlaceholderCopy } from "~/utils/seo";
 
 type PriceRes = {
   data?: {
@@ -40,14 +41,14 @@ const query = `
 
 const { data: priceRes } = await useCmsQuery<NonNullable<PriceRes["data"]>>("price-for-customer", query);
 
-const forCustomer = computed(
-  () =>
-    priceRes.value?.data?.price?.forCustomer ??
-    priceRes.value?.data?.fallbackPrice?.forCustomer ??
-    null
-);
+// Only the page's own language entry: the English one ("Dear customers",
+// Lorem ipsum) would put English text on another language's page.
+const forCustomer = computed(() => priceRes.value?.data?.price?.forCustomer ?? null);
 const title = computed(() => cmsText(forCustomer.value?.title) || t("warning.title"));
-const text = computed(() => cmsText(forCustomer.value?.text) || t("warning.text"));
+const text = computed(() => {
+  const value = cmsText(forCustomer.value?.text);
+  return value && !isPlaceholderCopy(value) ? value : t("warning.text");
+});
 </script>
 
 <template>

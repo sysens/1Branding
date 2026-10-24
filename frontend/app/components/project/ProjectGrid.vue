@@ -3,6 +3,8 @@
 import { ref, nextTick, computed, watch } from "vue";
 
 type Props = {
+  /** The project's name, for the images' alt text. */
+  title?: string | null;
   images?: string[] | null;
 
   topSrc?: string | null;
@@ -15,6 +17,7 @@ type Props = {
 };
 
 const props = withDefaults(defineProps<Props>(), {
+  title: null,
   images: null,
 
   topSrc: null,
@@ -29,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
 const root = ref<HTMLElement | null>(null);
 const { t } = useI18n();
 const imageAlt = (position: number) =>
-  t("a11y.projectImage", { position });
+  props.title?.trim() ? t("a11y.projectImageNamed", { title: props.title.trim(), position }) : t("a11y.projectImage", { position });
 
 const resolvedImages = computed(() => {
   const arr = (props.images ?? []).filter(Boolean);

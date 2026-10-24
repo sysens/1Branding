@@ -60,12 +60,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section class="vision" lang="en" aria-labelledby="vision-title">
+  <section class="vision" aria-labelledby="vision-title">
     <div class="vision__frame">
       <p v-blur-reveal class="vision__brand">{{ t("home.vision.brand") }}</p>
       <h2 id="vision-title" class="vision__title">
-        <span v-blur-reveal>{{ t("home.vision.lineFirst") }}</span>
+        <span v-blur-reveal>{{ `${t("home.vision.lineFirst")} ` }}</span>
         <span v-blur-reveal>{{ t("home.vision.lineSecond") }}</span>
       </h2>
       <p v-blur-reveal class="vision__label">{{ t("home.vision.label") }}</p>
@@ -214,6 +213,18 @@ onBeforeUnmount(() => {
 .vision__button:focus-visible {
   outline: 2px solid #00c936;
   outline-offset: 4px;
+}
+
+/* The Russian and Uzbek lines are longer than "Every solution.": a smaller
+   size keeps them clear of the numeral. */
+@media (min-width: 768px) {
+  .vision__title:lang(ru) {
+    font-size: calc(158 * var(--u));
+  }
+
+  .vision__title:lang(uz) {
+    font-size: calc(146 * var(--u));
+  }
 }
 
 /* Phones: copy, 2026, the numeral and the button stack. */

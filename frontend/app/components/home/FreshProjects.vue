@@ -17,8 +17,7 @@ const localePath = useLocalePath();
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section class="fresh" lang="en" aria-labelledby="fresh-title">
+  <section class="fresh" aria-labelledby="fresh-title">
     <h2 id="fresh-title" v-blur-reveal class="fresh__title">
       <span class="fresh__green">{{ t("home.fresh.accent") }}</span> {{ t("home.fresh.rest") }}
     </h2>

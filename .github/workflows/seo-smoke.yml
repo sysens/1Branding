@@ -1,0 +1,33 @@
+# Every Monday (and on demand) checks what search engines see on the live
+# site: status, title, description, canonical, robots, H1 and hreflang of the
+# key pages in every language, robots.txt, the sitemap and the old-URL 301s.
+name: SEO smoke test
+
+on:
+  schedule:
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Live SEO checks
+        run: node scripts/seo-smoke.mjs https://onebrandingworld.com
+      # The same values after hydration in a real browser. Playwright goes in
+      # a scratch folder, not the project (which would install everything).
+      - name: Hydrated SEO checks
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm init -y > /dev/null
+          npm install playwright@1.49.1
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/frontend/scripts/seo-hydration.mjs" .
+          node seo-hydration.mjs https://onebrandingworld.com

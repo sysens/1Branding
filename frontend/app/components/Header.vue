@@ -38,7 +38,7 @@
               :aria-expanded="isLangOpen"
               @click="isLangOpen = !isLangOpen"
             >
-              <span>{{ lang === "ru" ? "ru" : "en" }}</span>
+              <span>{{ lang }}</span>
               <svg
                 class="w-2.5 h-2.5 transition-transform duration-200"
                 :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
@@ -59,11 +59,20 @@
               leave-to-class="opacity-0 translate-y-2 scale-95"
             >
               <div
-                v-if="isLangOpen"
+                v-show="isLangOpen"
                 class="absolute left-1/2 -translate-x-1/2 top-[31px] w-[65px] py-3 rounded-[20px] bg-[#0B0B0B]/95 backdrop-blur-md border border-white/10 overflow-hidden"
               >
-                <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('en')">en</button>
-                <button type="button" class="site-nav__link block w-full py-2 text-center" @click="pickLang('ru')">ru</button>
+                <!-- Links, not buttons: crawlers follow them to the other languages. -->
+                <a
+                  v-for="code in LANGS"
+                  :key="code"
+                  :href="langHref(code)"
+                  :hreflang="code"
+                  :lang="code"
+                  class="site-nav__link block w-full py-2 text-center"
+                  :aria-current="code === lang ? 'true' : undefined"
+                  @click="onLangLink($event, code)"
+                >{{ code }}</a>
               </div>
             </transition>
           </div>
@@ -148,9 +157,9 @@
 
           <div class="px-[20px]">
             <a
-              :href="`${localePath('/')}#services`"
+              :href="localePath('/services')"
               class="block py-[23px] font-['Inter'] p-[20px] text-white text-[20px]"
-              @click="onNav($event, `${localePath('/')}#services`)"
+              @click="onNav($event, localePath('/services'))"
             >
               {{ $t("nav.services") }}
             </a>
@@ -222,7 +231,7 @@
                     class="w-full px-[20px] flex pb-[33px] items-center justify-between text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle"
                     @click="isLangOpen = !isLangOpen"
                   >
-                    <span>{{ lang === "ru" ? "ru " : "eng" }}</span>
+                    <span>{{ lang }}</span>
                     <svg
                       class="w-5 h-5 transition-transform duration-200"
                       :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
@@ -250,21 +259,17 @@
                       v-if="isLangOpen"
                       class="absolute left-0 right-0 top-[-100%] rounded-[20px] bg-[#FFFFFF14] backdrop-blur-md border border-white/10 overflow-hidden"
                     >
-                      <button
-                        type="button"
-                        class="w-full px-[20px] py-[18px] text-start text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
-                        @click="pickLang('en')"
-                      >
-                        en
-                      </button>
-                      <div class="h-px w-[70%] ml-[20px] bg-white/10"/>
-                      <button
-                        type="button"
-                        class="w-full py-[18px] text-start px-[20px] text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
-                        @click="pickLang('ru')"
-                      >
-                        ru
-                      </button>
+                      <template v-for="(code, index) in LANGS" :key="code">
+                        <div v-if="index" class="h-px w-[70%] ml-[20px] bg-white/10"/>
+                        <a
+                          :href="langHref(code)"
+                          :hreflang="code"
+                          :lang="code"
+                          class="block w-full px-[20px] py-[18px] text-start text-white font-['Inter'] font-normal text-[20px] leading-[18px] tracking-normal align-middle hover:bg-white/5"
+                          :aria-current="code === lang ? 'true' : undefined"
+                          @click="onLangLink($event, code)"
+                        >{{ code }}</a>
+                      </template>
                     </div>
                   </transition>
                 </div>
@@ -281,8 +286,11 @@
 <script setup lang="ts">
 import { watch, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
+import { SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
+import { serviceBySlug, servicePath } from "~/utils/servicePages";
 
-type AppLocale = "ru" | "en";
+type AppLocale = SiteLocale;
+const LANGS = SITE_LOCALES;
 
 const isMobileMenuOpen = useState<boolean>("mobileMenuOpen", () => false);
 const isLangOpen = useState<boolean>("mobileLangOpen", () => false);
@@ -312,9 +320,9 @@ const closeMobileMenu = () => {
 };
 
 const lang = computed<AppLocale>({
-  get: () => (locale.value as AppLocale) || "ru",
+  get: () => toSiteLocale(locale.value),
   set: async (val) => {
-    const next = (val as AppLocale) || "ru";
+    const next = toSiteLocale(val);
     const target = switchLocalePath(next);
 
     if (!target) return;
@@ -327,6 +335,22 @@ const pickLang = async (val: AppLocale) => {
   isLangOpen.value = false;
   await nextTick();
   lang.value = val;
+};
+
+// The same page in another language. A service page's slug differs per
+// language; the page sets it for switchLocalePath only once its own setup
+// runs, after the header has rendered on the server, so it is looked up here.
+const langHref = (code: AppLocale) => {
+  const slug = typeof route.params.slug === "string" && /\/services\/[^/]+\/?$/.test(route.path) ? route.params.slug : "";
+  const service = slug ? serviceBySlug(slug) : undefined;
+  return service ? servicePath(service.key, code) : switchLocalePath(code);
+};
+
+// A plain left click switches in-app; modified clicks open the link as usual.
+const onLangLink = (event: MouseEvent, code: AppLocale) => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  void pickLang(code);
 };
 
 const lockBodyScroll = () => {

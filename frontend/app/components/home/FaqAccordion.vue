@@ -47,8 +47,7 @@ const onLeave = (element: Element, done: () => void) => {
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section class="faq" lang="en" aria-labelledby="faq-title">
+  <section class="faq" aria-labelledby="faq-title">
     <h2 id="faq-title" v-blur-reveal class="faq__title">
       {{ t("home.faq.titleLead") }} <span class="faq__green">{{ t("home.faq.titleAccent") }}</span>
     </h2>

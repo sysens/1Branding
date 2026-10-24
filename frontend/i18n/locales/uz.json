@@ -1,0 +1,754 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "about": "Biz haqimizda",
+    "projects": "Loyihalar",
+    "contacts": "Aloqa",
+    "prices": "Narxlar",
+    "news": "Yangiliklar",
+    "services": "Xizmatlar"
+  },
+  "brand": {
+    "one": "One",
+    "brandingSuffix": "branding",
+    "oneGuaranteeSuffix": "Guarantee’s"
+  },
+  "seo": {
+    "description": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi, neyming, logotip yaratish, firma uslubi, brendbuk va qadoq dizayni.",
+    "heroEyebrow": "Toshkentdagi brending agentligi",
+    "home": {
+      "title": "Brending agentligi Toshkentda, Oʻzbekiston {'|'} OneBranding",
+      "description": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi, neyming, logotip yaratish, firma uslubi, brendbuk va qadoq dizayni."
+    },
+    "about": {
+      "title": "OneBranding haqida — Toshkentdagi brending jamoasi",
+      "description": "OneBranding jamoasi: Oʻzbekiston bizneslari uchun gʻoya va neymingdan firma uslubigacha kuchli brendlar yaratadigan strateglar, dizaynerlar va marketologlar."
+    },
+    "projects": {
+      "title": "Brending va firma uslubi portfoliosi {'|'} OneBranding",
+      "description": "OneBranding portfoliosi: Toshkentdagi brending jamoamiz yaratgan logotiplar, firma uslubi, qadoq dizayni, brendbuklar va reklama kampaniyalari.",
+      "h1": "OneBranding portfoliosi: brending, qadoq va firma uslubi"
+    },
+    "price": {
+      "title": "Toshkentda brending va logotip narxlari {'|'} OneBranding",
+      "description": "Toshkentda brending narxlari: paketlar $1 900 dan, logotip $900 dan, qadoq $500 dan, taqdimot dizayni slayd uchun $35 dan. Har biriga nima kirishini koʻring.",
+      "h1": "Toshkentda brending, logotip va firma uslubi narxlari"
+    },
+    "oneGuarantee": {
+      "title": "OneGuarantee: oldindan sinalgan dizayn {'|'} OneBranding",
+      "description": "OneGuarantee: ishga tushirishdan oldin dizayn yechimlarini dizaynerlarning jonli auditoriyasida sinaymiz, shunda ular maqsadli auditoriyangizga mos keladi.",
+      "h1": "OneGuarantee: ishga tushishdan oldin sinalgan dizayn"
+    },
+    "contacts": {
+      "title": "Kontaktlar: brending agentligi Toshkentda {'|'} OneBranding",
+      "description": "OneBranding bilan bogʻlaning: Toshkent, Amir Temur koʻchasi, 18A. Loyihangiz haqida aytib bering — brending, logotip va qadoq dizayni boʻyicha taklif olasiz."
+    },
+    "news": {
+      "title": "Brending haqida maqolalar va yangiliklar {'|'} OneBranding",
+      "description": "OneBranding maqolalari va yangiliklari: Oʻzbekiston bizneslari uchun brending, logotip yaratish, firma uslubi, qadoq dizayni va marketing haqida."
+    },
+    "project": "brending keysi",
+    "projectDescription": "OneBranding keysi: {title}. Oʻzbekistonlik brend uchun brend strategiyasi, logotip, firma uslubi va dizayn.",
+    "category": "Brending xizmatlari"
+  },
+  "common": {
+    "prev": "Oldingi",
+    "next": "Keyingi",
+    "from": "kamida",
+    "showMore": "Yana koʻrsatish",
+    "addFile": "Fayl qoʻshish",
+    "maxFileSize": "koʻpi bilan 10 MB",
+    "contacts": "Kontaktlar",
+    "send": "Yuborish",
+    "sending": "Yuborilmoqda...",
+    "downloadBrief": "brifni yuklab olish",
+    "socials": "IJTIMOIY TARMOQLAR",
+    "graphqlUrlEmpty": "GRAPHQL_URL EMPTY",
+    "noFileSelected": "Fayl tanlanmagan",
+    "requiredField": "Iltimos, barcha majburiy maydonlarni toʻldiring",
+    "invalidEmail": "Toʻgʻri e-mail kiriting ({'@'} belgisi boʻlishi shart)",
+    "fileRequired": "Iltimos, fayl biriktiring",
+    "fileUploadFailed": "Faylni yuklab boʻlmadi",
+    "sent": "Yuborildi",
+    "error": "Xatolik",
+    "skipToContent": "Asosiy mazmunga oʻtish",
+    "tooManyRequests": "Urinishlar juda koʻp. Bir necha daqiqadan soʻng qayta urinib koʻring.",
+    "networkError": "Server bilan aloqa yoʻq. Internetni tekshirib, qayta urinib koʻring.",
+    "sendFailed": "Soʻrovni yuborib boʻlmadi. Qayta urinib koʻring.",
+    "invalidEmailOrPhone": "E-mail va telefon raqamini tekshiring."
+  },
+  "home": {
+    "freshProjects": "yangi loyihalar",
+    "earthDives": {
+      "title": "Takliflarimiz",
+      "fallbackTitle": "Logotip va firma uslubi",
+      "fallbackDesc": "Brendingiz qadriyatlarini aks ettiruvchi, esda qoladigan firma uslubini yaratamiz."
+    },
+    "manifesto": {
+      "m1Line1": "Biz yaxlit qaraymiz.",
+      "m1Line2": "ONE —",
+      "m1Line2Accent": "har bir detal ustasi.",
+      "m2Line1": "ONE bilan brendingiz",
+      "m2Line2": "bozor yetakchilarini ergashtiradi",
+      "m3Line1": "biz yaratgan brendlar",
+      "m3Line2": "yetakchilarni ergashtiradi."
+    },
+    "identity": {
+      "headingLead": "OneBranding nomidagi",
+      "headingAccent": "“One”",
+      "headingRest": "—",
+      "headingSecond": "bizning",
+      "headingSecondAccent": "ish tamoyilimiz:",
+      "body": "bitta hamkor, yagona qarash va boshidan oxirigacha yaxlit yechim. Biz",
+      "bodyStrong": "strategiya, neyming, brending, dizayn, fotosurat, veb-saytlar hamda CRM va ERP",
+      "bodyRest": "tizimlarini yagona, uzviy jarayonda birlashtiramiz. Ilk gʻoyadan ishga tushirishgacha va undan keyin ham har bir bosqichni oʻz zimmamizga olamiz. Firma uslubingiz, kontentingiz, onlayn qiyofangiz va biznes tizimlaringiz bitta qarash asosida, detallarga puxta eʼtibor va doimo yuqori sifat bilan ishlab chiqiladi. Har bir element umumiy manzaraning bir qismi. Har bir yechim yaxlitlikni mustahkamlaydi."
+    },
+    "gallery": {
+      "title": "Firma uslubi — mahsulot tanilishining kaliti.",
+      "description": "Yagona vizual til ilk taassurotni yaratadi va mijoz xotirasida saqlanib qoladi. Brend ranglar, shakllar va taqdimotda izchil boʻlsa, uni yuzlab raqobatchilar orasidan tanib olish oson. Mijozlar faqat mahsulotni emas, uslubni ham eslab qoladi. Aynan shu uslub ularni qayta-qayta sizni tanlashga undaydi.",
+      "hint": "↓ Pastga suring — qator yonga siljiydi"
+    },
+    "parts": {
+      "headlineFirst": "Every part.",
+      "headlineSecond": "Working as one.",
+      "lead": "Yetakchilikka yaralgan brend.",
+      "tagline": "Yagona qarash. Har bir detalda sifat.",
+      "cards": {
+        "naming": "Neyming",
+        "branding": "Brending",
+        "design": "Dizayn",
+        "photography": "Fotosurat",
+        "websites": "Veb-saytlar",
+        "crm": "CRM va ERP"
+      }
+    },
+    "rowShorteners": {
+      "faqs": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "world": {
+      "eyebrow": "Bizning maydonimiz —",
+      "word": "DUNYO",
+      "lead": "Biz yaratadigan kuchli va tanib olinadigan brendlar",
+      "strong": "standartga",
+      "closing": "javob beradi va istalgan bozorda ajralib turadi."
+    },
+    "digitalExperience": {
+      "titleLines": [
+        "Biz yaratgan raqamli",
+        "mahsulotlar",
+        "premium koʻrinadi va",
+        "benuqson ishlaydi"
+      ],
+      "titleAccentWord": "premium koʻrinadi",
+      "description": "va har bir muloqotni brend bilan uning auditoriyasi oʻrtasidagi mustahkam aloqaga aylantiradi."
+    },
+    "firstGlance": {
+      "sections": [
+        {
+          "titleLead": "Sizni tanlashadi",
+          "titleAccent": "ilk qarashdayoq.",
+          "description": "Qaror soniyalarda qabul qilinadi. Odamlar siz bilan qoladimi yoki oʻtib ketadimi — buni aynan dizayn hal qiladi."
+        },
+        {
+          "titleLead": "Oʻqishdan oldin",
+          "titleAccent": "his qilishadi.",
+          "description": "Dizayn ilk taassurotni yaratadi, bu taassurot esa hamma narsani hal qiladi."
+        }
+      ]
+    },
+    "awards": {
+      "year": "2026",
+      "title": "Awwward",
+      "subtitle": "Oʻzbekiston boʻylab yaratadigan brendlarimiz uchun"
+    },
+    "brandStories": {
+      "ariaLabel": "Brendlar hikoyalari",
+      "stories": [
+        {
+          "title": "Pitsadan ham koʻproq.\nBu — Apex.",
+          "description": "Apexpizza bitta aniq gʻoyaga asoslangan: dadil taʼm, moʻl-koʻl masalliq va kuchli firma uslubi. Mahsulotdan qadoqqacha, taassurotdan tanilishgacha — har bir detal yagona tizim boʻlib ishlaydi.",
+          "alt": "Apex Pizza firma uslubi"
+        },
+        {
+          "title": "Kichik konfet.\nKatta tuygʻu.",
+          "description": "Perfect Candy kichkina shirinlikni esda qolarli lahzaga aylantiradi. Yorqin ranglar, oʻziga xos qadoq va quvnoq firma uslubi brendning har bir qismiga bir xil tuygʻu bagʻishlaydi.",
+          "alt": "Perfect Candy firma uslubi: binafsha rangli qadoq va shokoladli yuraklar"
+        },
+        {
+          "title": "Yangi yoʻnalish.\nBu — GreenGo.",
+          "description": "GreenGo kundalik harakatga energiya bagʻishlaydi. Aniq vizual til, ishonchli tipografika va yorqin yashil palitra brendni qayerda boʻlmasin, bir zumda tanib olinadigan qiladi.",
+          "alt": "GreenGo elektr transport brendining firma uslubi"
+        }
+      ]
+    },
+    "stats": {
+      "brandsValue": "2500+",
+      "brandsLabel": "Yaratilgan brendlar va loyihalar",
+      "yearsValue": "10+",
+      "yearsLabel": "Yillik brending tajribasi.",
+      "servicesValue": "25+",
+      "servicesLabel": "Kreativ xizmatlar.",
+      "closingBefore": "Everything - ",
+      "closingAccent": "One",
+      "closingAfter": "System."
+    },
+    "airways": {
+      "strong": "kuchli",
+      "rest1": "mahsulotga",
+      "rest2": "taqdimot kerak."
+    },
+    "presentations": {
+      "titleLead": "Ajoyib mahsulotga ",
+      "titleAccent": "faqat sifat yetmaydi.",
+      "text": "Kuchli taqdimot mahsulotning oʻzidagi sifat, aniqlik va intilish darajasini aks ettirishi kerak. OneBrandingda biz maʼlumotni aniq vizual tizimga aylantiramiz: unda tuzilma, tipografika, kompozitsiya va hikoya yagona boʻlib ishlaydi. Har bir detal qiymatni tushunarli yetkazish, taassurotni kuchaytirish va brendni munosib darajada koʻrsatish uchun puxta oʻylanadi.",
+      "cta": "ketdik!",
+      "more": "Taqdimotlar haqida batafsil"
+    },
+    "social": {
+      "one": "ONE",
+      "brand": "BREND.",
+      "visual": "VIZUAL",
+      "language": "TIL.",
+      "text": "Ijtimoiy tarmoqlar — brend va uning auditoriyasi oʻrtasidagi eng muhim aloqa nuqtalaridan biri. Har bir post, storis, kampaniya va reklama kreativi yagona kuchli vizual tizimning bir qismidek koʻrinishi kerak. OneBrandingda biz ijtimoiy tarmoqlar uchun firma uslubi tizimlarini yaratamiz: ularda tipografika, ranglar, fotosuratlar, kompozitsiya va grafik elementlar har qanday formatda uygʻun ishlaydi.",
+      "textStrong": "Natija — shunchaki chiroyli Instagram lentasi emas.",
+      "text2": "Bu tanilishni kuchaytiradigan, ishonch uygʻotadigan va brendingizni har bir aloqada professional koʻrsatadigan oʻziga xos vizual til."
+    },
+    "services": {
+      "one": "ONE",
+      "partner": "PARTNER.",
+      "every": "EVERY",
+      "solution": "SOLUTION.",
+      "subtitle": "Strategiya, dizayn, kontent va texnologiyalar. Yagona qarash atrofida birlashgan.",
+      "selected": "Tanlangan xizmat",
+      "explore": "Xizmatni koʻrish",
+      "closingFirst": "Every part connected.",
+      "closingLead": "Working as ",
+      "closingAccent": "one.",
+      "items": {
+        "01": {
+          "name": "Brend strategiyasi va neyming",
+          "description": "Tadqiqot, pozitsiyalash va maʼnoli nomlar.",
+          "tagline": "Aniq strategiya. Uzoq yashaydigan nom."
+        },
+        "02": {
+          "name": "Brending va rebrending",
+          "description": "Logotiplar, firma uslubi va brendbuklar.",
+          "tagline": "Yagona uslub. Har bir aloqa nuqtasida."
+        },
+        "03": {
+          "name": "Qadoq dizayni",
+          "description": "Javonda ajralib turadigan qadoq.",
+          "tagline": "Qoʻlga birinchi olinadi."
+        },
+        "04": {
+          "name": "Grafik dizayn va poligrafiya",
+          "description": "Menyular, kataloglar va brendlangan poligrafiya.",
+          "tagline": "Har bir sahifa — yagona vizual tilda."
+        },
+        "05": {
+          "name": "SMM va reklama kampaniyalari",
+          "description": "Auditoriya bilan bogʻlaydigan kontent va kampaniyalar.",
+          "tagline": "Har bir lentada yagona ovoz."
+        },
+        "06": {
+          "name": "Fotosurat va retush",
+          "description": "Brend va mahsulotlar uchun premium suratlar.",
+          "tagline": "Mahsulotni sotadigan suratlar."
+        },
+        "07": {
+          "name": "Video, 3D va motion dizayn",
+          "description": "Gʻoyalarni jonlantiradigan vizualizatsiya va animatsiya.",
+          "tagline": "Harakatdagi gʻoyalar."
+        },
+        "08": {
+          "name": "Taqdimot dizayni",
+          "description": "Tushunarli hikoyalar. Ishonarli taqdimotlar.",
+          "tagline": "Zalni zabt etadigan hikoyalar."
+        },
+        "09": {
+          "name": "Veb-sayt dizayni va yaratish",
+          "description": "Biznesingizga moslab yaratiladigan saytlar.",
+          "tagline": "Brendingiz — internetda."
+        },
+        "10": {
+          "name": "UI/UX va ilova dizayni",
+          "description": "Veb va mobil uchun qulay interfeyslar.",
+          "tagline": "Foydalanish oson. Unutish qiyin."
+        },
+        "11": {
+          "name": "CRM, ERP va Odoo yechimlari",
+          "description": "Bogʻlangan tizimlar. Aqlli jarayonlar.",
+          "tagline": "Barcha jarayonlar yagona tizimda."
+        },
+        "12": {
+          "name": "Peshlavha va koʻrgazma dizayni",
+          "description": "Firma uslubingiz — real makonda.",
+          "tagline": "Brendingiz — haqiqiy oʻlchamda."
+        }
+      },
+      "intro": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi va neyming, logotip yaratish, firma uslubi, qadoq dizayni, veb-saytlar va boshqa xizmatlar — barchasi bitta jamoadan.",
+      "allLink": "Barcha xizmatlar",
+      "pricesLink": "Narxlar",
+      "contactLink": "Biz bilan bogʻlaning"
+    },
+    "vision": {
+      "brand": "OneBranding",
+      "lineFirst": "Yagona qarash.",
+      "lineSecond": "Barcha yechimlar.",
+      "label": "Awwwards / Dizayn konsepsiyasi",
+      "year": "2026",
+      "cta": "OneBranding haqida"
+    },
+    "compare": {
+      "titleFirst": "Brendingiz chiroyliroq boʻlsin",
+      "titleLead": "— ",
+      "titleAccent": "xarakterli uslub bilan",
+      "hint": "*suring",
+      "before": "Oldin",
+      "after": "Keyin",
+      "label": "Oldin va keyin",
+      "prev": "Oldingi loyiha",
+      "next": "Keyingi loyiha",
+      "cta": "loyihalarni koʻrish"
+    },
+    "audit": {
+      "eyebrow": "Biznes auditi va strategiya",
+      "lineFirst": "Muammodan",
+      "lineSecond": "rivojlanishga.",
+      "asideFirst": "Biznesingiz haqida aniq tasavvur.",
+      "asideSecond": "Keyingi qadamlar uchun aniq reja.",
+      "current": "Hozirgi holat",
+      "target": "Maqsadli holat",
+      "steps": {
+        "audit": "Audit",
+        "analysis": "Tahlil",
+        "strategy": "Strategiya",
+        "action": "Harakat"
+      },
+      "planAccent": "Yagona reja.",
+      "planRest": "Aniq ustuvorliklar. Oʻlchanadigan maqsadlar.",
+      "text": "Biznesingizni oʻrganamiz, uni nima toʻxtatib turganini aniqlaymiz va A nuqtadan B nuqtagacha aniq yoʻlni belgilaymiz. Audit va tahlil orqali maʼlumotlarni aniq ustuvorliklarga, amaliy yechimlarga va oʻlchanadigan maqsadlarga asoslangan strategiyaga aylantiramiz. Natijada nimani oʻzgartirish kerakligi, bu nega muhimligi va qanday qilib oldinga yurishni koʻrsatadigan yoʻl xaritasiga ega boʻlasiz.",
+      "cta": "Muhokama qilaylik"
+    },
+    "clients": {
+      "titleFirst": "Bizga",
+      "count": "ishongan",
+      "titleRest": "brendlar",
+      "text": "Restoran tarmoqlari, banklar, FMCG va chakana savdo brendlari: har qanday hajmdagi kompaniyalar uchun firma uslubi, qadoq, reklama kampaniyalari va taqdimot materiallarini yaratamiz.",
+      "trustStrong": "Toshkentdan xalqaro bozorlargacha —",
+      "trustRest": "oʻzbek, rus va ingliz tillarida.",
+      "showAll": "Barcha {count} ta brendni koʻrish"
+    },
+    "faq": {
+      "titleLead": "Koʻp beriladigan",
+      "titleAccent": "savollar",
+      "items": [
+        {
+          "q": "Loyiha ustida ish qanday kechadi?",
+          "a": "Har bir loyiha aniq bosqichlardan oʻtadi: brif va bozoringizni oʻrganish, strategiya va konsepsiya, dizayn, fikr-mulohazalaringiz asosida takomillashtirish va yakuniy topshirish. Har bir bosqichda natijani koʻrasiz va keyingisiga oʻtishdan oldin uni tasdiqlaysiz."
+        },
+        {
+          "q": "Brend yaratish qancha vaqt oladi?",
+          "a": "Bu ish hajmiga bogʻliq. Faqat firma uslubini ishlab chiqish odatda 2 haftadan 6 haftagacha davom etadi; neyming, qadoq yoki veb-sayt bilan toʻliq brend tizimi koʻproq vaqt talab qiladi. Muddatni ishni boshlashdan oldin kelishib olamiz."
+        },
+        {
+          "q": "Toshkentda brending qancha turadi?",
+          "a": "Brending paketlari: Launch Base — $1 900 dan, One Pro — $2 900 dan, Global ultimate — $5 900 dan. Alohida logotip yaratish $900 dan, qadoq dizayni esa $500 dan boshlanadi. Yakuniy narx brifdan keyin kelishilgan ish hajmiga bogʻliq."
+        },
+        {
+          "q": "Brending nimalarni oʻz ichiga oladi?",
+          "a": "Strategiya va pozitsiyalash, kerak boʻlsa neyming, logotip va firma uslubi tizimi, ranglar, tipografika, grafik elementlar va aniq qoidalar jamlangan brendbuk — shuningdek, qadoqdan tortib ijtimoiy tarmoqlar va veb-saytgacha sizga kerakli materiallar."
+        },
+        {
+          "q": "Ish jarayonida oʻzgartirish kiritish mumkinmi?",
+          "a": "Ha. Har bir bosqichda bir necha marta tuzatish kiritish nazarda tutilgan va natija maqsadlaringizni aks ettirishi uchun siz bilan yaqin hamkorlikda ishlaymiz. Yoʻnalishdagi kattaroq oʻzgarishlar ochiq muhokama qilinadi va rejaga kiritiladi."
+        },
+        {
+          "q": "Xalqaro loyihalar bilan ishlaysizmi?",
+          "a": "Ha. Oʻzbekistondagi va xorijdagi mijozlar bilan masofadan yoki joyida, oʻzbek, rus va ingliz tillarida ishlaymiz hamda dizaynni xalqaro bozorlar va standartlarni hisobga olgan holda yaratamiz."
+        },
+        {
+          "q": "Ishni boshlash uchun nima kerak?",
+          "a": "Biznesingiz, maqsadlaringiz va auditoriyangiz haqida qisqa suhbat. Sizga brif yuboramiz, ish hajmi, muddat va narxni kelishamiz, shartnoma imzolaymiz — va ishni tadqiqotdan boshlaymiz."
+        },
+        {
+          "q": "Nega narx oʻrtachadan yuqori?",
+          "a": "Chunki siz bitta logotip emas, yaxlit tizim olasiz: tadqiqot, strategiya, mutaxassislar jamoasi va har bir aloqa nuqtasida ishlaydigan brend. Bu biznesingiz oʻsgani sari oʻzini oqlab boradigan sarmoya."
+        },
+        {
+          "q": "Yakunda qanday materiallarni olaman?",
+          "a": "Kerakli formatlardagi (vektor, bosma va veb) barcha yakuniy fayllar, foydalanish qoidalari yozilgan brendbuk, manba fayllari va kelishilgan materiallar — jamoangiz va hamkorlaringiz brenddan toʻgʻri foydalanishi uchun zarur boʻlgan hamma narsa."
+        }
+      ]
+    },
+    "fresh": {
+      "accent": "Yangi",
+      "rest": "loyihalar",
+      "more": "Barcha loyihalar"
+    }
+  },
+  "productSlug": {
+    "titleFallback": "Brending",
+    "descFallback": "Brendingizni raqobatchilardan ajratib turadigan firma uslubini yaratamiz. Betakror konsepsiyalar va tanib olinadigan uslub."
+  },
+  "aboutPage": {
+    "title": "Jamoamiz bilan tanishing",
+    "moreButton": "Batafsil",
+    "cms": {
+      "section1Title": "Jamoamiz bilan tanishing",
+      "section2": [
+        {
+          "title": "Bizning missiyamiz",
+          "text": "Biz shunchaki mavjud boʻlib qolmaydigan, balki taʼsir koʻrsatadigan brendlar yaratamiz.\n\nBiz uchun har bir loyiha — strategik ish: unda dizayn oʻsish va raqobatdagi ustunlik vositasiga aylanadi.\n\nXarakterli brendlar yaratish uchun marketing tafakkuri, chuqur tahlil va kuchli vizual ijroni birlashtiramiz. Gʻoyadan yakuniy amalga oshirishgacha har bir detal puxta ishlanadi va natijaga xizmat qiladi.\n\nMissiyamiz — baland ovozda gapiradigan, oʻziga ishonchli koʻrinadigan va ortiqcha soʻzlarsiz sotadigan brendlar yaratish."
+        },
+        {
+          "title": "Bizning qarashimiz",
+          "text": "Brendingning kelajagini soddalik, aniqlik va mazmunda koʻramiz.\n\nMaʼlumot toʻlib-toshgan dunyoda aniq, halol va vizual jihatdan kuchli brendlar gʻolib chiqadi.\n\nOneBranding xotirada qoladigan va ishonch uygʻotadigan firma uslublarini yaratadi.\n\nBiz xarakterli minimalizmga ishonamiz: unda har bir chiziq, rang va shakl maʼnoga ega.\n\nKelajak oʻz auditoriyasini tushunadigan va uning tilida gapiradigan brendlarniki. Biz aynan shunday brendlarni yaratamiz."
+        }
+      ],
+      "section3Title": "OneBranding ijodkorlari",
+      "section3Text": "OneBrandingda tasodifiy qarorlar yoʻq — faqat puxta oʻylangan yondashuv, xarakter va natija uchun masʼuliyat bor.\n\nShuning uchun loyihalarimiz shunchaki chiroyli koʻrinib qolmaydi, balki taʼsir koʻrsatadi."
+    },
+    "lead": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi. Oʻzbekistondagi va xorijdagi kompaniyalar uchun brendlarni strategiyadan tortib har bir aloqa nuqtasigacha yaratamiz — oʻzbek, rus va ingliz tillarida.",
+    "servicesTitle": "Biz nima qilamiz"
+  },
+  "newsPage": {
+    "title": "Studiyamiz blogi"
+  },
+  "news": {
+    "otherNews": "Boshqa yangiliklar"
+  },
+  "oneGuarantee": {
+    "clientsTitle": "Mijozlarimiz fikri",
+    "clientsSubtitle": "Xizmatlarimizdan foydalangan insonlarning samimiy taassurotlari.",
+    "section2": {
+      "title": "ONEGUARANTEE",
+      "text1": "Brendning maqsadli auditoriyasiga yoqishi kafolatlangan* dizayn!",
+      "text2": "Yechimlarimizni yetakchi dizaynerlarning onlayn guruhi orqali sinovdan oʻtkazamiz (har bir guruhda yechimlarimizni baholashga tayyor 5 mingga yaqin real inson bor).",
+      "text3": "Samarali yechimlar oʻrniga kreativ yechimlar taklif qiladigan kompaniyalar koʻp. Bunday yechimlar eʼtiborni tortadi, qiziqarli, dadil va innovatsion koʻrinadi, biroq koʻpincha mijozning biznes maqsadlariga javob bermaydi.",
+      "text4": "Bunday yondashuvda kreativlik va goʻzallik samaradorlikka zid boradi. Natijaga mijozning biznes manfaatlari doirasidagi hamkorlik emas, balki agentlikning ijodiy qarashi taʼsir qiladi.",
+      "text5": "Onebranding agentlik va mijozni yaqinlashtiradi, munosabatlarni tushunarli hamkorlikka aylantiradi, ish natijasini esa samarali qiladi!",
+      "highlightToken": "kafolatlangan*"
+    },
+    "reasonsTitle": "NEGA BU SAMARALI ISHLAYDI?",
+    "cms": {
+      "section4": {
+        "title": "Butun dunyodagi brendlar bilan ishlaymiz.",
+        "cards": [
+          {
+            "title": "Global brending",
+            "description": "Xalqaro standartlarga javob beradigan va har qanday bozorda ajralib turadigan kuchli, tanib olinadigan brendlar yaratamiz."
+          },
+          {
+            "title": "Chegarasiz dizayn",
+            "description": "Dunyo boʻylab mijozlar bilan har qanday murakkablikdagi loyihalar ustida ishlaymiz — gʻoyadan toʻliq brend tizimigacha."
+          },
+          {
+            "title": "Jahon darajasidagi sifat",
+            "description": "Har bir yechim eng mayda detaligacha oʻylab chiqiladi — shunda brend global maydonda ishonchli, premium va raqobatbardosh koʻrinadi."
+          }
+        ]
+      },
+      "section5": {
+        "items": [
+          "Boshida maqsadli auditoriya brendni qanday qabul qilishini oʻlchaymiz",
+          "Butun loyiha ustidan strategik nazorat",
+          "Bitta vazifa ustida bir nechta jamoa parallel ishlaydi"
+        ]
+      },
+      "section6": {
+        "title": "Koʻproqni istagan brendlar bilan ishlaymiz.",
+        "text": "Agar sizga shunchaki dizayn emas, daromad keltiradigan natija kerak boʻlsa — toʻgʻri joydasiz.",
+        "buttonText": "Telegram orqali yozing"
+      }
+    }
+  },
+  "warning": {
+    "title": "Hurmatli mijozlar",
+    "text": "Vaqtingizni qadrlaymiz va shuni maʼlum qilmoqchimiz: xizmatlar narxi individual hisoblanadi hamda loyihaning murakkabligi, muddatlari va ish hajmiga bogʻliq. Ishni boshlashdan oldin eng maqbul yechim va shaffof rejani taklif qilish uchun maqsadlar, bosqichlar va byudjetni aniqlashtiramiz. Iltimos, dolzarb aloqa maʼlumotlarini qoldiring — bu kelishuv va tijorat taklifini tayyorlashni tezlashtiradi. Savollaringiz boʻlsa, bizga yozing — batafsil maslahat beramiz. Tushunganingiz va ishonchingiz uchun rahmat."
+  },
+  "contacts": {
+    "title": "Toshkentdagi OneBranding bilan bogʻlaning",
+    "addressTitle": "MANZIL",
+    "addressText": "Toshkent sh., Shayxontohur tumani, Amir Temur koʻchasi, 18A, 5-ofis, Oʻzbekiston, 100047",
+    "workTitle": "ISH VAQTI",
+    "workHours": "Dushanba — juma, 10:00–19:00",
+    "contactInfoTitle": "ALOQA MAʼLUMOTLARI",
+    "noteTitle": "ESLATMA",
+    "noteText": "Agentlik asosan yuridik shaxslar va yirik loyihalar bilan ishlaydi. Murojaat qilganda amaldagi aloqa maʼlumotlaringizni koʻrsating.",
+    "briefText": "Quyidagi shaklni toʻldiring yoki bizga qoʻngʻiroq qiling — sizga taklif tayyorlaymiz.",
+    "form": {
+      "title": "OneBranding bilan bogʻlaning",
+      "description": "Loyiha ustida ishni boshlashdan oldin mijozlardan bir nechta savolga javob berishni soʻraymiz. Javoblaringiz vazifangizni hal qilish uchun eng mos vositalarni tanlashga yordam beradi. Loyihangiz haqida qanchalik batafsil yozsangiz, taklifimiz shunchalik aniq boʻladi. Shunda sizga qanday foyda keltira olishimizni tezroq tushunamiz. Agar maʼlumot toʻplab, uchrashuvga tayyorlansak, ilk suhbatimiz ancha aniq va mazmunli boʻladi. Agar vazifangiz bizning yoʻnalishimizga mos kelmasa, sizga munosib hamkorlarni tavsiya qilamiz.",
+      "topicTitle": "Mavzu",
+      "topicInput": "Loyihangiz nomi*",
+      "servicesTitle": "Bizdan qaysi xizmatlarni buyurtma qilmoqchisiz",
+      "servicesInput": "Xabar",
+      "fullName": "Ism va familiya*",
+      "jobTitle": "Lavozim",
+      "company": "Kompaniya*",
+      "phone": "Telefon*",
+      "email": "E-mail*",
+      "agreement": "Soʻrovni yuborib, shaxsiy maʼlumotlaringiz qayta ishlanishiga rozilik bildirasiz. Batafsil:",
+      "privacyLink": "maxfiylik siyosati"
+    }
+  },
+  "footerNew": {
+    "headlineFirst": "Kelajakni",
+    "headlineLead": "birga",
+    "headlineAccent": "quraylik.",
+    "ready": "Hammasini birlashtirishga tayyormisiz?",
+    "pitchFirst": "Brending, dizayn va texnologiyalar.",
+    "pitchSecond": "Gʻoyadan ishga tushirishgacha — bitta hamkor.",
+    "start": "Loyihani boshlash",
+    "navLabel": "Sayt pastki qismi",
+    "explore": "Boʻlimlar",
+    "work": "Loyihalar",
+    "services": "Xizmatlar",
+    "about": "Biz haqimizda",
+    "contact": "Aloqa",
+    "expertise": "Yoʻnalishlar",
+    "branding": "Brending",
+    "packaging": "Qadoq",
+    "photography": "Fotosurat",
+    "web": "Veb va tizimlar",
+    "information": "Maʼlumot",
+    "process": "Ish jarayonimiz",
+    "guarantee": "OneGuarantee",
+    "privacy": "Maxfiylik siyosati",
+    "terms": "Foydalanish shartlari",
+    "social": "Ijtimoiy tarmoqlar",
+    "tagline": "One vision. Every solution.",
+    "rights": "Barcha huquqlar himoyalangan.",
+    "blog": "Blog",
+    "pricing": "Narxlar"
+  },
+  "errorPage": {
+    "notFoundTitle": "Sahifa topilmadi",
+    "notFoundText": "Siz izlayotgan sahifa mavjud emas yoki boshqa manzilga koʻchirilgan.",
+    "title": "Nimadir xato ketdi",
+    "text": "Birozdan soʻng qayta urinib koʻring.",
+    "home": "Bosh sahifaga qaytish"
+  },
+  "movement": {
+    "first": "Harakatga",
+    "second": "qoʻshiling",
+    "description": "Keyingi bosqichga OneBranding bilan qadam qoʻying.",
+    "detail": "Brendingiz kelajagi shu yerda boshlanadi.",
+    "action": "Ishlarimizni koʻring",
+    "copyright": "Barcha huquqlar himoyalangan."
+  },
+  "robot": {
+    "lead": "Kuchli brend",
+    "accent": "tasodifan yaratilmaydi.",
+    "description": "U puxta tizim, aniq strategiya va kuchli dizayn yechimlari orqali quriladi.",
+    "support": "Onebranding biznesingizni tanish, unga ishonish va uni tanlashni osonlashtiradi."
+  },
+  "a11y": {
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish",
+    "menu": "Menyu",
+    "projectImage": "Loyiha galereyasi, {position}-rasm",
+    "loading": "Yuklanmoqda",
+    "clients": "Mijozlarimiz",
+    "projects": "Loyihalar",
+    "globe": "Mamlakatlar belgilari va ularni bogʻlovchi yoʻnalishlar tushirilgan aylanayotgan globus",
+    "globeImage": "Qitʼalari yoritilgan globus",
+    "pauseGlobe": "Aylanishni toʻxtatish",
+    "resumeGlobe": "Aylanishni davom ettirish",
+    "resetGlobe": "Globusni asl holatiga qaytarish",
+    "projectImageNamed": "{title}: OneBranding loyihasi, {position}-rasm"
+  },
+  "servicePages": {
+    "branding": {
+      "name": "Brending va rebrending",
+      "summary": "Strategiya, logotip, firma uslubi va brendbuk: yangi yoki yangilangan toʻliq brend."
+    },
+    "logo": {
+      "name": "Logotip yaratish",
+      "summary": "Strategiya va pozitsiyalashga asoslangan, tanib olinadigan va uzoq yashaydigan logotip."
+    },
+    "identity": {
+      "name": "Firma uslubi",
+      "summary": "Har bir aloqa nuqtasida brendingizni tanitadigan ranglar, tipografika va grafik elementlar."
+    },
+    "brandbook": {
+      "name": "Brendbuk",
+      "summary": "Logotip va firma uslubingiz qayerda boʻlmasin, bir xil koʻrinishini taʼminlaydigan qoidalar."
+    },
+    "strategy": {
+      "name": "Brend strategiyasi va neyming",
+      "summary": "Tadqiqot, pozitsiyalash va maʼnoli nomlar."
+    },
+    "packaging": {
+      "name": "Qadoq dizayni",
+      "summary": "Javonda ajralib turadigan va mahsulot qiymatini yetkazadigan qadoq."
+    },
+    "print": {
+      "name": "Grafik dizayn va poligrafiya",
+      "summary": "Yagona vizual tildagi menyular, kataloglar va brendlangan poligrafiya."
+    },
+    "social": {
+      "name": "SMM va reklama kampaniyalari",
+      "summary": "Har bir lentada yagona ovozni saqlaydigan kontent tizimlari va kampaniyalar."
+    },
+    "photo": {
+      "name": "Mahsulot fotosurati va retush",
+      "summary": "Mahsulotni sotishga yordam beradigan premium brend va mahsulot suratlari."
+    },
+    "motion": {
+      "name": "Video, 3D va motion dizayn",
+      "summary": "Gʻoyalarni jonlantiradigan vizualizatsiya va animatsiya."
+    },
+    "presentation": {
+      "name": "Taqdimot dizayni",
+      "summary": "Pitch-deklardan mahsulot taqdimotlarigacha — tushunarli hikoyalar va ishonarli taqdimotlar."
+    },
+    "web": {
+      "name": "Sayt yaratish",
+      "summary": "Biznesingizga moslab loyihalanadigan va ishlab chiqiladigan individual saytlar."
+    },
+    "uiux": {
+      "name": "UI/UX va ilova dizayni",
+      "summary": "Veb va mobil uchun qulay, intuitiv interfeyslar."
+    },
+    "crm": {
+      "name": "CRM, ERP va Odoo",
+      "summary": "Jarayonlaringizga moslab sozlanadigan, ishni aqlliroq qiladigan bogʻlangan tizimlar."
+    },
+    "signage": {
+      "name": "Peshlavha va koʻrgazma dizayni",
+      "summary": "Firma uslubingiz — real makonlarda."
+    }
+  },
+  "servicesPage": {
+    "breadcrumb": "Xizmatlar",
+    "breadcrumbLabel": "Navigatsiya yoʻli",
+    "eyebrow": "OneBranding xizmati",
+    "pricesTitle": "{name}: narxlar",
+    "pricesNote": "Narxlar roʻyxatimizdagi paketlar. Yakuniy narx brifda kelishilgan ish hajmiga bogʻliq.",
+    "allPrices": "Barcha narxlarni koʻrish",
+    "relatedTitle": "Tegishli xizmatlar",
+    "allServices": "Barcha xizmatlar",
+    "viewProjects": "Loyihalarimizni koʻring",
+    "priceFrom": "{price} dan",
+    "pricePerSlide": "slayd uchun {price}"
+  },
+  "servicesHub": {
+    "title": "Toshkentda brending va dizayn xizmatlari",
+    "description": "Toshkentdagi OneBranding xizmatlari: brending, logotip yaratish, firma uslubi, qadoq dizayni, sayt yaratish va boshqalar. Narxlar, jarayon va muddatlar.",
+    "eyebrow": "Xizmatlar",
+    "h1": "Toshkentda brending va dizayn xizmatlari",
+    "lead": "Strategiya, dizayn, kontent va texnologiyalar — bitta jamoadan: xizmatni tanlang va u nimalarni oʻz ichiga olishi, qanday ishlashimiz va narxi bilan tanishing.",
+    "listTitle": "Barcha xizmatlar",
+    "ctaTitle": "Qayerdan boshlashni bilmayapsizmi?",
+    "ctaText": "Biznesingiz va maqsadlaringiz haqida aytib bering — sizga mos ish hajmi, muddat va narxni taklif qilamiz.",
+    "ctaButton": "Loyihani muhokama qilish"
+  },
+  "privacy": {
+    "title": "Maxfiylik siyosati",
+    "description": "OneBranding saytdagi aloqa shakli orqali yuborilgan shaxsiy maʼlumotlarni qanday toʻplashi, ishlatishi va himoya qilishi hamda murojaat tartibi haqida.",
+    "h1": "Maxfiylik siyosati",
+    "updatedLabel": "Soʻnggi yangilanish",
+    "updated": "2026-10-23",
+    "sections": [
+      {
+        "h": "Biz kimmiz",
+        "p": [
+          "OneBranding — Oʻzbekiston, Toshkent sh., Amir Temur koʻchasi, 18A, 5-ofis manzilida joylashgan brending agentligi. Ushbu siyosat onebrandingworld.com sayti va undagi aloqa shakli orqali yuboriladigan soʻrovlarga taalluqli."
+        ]
+      },
+      {
+        "h": "Qanday maʼlumotlarni toʻplaymiz",
+        "p": [
+          "Soʻrov yuborganingizda shaklga kiritgan maʼlumotlaringizni olamiz: ismingiz, lavozimingiz, kompaniyangiz, telefon raqamingiz, e-mail manzilingiz, soʻrov mavzusi va matni hamda biriktirgan faylingiz.",
+          "Soʻrov bilan birga tashrifingiz qayerdan kelganini ham qayd etamiz: sizni yoʻnaltirgan sayt, siz ochgan birinchi sahifa (agar manzilida reklama kampaniyasi teglari boʻlsa, ular bilan birga) va shakl joylashgan sahifa. Bu qaysi sahifalarimiz va kanallarimiz soʻrov keltirayotganini tushunishga yordam beradi."
+        ]
+      },
+      {
+        "h": "Nima uchun foydalanamiz",
+        "p": [
+          "Faqat soʻrovingizga javob berish uchun: siz bilan bogʻlanish, taklif tayyorlash va ish boʻyicha kelishib olish uchun. Maʼlumotlaringizni sotmaymiz va uchinchi shaxslarga ularning oʻz marketingi uchun bermaymiz."
+        ]
+      },
+      {
+        "h": "Qayerda saqlanadi",
+        "p": [
+          "Soʻrovlar saytimizning kontentni boshqarish tizimida saqlanadi, soʻrov haqidagi bildirishnoma esa jamoamizning yopiq Telegram chatiga yuboriladi. Ularga faqat soʻrovlar bilan ishlaydigan xodimlar kira oladi."
+        ]
+      },
+      {
+        "h": "Analitika",
+        "p": [
+          "Agar saytda veb-analitika (Google Analytics yoki Yandex Metrica) yoqilgan boʻlsa, u cookie-fayllar yordamida tashriflarni hamda shaklni yuborish yoki telefon raqamimizni bosish kabi harakatlarni qayd etadi. Bu saytni yaxshilashimizga yordam beradi; maʼlumotlar umumlashtirilgan holda boʻladi va shaxsingizni aniqlash uchun ishlatilmaydi."
+        ]
+      },
+      {
+        "h": "Qancha muddat saqlaymiz",
+        "p": [
+          "Soʻrovlarni siz bilan ishlayotgan vaqtimizda va oʻzaro muloqotimiz qaydini saqlash uchun zarur boʻlgan muddat davomida saqlaymiz, soʻngra ularni oʻchirib tashlaymiz."
+        ]
+      },
+      {
+        "h": "Sizning huquqlaringiz",
+        "p": [
+          "Biz siz haqingizda qanday maʼlumotlarni saqlayotganimizni soʻrashingiz, ularni tuzatish yoki oʻchirishni soʻrashingiz yoxud istalgan vaqtda roziligingizni qaytarib olishingiz mumkin. Buning uchun +998 93 560 80 00 raqamiga qoʻngʻiroq qiling yoki aloqa shakli orqali yozing."
+        ]
+      },
+      {
+        "h": "Oʻzgartirishlar",
+        "p": [
+          "Sayt yoki ish jarayonlarimiz oʻzgarganda ushbu siyosatni yangilashimiz mumkin. Yuqoridagi sana eng soʻnggi tahrirni koʻrsatadi."
+        ]
+      }
+    ]
+  },
+  "projectsPage": {
+    "back": "Bosh sahifaga qaytish",
+    "services": "Xizmatlarimiz",
+    "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti."
+  },
+  "pricing": {
+    "serviceLink": "{name} xizmatiga nimalar kiradi",
+    "details": "Aniq ish hajmi, muddat va narx ishni boshlashdan oldin brifda kelishiladi.",
+    "categories": {
+      "branding": {
+        "title": "Brending",
+        "description": "Brending — biznesingizni kuchli va tanib olinadigan brend sifatida toʻliq ishlab chiqish. U strategiya, pozitsiyalash, logotip, firma uslubi va ishonch uygʻotib, sizni raqobatchilardan ajratib turadigan butun vizual tizimni oʻz ichiga oladi."
+      },
+      "logo": {
+        "title": "Logotip",
+        "description": "Logotip — brendning asosiy ramzi: u ilk taassurotni shakllantiradi va butun firma uslubining vizual yoʻnalishini belgilaydi. Logotiplarni strategiya va pozitsiyalash asosida yaratamiz, shuning uchun ular nafaqat chiroyli, balki tanib olinadigan, dolzarb va uzoq umrli boʻladi."
+      },
+      "packaging": {
+        "title": "Qadoq",
+        "description": "Qadoq — xaridor bilan asosiy aloqa nuqtasi va mahsulot javonda tanlanishining asosiy sabablaridan biri. Biz eʼtiborni tortadigan, mahsulot qiymatini yetkazadigan, brendni mustahkamlaydigan va raqobatchilar orasida ajralib turadigan qadoq dizaynini yaratamiz."
+      },
+      "presentation": {
+        "title": "Taqdimot",
+        "description": "Taqdimot dizayni gʻoyalaringizni auditoriya eʼtiborini ushlab turadigan aniq va puxta tuzilgan slaydlarga aylantiradi — savdo, loyiha himoyasi yoki ommaviy chiqish uchun boʻladimi, farqi yoʻq. Narx har bir slayd uchun hisoblanadi, shuning uchun hajm ehtiyojingizga mos keladi."
+      }
+    },
+    "lead": "Narxlar AQSH dollarida koʻrsatilgan va boshlangʻich narx hisoblanadi: yakuniy narx brifdan keyin kelishilgan ish hajmiga bogʻliq.",
+    "tableTitle": "Narxlar roʻyxati",
+    "tableService": "Xizmat",
+    "tablePackage": "Paket",
+    "tablePrice": "Narx",
+    "perSlide": "slayd uchun"
+  },
+  "project": {
+    "palette": "Rang palitrasi",
+    "more": "Sizga ham shunday loyiha kerakmi?",
+    "services": "Xizmatlarimiz",
+    "contact": "Loyihani muhokama qilish"
+  },
+  "header": {
+    "allServices": "Barcha xizmatlar",
+    "blog": "Blog"
+  }
+}

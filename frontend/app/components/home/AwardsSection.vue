@@ -24,7 +24,7 @@ const PARTNER_LOGOS = [
 
 const year = computed(() => t("home.awards.year") || "2026");
 const title = computed(() => t("home.awards.title") || "Awwward");
-const subtitle = computed(() => t("home.awards.subtitle") || "built the best brands of Uzbekistan");
+const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we build across Uzbekistan");
 </script>
 
 <template>
@@ -34,7 +34,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "built the best bra
     </div>
     <header class="awards-section__heading">
       <h2 id="awards-title">
-        <span v-blur-reveal class="awards-section__year">{{ year }}</span>
+        <span v-blur-reveal class="awards-section__year">{{ `${year} ` }}</span>
         <span v-blur-reveal class="awards-section__title">{{ title }}</span>
       </h2>
       <p v-blur-reveal>{{ subtitle }}</p>

@@ -90,18 +90,20 @@ const heroCopy = computed<HeroCopy>(() => {
     <div class="leading-copy-position relative">
       <div class="flex justify-center">
         <h1 class="hero-slogan">
-          <!-- The design has no visible keyword line; it stays in the heading for
-               search engines and screen readers. The interpolated trailing spaces
-               keep the lines apart in the heading's text (the template compiler
-               drops plain whitespace between tags); visually they collapse. -->
-          <span class="sr-only">{{ `${$t("seo.heroEyebrow")}. ` }}</span>
-          <span class="hero-slogan__lead">
+          <!-- What the page is about, in its language, above the slogan. The
+               slogan is the brand's own English line on every language's page
+               (marked lang="en" for screen readers and search engines). The
+               interpolated trailing spaces keep the lines apart in the
+               heading's text (the template compiler drops plain whitespace
+               between tags); visually they collapse. -->
+          <span class="hero-slogan__eyebrow">{{ `${$t("seo.heroEyebrow")} ` }}</span>
+          <span class="hero-slogan__lead" lang="en">
             <span class="hero-slogan__dash" aria-hidden="true" />{{ `${heroCopy.leadText} ` }}
           </span>
 
-          <span class="hero-slogan__main">{{ `${heroCopy.mainText} ` }}</span>
+          <span class="hero-slogan__main" lang="en">{{ `${heroCopy.mainText} ` }}</span>
 
-          <span class="hero-slogan__tagline">
+          <span class="hero-slogan__tagline" lang="en">
             <span v-for="part in heroCopy.taglineParts" :key="part">{{ `${part} ` }}</span>
           </span>
         </h1>
@@ -217,6 +219,17 @@ const heroCopy = computed<HeroCopy>(() => {
   mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
 }
 
+/* The keyword line: small, muted, centred over the slogan. */
+.hero-slogan__eyebrow {
+  display: block;
+  margin-bottom: 0.9em;
+  color: #a3a6aa;
+  font-size: max(0.75rem, calc(var(--hero-main-size) * 0.075));
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+}
+
 /* The design's dash is a wide outlined bar, heavier than a dash glyph. */
 .hero-slogan__dash {
   display: inline-block;
@@ -268,12 +281,17 @@ const heroCopy = computed<HeroCopy>(() => {
    keeps its own fade-out mask under the sweep, so nothing jumps when the
    sweep ends. */
 @media (prefers-reduced-motion: no-preference) {
+  .hero-slogan__eyebrow,
   .hero-slogan__lead,
   .hero-slogan__main,
   .hero-slogan__tagline {
     animation:
       hero-line-in 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) var(--hero-line-delay) backwards,
       hero-line-sweep 1.1s cubic-bezier(0.45, 0, 0.25, 1) var(--hero-line-delay) backwards;
+  }
+
+  .hero-slogan__eyebrow {
+    --hero-line-delay: 0.05s;
   }
 
   .hero-slogan__lead {

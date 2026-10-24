@@ -1,4 +1,5 @@
 import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
+import { toSiteLocale } from "~/utils/locales";
 
 /**
  * Shared access to the Strapi GraphQL API. Every page and component goes
@@ -8,17 +9,20 @@ import { resolveStrapiMediaUrl } from "~/utils/strapiMedia";
  * server/plugins/internal-graphql.ts); the code always uses the public URL.
  */
 
-export type CmsLocale = "en" | "ru";
+// The CMS has entries in English and Russian. Asking it for "uz" returns no
+// entry (and no error), so Uzbek pages take the English entry's media through
+// the `$withFallback` copy and their text from the page's own i18n copy.
+export type CmsLocale = "en" | "ru" | "uz";
 
 export type CmsResponse<T> = {
   data?: T | null;
   errors?: Array<{ message: string }>;
 };
 
-/** The CMS locale of the current page: "ru" under /ru, otherwise "en". */
+/** The CMS locale of the current page: the page's own language. */
 export const useCmsLocale = () => {
   const { locale } = useI18n();
-  return computed<CmsLocale>(() => (locale.value === "ru" ? "ru" : "en"));
+  return computed<CmsLocale>(() => toSiteLocale(locale.value));
 };
 
 /** The public GraphQL endpoint ("" when it is not configured). */

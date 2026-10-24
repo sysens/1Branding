@@ -1,0 +1,48 @@
+{
+  "title": "Presentation Design in Tashkent: Price per Slide",
+  "description": "Presentation design in Tashkent: pitch decks, company and product decks. Per slide: Start from $35, Product from $65, Global from $99. Talk to OneBranding.",
+  "h1": "Presentation design in Tashkent",
+  "lead": "OneBranding designs clear, convincing presentations: pitch decks for investors, company profiles, product and sales decks. Pricing is per slide: Start from $35, Product from $65 and Global from $99 per slide.",
+  "intro": [
+    "A presentation is often the first serious conversation with an investor, a partner or a large client, and it has to hold their attention even when you are not in the room. We help you decide what to say and in what order, then turn it into slides where every chart, number and image is easy to read and leads to the conclusion you need.",
+    "Each deck follows your brand: its colours, typography and visual language, so it looks like part of your company rather than a template. You can order a new presentation or the redesign of one you already have. We work in Uzbek, Russian and English with clients in Uzbekistan and abroad; the number of slides and the pricing tier are agreed after the brief."
+  ],
+  "includes": {
+    "title": "What presentation design includes",
+    "items": [
+      "Structure and storyline of the presentation",
+      "Work on the text: shorter, clearer, to the point",
+      "Slide design in your brand's style",
+      "Charts, tables, diagrams and infographics",
+      "Icons, images and illustrations in one consistent style",
+      "Cover, section divider and closing slides",
+      "A final file to present and edit, plus a PDF to send"
+    ]
+  },
+  "process": {
+    "title": "How we work",
+    "steps": [
+      { "name": "Brief and material", "text": "We learn who the presentation is for, what it must achieve and where it will be shown, and study your material." },
+      { "name": "Structure and concept", "text": "We build the storyline slide by slide and choose the visual approach." },
+      { "name": "Design", "text": "We design the key slides first, then the whole deck, with its charts and infographics." },
+      { "name": "Refinement", "text": "Each stage includes rounds of revisions with your feedback; you approve it before we move on." },
+      { "name": "Hand-over", "text": "You receive the finished presentation, ready to present, edit and send." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Presentation design questions",
+    "items": [
+      { "q": "How much does presentation design cost in Tashkent?", "a": "We price per slide: Start from $35, Product from $65 and Global from $99 per slide. The total depends on the number of slides and the tier, and we agree on both after the brief, so you know the price before we start." },
+      { "q": "How many slides does a presentation need?", "a": "It depends on the goal: a pitch for investors should be short and focused, while a company profile or a product catalogue can be longer. We suggest a structure after the brief, so you pay only for slides that do a job." },
+      { "q": "Do you design pitch decks for investors?", "a": "Yes. We help you build the story investors expect to hear: the problem, the solution, the market, the business model, the team and what you are asking for. Then we design it so the key numbers and conclusions are clear at a glance." },
+      { "q": "Can you redesign our existing presentation?", "a": "Yes. Send us your current deck: we review its structure, tighten the text and redesign the slides in your brand's style. The price is calculated in the same way, per slide, and agreed after we have seen the material." },
+      { "q": "Will we be able to edit the presentation ourselves?", "a": "Yes. Along with a PDF to send, you receive the source file of the presentation, so your team can correct the text and update the numbers. If you later need new slides in the same style, we design them and price them per slide, as usual." }
+    ]
+  },
+  "cta": {
+    "title": "Tell us about your presentation",
+    "text": "Send us your material or a short description of the task, and we will come back with a proposal: number of slides, tier and price.",
+    "button": "Discuss your project"
+  }
+}

@@ -1,0 +1,75 @@
+// Live SEO smoke test of the production site (weekly in CI, or by hand):
+// `node scripts/seo-smoke.mjs [https://onebrandingworld.com]`.
+// For each key page in every language it checks what a crawler sees in the
+// server HTML: status 200, one H1, a title and description, an absolute
+// self-canonical, robots allowing indexing and the hreflang set; then
+// robots.txt, the sitemap, and that old addresses answer with one 301.
+const ORIGIN = (process.argv[2] || process.env.SITE_URL || "https://onebrandingworld.com").replace(/\/+$/, "");
+const PAGES = [
+  "/", "/about", "/services", "/services/branding", "/services/logo-design", "/projects", "/pricing", "/contact", "/news",
+  "/ru", "/ru/about", "/ru/services", "/ru/services/razrabotka-logotipa", "/ru/pricing", "/ru/contact",
+  "/uz", "/uz/about", "/uz/services", "/uz/services/logotip-yaratish", "/uz/pricing", "/uz/contact",
+];
+const REDIRECTS = [
+  ["/en/About", "/about"],
+  ["/ru/", "/ru"],
+  ["/ContactPage", "/contact"],
+  ["/services/rq51r0st097n29olxjbe1q5h", "/services/branding"],
+];
+
+const results = [];
+const check = (name, ok, detail = "") => {
+  results.push(ok);
+  console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? `  (${detail})` : ""}`);
+};
+const attr = (html, pattern) => (html.match(pattern) || [])[1] || "";
+const get = (path, init = {}) => fetch(ORIGIN + path, { redirect: "manual", headers: { "user-agent": "OneBranding-SEO-smoke/1.0" }, ...init });
+
+for (const path of PAGES) {
+  const res = await get(path);
+  const html = await res.text();
+  const title = attr(html, /<title[^>]*>([^<]*)<\/title>/i);
+  const description = attr(html, /<meta[^>]+name="description"[^>]+content="([^"]*)"/i);
+  const canonical = attr(html, /<link[^>]+rel="canonical"[^>]+href="([^"]*)"/i);
+  const robots = attr(html, /<meta[^>]+name="robots"[^>]+content="([^"]*)"/i);
+  const h1s = (html.match(/<h1[\s>]/gi) || []).length;
+  const hreflangs = ["en", "ru", "uz", "x-default"].filter((code) => html.includes(`hreflang="${code}"`));
+  const expected = `${ORIGIN}${path}`;
+  const problems = [
+    res.status !== 200 && `status ${res.status}`,
+    !title && "no title",
+    title.length > 70 && `title ${title.length} chars`,
+    !description && "no description",
+    canonical !== expected && `canonical ${canonical || "missing"}`,
+    /noindex/i.test(robots) && "noindex",
+    h1s !== 1 && `${h1s} h1`,
+    hreflangs.length !== 4 && `hreflang ${hreflangs.join(",")}`,
+  ].filter(Boolean);
+  check(path, problems.length === 0, problems.join("; "));
+}
+
+let res = await get("/robots.txt");
+const robotsTxt = await res.text();
+check("robots.txt", res.status === 200 && robotsTxt.includes(`Sitemap: ${ORIGIN}/sitemap.xml`) && !/Disallow:\s*\/\s*$/m.test(robotsTxt), String(res.status));
+
+res = await get("/sitemap.xml");
+const sitemap = await res.text();
+const urls = (sitemap.match(/<loc>/g) || []).length;
+check("sitemap.xml", res.status === 200 && urls >= 60 && sitemap.includes(`${ORIGIN}/uz/services/logotip-yaratish`), `${res.status}, ${urls} URLs`);
+
+for (const [from, to] of REDIRECTS) {
+  res = await get(from);
+  const location = res.headers.get("location") || "";
+  check(`301 ${from}`, res.status === 301 && (location === to || location === `${ORIGIN}${to}`), `${res.status} ${location}`);
+}
+
+// The www host is optional until its domain is attached; report it without failing.
+try {
+  const www = await fetch(ORIGIN.replace("://", "://www."), { redirect: "manual" });
+  console.log(`INFO  www host answers ${www.status} ${www.headers.get("location") || ""}`);
+} catch (error) {
+  console.log(`INFO  www host unreachable (${error.message})`);
+}
+
+console.log(`\n${results.filter(Boolean).length}/${results.length} passed`);
+process.exit(results.every(Boolean) ? 0 : 1);

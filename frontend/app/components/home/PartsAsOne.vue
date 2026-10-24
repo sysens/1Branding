@@ -327,15 +327,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- The copy is English in both locales. -->
-  <section ref="root" class="parts" :class="{ 'parts--animated': animated }" lang="en">
+  <section ref="root" class="parts" :class="{ 'parts--animated': animated }">
     <div ref="screen" class="parts__screen">
       <!-- Texts sit on the screen rather than the stage, so on phones (where the
            stage pans) they stay in view; on wider screens they line up with the
            design frame through the same --u maths. -->
       <p class="parts__brand" data-headline data-blur-reveal="manual">OneBranding</p>
-      <h2 class="parts__headline" data-headline data-blur-reveal="manual">
-        <span>{{ t("home.parts.headlineFirst") }}</span>
+      <!-- The brand's slogan stays English on every language's page. -->
+      <h2 class="parts__headline" data-headline data-blur-reveal="manual" lang="en">
+        <span>{{ `${t("home.parts.headlineFirst")} ` }}</span>
         <span>{{ t("home.parts.headlineSecond") }}</span>
       </h2>
       <ul class="sr-only">

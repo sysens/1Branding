@@ -109,7 +109,7 @@ useHead(() => ({
       </div>
     </div>
 
-    <p v-else class="projects-wall__empty">Projects are unavailable.</p>
+    <p v-else class="projects-wall__empty">{{ $t("projectsPage.unavailable") }}</p>
   </section>
 </template>
 

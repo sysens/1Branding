@@ -1,14 +1,23 @@
-export type SeoLocale = "ru" | "en";
+import { COMPANY, COMPANY_ADDRESS, COMPANY_MAP_URL } from "./company";
+import { LANGUAGE_TAGS, type SiteLocale } from "./locales";
+
+export type SeoLocale = SiteLocale;
 
 export const SITE_NAME = "OneBranding";
 export const DEFAULT_OG_IMAGE = { path: "/og-image.jpg", width: 1200, height: 630 };
-export const OG_LOCALES: Record<SeoLocale, string> = { ru: "ru_RU", en: "en_US" };
+export const OG_LOCALES: Record<SeoLocale, string> = { en: "en_US", ru: "ru_RU", uz: "uz_UZ" };
 
-/** Adds the brand suffix unless the title already carries it (mirrors app.vue's titleTemplate). */
+// Search results show about 60 characters of a title; past that the brand
+// suffix would only push the words that matter out of view.
+const TITLE_MAX = 60;
+
+/** Adds the brand suffix unless the title already carries it or would get too long (mirrors app.vue's titleTemplate). */
 export const withSiteName = (title: string) => {
   const clean = title.trim();
   if (!clean) return SITE_NAME;
-  return clean.includes(SITE_NAME) ? clean : `${clean} · ${SITE_NAME}`;
+  if (clean.includes(SITE_NAME)) return clean;
+  const full = `${clean} | ${SITE_NAME}`;
+  return full.length > TITLE_MAX ? clean : full;
 };
 
 /** Strips markup and collapses whitespace, then trims to a snippet-sized sentence. */
@@ -58,11 +67,8 @@ type OrganizationContact = {
   telephone?: string;
   email?: string;
   sameAs?: string[];
-};
-
-const ADDRESS: Record<SeoLocale, { streetAddress: string; addressLocality: string; addressRegion: string }> = {
-  ru: { streetAddress: "ул. Амира Темура, 18А, офис 5", addressLocality: "Ташкент", addressRegion: "Шайхантахурский район" },
-  en: { streetAddress: "18A Amir Temur St., office 5", addressLocality: "Tashkent", addressRegion: "Shaykhantakhur district" },
+  /** The service pages, with names in the page's language (else SERVICES). */
+  services?: Array<{ name: string; url: string }>;
 };
 
 const SERVICES: Record<SeoLocale, string[]> = {
@@ -86,39 +92,66 @@ const SERVICES: Record<SeoLocale, string[]> = {
     "Rebranding",
     "Presentations and digital design",
   ],
+  uz: [
+    "Brend strategiyasi va platformasi",
+    "Neyming",
+    "Logotip yaratish",
+    "Firma uslubi va vizual identifikatsiya",
+    "Brendbuk va gaydlayn",
+    "Qadoq dizayni",
+    "Rebrending",
+    "Taqdimot va digital dizayn",
+  ],
 };
 
 const ORG_DESCRIPTION: Record<SeoLocale, string> = {
   ru: "Брендинговое агентство полного цикла в Ташкенте: стратегия, нейминг, логотип, фирменный стиль, брендбук, дизайн упаковки и digital.",
   en: "Full-cycle branding agency in Tashkent, Uzbekistan: brand strategy, naming, logo design, visual identity, brand books, packaging and digital.",
+  uz: "Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi, neyming, logotip, firma uslubi, brendbuk, qadoq dizayni va digital.",
+};
+
+const PLACES: Record<SeoLocale, { city: string; country: string; catalog: string }> = {
+  ru: { city: "Ташкент", country: "Узбекистан", catalog: "Услуги брендинга" },
+  en: { city: "Tashkent", country: "Uzbekistan", catalog: "Branding services" },
+  uz: { city: "Toshkent", country: "Oʻzbekiston", catalog: "Brending xizmatlari" },
 };
 
 /** Site-wide ProfessionalService + WebSite graph, referenced from pages by `@id`. */
 export const organizationGraph = (origin: string, locale: SeoLocale, contact: OrganizationContact) => {
   const orgId = `${origin}/#organization`;
-  const home = `${origin}${locale === "ru" ? "/ru" : "/"}`;
+  const address = COMPANY_ADDRESS[locale];
+  const place = PLACES[locale];
   return [
     {
       "@type": "ProfessionalService",
       "@id": orgId,
       name: SITE_NAME,
-      alternateName: ["One Branding", "OneBranding agency", "Onebranding"],
+      alternateName: [COMPANY.localName, "OneBranding Uzbekistan"],
       url: `${origin}/`,
       logo: `${origin}/General/apple-touch-icon.png`,
       image: `${origin}${DEFAULT_OG_IMAGE.path}`,
       description: ORG_DESCRIPTION[locale],
       slogan: "Design is how it works",
-      address: { "@type": "PostalAddress", ...ADDRESS[locale], postalCode: "100047", addressCountry: "UZ" },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${address.street}, ${address.district}`,
+        addressLocality: address.city,
+        addressRegion: address.city,
+        postalCode: COMPANY.postalCode,
+        addressCountry: COMPANY.country,
+      },
+      hasMap: COMPANY_MAP_URL,
+      priceRange: COMPANY.priceRange,
       areaServed: [
-        { "@type": "City", name: locale === "ru" ? "Ташкент" : "Tashkent" },
-        { "@type": "Country", name: locale === "ru" ? "Узбекистан" : "Uzbekistan" },
+        { "@type": "City", name: place.city },
+        { "@type": "Country", name: place.country },
       ],
-      knowsLanguage: ["ru", "uz", "en"],
+      knowsLanguage: ["uz", "ru", "en"],
       openingHoursSpecification: [{
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens: "10:00",
-        closes: "19:00",
+        dayOfWeek: [...COMPANY.hours.days],
+        opens: COMPANY.hours.opens,
+        closes: COMPANY.hours.closes,
       }],
       ...(contact.telephone ? { telephone: contact.telephone } : {}),
       ...(contact.email ? { email: contact.email } : {}),
@@ -135,19 +168,24 @@ export const organizationGraph = (origin: string, locale: SeoLocale, contact: Or
       ...(contact.sameAs?.length ? { sameAs: contact.sameAs } : {}),
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: locale === "ru" ? "Услуги брендинга" : "Branding services",
-        itemListElement: SERVICES[locale].map((name) => ({
+        name: place.catalog,
+        itemListElement: (contact.services?.length
+          ? contact.services
+          : SERVICES[locale].map((name) => ({ name, url: "" }))
+        ).map(({ name, url }) => ({
           "@type": "Offer",
-          itemOffered: { "@type": "Service", name, provider: { "@id": orgId } },
+          itemOffered: { "@type": "Service", name, ...(url ? { url } : {}), provider: { "@id": orgId } },
         })),
       },
     },
     {
       "@type": "WebSite",
       "@id": `${origin}/#website`,
-      url: home,
+      // The site's home is "/" in every language; each language is listed.
+      url: `${origin}/`,
       name: SITE_NAME,
-      inLanguage: locale,
+      alternateName: COMPANY.localName,
+      inLanguage: LANGUAGE_TAGS[locale],
       publisher: { "@id": orgId },
     },
   ];

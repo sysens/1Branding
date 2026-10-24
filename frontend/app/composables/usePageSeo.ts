@@ -6,8 +6,8 @@ import {
   toMetaDescription,
   withSiteName,
   type BreadcrumbItem,
-  type SeoLocale,
 } from "~/utils/seo";
+import { SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
 
 type JsonLd = Record<string, unknown>;
 
@@ -24,8 +24,12 @@ export type PageSeoInput = {
   breadcrumbs?: MaybeRefOrGetter<BreadcrumbItem[] | null | undefined>;
   /** false => noindex (previews, fallback-language copies, utility pages). */
   indexable?: MaybeRefOrGetter<boolean>;
-  /** Emit ru/en hreflang alternates (only when both language versions exist). */
-  alternates?: MaybeRefOrGetter<boolean>;
+  /**
+   * hreflang alternates: true (default) for every language, false for none,
+   * or the languages that really have this page (e.g. a CMS article that only
+   * exists in English).
+   */
+  alternates?: MaybeRefOrGetter<boolean | readonly SiteLocale[]>;
 };
 
 const cleanPath = (path: string) => {
@@ -59,12 +63,17 @@ export const usePageSeo = (input: PageSeoInput) => {
   const localePath = useLocalePath();
   const origin = useSiteOrigin();
 
-  const lang = computed<SeoLocale>(() => (locale.value === "en" ? "en" : "ru"));
+  const lang = computed(() => toSiteLocale(locale.value));
   const fullTitle = computed(() => withSiteName(title.value));
   const description = computed(() => toMetaDescription(toValue(input.description)) || t("seo.description"));
   const canonical = computed(() => `${origin}${cleanPath(route.path)}`);
   const indexable = computed(() => toValue(input.indexable) ?? true);
-  const withAlternates = computed(() => toValue(input.alternates) ?? true);
+  const alternateLocales = computed<readonly SiteLocale[]>(() => {
+    const value = toValue(input.alternates) ?? true;
+    if (value === true) return SITE_LOCALES;
+    if (value === false) return [];
+    return SITE_LOCALES.filter((code) => value.includes(code));
+  });
 
   const image = computed(() => {
     const value = toValue(input.image)?.trim();
@@ -74,9 +83,10 @@ export const usePageSeo = (input: PageSeoInput) => {
   const isDefaultImage = computed(() => image.value === `${origin}${DEFAULT_OG_IMAGE.path}`);
 
   const alternates = computed(() => {
-    if (!withAlternates.value || !indexable.value) return [];
+    // One language alone has no alternates to name.
+    if (alternateLocales.value.length < 2 || !alternateLocales.value.includes(lang.value) || !indexable.value) return [];
     type AlternateLink = { rel: "alternate"; hreflang: string; href: string; key: string };
-    const links = (["ru", "en"] as const)
+    const links = alternateLocales.value
       .map((code): AlternateLink | null => {
         const path = switchLocalePath(code);
         return path ? { rel: "alternate", hreflang: code, href: `${origin}${cleanPath(path)}`, key: `hreflang-${code}` } : null;
@@ -116,7 +126,7 @@ export const usePageSeo = (input: PageSeoInput) => {
     ogUrl: () => canonical.value,
     ogSiteName: "OneBranding",
     ogLocale: () => OG_LOCALES[lang.value],
-    ogLocaleAlternate: () => [OG_LOCALES[lang.value === "ru" ? "en" : "ru"]],
+    ogLocaleAlternate: () => alternateLocales.value.filter((code) => code !== lang.value).map((code) => OG_LOCALES[code]),
     ogImage: () => image.value,
     ogImageWidth: () => (isDefaultImage.value ? DEFAULT_OG_IMAGE.width : undefined),
     ogImageHeight: () => (isDefaultImage.value ? DEFAULT_OG_IMAGE.height : undefined),

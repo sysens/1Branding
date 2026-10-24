@@ -2,11 +2,14 @@
 import { computed, ref } from "vue";
 import NewsHero from "~/components/news/NewsHero.vue";
 import NewsSlider from "~/components/news/NewsSlider.vue";
+import { toMetaDescription } from "~/utils/seo";
+import { isSiteLocale, toSiteLocale } from "~/utils/locales";
 
-type AppLocale = "ru" | "en";
 type Media = { url?: string | null };
 type NewsItem = {
   documentId?: string | null;
+  locale?: string | null;
+  localizations?: Array<{ locale?: string | null } | null> | null;
   title?: string | null;
   text?: string | null;
   createdAt?: string | null;
@@ -25,7 +28,6 @@ const route = useRoute();
 const graphqlUrl = useGraphqlUrl();
 const cmsMedia = useCmsMedia();
 const documentId = computed(() => String(route.params.id || "").trim());
-const gqlLocale = computed<AppLocale>(() => locale.value === "en" ? "en" : "ru");
 
 // A new route instance avoids stale content (and stale SEO) on client-side ID changes.
 definePageMeta({ key: (route) => route.fullPath });
@@ -40,12 +42,14 @@ if (!graphqlUrl) {
 const query = `
   query NewsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     newsPage(documentId: $documentId, locale: $locale) {
-      documentId title text createdAt publishedAt updatedAt
+      documentId locale title text createdAt publishedAt updatedAt
+      localizations { locale }
       image { url }
       images_connection { nodes { url } }
     }
     fallbackNewsPage: newsPage(documentId: $documentId, locale: $fallbackLocale) {
-      documentId title text createdAt publishedAt updatedAt
+      documentId locale title text createdAt publishedAt updatedAt
+      localizations { locale }
       image { url }
       images_connection { nodes { url } }
     }
@@ -68,9 +72,13 @@ if (!news.value) {
 }
 
 const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news.title"));
-const seoDescription = computed(() =>
-  (news.value?.text || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) || t("seo.news.description")
-);
+const seoDescription = computed(() => toMetaDescription(news.value?.text) || t("seo.news.description"));
+// The languages this article is written in (its hreflang alternates).
+const articleLocales = computed(() => {
+  const own = data.value?.data?.newsPage;
+  if (!own) return [];
+  return [own.locale, ...(own.localizations ?? []).map((entry) => entry?.locale)].filter(isSiteLocale);
+});
 const seoImage = computed(() => cmsMedia(news.value?.image?.url));
 const origin = useSiteOrigin();
 const localePath = useLocalePath();
@@ -78,14 +86,14 @@ const canonical = computed(() => `${origin}${route.path}`);
 const validDate = (value?: string | null) => value && !Number.isNaN(Date.parse(value)) ? new Date(value).toISOString() : undefined;
 const structuredData = computed(() => ({
   "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@type": "BlogPosting",
   headline: seoTitle.value,
   description: seoDescription.value,
   ...(seoImage.value ? { image: [seoImage.value] } : {}),
   ...(validDate(news.value?.publishedAt || news.value?.createdAt) ? { datePublished: validDate(news.value?.publishedAt || news.value?.createdAt) } : {}),
   ...(validDate(news.value?.updatedAt) ? { dateModified: validDate(news.value?.updatedAt) } : {}),
   ...(canonical.value ? { mainEntityOfPage: canonical.value } : {}),
-  inLanguage: data.value?.data?.newsPage ? gqlLocale.value : "en",
+  inLanguage: news.value?.locale || toSiteLocale(locale.value),
   author: { "@id": `${origin}/#organization` },
   publisher: { "@id": `${origin}/#organization` },
 }));
@@ -104,6 +112,7 @@ usePageSeo({
     !("preview" in route.query || "draft" in route.query) &&
     !!data.value?.data?.newsPage
   ),
+  alternates: articleLocales,
 });
 
 const pageRoot = ref<HTMLElement | null>(null);

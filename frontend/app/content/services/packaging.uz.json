@@ -1,0 +1,49 @@
+{
+  "title": "Toshkentda qadoq dizayni — $500 dan",
+  "description": "Toshkentda qadoq dizayni: konsepsiya, etiketka va qutilar, taʼm va hajmlar boʻyicha liniya, bosmaga tayyor fayllar. Advanced $500 dan, All in one $1 900 dan.",
+  "h1": "Toshkentda qadoq dizayni",
+  "lead": "OneBranding javonda ajralib turadigan va mahsulot qadrini koʻrsatadigan qadoq yaratadi: etiketkalar, qutilar va butun mahsulot liniyalari, chop etishga tayyor holda. Qadoq dizayni narxi $500 dan (Advanced) va $1 900 dan (All in one).",
+  "intro": [
+    "Qadoq — brend xaridor bilan uchrashadigan joy. Javonda bir necha soniya ichida u mahsulot nima ekanini, nega oʻz narxiga arzishini va uning ortida qaysi brend turganini aytib berishi kerak. Biz kategoriyadan boshlaymiz: raqobatchilar qanday koʻrinadi, xaridor nimani kutadi va mahsulotingiz nimasi bilan ajralib tura oladi. Soʻng dizaynni firma uslubingizga tayangan holda quramiz, shunda qadoq va brend bir tilda gapiradi.",
+    "Biz yangi qadoq yaratamiz va mavjudini yangilaymiz — bitta etiketkadan tortib turli taʼm, hajm yoki seriyalardan iborat liniyagacha. Har bir maket bosmaxonangizning kesish shabloni boʻyicha ishlab chiqarishga tayyorlanadi, unda siz bergan tarkib, shtrix-kod va boshqa majburiy maʼlumotlar uchun joy ajratiladi. Oʻzbekiston va xorijdagi ishlab chiqaruvchilar bilan oʻzbek, rus va ingliz tillarida, masofadan yoki Toshkentdagi ofisimizda ishlaymiz."
+  ],
+  "includes": {
+    "title": "Qadoq dizayniga nimalar kiradi",
+    "items": [
+      "Kategoriya va javondagi raqobatchilar tahlili",
+      "Bir nechta yoʻnalishdagi qadoq konsepsiyasi",
+      "Asosiy etiketka, quti yoki qadoq dizayni",
+      "Har bir taʼm, hajm va seriyaga moslashtirish",
+      "Maketni bosmaxonaning kesish shabloniga joylashtirish",
+      "Tarkib, shtrix-kod va majburiy maʼlumotlarni joylashtirish",
+      "Chop etishdan oldin qadoqning 3D vizualizatsiyasi",
+      "Chop etishga tayyor fayllar va manba fayllar"
+    ]
+  },
+  "process": {
+    "title": "Qanday ishlaymiz",
+    "steps": [
+      { "name": "Brif va tadqiqot", "text": "Mahsulot, xaridor va narx segmentini oʻrganamiz, raqobatchilar javonda qanday koʻrinishini tahlil qilamiz." },
+      { "name": "Konsepsiya", "text": "Brendingizga asoslangan qadoq dizayni yoʻnalishlarini taklif qilamiz va birini siz bilan birga tanlaymiz." },
+      { "name": "Dizayn va liniya", "text": "Asosiy qadoqni ishlab chiqamiz, soʻng uni har bir taʼm, hajm yoki seriyaga moslashtiramiz." },
+      { "name": "Takomillashtirish", "text": "Har bir bosqichda fikrlaringiz asosida tuzatishlar kiritiladi; keyingi bosqichga siz tasdiqlaganingizdan soʻng oʻtamiz." },
+      { "name": "Chop etish uchun fayllar", "text": "Dizaynni bosmaxonaning kesish shabloniga joylashtiramiz va chop etishga tayyor hamda manba fayllarni topshiramiz." }
+    ]
+  },
+  "timeline": null,
+  "faq": {
+    "title": "Qadoq dizayni boʻyicha savollar",
+    "items": [
+      { "q": "Qadoq dizayni qancha turadi?", "a": "Qadoq dizayni Advanced paketida $500 dan, All in one paketida esa $1 900 dan boshlanadi. Yakuniy narx liniyadagi mahsulotlar va variantlar soniga bogʻliq boʻlib, brifdan soʻng kelishiladi." },
+      { "q": "Faqat etiketka qilasizmi yoki qutini ham?", "a": "Ikkalasini ham. Etiketkalar, qutilar, paketlar, butilkalar, tubalar va boshqa formatlarni, shuningdek bir nechta mahsulot javonda bitta oila boʻlib koʻrinishi kerak boʻlgan butun liniyalarni ishlab chiqamiz." },
+      { "q": "Mavjud qadoqimizni yangilab bera olasizmi?", "a": "Ha. Xaridorlar hozirgi qadoqingizda nimani tanishini koʻrib chiqamiz, ishlayotgan elementlarni saqlab, qolganini yangilaymiz. Shunda doimiy mijozlaringiz yangilangan mahsulotni ham javonda avvalgidek oson va tez topa oladi." },
+      { "q": "Fayllar bosmaxona uchun tayyor boʻladimi?", "a": "Ha, albatta. Dizaynni bosmaxonangiz bergan kesish shabloniga joylashtiramiz va chop etishga tayyor fayllarni ular soʻragan formatlarda, kelgusidagi oʻzgartirishlar uchun tahrirlanadigan manba fayllar bilan birga topshiramiz." },
+      { "q": "Qadoqdan oldin firma uslubi kerakmi?", "a": "Bu maqsadga muvofiq, chunki qadoq brendning bir qismi boʻlib koʻrinishi kerak. Agar sizda hali firma uslubi boʻlmasa, uni brending loyihasi doirasida qadoq bilan birga ishlab chiqishimiz mumkin." }
+    ]
+  },
+  "cta": {
+    "title": "Mahsulotingiz haqida aytib bering",
+    "text": "Brifni toʻldiring — biz ish hajmi, muddat va narx boʻyicha taklifimizni yuboramiz.",
+    "button": "Qadoqni muhokama qilish"
+  }
+}
