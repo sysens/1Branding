@@ -11,7 +11,7 @@
   height: auto;
   aspect-ratio: 2.4 / 1;
   /* Ultra-wide screens: keep the light within one screen instead of ~1.5. */
-  max-height: max(150px, 85svh);
+  max-height: max(9.375rem, 85svh);
   margin-top: -175px;
   margin-bottom: -1px;
   mask-image: linear-gradient(to bottom, transparent, #000 20%);
@@ -21,5 +21,5 @@
 @keyframes awards-breathe { to { transform: scaleX(1.035); } }
 @media (prefers-reduced-motion: reduce) { .awards-transition__light { animation: none; } }
 @media (min-width: 1440px) { .awards-transition { margin-top: -210px; } }
-@media (max-width: 767px), (orientation: portrait) { .awards-transition { min-height: 150px; aspect-ratio: 2.4 / 1; margin-top: -55px; } }
+@media (max-width: 767px), (orientation: portrait) { .awards-transition { min-height: 9.375rem; aspect-ratio: 2.4 / 1; margin-top: -55px; } }
 </style>

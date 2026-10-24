@@ -169,18 +169,18 @@ const highlightedText = computed(() => {
 <template>
   <div
     ref="root"
-    class="relative flex justify-center md:px-[40px] px-[20px]"
+    class="relative flex justify-center md:px-[2.5rem] px-[1.25rem]"
   >
     <div
-      class="pointer-events-none absolute top-0 left-0 w-full h-[80px] bg-gradient-to-b from-black/0 via-black/100 to-transparent"
+      class="pointer-events-none absolute top-0 left-0 w-full h-[5rem] bg-gradient-to-b from-black/0 via-black/100 to-transparent"
     />
 
-    <div class="max-w-[991px] mx-auto flex flex-col items-center text-center">
+    <div class="max-w-[61.9375rem] mx-auto flex flex-col items-center text-center">
       <div>
         <!-- One brand word on the display step; <wbr> lets it break after
              "ONE" on the narrowest phones instead of running off the screen. -->
         <h2
-          class="og-title will-change-transform type-display-s type-caps text-[#FFFFFF] text-center pt-20 pb-[38px]"
+          class="og-title will-change-transform type-display-s type-caps text-[#FFFFFF] text-center pt-20 pb-[2.375rem]"
         >
           <span class="text-[#15FF00]">{{ $t("brand.one").toUpperCase() }}</span
           ><wbr>{{ s2Title.replace(/^ONE/i, "") }}
@@ -188,7 +188,7 @@ const highlightedText = computed(() => {
 
         <div class="mx-auto block">
           <p
-            class="og-subtitle will-change-transform type-lead text-center text-[#FFFFFF] w-full max-w-[398px] pb-[110px] mx-auto"
+            class="og-subtitle will-change-transform type-lead text-center text-[#FFFFFF] w-full max-w-[24.875rem] pb-[6.875rem] mx-auto"
           >
             {{ highlightedText.before }}<span v-if="highlightedText.highlight" class="text-[#15FF00]">{{ highlightedText.highlight }}</span>{{ highlightedText.after }}
           </p>
@@ -196,12 +196,12 @@ const highlightedText = computed(() => {
       </div>
 
       <div
-        class="og-box will-change-transform relative text-[#FFFFFF] text-center max-w-[751px] border border-[#00FF0D] rounded-[20px] md:px-[75px] md:py-[40px] px-[10px] py-[20px] mb-[80px] mx-auto"
+        class="og-box will-change-transform relative text-[#FFFFFF] text-center max-w-[46.9375rem] border border-[#00FF0D] rounded-[1.25rem] md:px-[4.6875rem] md:py-[2.5rem] px-[0.625rem] py-[1.25rem] mb-[5rem] mx-auto"
       >
         <img
           src="/OneGuarantee/subway-tick-1.png"
           alt=""
-          class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[50px] h-auto bg-black px-2"
+          class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-[3.125rem] h-auto bg-black px-2"
         >
 
         <!-- A short callout (about 160 characters): stays centred in its frame. -->
@@ -212,30 +212,30 @@ const highlightedText = computed(() => {
 
       <!-- Running text (180-210 characters each): left-aligned at a reading
            measure, the column itself centred. -->
-      <div class="max-w-[801px]">
+      <div class="max-w-[50.0625rem]">
         <p
-          class="og-p1 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[32px]"
+          class="og-p1 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[2rem]"
         >
           {{ s2Text3 }}
         </p>
 
         <p
-          class="og-p2 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[32px]"
+          class="og-p2 will-change-transform type-lead type-measure mx-auto text-left text-[#FFFFFF] pb-[2rem]"
         >
           {{ s2Text4 }}
         </p>
       </div>
 
       <div class="og-divider will-change-transform w-full">
-        <div class="borderGreen w-full max-w-[991px]" />
+        <div class="borderGreen w-full max-w-[61.9375rem]" />
         <div
-          class="text-[#FFFFFF] text-center w-full h-[2px] bg-gradient-to-r from-transparent via-[#00FF0D] to-transparent"
+          class="text-[#FFFFFF] text-center w-full h-[0.125rem] bg-gradient-to-r from-transparent via-[#00FF0D] to-transparent"
         />
       </div>
 
-      <div class="w-full max-w-[801px]">
+      <div class="w-full max-w-[50.0625rem]">
         <p
-          class="og-last will-change-transform type-lead type-measure mx-auto text-[#FFFFFF] pt-[32px] pb-[34px] text-center"
+          class="og-last will-change-transform type-lead type-measure mx-auto text-[#FFFFFF] pt-[2rem] pb-[2.125rem] text-center"
         >
           <span class="font-semibold">
             <span class="text-[#15FF00]">{{ $t("brand.one") }}</span

@@ -1,9 +1,9 @@
 <template>
   <Teleport to="body">
-    <div class="MainHeader headerMain relative px-[20px] min-[950px]:px-0 z-[8888]">
+    <div class="MainHeader headerMain relative px-[1.25rem] min-[950px]:px-0 z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[980px] min-[950px]:max-w-[900px] mt-[20px] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[28px] min-[950px]:pr-[11px] border h-[76px] min-[950px]:h-[56px] mx-[20px] border-[#4fbd34] fixed min-[950px]:top-[30px] top-[10px] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[60px] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[61.25rem] min-[950px]:max-w-[56.25rem] mt-[1.25rem] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[1.75rem] min-[950px]:pr-[0.6875rem] border h-[4.75rem] min-[950px]:h-[3.5rem] mx-[1.25rem] border-[#4fbd34] fixed min-[950px]:top-[1.875rem] top-[0.625rem] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[3.75rem] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
         <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
         <a
@@ -88,11 +88,11 @@
               :aria-label="$t('a11y.openMenu')"
               :aria-expanded="isMobileMenuOpen"
               aria-controls="mobile-menu"
-              class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
+              class="w-[3.375rem] h-[3.25rem] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[2.5rem] shadow-[0_0_15px_#03CB00]"
               @click="isMobileMenuOpen = true"
             >
               <!-- Vector, so the 21px bitmap no longer blurs on high-DPI screens. -->
-              <svg class="w-[24px] h-auto" viewBox="0 0 21 21" width="24" height="24" fill="#00EA00" aria-hidden="true">
+              <svg class="w-[1.5rem] h-auto" viewBox="0 0 21 21" width="24" height="24" fill="#00EA00" aria-hidden="true">
                 <rect width="21" height="3.5" rx="1.75" />
                 <rect y="8.75" width="21" height="3.5" rx="1.75" />
                 <rect y="17.5" width="21" height="3.5" rx="1.75" />
@@ -126,30 +126,30 @@
         <div class="absolute inset-0 bg-black/80" aria-hidden="true" @click="closeMobileMenu"/>
 
         <div class="relative h-full overflow-y-auto overscroll-contain z-[2147483647]">
-          <div class="flex items-center justify-between px-[32px] pt-[40px] pb-[72px]">
+          <div class="flex items-center justify-between px-[2rem] pt-[2.5rem] pb-[4.5rem]">
             <a :href="localePath('/')" @click="onNav($event, localePath('/'))">
-              <img class="w-[72px] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" >
+              <img class="w-[4.5rem] h-auto" src="/header/headerlogo.jpg" alt="OneBranding" >
             </a>
 
             <button
               ref="menuCloseButton"
               type="button"
               :aria-label="$t('a11y.closeMenu')"
-              class="w-[54px] h-[52px] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[40px] shadow-[0_0_15px_#03CB00]"
+              class="w-[3.375rem] h-[3.25rem] flex items-center justify-center border border-[#03CB00] bg-[#00000080] rounded-[2.5rem] shadow-[0_0_15px_#03CB00]"
               @click="closeMobileMenu"
             >
               <img
-                class="w-[24px] h-auto rotate-90"
+                class="w-[1.5rem] h-auto rotate-90"
                 src="/header/vector-13.png"
                 alt=""
               >
             </button>
           </div>
 
-          <div class="px-[20px]">
+          <div class="px-[1.25rem]">
             <a
               :href="localePath('/services')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/services'))"
             >
               {{ $t("nav.services") }}
@@ -159,7 +159,7 @@
 
             <a
               :href="localePath('/about')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/about'))"
             >
               {{ $t("nav.about") }}
@@ -169,7 +169,7 @@
 
             <a
               :href="localePath('/projects')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/projects'))"
             >
               {{ $t("nav.projects") }}
@@ -178,7 +178,7 @@
 
             <a
               :href="localePath('/contact')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/contact'))"
             >
               {{ $t("nav.contacts") }}
@@ -187,7 +187,7 @@
 
             <a
               :href="localePath('/one-guarantee')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/one-guarantee'))"
             >
               <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
@@ -198,7 +198,7 @@
 
             <a
               :href="localePath('/pricing')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/pricing'))"
             >
               {{ $t("nav.prices") }}
@@ -207,7 +207,7 @@
 
             <a
               :href="localePath('/news')"
-              class="type-h4 block py-[23px] p-[20px] text-white"
+              class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/news'))"
             >
               {{ $t("nav.news") }}
@@ -215,11 +215,11 @@
             <div class="h-px bg-white/10"/>
 
             <div>
-              <div class="block py-[23px] text-white">
+              <div class="block py-[1.4375rem] text-white">
                 <div class="relative w-full">
                   <button
                     type="button"
-                    class="type-h4 w-full px-[20px] flex pb-[25px] items-center justify-between text-white align-middle"
+                    class="type-h4 w-full px-[1.25rem] flex pb-[1.5625rem] items-center justify-between text-white align-middle"
                     @click="isLangOpen = !isLangOpen"
                   >
                     <span>{{ lang }}</span>
@@ -248,15 +248,15 @@
                   >
                     <div
                       v-if="isLangOpen"
-                      class="absolute left-0 right-0 top-[-100%] rounded-[20px] bg-[#FFFFFF14] backdrop-blur-md border border-white/10 overflow-hidden"
+                      class="absolute left-0 right-0 top-[-100%] rounded-[1.25rem] bg-[#FFFFFF14] backdrop-blur-md border border-white/10 overflow-hidden"
                     >
                       <template v-for="(code, index) in LANGS" :key="code">
-                        <div v-if="index" class="h-px w-[70%] ml-[20px] bg-white/10"/>
+                        <div v-if="index" class="h-px w-[70%] ml-[1.25rem] bg-white/10"/>
                         <a
                           :href="langHref(code)"
                           :hreflang="code"
                           :lang="code"
-                          class="type-h4 block w-full px-[20px] py-[14px] text-start text-white align-middle hover:bg-white/5"
+                          class="type-h4 block w-full px-[1.25rem] py-[0.875rem] text-start text-white align-middle hover:bg-white/5"
                           :aria-current="code === lang ? 'true' : undefined"
                           @click="onLangLink($event, code)"
                         >{{ code }}</a>
@@ -495,13 +495,13 @@ onBeforeUnmount(() => {
 }
 
 .site-nav {
-  gap: 22px;
+  gap: 1.375rem;
 }
 
 .site-nav__link {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
   padding: 0;
   border: 0;
   background: none;
@@ -525,10 +525,10 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 0 18px;
+  height: 2.25rem;
+  padding: 0 1.125rem;
   border: 1px solid rgb(64 140 52 / 0.85);
-  border-radius: 40px;
+  border-radius: 2.5rem;
   background: #000;
   color: #fff;
   font-family: var(--app-font-sans);
@@ -544,7 +544,7 @@ onBeforeUnmount(() => {
 .site-guarantee:hover,
 .site-guarantee:focus-visible {
   border-color: #03cb00;
-  box-shadow: 0 0 18px rgb(3 203 0 / 0.45);
+  box-shadow: 0 0 1.125rem rgb(3 203 0 / 0.45);
 }
 
 .site-guarantee__one {
@@ -561,11 +561,11 @@ onBeforeUnmount(() => {
 .lang-select__trigger {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 8px 0 11px;
+  gap: 0.375rem;
+  height: 2rem;
+  padding: 0 0.5rem 0 0.6875rem;
   border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: rgb(255 255 255 / 0.04);
   color: #fafafa;
   font-family: var(--app-font-sans);
@@ -585,7 +585,7 @@ onBeforeUnmount(() => {
 .lang-select__trigger:focus-visible {
   border-color: rgb(3 203 0 / 0.7);
   outline: none;
-  box-shadow: 0 0 0 3px rgb(3 203 0 / 0.2);
+  box-shadow: 0 0 0 0.1875rem rgb(3 203 0 / 0.2);
 }
 
 .lang-select__chevron,
@@ -599,8 +599,8 @@ onBeforeUnmount(() => {
 }
 
 .lang-select__chevron {
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   opacity: 0.6;
   transition: transform 0.2s ease;
 }
@@ -611,24 +611,24 @@ onBeforeUnmount(() => {
 
 .lang-select__content {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 0.625rem);
   left: 0;
   z-index: 10;
   min-width: 10rem;
-  padding: 4px;
+  padding: 0.25rem;
   border: 1px solid #27272a;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: #09090b;
-  box-shadow: 0 10px 38px -10px rgb(0 0 0 / 0.65), 0 10px 20px -15px rgb(0 0 0 / 0.45);
+  box-shadow: 0 0.625rem 2.375rem -10px rgb(0 0 0 / 0.65), 0 0.625rem 1.25rem -15px rgb(0 0 0 / 0.45);
 }
 
 .lang-select__item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 7px 8px;
-  border-radius: 5px;
+  gap: 0.75rem;
+  padding: 0.4375rem 0.5rem;
+  border-radius: 0.3125rem;
   color: #fafafa;
   font-family: var(--app-font-sans);
   font-size: var(--type-small-size);
@@ -647,8 +647,8 @@ onBeforeUnmount(() => {
 }
 
 .lang-select__check {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   color: #03cb00;
 }
 
@@ -667,7 +667,7 @@ onBeforeUnmount(() => {
    a phone, as before). */
 @media (max-width: 949px) {
   .site-logo {
-    margin-left: 14px;
+    margin-left: 0.875rem;
     font-size: var(--type-h3-size);
     line-height: var(--type-h3-lh);
     letter-spacing: var(--type-h3-ls);
@@ -675,25 +675,25 @@ onBeforeUnmount(() => {
 }
 
 .shake-btn {
-  box-shadow: 0 0 15px #03cb00;
+  box-shadow: 0 0 0.9375rem #03cb00;
   animation: glowBlink 3s ease-in-out infinite;
 }
 
 @keyframes glowBlink {
   0% {
-    box-shadow: 0 0 35px #03cb00;
+    box-shadow: 0 0 2.1875rem #03cb00;
   }
   25% {
     box-shadow: 0 0 0px #03cb00;
   }
   50% {
-    box-shadow: 0 0 35px #03cb00;
+    box-shadow: 0 0 2.1875rem #03cb00;
   }
   75% {
     box-shadow: 0 0 0px #03cb00;
   }
   100% {
-    box-shadow: 0 0 35px #03cb00;
+    box-shadow: 0 0 2.1875rem #03cb00;
   }
 }
 
@@ -711,7 +711,7 @@ onBeforeUnmount(() => {
 /* Narrow desktops: the items close up. */
 @media (min-width: 950px) and (max-width: 1099px) {
   .site-header .site-nav {
-    gap: 14px;
+    gap: 0.875rem;
   }
 }
 

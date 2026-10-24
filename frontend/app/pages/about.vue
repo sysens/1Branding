@@ -34,11 +34,11 @@ usePageSeo({
 
     <div>
       <div
-        class="vg relative z-10 bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat pt-[30px] md:pt-[60px]"
+        class="vg relative z-10 bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat pt-[1.875rem] md:pt-[3.75rem]"
       >
 
         <h1
-          class="products intro-slide-in type-h1 px-4 pt-[137px] pb-[30px] text-center text-[#FFFFFF] md:pt-[127px] md:pb-[60px]"
+          class="products intro-slide-in type-h1 px-4 pt-[8.5625rem] pb-[1.875rem] text-center text-[#FFFFFF] md:pt-[7.9375rem] md:pb-[3.75rem]"
         >
           {{ $t("aboutPage.title") }}
         </h1>
@@ -66,7 +66,7 @@ usePageSeo({
 
     <!-- The landing's "Fresh projects" heading: the same step (h1) as there. -->
     <h2
-      class="type-h2 type-caps px-4 pt-[100px] pb-[30px] text-center text-white md:pt-[130px] md:pb-20"
+      class="type-h2 type-caps px-4 pt-[6.25rem] pb-[1.875rem] text-center text-white md:pt-[8.125rem] md:pb-20"
     >
       {{ $t("home.freshProjects") }}
     </h2>
@@ -79,9 +79,9 @@ usePageSeo({
 <style scoped>
 .about-lead {
   position: relative;
-  max-width: 900px;
+  max-width: 56.25rem;
   margin: 0 auto;
-  padding: 0 20px 56px;
+  padding: 0 1.25rem 3.5rem;
   text-align: center;
 }
 
@@ -102,14 +102,14 @@ usePageSeo({
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px 12px;
-  margin-top: 24px;
+  gap: 0.625rem 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .about-lead a {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border: 1px solid rgb(255 255 255 / 0.18);
-  border-radius: 999px;
+  border-radius: 62.4375rem;
   color: #fff;
   font-family: var(--app-font-sans);
   font-size: var(--type-small-size);

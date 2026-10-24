@@ -405,11 +405,11 @@ onBeforeUnmount(() => {
 /* "Before" / "After": the caption step at the label weight. */
 .compare__chip {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 0.75rem;
+  left: 0.75rem;
   z-index: 2;
   padding: 0.3em 0.75em;
-  border-radius: 999px;
+  border-radius: 62.4375rem;
   background: rgb(0 0 0 / 0.55);
   color: #fff;
   font-family: var(--app-font-sans);
@@ -417,13 +417,13 @@ onBeforeUnmount(() => {
   font-weight: 600;
   line-height: var(--type-caption-lh);
   letter-spacing: var(--type-caption-ls);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(0.375rem);
   pointer-events: none;
 }
 
 .compare__chip--end {
   left: auto;
-  right: 12px;
+  right: 0.75rem;
 }
 
 .compare__pivot {
@@ -440,7 +440,7 @@ onBeforeUnmount(() => {
   top: 0;
   bottom: 0;
   left: 0;
-  width: var(--compare-line-width, 8px);
+  width: var(--compare-line-width, 0.5rem);
   translate: -50% 0;
   background: var(--compare-line);
 }
@@ -457,12 +457,12 @@ onBeforeUnmount(() => {
   left: 0;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 62.4375rem;
   background: var(--compare-line);
   color: #062b10;
-  box-shadow: 0 4px 18px rgb(0 0 0 / 0.25);
+  box-shadow: 0 0.25rem 1.125rem rgb(0 0 0 / 0.25);
   translate: -50% -50%;
   pointer-events: auto;
   cursor: grab;
@@ -470,14 +470,14 @@ onBeforeUnmount(() => {
 }
 
 .compare[data-dragging] .compare__handle {
-  width: 40px;
-  height: 26px;
+  width: 2.5rem;
+  height: 1.625rem;
   cursor: grabbing;
 }
 
 .compare__handle svg {
-  width: 14px;
-  height: 14px;
+  width: 0.875rem;
+  height: 0.875rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.4;
@@ -486,8 +486,8 @@ onBeforeUnmount(() => {
 }
 
 .compare__handle:focus-visible:not([data-quiet]) {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
+  outline: 0.1875rem solid #fff;
+  outline-offset: 0.1875rem;
 }
 
 .compare__handle:focus {

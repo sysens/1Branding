@@ -81,7 +81,7 @@ import Sparkles from "~/components/ui/Sparkles.vue";
     rgba(3, 203, 0, 0.08) 56%,
     transparent 74%
   );
-  filter: blur(6px);
+  filter: blur(0.375rem);
   pointer-events: none;
 }
 
@@ -115,7 +115,7 @@ import Sparkles from "~/components/ui/Sparkles.vue";
 
 .footer-brand-sparkles__line--core {
   width: 46%;
-  height: 2px;
+  height: 0.125rem;
   background: linear-gradient(90deg, transparent, #d6ffd2, transparent);
 }
 
@@ -131,8 +131,8 @@ import Sparkles from "~/components/ui/Sparkles.vue";
   height: 100%;
   background: #000000;
   pointer-events: none;
-  -webkit-mask-image: radial-gradient(74% 300px at top, transparent 42%, #000000 90%);
-  mask-image: radial-gradient(74% 300px at top, transparent 42%, #000000 90%);
+  -webkit-mask-image: radial-gradient(74% 18.75rem at top, transparent 42%, #000000 90%);
+  mask-image: radial-gradient(74% 18.75rem at top, transparent 42%, #000000 90%);
 }
 
 @media (max-width: 640px) {

@@ -78,41 +78,41 @@ useGsapContext(root, ({ gsap }) => {
     <div class="products">
       <!-- The company's name, address and phone (NAP), marked up as contact
            details; the labels are h2s, the details plain text and links. -->
-      <address class="not-italic md:flex gap-[189px]">
+      <address class="not-italic md:flex gap-[11.8125rem]">
         <div class="flex-1">
-          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
+          <h2 class="type-h5 type-caps md:pb-[2rem] pb-[1.25rem] text-[#FFFFFF]">
             {{ t("contacts.addressTitle") }}
           </h2>
-          <p class="type-lead text-[#8f8f8f] md:pb-[80px] pb-[40px]">
+          <p class="type-lead text-[#8f8f8f] md:pb-[5rem] pb-[2.5rem]">
             <a :href="COMPANY_MAP_URL" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">{{ address }}</a>
           </p>
 
-          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
+          <h2 class="type-h5 type-caps md:pb-[2rem] pb-[1.25rem] text-[#FFFFFF]">
             {{ t("contacts.contactInfoTitle") }}
           </h2>
-          <p class="flex items-center gap-[10px] pb-[15px]">
+          <p class="flex items-center gap-[0.625rem] pb-[0.9375rem]">
             <img src="/Contacts/iconsax-call.png" alt="" width="24" height="24">
             <a :href="`tel:${phone.e164}`" class="type-lead text-[#8f8f8f] hover:text-white transition-colors">{{ phone.display }}</a>
           </p>
-          <p class="flex items-center gap-[10px] md:pb-[87px] pb-[40px]">
+          <p class="flex items-center gap-[0.625rem] md:pb-[5.4375rem] pb-[2.5rem]">
             <img src="/Contacts/sms.png" alt="" width="24" height="24">
             <a :href="`https://${website}/`" class="type-lead text-[#8f8f8f] hover:text-white transition-colors">{{ website }}</a>
           </p>
         </div>
 
         <div class="flex-1">
-          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
+          <h2 class="type-h5 type-caps md:pb-[2rem] pb-[1.25rem] text-[#FFFFFF]">
             {{ t("contacts.workTitle") }}
           </h2>
-          <p class="type-lead text-[#8f8f8f] md:pb-[80px] pb-[40px]">
+          <p class="type-lead text-[#8f8f8f] md:pb-[5rem] pb-[2.5rem]">
             {{ t("contacts.workHours") }}
           </p>
 
           <template v-if="profiles.length">
-            <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
+            <h2 class="type-h5 type-caps md:pb-[2rem] pb-[1.25rem] text-[#FFFFFF]">
               {{ t("common.socials") }}
             </h2>
-            <div class="md:pb-[111px] pb-[40px] flex gap-[18px]">
+            <div class="md:pb-[6.9375rem] pb-[2.5rem] flex gap-[1.125rem]">
               <a
                 v-for="profile in profiles"
                 :key="profile.kind"
@@ -129,18 +129,18 @@ useGsapContext(root, ({ gsap }) => {
         </div>
       </address>
 
-      <div class="md:flex gap-[189px]">
+      <div class="md:flex gap-[11.8125rem]">
         <div class="flex-1">
-          <h2 class="type-h5 type-caps md:pb-[32px] pb-[20px] text-[#FFFFFF]">
+          <h2 class="type-h5 type-caps md:pb-[2rem] pb-[1.25rem] text-[#FFFFFF]">
             {{ t("contacts.noteTitle") }}
           </h2>
-          <p class="type-lead type-measure text-[#8f8f8f] md:pb-0 pb-[40px]">
+          <p class="type-lead type-measure text-[#8f8f8f] md:pb-0 pb-[2.5rem]">
             {{ t("contacts.noteText") }}
           </p>
         </div>
 
         <div class="flex-1">
-          <p class="type-lead type-measure text-[#8f8f8f] pb-[30px]">
+          <p class="type-lead type-measure text-[#8f8f8f] pb-[1.875rem]">
             {{ t("contacts.briefText") }}
           </p>
           <button

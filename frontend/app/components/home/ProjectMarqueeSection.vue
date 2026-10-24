@@ -40,7 +40,7 @@ onMounted(() => { lit.value = true; });
   z-index: 2;
   height: calc(var(--overlap) + var(--frame-h));
   pointer-events: none;
-  background: linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 2px) no-repeat;
+  background: linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 0.125rem) no-repeat;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
   mask-image: linear-gradient(to bottom, transparent 0, #000 var(--overlap));
 }
@@ -48,7 +48,7 @@ onMounted(() => { lit.value = true; });
 .project-marquee-section__light.is-lit {
   background:
     url("/home/marquee/light.webp") center bottom / 100% var(--frame-h) no-repeat,
-    linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 2px) no-repeat;
+    linear-gradient(#fffefa, #fffefa) center top / 100% calc(var(--overlap) + 0.125rem) no-repeat;
 }
 
 .project-marquee-section__marquee {

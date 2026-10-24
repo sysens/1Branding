@@ -107,10 +107,10 @@ watch(
         <NuxtImg
           :src="firstImage(item)"
           :alt="safeTitle(item)"
-          class="w-full md:h-full h-[120px] block object-cover md:rounded-[20px] rounded-[10px]"
+          class="w-full md:h-full h-[7.5rem] block object-cover md:rounded-[1.25rem] rounded-[0.625rem]"
         />
 
-        <div class="text-white px-[24px] absolute bottom-[12%]">
+        <div class="text-white px-[1.5rem] absolute bottom-[12%]">
           <p
             class="type-small text-[#E3E3E3] transition-all duration-300 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
           >
@@ -126,7 +126,7 @@ watch(
       </NuxtLink>
     </div>
 
-    <div class="flex items-center justify-center mt-[90px]">
+    <div class="flex items-center justify-center mt-[5.625rem]">
       <button
         v-if="hasMore"
         class="showMore ob-button"

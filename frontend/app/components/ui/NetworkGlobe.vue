@@ -101,7 +101,7 @@ canvas:focus-visible {
   position: absolute;
   left: 0;
   top: 0;
-  padding: 4px 7px;
+  padding: 0.25rem 0.4375rem;
   background: #101112e8;
   color: #efefea;
   font-family: var(--app-font-sans);
@@ -115,18 +115,18 @@ canvas:focus-visible {
 }
 .network-globe__controls {
   position: absolute;
-  bottom: 24px;
-  right: 28px;
+  bottom: 1.5rem;
+  right: 1.75rem;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   opacity: 0;
   transition: opacity 150ms;
 }
 .network-globe:hover .network-globe__controls,
 .network-globe:focus-within .network-globe__controls { opacity: 1; }
 button {
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
   display: grid;
   place-items: center;
   border: 1px solid #ffffff32;
@@ -150,8 +150,8 @@ button:focus-visible {
 }
 @media (max-width: 767px) {
   .network-globe__controls {
-    right: 16px;
-    bottom: 16px;
+    right: 1rem;
+    bottom: 1rem;
   }
 }
 @media (hover: none) { .network-globe__controls { opacity: 1; } }

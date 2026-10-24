@@ -33,7 +33,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 110px;
+  width: 6.875rem;
   z-index: 5;
   pointer-events: none;
 }
@@ -62,7 +62,7 @@
 
 @media (max-width: 767px) {
   .edge-gradient {
-    width: 50px;
+    width: 3.125rem;
   }
 
   .edge-gradient-left {

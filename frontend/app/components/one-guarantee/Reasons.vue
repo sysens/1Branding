@@ -80,26 +80,26 @@ const resolveImg = useCmsMedia();
 <template>
   <div
     ref="root"
-    class="div max-w-[746px] pt-[100px] md:mb-[377px] mb-[175px] mx-auto md:px-0 md:[40px]"
+    class="div max-w-[46.625rem] pt-[6.25rem] md:mb-[23.5625rem] mb-[10.9375rem] mx-auto md:px-0 md:[2.5rem]"
   >
     <div class="eff-head will-change-transform">
       <h2
-        class="type-h2 type-caps text-[#FFFFFF] mb-[80px] text-center"
+        class="type-h2 type-caps text-[#FFFFFF] mb-[5rem] text-center"
       >
         {{ title }}
       </h2>
     </div>
 
     <div class="eff-list will-change-transform">
-      <div class="flex flex-col mx-[20px] md:gap-[45px] gap-[25px]">
+      <div class="flex flex-col mx-[1.25rem] md:gap-[2.8125rem] gap-[1.5625rem]">
         <div
           v-for="(item, i) in items"
           :key="i"
-          class="Item flex shrink-0 items-center gap-[30px]"
+          class="Item flex shrink-0 items-center gap-[1.875rem]"
         >
-          <div class="shrink-0 w-[40px] h-[35px]">
+          <div class="shrink-0 w-[2.5rem] h-[2.1875rem]">
             <img
-              class="w-[40px] h-[35px]"
+              class="w-[2.5rem] h-[2.1875rem]"
               :src="resolveImg(item.checkMark?.url)"
               alt=""
             >

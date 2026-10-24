@@ -36,7 +36,7 @@ function handleError(): void {
 
 <template>
   <span
-    class="marquee-image-frame relative block overflow-hidden bg-black md:h-[17.0625rem] h-[205px] md:w-[30.375rem] w-[364px] shrink-0 rounded-[20px] md:rounded-[1.875rem] select-none pointer-events-none"
+    class="marquee-image-frame relative block overflow-hidden bg-black md:h-[17.0625rem] h-[12.8125rem] md:w-[30.375rem] w-[22.75rem] shrink-0 rounded-[1.25rem] md:rounded-[1.875rem] select-none pointer-events-none"
   >
     <OptImage
       v-if="!deferred && optimized"

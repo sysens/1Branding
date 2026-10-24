@@ -102,23 +102,23 @@ const textIsLong = computed(() => (section3.value?.text ?? "").trim().length > 1
 <template>
   <div ref="root">
     <div class="containerr">
-      <div class="w-full md:pt-[167px] pt-[100px]">
+      <div class="w-full md:pt-[10.4375rem] pt-[6.25rem]">
         <h2
-          class="cp-title type-h2 text-white mb-[27px] md:px-0 px-[20px] text-center will-change-transform"
+          class="cp-title type-h2 text-white mb-[1.6875rem] md:px-0 px-[1.25rem] text-center will-change-transform"
         >
           {{ section3?.title || $t("project.palette") }}
         </h2>
 
         <div
-          class="cp-cards md:flex md:justify-center md:mb-[130px] flex gap-6 mb-[100px] overflow-x-auto md:overflow-visible snap-x snap-mandatory [-webkit-overflow-scrolling:touch] will-change-transform"
+          class="cp-cards md:flex md:justify-center md:mb-[8.125rem] flex gap-6 mb-[6.25rem] overflow-x-auto md:overflow-visible snap-x snap-mandatory [-webkit-overflow-scrolling:touch] will-change-transform"
         >
           <div
             v-for="c in colors"
             :key="c.id"
-            class="md:w-[202px] md:h-[225px] bg-white/5 md:rounded-[30px] flex flex-col items-center justify-center gap-4 shrink-0 snap-start w-[134.67px] h-[150px] opacity-100 border-t border-[#FFFFFF0D]/5 rounded-[20px] py-[20px] px-[16px]"
+            class="md:w-[12.625rem] md:h-[14.0625rem] bg-white/5 md:rounded-[1.875rem] flex flex-col items-center justify-center gap-4 shrink-0 snap-start w-[8.41687rem] h-[9.375rem] opacity-100 border-t border-[#FFFFFF0D]/5 rounded-[1.25rem] py-[1.25rem] px-[1rem]"
           >
             <div
-              class="md:w-[154px] md:h-[127px] md:rounded-[20px] w-[102.67px] h-[84.67px] rounded-[13.33px] opacity-100 rotate-0"
+              class="md:w-[9.625rem] md:h-[7.9375rem] md:rounded-[1.25rem] w-[6.41688rem] h-[5.29188rem] rounded-[0.83313rem] opacity-100 rotate-0"
               :style="{ backgroundColor: c.HexColorCode || '#000' }"
             />
 

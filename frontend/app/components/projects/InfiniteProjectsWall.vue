@@ -168,7 +168,7 @@ useHead(() => ({
   width: 100%;
   height: 100%;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
+  border-radius: 1.25rem;
   background: #0a0a0a;
   transform: translateZ(0);
   transition: transform 260ms ease, box-shadow 260ms ease;
@@ -179,7 +179,7 @@ useHead(() => ({
   z-index: 2;
   outline: none;
   transform: scale(1.05);
-  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1.125rem 3.375rem rgba(0, 0, 0, 0.24);
 }
 
 .projects-wall__card img {

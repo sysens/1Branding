@@ -209,7 +209,7 @@
 .audit__link-fill {
   stroke: var(--green);
   stroke-dasharray: 1 1;
-  filter: drop-shadow(0 0 4px rgb(0 245 98 / 0.55));
+  filter: drop-shadow(0 0 0.25rem rgb(0 245 98 / 0.55));
 }
 
 .audit__dot {
@@ -372,7 +372,7 @@
 
 .audit__plan {
   /* The shared heading size; a long line wraps rather than leave the container. */
-  max-width: min(100%, 1450px);
+  max-width: min(100%, 90.625rem);
   margin-inline: auto;
   margin-top: calc(110 * var(--u)) !important;
   font-family: var(--app-font-display);
@@ -475,10 +475,10 @@
     bottom: 2.25rem;
     left: calc(0.25rem + 2.25rem - 1.5px);
     display: block;
-    width: 3px;
-    border-radius: 3px;
+    width: 0.1875rem;
+    border-radius: 0.1875rem;
     background: linear-gradient(var(--green), var(--green)) top / 100% calc(var(--progress, 0) * 100%) no-repeat, #3a3e42;
-    box-shadow: 0 0 10px rgb(0 245 98 / calc(var(--progress, 0) * 0.5));
+    box-shadow: 0 0 0.625rem rgb(0 245 98 / calc(var(--progress, 0) * 0.5));
   }
 
   .audit__step,
@@ -531,7 +531,7 @@
   .audit__ring {
     width: 4.5rem;
     height: 4.5rem;
-    border-width: 3px;
+    border-width: 0.1875rem;
     background: #000;
   }
 

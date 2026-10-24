@@ -177,7 +177,7 @@ const onLeave = (element: Element, done: () => void) => {
 }
 
 .faq__question:focus-visible {
-  outline: 2px solid #00e632;
+  outline: 0.125rem solid #00e632;
   outline-offset: -4px;
   border-radius: calc(16 * var(--u));
 }
@@ -199,7 +199,7 @@ const onLeave = (element: Element, done: () => void) => {
   width: 100%;
   height: calc(2.2 * var(--u));
   margin-top: calc(-1.1 * var(--u));
-  border-radius: 2px;
+  border-radius: 0.125rem;
   background: #e8e8e8;
   content: "";
   transition: transform 0.56s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.3s ease;
@@ -269,7 +269,7 @@ const onLeave = (element: Element, done: () => void) => {
 
   .faq__icon::before,
   .faq__icon::after {
-    height: 2px;
+    height: 0.125rem;
     margin-top: -1px;
   }
 

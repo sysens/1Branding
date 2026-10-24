@@ -44,7 +44,7 @@ withDefaults(defineProps<{ showGradient?: boolean }>(), { showGradient: false })
   overflow: hidden;
   flex-shrink: 0;
   background-image: radial-gradient(circle, #08080a 0.5px, transparent 0.5px);
-  background-size: 3px 3px;
+  background-size: 0.1875rem 0.1875rem;
 }
 .macbook-keyboard { width: 80%; height: 100%; margin-inline: auto; }
 .macbook-trackpad {

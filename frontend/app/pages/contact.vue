@@ -84,17 +84,17 @@ onMounted(async () => {
     <div class="bg-black relative">
       <div>
         <div
-          class="md:pt-[60px] pt-[30px] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat"
+          class="md:pt-[3.75rem] pt-[1.875rem] bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat"
         >
 
           <h1
-            class="products intro-slide-in type-h1 text-[#FFFFFF] md:pt-[105px] pt-[118px] md:pb-[83px] pb-[54px] text-center"
+            class="products intro-slide-in type-h1 text-[#FFFFFF] md:pt-[6.5625rem] pt-[7.375rem] md:pb-[5.1875rem] pb-[3.375rem] text-center"
           >
             {{ $t("contacts.title") }}
           </h1>
         </div>
 
-        <div class="md:px-30px px-[40px] containerr">
+        <div class="md:px-30px px-[2.5rem] containerr">
           <Locations />
           <div id="contact-request" class="scroll-mt-32"><Form /></div>
         </div>

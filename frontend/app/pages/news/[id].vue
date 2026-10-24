@@ -142,7 +142,7 @@ useGsapContext(pageRoot, ({ gsap }) => {
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
     <div class="relative z-10">
       <div
-        class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
+        class="bg-[url('/home/Ellipse.png')] md:pt-[3.75rem] pt-[1.875rem] bg-contain bg-top bg-no-repeat"
       >
 
         <div class="containerr">

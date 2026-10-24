@@ -161,8 +161,8 @@ const onCtaClick = async (event: MouseEvent) => {
 
 <template>
   <div ref="root" class="flex justify-center md:px-0">
-    <div class="max-w-[685px] mx-auto">
-      <div class="flex justify-center mb-[48px] items-center">
+    <div class="max-w-[42.8125rem] mx-auto">
+      <div class="flex justify-center mb-[3rem] items-center">
         <img
           class="cta-img will-change-transform"
           src="/OneGuarantee/image-84.png"
@@ -178,7 +178,7 @@ const onCtaClick = async (event: MouseEvent) => {
         </h2>
 
         <p
-          class="cta-text will-change-transform type-lead text-[#FFFFFF] py-[45px] text-center"
+          class="cta-text will-change-transform type-lead text-[#FFFFFF] py-[2.8125rem] text-center"
         >
           {{ section6.text }}
         </p>

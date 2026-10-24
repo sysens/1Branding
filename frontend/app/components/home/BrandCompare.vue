@@ -143,7 +143,7 @@ const go = (step: 1 | -1) => {
 
 .compare-section__compare {
   --compare-line: #00ff01;
-  --compare-line-width: max(2px, calc(3 * var(--u)));
+  --compare-line-width: max(0.125rem, calc(3 * var(--u)));
   position: absolute;
   inset: 0;
 }
@@ -197,8 +197,8 @@ const go = (step: 1 | -1) => {
 }
 
 .compare-section__arrow:focus-visible {
-  outline: 2px solid #00c936;
-  outline-offset: 4px;
+  outline: 0.125rem solid #00c936;
+  outline-offset: 0.25rem;
 }
 
 /* The shared .ob-button under the stage. */
@@ -235,7 +235,7 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__compare {
-    --compare-line-width: 2px;
+    --compare-line-width: 0.125rem;
   }
 
   .compare-section__arrow {
@@ -249,8 +249,8 @@ const go = (step: 1 | -1) => {
     border-radius: 50%;
     background: rgb(0 0 0 / 0.45);
     color: #fff;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(0.375rem);
+    backdrop-filter: blur(0.375rem);
     transform: translateY(-50%);
   }
 
@@ -273,7 +273,7 @@ const go = (step: 1 | -1) => {
   }
 
   .compare-section__arrow:focus-visible {
-    outline-offset: 2px;
+    outline-offset: 0.125rem;
   }
 }
 

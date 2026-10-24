@@ -356,8 +356,8 @@ a.site-footer__link:focus-visible {
 }
 
 .site-footer a:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 4px;
+  outline: 0.125rem solid var(--green);
+  outline-offset: 0.25rem;
 }
 
 @media (max-width: 899px) {
@@ -387,7 +387,7 @@ a.site-footer__link:focus-visible {
   }
 
   .site-footer__link {
-    min-height: 24px;
+    min-height: 1.5rem;
   }
 
   .site-footer__bottom {

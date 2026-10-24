@@ -48,24 +48,24 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
 /* flow-root: a trimmed stage pulls the section's own bottom up instead of
    collapsing its negative margin through and sliding the next section under. */
 .awards-section { position: relative; z-index: 30; display: flow-root; isolation: isolate; background: #000; color: #fff; }
-.awards-section__brands { display: flex; align-items: center; height: 120px; overflow: clip; mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent); }
-.awards-section__brands :deep(img) { height: 28px; max-width: 135px; filter: grayscale(1); opacity: .64; }
-.awards-section__brands :deep(.spaceBetween) { min-height: 50px; }
-.awards-section__heading { position: relative; z-index: 2; text-align: center; padding-inline: 20px; }
+.awards-section__brands { display: flex; align-items: center; height: 7.5rem; overflow: clip; mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent); }
+.awards-section__brands :deep(img) { height: 1.75rem; max-width: 8.4375rem; filter: grayscale(1); opacity: .64; }
+.awards-section__brands :deep(.spaceBetween) { min-height: 3.125rem; }
+.awards-section__heading { position: relative; z-index: 2; text-align: center; padding-inline: 1.25rem; }
 .awards-section__heading h2 { margin: 0; font-family: var(--app-font-display); font-weight: 700; }
 /* The outline year (transparent fill: its stroke is the lettering) on the
    display-xl step, the title on display-l. */
-.awards-section__year { display: block; font-size: var(--type-display-xl-size); line-height: var(--type-display-xl-lh); letter-spacing: var(--type-display-xl-ls); color: transparent; -webkit-text-stroke: 2px #009c22; mask-image: linear-gradient(#000 48%, transparent 99%); }
+.awards-section__year { display: block; font-size: var(--type-display-xl-size); line-height: var(--type-display-xl-lh); letter-spacing: var(--type-display-xl-ls); color: transparent; -webkit-text-stroke: 0.125rem #009c22; mask-image: linear-gradient(#000 48%, transparent 99%); }
 /* The title rides up into the year's fading lower half: its caps start just
    under the year's middle. The pull is a share of the year's size, so the
    overlap holds at every step size. */
 .awards-section__title { position: relative; display: block; margin-top: calc(-0.43 * var(--type-display-xl-size)); font-size: var(--type-display-l-size); line-height: var(--type-display-l-lh); letter-spacing: var(--type-display-l-ls); background: linear-gradient(115deg, #005e22 10%, #00e429 46%, #009426 86%); background-clip: text; -webkit-text-fill-color: transparent; }
 .awards-section__heading p { margin: -2px 0 0; font-family: var(--app-font-display); font-size: var(--type-h4-size); font-weight: 400; line-height: var(--type-h4-lh); letter-spacing: var(--type-h4-ls); text-wrap: balance; }
 @media (max-width: 599px) {
-  .awards-section__brands { height: 90px; }
-  .awards-section__brands :deep(img) { height: 22px; max-width: 110px; }
-  .awards-section__heading { padding-inline: 12px; }
+  .awards-section__brands { height: 5.625rem; }
+  .awards-section__brands :deep(img) { height: 1.375rem; max-width: 6.875rem; }
+  .awards-section__heading { padding-inline: 0.75rem; }
   .awards-section__year { -webkit-text-stroke-width: 1px; }
-  .awards-section__heading p { max-width: 310px; margin: 10px auto 0; }
+  .awards-section__heading p { max-width: 19.375rem; margin: 0.625rem auto 0; }
 }
 </style>

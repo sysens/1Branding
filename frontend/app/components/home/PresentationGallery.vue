@@ -102,8 +102,8 @@ onBeforeUnmount(() => {
   /* The viewport unit this section scales with, frozen once its content
      reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
      on wider screens it stays as wide as the container. */
-  --vw: min(1vw, 17.58px);
-  --g: 16px;
+  --vw: min(1vw, 1.09875rem);
+  --g: 1rem;
   padding: clamp(2rem, 3.5vw, 4.5rem) 0 clamp(1.5rem, 2.5vw, 3rem);
   background: #000;
   color: #fff;
@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
   font-family: var(--app-font-display);
   font-size: var(--section-title-size);
   /* A long line wraps rather than leave the site container. */
-  max-width: min(100%, 1450px);
+  max-width: min(100%, 90.625rem);
   font-weight: 600;
   line-height: var(--type-h1-lh);
   letter-spacing: var(--type-h1-ls);
@@ -242,22 +242,22 @@ onBeforeUnmount(() => {
 
 .pgallery__rule {
   width: 86%;
-  height: 3px;
+  height: 0.1875rem;
   margin: clamp(2.5rem, 4.4vw, 5.5rem) auto 0;
   background: linear-gradient(90deg, rgb(0 255 42 / 0) 0%, #00ff2a 14%, #00ff2a 86%, rgb(0 255 42 / 0) 100%);
-  filter: drop-shadow(0 0 5px rgb(0 255 42 / 0.55));
+  filter: drop-shadow(0 0 0.3125rem rgb(0 255 42 / 0.55));
 }
 
 @media (min-width: 1441px) {
   .pgallery {
-    --g: calc(10px + 0.416667vw);
+    --g: calc(0.625rem + 0.416667vw);
   }
 }
 
 @media (max-width: 991px) {
   .pgallery__grid,
   .pgallery__line {
-    gap: 4.8px;
+    gap: 0.3rem;
   }
 
   .pgallery__line {

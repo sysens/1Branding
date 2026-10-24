@@ -50,15 +50,15 @@ usePageSeo({
 <style src="~/assets/css/service-page.css"></style>
 <style scoped>
 .privacy-page {
-  max-width: 860px;
+  max-width: 53.75rem;
 }
 
 .privacy-page__section {
-  margin-top: 56px;
+  margin-top: 3.5rem;
 }
 
 .privacy-page__section h2 {
-  margin: 0 0 16px;
+  margin: 0 0 1rem;
   font-family: var(--app-font-display);
   font-size: var(--type-h4-size);
   line-height: var(--type-h4-lh);
@@ -68,7 +68,7 @@ usePageSeo({
 
 .privacy-page__section p {
   max-width: var(--type-measure);
-  margin: 0 0 14px;
+  margin: 0 0 0.875rem;
   color: #c9cbce;
   font-family: var(--app-font-sans);
   font-size: var(--type-body-size);

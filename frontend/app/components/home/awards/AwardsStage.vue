@@ -40,9 +40,9 @@ const { ready } = useAwardsStage(root, canvas, { numeral: props.numeral });
 /* Black fades on the sides, the bottom and the top: the ceiling's lines start at
    the canvas's top edge, so without the top fade their cut ends show. */
 .awards-stage::after { content: ''; position: absolute; z-index: 3; inset: 0; pointer-events: none; background: linear-gradient(90deg, #000, transparent 17%, transparent 83%, #000), linear-gradient(0deg, #000, transparent 12%), linear-gradient(180deg, #000, transparent 9%); }
-.awards-stage__pause { position: absolute; z-index: 4; left: 24px; bottom: 24px; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #ffffff40; border-radius: 6px; color: white; background: #111b; opacity: 0; }
+.awards-stage__pause { position: absolute; z-index: 4; left: 1.5rem; bottom: 1.5rem; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid #ffffff40; border-radius: 0.375rem; color: white; background: #111b; opacity: 0; }
 .awards-stage:hover .awards-stage__pause, .awards-stage__pause:focus-visible { opacity: 1; }
-.awards-stage__pause:focus-visible { outline: 2px solid #03cb32; outline-offset: 3px; }
-@media (hover: none) { .awards-stage__pause { opacity: 1; left: 12px; bottom: 8px; } }
+.awards-stage__pause:focus-visible { outline: 0.125rem solid #03cb32; outline-offset: 0.1875rem; }
+@media (hover: none) { .awards-stage__pause { opacity: 1; left: 0.75rem; bottom: 0.5rem; } }
 @media (prefers-reduced-motion: reduce) { .awards-stage__pause { display: none; } }
 </style>

@@ -231,7 +231,7 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
                   loading="eager"
                   decoding="async"
                   :fetchpriority="rowIndex === 0 && itemIndex < 5 ? 'high' : 'auto'"
-                  class="marquee-image md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
+                  class="marquee-image md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 object-cover rounded-[1.25rem] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
               </a>
@@ -257,7 +257,7 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
                   loading="eager"
                   decoding="async"
                   fetchpriority="auto"
-                  class="marquee-image md:h-[17.0625rem] h-[142px] md:w-[30.375rem] w-[252px] shrink-0 object-cover rounded-[20px] md:rounded-[1.875rem] select-none"
+                  class="marquee-image md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 object-cover rounded-[1.25rem] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
               </a>
@@ -269,7 +269,7 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
 
     <a
       :href="localePath('/projects')"
-      class="ob-button flex w-fit mx-auto mt-[80px] mb-[50px]"
+      class="ob-button flex w-fit mx-auto mt-[5rem] mb-[3.125rem]"
       @click.prevent="navigateSafely(localePath('/projects'))"
     >
       {{ $t("aboutPage.moreButton") }}

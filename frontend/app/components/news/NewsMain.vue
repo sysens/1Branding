@@ -88,7 +88,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
 <template>
   <div ref="root">
     <div class="containerr bg-black">
-      <div class="main flex flex-col md:gap-[125px] gap-[50px]">
+      <div class="main flex flex-col md:gap-[7.8125rem] gap-[3.125rem]">
         <NuxtLink
           v-for="item in items"
           :key="item.documentId"
@@ -97,11 +97,11 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
         >
           <!-- On phones the text sits under the picture, at the full width:
                beside a 148px thumbnail its column held only ~25 characters. -->
-          <div class="Item flex flex-col md:flex-row md:items-center md:gap-[86px] gap-[15px]">
-            <div class="w-full h-[200px] md:shrink md:w-[668px] md:h-[360px]">
+          <div class="Item flex flex-col md:flex-row md:items-center md:gap-[5.375rem] gap-[0.9375rem]">
+            <div class="w-full h-[12.5rem] md:shrink md:w-[41.75rem] md:h-[22.5rem]">
               <img
                 v-if="item.image?.url"
-                class="w-full md:w-[668px] object-cover h-full"
+                class="w-full md:w-[41.75rem] object-cover h-full"
                 :src="resolveImage(item.image.url)"
                 alt=""
               >
@@ -111,7 +111,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
                  keeps the title clear of the page's dark edge gradient. -->
             <div class="w-full min-w-0 md:pr-[clamp(2rem,9vw,9rem)]">
               <h2
-                class="type-h3 md:pb-[32px] text-white py-[8px]"
+                class="type-h3 md:pb-[2rem] text-white py-[0.5rem]"
               >
                 {{ item.title }}
               </h2>
@@ -129,7 +129,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
 
     <button
       :disabled="loadingMore || !canLoadMore"
-      class="ob-button flex w-fit mx-auto mt-[50px] mb-[100px] md:my-[100px]"
+      class="ob-button flex w-fit mx-auto mt-[3.125rem] mb-[6.25rem] md:my-[6.25rem]"
       @click="loadMore"
     >
       {{ $t("common.showMore") }}

@@ -146,19 +146,19 @@ watch(locale, async () => {
 </script>
 
 <template>
-  <section ref="root" class="relative md:pt-[26px]">
-    <div class="news-title flex items-center justify-between px-[8px] pb-[18px]">
+  <section ref="root" class="relative md:pt-[1.625rem]">
+    <div class="news-title flex items-center justify-between px-[0.5rem] pb-[1.125rem]">
       <div class="text-white w-full md:w-auto">
         <h2
-          class="type-h2 text-center md:text-left text-[#FFFFFF] md:pb-[64px] pb-[12px] will-change-transform"
+          class="type-h2 text-center md:text-left text-[#FFFFFF] md:pb-[4rem] pb-[0.75rem] will-change-transform"
         >
           {{ $t("news.otherNews") }}
         </h2>
       </div>
 
-      <div class="gap-[41px] hidden md:flex">
+      <div class="gap-[2.5625rem] hidden md:flex">
         <button
-          class="group bg-[length:440%] bg-right w-[81px] h-[81px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
+          class="group bg-[length:440%] bg-right w-[5.0625rem] h-[5.0625rem] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
           :aria-label="$t('common.prev')"
           @click="prev"
@@ -167,7 +167,7 @@ watch(locale, async () => {
         </button>
 
         <button
-          class="group bg-[length:340%] bg-top w-[81px] h-[81px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
+          class="group bg-[length:340%] bg-top w-[5.0625rem] h-[5.0625rem] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
           :aria-label="$t('common.next')"
           @click="next"
@@ -178,24 +178,24 @@ watch(locale, async () => {
     </div>
 
     <div
-      class="pointer-events-none absolute left-0 top-[78px] bottom-0 w-[80px] z-[5]"
+      class="pointer-events-none absolute left-0 top-[4.875rem] bottom-0 w-[5rem] z-[5]"
     />
     <div
-      class="pointer-events-none absolute right-0 top-[78px] bottom-0 w-[80px] z-[5]"
+      class="pointer-events-none absolute right-0 top-[4.875rem] bottom-0 w-[5rem] z-[5]"
     />
 
     <div
       ref="container"
-      class="news-slider keen-slider md:px-[0px] px-[10px] md: will-change-transform"
+      class="news-slider keen-slider md:px-[0px] px-[0.625rem] md: will-change-transform"
     >
       <NuxtLink
         v-for="item in items"
         :key="item.documentId"
         :to="toNewsSlug(item.documentId)"
-        class="keen-slider__slide min-h-[1px] h-auto rounded-[20px] bg-[#FFFFFF0D] block"
+        class="keen-slider__slide min-h-[1px] h-auto rounded-[1.25rem] bg-[#FFFFFF0D] block"
       >
-        <article class="rounded-[14px] overflow-hidden">
-          <div class="relative h-[360px] overflow-hidden">
+        <article class="rounded-[0.875rem] overflow-hidden">
+          <div class="relative h-[22.5rem] overflow-hidden">
             <img
               class="w-full h-full object-cover block"
               :src="
@@ -208,12 +208,12 @@ watch(locale, async () => {
             <div class="absolute inset-0"/>
           </div>
 
-          <div class="px-[30px]">
+          <div class="px-[1.875rem]">
             <div
-              class="flex items-center gap-[8px] pt-[24px] pb-[30px] text-[#bfbfbf] opacity-[0.9]"
+              class="flex items-center gap-[0.5rem] pt-[1.5rem] pb-[1.875rem] text-[#bfbfbf] opacity-[0.9]"
             >
               <img
-                class="w-[14px] h-[14px] opacity-[0.9]"
+                class="w-[0.875rem] h-[0.875rem] opacity-[0.9]"
                 src="/News/vector-9.png"
                 alt=""
               >
@@ -223,7 +223,7 @@ watch(locale, async () => {
             </div>
 
             <p
-              class="type-h5 pb-[30px] line-clamp-2 text-[#FFFFFF]"
+              class="type-h5 pb-[1.875rem] line-clamp-2 text-[#FFFFFF]"
             >
               {{ item.title }}
             </p>
@@ -232,24 +232,24 @@ watch(locale, async () => {
       </NuxtLink>
     </div>
 
-    <div class="buttonMobile pt-[30px]">
-      <div class="md:hidden flex w-full justify-center items-center gap-[30px]">
+    <div class="buttonMobile pt-[1.875rem]">
+      <div class="md:hidden flex w-full justify-center items-center gap-[1.875rem]">
         <button
-          class="group bg-[length:440%] bg-right w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
+          class="group bg-[length:440%] bg-right w-[3.125rem] h-[3.125rem] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
           :aria-label="$t('common.prev')"
           @click="prev"
         >
-          <img class="w-[19px] h-auto" src="/News/vector-10.png" alt="" >
+          <img class="w-[1.1875rem] h-auto" src="/News/vector-10.png" alt="" >
         </button>
 
         <button
-          class="group bg-[length:340%] bg-top w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
+          class="group bg-[length:340%] bg-top w-[3.125rem] h-[3.125rem] rounded-full flex items-center justify-center bg-[url('/home/Component3.png')] bg-no-repeat hover:bg-[length:420%] transition-[background-size,box-shadow] duration-700 ease-out hover:shadow-[0_0_30px_rgba(3,203,0,0.9)]"
           type="button"
           :aria-label="$t('common.next')"
           @click="next"
         >
-          <img class="w-[19px] h-auto" src="/News/vector-11.png" alt="" >
+          <img class="w-[1.1875rem] h-auto" src="/News/vector-11.png" alt="" >
         </button>
       </div>
     </div>

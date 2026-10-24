@@ -35,16 +35,16 @@ const year = new Date().getFullYear();
 }
 .movement-footer__stage {
   position: relative;
-  width: min(100%, 1728px);
-  min-height: 590px;
+  width: min(100%, 108rem);
+  min-height: 36.875rem;
   margin-inline: auto;
-  padding: 115px 4rem 5rem;
+  padding: 7.1875rem 4rem 5rem;
   isolation: isolate;
 }
 .movement-footer__content {
   position: relative;
   z-index: 1;
-  width: min(510px, 48%);
+  width: min(31.875rem, 48%);
   margin-left: 46%;
 }
 /* Type: the title is the h1 step (72px at 1440, 56 at 1000, 36 on a phone),
@@ -68,7 +68,7 @@ p {
 }
 .movement-footer__legal {
   position: relative;
-  max-width: 1360px;
+  max-width: 85rem;
   margin: auto;
   padding: 1.5rem 4rem 2rem;
   /* At least #8f8f8f on the near-black background (was #7b8086). */
@@ -86,8 +86,8 @@ small {
 }
 @media (max-width: 767px) {
   .movement-footer__stage {
-    padding: 270px 1.25rem 3rem;
-    min-height: 590px;
+    padding: 16.875rem 1.25rem 3rem;
+    min-height: 36.875rem;
   }
   .movement-footer__content {
     width: 100%;

@@ -138,7 +138,7 @@ const lastThree = computed(() => {
 
 <template>
   <div ref="root">
-    <div class="md:pt-[130px] pt-[80px] md:pb-[60px]">
+    <div class="md:pt-[8.125rem] pt-[5rem] md:pb-[3.75rem]">
       <div v-if="section3" class="containerr">
         <div>
           <h2
@@ -150,19 +150,19 @@ const lastThree = computed(() => {
           <!-- CMS copy: one or two lines stay centred, a longer text is
                left-aligned at a reading measure (the block stays centred). -->
           <p
-            class="team-text type-lead type-measure mx-auto text-[#FFFFFFCC]/80 pt-[20px] pb-[60px]"
+            class="team-text type-lead type-measure mx-auto text-[#FFFFFFCC]/80 pt-[1.25rem] pb-[3.75rem]"
             :class="subTitleIsLong ? 'text-left' : 'text-center'"
           >
             {{ section3.subTitle }}
           </p>
 
-          <div class="md:h-[531px] h-full md:flex block gap-[10px]">
+          <div class="md:h-[33.1875rem] h-full md:flex block gap-[0.625rem]">
             <div class="flex-1 h-full">
               <NuxtImg
                 v-if="lastThree.left"
                 :src="lastThree.left.src"
                 :alt="lastThree.left.alt"
-                class="img-left w-full md:h-full h-[300px] object-cover pb-[10px] md:pb-0 block md:rounded-l-[30px] rounded-t-[20px] md:rounded-t-[0px] md:rounded-tl-[20px] will-change-transform"
+                class="img-left w-full md:h-full h-[18.75rem] object-cover pb-[0.625rem] md:pb-0 block md:rounded-l-[1.875rem] rounded-t-[1.25rem] md:rounded-t-[0px] md:rounded-tl-[1.25rem] will-change-transform"
               />
             </div>
 
@@ -171,7 +171,7 @@ const lastThree = computed(() => {
                 v-if="lastThree.center"
                 :src="lastThree.center.src"
                 :alt="lastThree.center.alt"
-                class="img-center w-full md:h-full h-[300px] pb-[10px] md:pb-0 object-cover block will-change-transform"
+                class="img-center w-full md:h-full h-[18.75rem] pb-[0.625rem] md:pb-0 object-cover block will-change-transform"
               />
             </div>
 
@@ -180,7 +180,7 @@ const lastThree = computed(() => {
                 v-if="lastThree.right"
                 :src="lastThree.right.src"
                 :alt="lastThree.right.alt"
-                class="img-right w-full md:h-full h-[300px] object-cover block md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px] md:rounded-br-[20px] will-change-transform"
+                class="img-right w-full md:h-full h-[18.75rem] object-cover block md:rounded-r-[1.875rem] rounded-b-[1.25rem] md:rounded-b-[0px] md:rounded-br-[1.25rem] will-change-transform"
               />
             </div>
           </div>

@@ -54,9 +54,12 @@ const wrap = (value: number, span: number): number => {
 };
 
 const getMetrics = (width: number): WallMetrics => {
-  const tileWidth = width <= 640 ? 285 : width <= 1024 ? 390 : 500;
+  // Past 1920px the whole site grows with the root size (8.889px + 1/270 of
+  // the width, see html in tailwind.css): the tiles grow by the same factor.
+  const scale = Math.max(1, (8.889 + width / 270) / 16);
+  const tileWidth = (width <= 640 ? 285 : width <= 1024 ? 390 : 500) * scale;
   const tileHeight = tileWidth * (9 / 16);
-    const gap = 20;
+  const gap = 20 * scale;
 
   return {
     tileWidth,

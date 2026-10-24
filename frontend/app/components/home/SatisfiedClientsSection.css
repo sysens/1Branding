@@ -43,7 +43,7 @@
   width: clamp(18rem, 24vw, 27rem) !important;
   height: auto !important;
   aspect-ratio: 16 / 9;
-  border-radius: 2px !important;
+  border-radius: 0.125rem !important;
 }
 
 .clients-section__collage :deep(.mt-20) {

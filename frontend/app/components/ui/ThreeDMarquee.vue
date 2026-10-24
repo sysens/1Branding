@@ -133,8 +133,8 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
 /* size-[1720px] shrink-0 scale-50 sm:scale-75 lg:scale-100 */
 .three-d-marquee__stage {
   flex-shrink: 0;
-  width: 1720px;
-  height: 1720px;
+  width: 107.5rem;
+  height: 107.5rem;
   transform: scale(0.5);
 }
 
@@ -144,13 +144,13 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
    place and the new ones fill the lower-left of the band. */
 .three-d-marquee__plane {
   position: relative;
-  top: 384px;
+  top: 24rem;
   right: 50%;
   display: grid;
-  width: calc(100% + 876px);
+  width: calc(100% + 54.75rem);
   height: 100%;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 32px;
+  gap: 2rem;
   transform: rotateX(55deg) rotateY(0deg) rotateZ(-45deg) translateX(-876px);
   transform-origin: top left;
   transform-style: preserve-3d;
@@ -161,7 +161,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
+  gap: 2rem;
   will-change: transform;
 }
 
@@ -179,7 +179,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
 
 @keyframes three-d-marquee-down {
   from { transform: translateY(0); }
-  to { transform: translateY(100px); }
+  to { transform: translateY(6.25rem); }
 }
 
 @keyframes three-d-marquee-up {
@@ -197,7 +197,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   width: 100%;
   height: auto;
   aspect-ratio: 970 / 700;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   object-fit: cover;
   box-shadow: 0 0 0 1px rgb(3 7 18 / 0.05);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -205,7 +205,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
 
 .three-d-marquee__image:hover {
   transform: translateY(-10px);
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05);
+  box-shadow: 0 1.5625rem 3.125rem -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(3 7 18 / 0.05);
 }
 
 /* Dashed guide lines (GridLineVertical / GridLineHorizontal, dark variant),
@@ -220,9 +220,9 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   top: -40px;
   left: -16px;
   width: 1px;
-  height: calc(100% + 80px);
+  height: calc(100% + 5rem);
   background: linear-gradient(to bottom, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.2) 50%, transparent 0, transparent);
-  background-size: 1px 5px;
+  background-size: 1px 0.3125rem;
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
 }
@@ -230,10 +230,10 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
 .three-d-marquee__line--horizontal {
   top: -16px;
   left: -10px;
-  width: calc(100% + 20px);
+  width: calc(100% + 1.25rem);
   height: 1px;
   background: linear-gradient(to right, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.2) 50%, transparent 0, transparent);
-  background-size: 5px 1px;
+  background-size: 0.3125rem 1px;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
 }

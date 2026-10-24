@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
   /* The viewport unit this section scales with, frozen once its content
      reaches the site container (1450px = 82.5vw at a 1758px wide screen), so
      on wider screens it stays as wide as the container. */
-  --vw: min(1vw, 17.58px);
+  --vw: min(1vw, 1.09875rem);
   /* Column width and gutter of the design (2000px frame: 544px posts, 8px gaps). */
   --col: calc(27.2 * var(--fvw));
   --gap: calc(0.32 * var(--fvw));

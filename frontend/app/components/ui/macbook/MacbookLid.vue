@@ -41,7 +41,7 @@ onMounted(() => { mounted.value = true; });
 </template>
 
 <style scoped>
-.macbook-lid { position: relative; perspective: 800px; }
+.macbook-lid { position: relative; perspective: 50rem; }
 .macbook-lid__back {
   position: relative;
   width: 32rem;
@@ -49,7 +49,7 @@ onMounted(() => { mounted.value = true; });
   padding: 0.5rem;
   border-radius: 1rem;
   background: #010101;
-  transform: perspective(800px) rotateX(-25deg) translateZ(0);
+  transform: perspective(50rem) rotateX(-25deg) translateZ(0);
   transform-origin: bottom;
   transform-style: preserve-3d;
 }
@@ -61,7 +61,7 @@ onMounted(() => { mounted.value = true; });
   justify-content: center;
   border-radius: 0.5rem;
   background: #010101;
-  box-shadow: 0 2px 0 2px #171717 inset;
+  box-shadow: 0 0.125rem 0 0.125rem #171717 inset;
   color: white;
 }
 .macbook-scroll__screen {

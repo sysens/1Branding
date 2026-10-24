@@ -237,26 +237,26 @@ watch(
     <div>
       <div class="containerr">
         <div v-for="(b, i) in blocks" :key="`grid-${i}`" class="grid-block">
-          <div :class="i === 0 ? '' : 'pt-[10px] md:pt-[10px]'">
+          <div :class="i === 0 ? '' : 'pt-[0.625rem] md:pt-[0.625rem]'">
             <template v-if="b.kind === 'triple'">
               <div>
                 <img
-                  class="top-img w-full object-cover pb-[5px] md:pb-0 md:h-[700px] h-[542px] md:rounded-t-[30px] rounded-t-[20px] will-change-transform"
+                  class="top-img w-full object-cover pb-[0.3125rem] md:pb-0 md:h-[43.75rem] h-[33.875rem] md:rounded-t-[1.875rem] rounded-t-[1.25rem] will-change-transform"
                   :src="b.top"
                   :alt="imageAlt(i * 3 + 1)"
                 >
               </div>
 
               <div
-                class="flex flex-col md:flex-row gap-[5px] md:pt-[10px] pt-0 md:gap-[10px]"
+                class="flex flex-col md:flex-row gap-[0.3125rem] md:pt-[0.625rem] pt-0 md:gap-[0.625rem]"
               >
                 <img
-                  class="bottom-left object-cover md:w-[33%] md:h-[531px] h-[400px] md:rounded-bl-[30px] will-change-transform"
+                  class="bottom-left object-cover md:w-[33%] md:h-[33.1875rem] h-[25rem] md:rounded-bl-[1.875rem] will-change-transform"
                   :src="b.left"
                   :alt="imageAlt(i * 3 + 2)"
                 >
                 <img
-                  class="bottom-right object-cover w-full md:h-[531px] md:max-w-[66.5%] h-[400px] md:rounded-br-[30px] rounded-b-[20px] md:rounded-b-[0px] will-change-transform"
+                  class="bottom-right object-cover w-full md:h-[33.1875rem] md:max-w-[66.5%] h-[25rem] md:rounded-br-[1.875rem] rounded-b-[1.25rem] md:rounded-b-[0px] will-change-transform"
                   :src="b.right"
                   :alt="imageAlt(i * 3 + 3)"
                 >
@@ -266,7 +266,7 @@ watch(
             <template v-else-if="b.kind === 'single'">
               <div>
                 <img
-                  class="single-img w-full object-cover md:h-[700px] h-[542px] md:rounded-[30px] rounded-[20px] will-change-transform"
+                  class="single-img w-full object-cover md:h-[43.75rem] h-[33.875rem] md:rounded-[1.875rem] rounded-[1.25rem] will-change-transform"
                   :src="b.src"
                   :alt="imageAlt(i * 3 + 1)"
                 >
@@ -274,14 +274,14 @@ watch(
             </template>
 
             <template v-else>
-              <div class="flex flex-col md:flex-row gap-[5px] md:gap-[10px]">
+              <div class="flex flex-col md:flex-row gap-[0.3125rem] md:gap-[0.625rem]">
                 <img
-                  class="double-left object-cover w-full md:w-1/2 md:h-[531px] h-[400px] md:rounded-bl-[30px] md:rounded-tl-[30px] rounded-t-[20px] will-change-transform"
+                  class="double-left object-cover w-full md:w-1/2 md:h-[33.1875rem] h-[25rem] md:rounded-bl-[1.875rem] md:rounded-tl-[1.875rem] rounded-t-[1.25rem] will-change-transform"
                   :src="b.left"
                   :alt="imageAlt(i * 3 + 1)"
                 >
                 <img
-                  class="double-right object-cover w-full md:w-1/2 md:h-[531px] h-[400px] md:rounded-br-[30px] md:rounded-tr-[30px] rounded-b-[20px] will-change-transform"
+                  class="double-right object-cover w-full md:w-1/2 md:h-[33.1875rem] h-[25rem] md:rounded-br-[1.875rem] md:rounded-tr-[1.875rem] rounded-b-[1.25rem] will-change-transform"
                   :src="b.right"
                   :alt="imageAlt(i * 3 + 2)"
                 >

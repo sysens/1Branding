@@ -48,7 +48,7 @@ usePageSeo({
   gap: 0.65rem;
   min-height: 2.9rem;
   padding: 0.65rem 1.25rem;
-  border-radius: 999px;
+  border-radius: 62.4375rem;
   background: #fff;
   color: #252525;
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.2);
@@ -78,8 +78,8 @@ usePageSeo({
 }
 
 .projects-back:focus-visible {
-  outline: 3px solid #03cb00;
-  outline-offset: 3px;
+  outline: 0.1875rem solid #03cb00;
+  outline-offset: 0.1875rem;
 }
 
 .projects-heading {
@@ -93,13 +93,13 @@ usePageSeo({
   max-width: calc(100vw - 2.5rem);
   min-height: 2.9rem;
   padding: 0.55rem 0.6rem 0.55rem 1.25rem;
-  border-radius: 999px;
+  border-radius: 62.4375rem;
   background: rgb(0 0 0 / 0.72);
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.2);
   color: #fff;
   transform: translateX(-50%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
 }
 
 .projects-heading h1 {
@@ -119,7 +119,7 @@ usePageSeo({
   /* The caption step's taller line (1.4) takes the place of the old padding,
      so the green pill keeps its height. */
   padding: 0.3rem 0.9rem;
-  border-radius: 999px;
+  border-radius: 62.4375rem;
   background: #03cb00;
   color: #000;
   font-family: var(--app-font-sans);

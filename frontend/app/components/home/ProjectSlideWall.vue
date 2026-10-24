@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .slide-wall {
   /* Slidor's gutter: 0.625 of a root size that grows past 1440px. */
-  --wall-gap: 10px;
+  --wall-gap: 0.625rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,13 +123,13 @@ onBeforeUnmount(() => {
 
 @media (min-width: 1441px) {
   .slide-wall {
-    --wall-gap: calc(0.625 * (10px + 0.416667vw));
+    --wall-gap: calc(0.625 * (0.625rem + 0.416667vw));
   }
 }
 
 @media (max-width: 991px) {
   .slide-wall {
-    --wall-gap: 4.8px;
+    --wall-gap: 0.3rem;
   }
 }
 

@@ -86,22 +86,22 @@ const section2WithImages = computed(() =>
 
 <template>
   <div ref="root" class="section-root">
-    <div class="mt-[190px]">
-      <div class="containerr bg-[#2A2A2A]/25 rounded-[30px]">
+    <div class="mt-[11.875rem]">
+      <div class="containerr bg-[#2A2A2A]/25 rounded-[1.875rem]">
         <div
           v-for="(item, i) in section2WithImages"
           :key="i"
-          class="mission-block flex flex-col-reverse items-center md:p-10 py-5 md:gap-[80px] gap-[30px]"
+          class="mission-block flex flex-col-reverse items-center md:p-10 py-5 md:gap-[5rem] gap-[1.875rem]"
           :class="i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'"
         >
           <div class="mission-text flex-1 will-change-transform">
             <h2
-              class="type-h3 text-[#FFFFFF] md:pb-[60px] pb-[30px]"
+              class="type-h3 text-[#FFFFFF] md:pb-[3.75rem] pb-[1.875rem]"
             >
               {{ item.title }}
             </h2>
             <p
-              class="type-body type-measure text-[#FFFFFF] pb-[80px] md:pb-0"
+              class="type-body type-measure text-[#FFFFFF] pb-[5rem] md:pb-0"
             >
               {{ item.text }}
             </p>
@@ -111,7 +111,7 @@ const section2WithImages = computed(() =>
             v-if="item.imageSrc"
             :src="item.imageSrc"
             :alt="item.image?.alternativeText?.trim() || item.title"
-            class="mission-img flex-1 md:w-[50%] md:h-[500px] h-[234px] w-full rounded-[30px] will-change-transform"
+            class="mission-img flex-1 md:w-[50%] md:h-[31.25rem] h-[14.625rem] w-full rounded-[1.875rem] will-change-transform"
           />
         </div>
       </div>

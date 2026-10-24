@@ -66,7 +66,7 @@ usePageSeo({
             </div>
             <div class="home-hero-shade" aria-hidden="true" />
             <div class="relative">
-              <div class="pt-[30px] md:pt-10" />
+              <div class="pt-[1.875rem] md:pt-10" />
               <section class="leading-target home-leading">
                 <LeadingPage :landing-page="landingPage" />
               </section>

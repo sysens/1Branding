@@ -28,7 +28,7 @@ const { canvasRef, ready, running } = useChronograph(isActive);
   position: absolute;
   top: 0;
   left: 50%;
-  width: clamp(1350px, 119.33vw, 1630px);
+  width: clamp(84.375rem, 119.33vw, 101.875rem);
   aspect-ratio: 1920 / 689;
   transform: translateX(-55.215%);
   pointer-events: none;
@@ -54,7 +54,7 @@ const { canvasRef, ready, running } = useChronograph(isActive);
 .movement-art__placeholder {
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 8px #22272a;
+  box-shadow: inset 0 0 0 0.5rem #22272a;
   border-radius: inherit;
   background: #0b0e0c;
 }
@@ -71,7 +71,7 @@ canvas {
 }
 canvas.is-ready { opacity: 1; }
 @media (min-width: 1500px) {
-  .movement-art { width: 1920px; transform: translateX(-54.6875%); }
+  .movement-art { width: 120rem; transform: translateX(-54.6875%); }
   /* From ~1830px wide the fixed 1920px artwork's edges come into view; fade them
      into the footer background instead of showing a hard vertical cut. */
   .movement-art__background {
@@ -86,15 +86,15 @@ canvas.is-ready { opacity: 1; }
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .movement-art { width: 1430px; left: -255px; transform: none; }
+  .movement-art { width: 89.375rem; left: -255px; transform: none; }
 }
 @media (max-width: 767px) {
   .movement-art {
-    width: 767px;
+    width: 47.9375rem;
     aspect-ratio: 767 / 560;
     left: 50%;
     transform: translateX(-50%);
   }
-  .movement-art__clock { width: 208px; top: 28px; left: calc(49% - 104px); }
+  .movement-art__clock { width: 13rem; top: 1.75rem; left: calc(49% - 6.5rem); }
 }
 </style>

@@ -127,7 +127,7 @@ const sections = computed<ProductStorySection[]>(() => {
 @media (min-width: 901px) {
   .first-glance-stage {
     position: relative;
-    width: min(100%, 2240px);
+    width: min(100%, 140rem);
     margin-inline: auto;
     container-type: inline-size;
   }

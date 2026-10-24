@@ -125,8 +125,8 @@ const heroCopy = computed<HeroCopy>(() => {
   flex-direction: column;
   justify-content: flex-end;
   box-sizing: border-box;
-  min-height: calc(100vh - 30px);
-  min-height: calc(100svh - 30px);
+  min-height: calc(100vh - 1.875rem);
+  min-height: calc(100svh - 1.875rem);
   padding-bottom: 3.5vh;
   padding-bottom: 3.5svh;
 }
@@ -325,7 +325,7 @@ const heroCopy = computed<HeroCopy>(() => {
 @keyframes hero-line-in {
   from {
     opacity: 0;
-    filter: blur(16px);
+    filter: blur(1rem);
     translate: 0 0.28em;
   }
 }

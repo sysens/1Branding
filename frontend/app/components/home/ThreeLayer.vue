@@ -111,7 +111,7 @@ const rowsConfig = computed(() => {
         <div class="mt-20">
           <div
             v-if="shouldShowButton"
-            class="flex justify-center md:mt-20 mt-[30px] mb-6"
+            class="flex justify-center md:mt-20 mt-[1.875rem] mb-6"
           >
             <NuxtLink
               :to="localePath('/projects')"

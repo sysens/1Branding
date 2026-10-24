@@ -69,14 +69,14 @@ usePageSeo({
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
 
     <div class="relative z-10">
-      <div class="vg md:pt-[60px] pt-[30px]">
+      <div class="vg md:pt-[3.75rem] pt-[1.875rem]">
 
         <header class="pricing-intro">
           <h1 v-blur-reveal>{{ $t("seo.price.h1") }}</h1>
           <p v-rise>{{ $t("pricing.lead") }}</p>
         </header>
 
-        <div class="mx-auto max-w-[1760px] touch-pan-y">
+        <div class="mx-auto max-w-[110rem] touch-pan-y">
           <CostsSlider />
         </div>
       </div>
@@ -106,7 +106,7 @@ usePageSeo({
         </div>
       </section>
 
-      <div class="mx-auto max-w-[1660px]">
+      <div class="mx-auto max-w-[103.75rem]">
         <Warning />
       </div>
 
@@ -116,9 +116,9 @@ usePageSeo({
 
 <style scoped>
 .pricing-intro {
-  max-width: 980px;
+  max-width: 61.25rem;
   margin: 0 auto;
-  padding: 110px 20px 10px;
+  padding: 6.875rem 1.25rem 0.625rem;
   text-align: center;
 }
 
@@ -135,7 +135,7 @@ usePageSeo({
 /* One or two short lines (about 130 characters): stays centred. */
 .pricing-intro p {
   max-width: var(--type-measure);
-  margin: 20px auto 0;
+  margin: 1.25rem auto 0;
   color: #a3a6aa;
   font-family: var(--app-font-sans);
   font-size: var(--type-body-size);
@@ -144,13 +144,13 @@ usePageSeo({
 }
 
 .pricing-table {
-  max-width: 1100px;
-  margin: 40px auto 80px;
-  padding: 0 20px;
+  max-width: 68.75rem;
+  margin: 2.5rem auto 5rem;
+  padding: 0 1.25rem;
 }
 
 .pricing-table h2 {
-  margin: 0 0 24px;
+  margin: 0 0 1.5rem;
   color: #fff;
   font-family: var(--app-font-display);
   font-size: var(--type-h3-size);
@@ -166,7 +166,7 @@ usePageSeo({
 
 .pricing-table table {
   width: 100%;
-  min-width: 520px;
+  min-width: 32.5rem;
   border-collapse: collapse;
   color: #d5d7da;
   font-family: var(--app-font-sans);
@@ -177,7 +177,7 @@ usePageSeo({
 
 .pricing-table th,
 .pricing-table td {
-  padding: 16px 18px;
+  padding: 1rem 1.125rem;
   border-bottom: 1px solid rgb(255 255 255 / 0.12);
   text-align: left;
 }

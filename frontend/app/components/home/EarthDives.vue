@@ -183,7 +183,7 @@ const resolveMedia = useCmsMedia();
     <img
       src="/General/ellipse-5.png"
       alt=""
-      class="absolute right-1 md:top-9 top-[35%] w-[900px] md:w-[37.5rem] h-[900px] md:object-contain oject-fit pointer-events-none select-none -z-10"
+      class="absolute right-1 md:top-9 top-[35%] w-[56.25rem] md:w-[37.5rem] h-[56.25rem] md:object-contain oject-fit pointer-events-none select-none -z-10"
     >
 
     <div class="containerr relative z-1">
@@ -196,10 +196,10 @@ const resolveMedia = useCmsMedia();
       </h2>
 
       <div class="md:flex inline-block md:gap-7 gap-2 place-items-center">
-        <div class="main flex-1 flex justify-center md:py-0 py-[40px]">
+        <div class="main flex-1 flex justify-center md:py-0 py-[2.5rem]">
           <video
             ref="earthDivesVideo"
-            class="left-earth-video left-earth w-[252px] h-[270px] md:w-[39.3125rem] md:h-[42.0625rem] object-cover"
+            class="left-earth-video left-earth w-[15.75rem] h-[16.875rem] md:w-[39.3125rem] md:h-[42.0625rem] object-cover"
             muted
             loop
             playsinline
@@ -210,15 +210,15 @@ const resolveMedia = useCmsMedia();
         </div>
 
         <div class="main flex-1">
-          <div class="rowSection flex flex-col md:gap-[1.875rem] gap-[16px]">
+          <div class="rowSection flex flex-col md:gap-[1.875rem] gap-[1rem]">
             <div
               v-for="(card, i) in displayCards"
               :key="i"
-              class="row-item item md:min-h-[10rem] min-h-[130px] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[20px] md:rounded-[1.875rem] rounded-[20px] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[10px] md:py-[2.25rem] py-[20px] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
+              class="row-item item md:min-h-[10rem] min-h-[8.125rem] border-[1px] border-[#FFFFFF1F] flex items-center md:gap-[1.875rem] gap-[1.25rem] md:rounded-[1.875rem] rounded-[1.25rem] bg-[#0D0D0D] md:p-[1.875rem] md:px-[1.875rem] px-[0.625rem] md:py-[2.25rem] py-[1.25rem] bg-gradient-to-r from-[#0D0D0D] to-[#1f1e1e]"
             >
               <div class="shrink-0">
                 <img
-                  class="md:w-[4.375rem] md:h-[4.375rem] w-[40px] h-[40px] object-contain"
+                  class="md:w-[4.375rem] md:h-[4.375rem] w-[2.5rem] h-[2.5rem] object-contain"
                   :src="resolveMedia(card.icon?.url) || '/home/rowthree.jpg'"
                   alt=""
                 >
@@ -231,7 +231,7 @@ const resolveMedia = useCmsMedia();
                   {{ card.title }}
                 </h2>
                 <p
-                  class="type-small text-[#8f8f8f] line-clamp-4 md:pt-[1.875rem] pt-[10px]"
+                  class="type-small text-[#8f8f8f] line-clamp-4 md:pt-[1.875rem] pt-[0.625rem]"
                 >
                   {{ card.description }}
                 </p>

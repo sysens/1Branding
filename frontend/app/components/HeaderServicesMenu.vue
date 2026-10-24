@@ -174,8 +174,8 @@ onBeforeUnmount(() => clearTimeout(closer));
 /* The design's "Services" has no arrow; the label still rolls on hover. */
 .svc__chevron {
   display: none;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -188,9 +188,9 @@ onBeforeUnmount(() => clearTimeout(closer));
 }
 
 .svc__trigger:focus-visible {
-  outline: 2px solid #03cb00;
-  outline-offset: 6px;
-  border-radius: 4px;
+  outline: 0.125rem solid #03cb00;
+  outline-offset: 0.375rem;
+  border-radius: 0.25rem;
 }
 
 /* The page behind is dimmed, as on slidor. */
@@ -220,20 +220,20 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__panel {
   position: fixed;
   z-index: 1001;
-  top: calc(30px + var(--header-h, 56px) + 14px);
+  top: calc(1.875rem + var(--header-h, 3.5rem) + 0.875rem);
   left: 0;
   display: grid;
   grid-template-columns: minmax(0, 4fr) minmax(0, 5fr);
   align-items: stretch;
   gap: 2.5rem;
   width: 100vw;
-  max-height: calc(100vh - 30px - var(--header-h, 56px) - 14px);
+  max-height: calc(100vh - 1.875rem - var(--header-h, 3.5rem) - 0.875rem);
   overflow: auto;
   padding: 2rem calc(2.5rem + var(--frame-side));
   border-top: 1px solid rgb(255 255 255 / 0.08);
   border-bottom: 1px solid rgb(3 203 0 / 0.4);
   background: #000;
-  box-shadow: 0 40px 80px rgb(0 0 0 / 0.5);
+  box-shadow: 0 2.5rem 5rem rgb(0 0 0 / 0.5);
   font-family: var(--app-font-sans);
 }
 
@@ -258,7 +258,7 @@ onBeforeUnmount(() => clearTimeout(closer));
   position: relative;
   min-height: 20rem;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: #111;
 }
 
@@ -282,7 +282,7 @@ onBeforeUnmount(() => clearTimeout(closer));
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-content: space-between;
-  gap: 4px;
+  gap: 0.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -291,7 +291,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 /* Items rise in one after another as the panel opens. */
 .svc__list li {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(0.5rem);
   transition: opacity 0.4s ease calc(var(--i) * 30ms + 80ms), transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 30ms + 80ms);
 }
 
@@ -302,7 +302,7 @@ onBeforeUnmount(() => clearTimeout(closer));
 
 .svc-panel-enter-from .svc__list li {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(0.5rem);
 }
 
 .svc__item {
@@ -310,7 +310,7 @@ onBeforeUnmount(() => clearTimeout(closer));
   align-items: flex-start;
   gap: 1rem;
   padding: 1.25rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   color: #fff;
   text-decoration: none;
   transition: background-color 0.25s ease;
@@ -324,8 +324,8 @@ onBeforeUnmount(() => clearTimeout(closer));
 
 .svc__icon {
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-top: 1px;
   fill: none;
   stroke: #fff;
@@ -398,16 +398,16 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__column {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0.875rem;
   min-width: 0;
 }
 
 .svc__more {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 0.5rem 1.5rem;
   margin: 0;
-  padding: 14px 14px 0;
+  padding: 0.875rem 0.875rem 0;
   border-top: 1px solid rgb(255 255 255 / 0.1);
 }
 

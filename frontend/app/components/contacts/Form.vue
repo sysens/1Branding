@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
       <div
         role="status"
         aria-live="polite"
-        class="w-[92vw] max-w-[560px] rounded-xl border border-white/10 px-4 py-3 backdrop-blur-md shadow-lg"
+        class="w-[92vw] max-w-[35rem] rounded-xl border border-white/10 px-4 py-3 backdrop-blur-md shadow-lg"
         :class="toastType === 'success' ? 'bg-green-500/20' : 'bg-black/50'"
       >
         <p class="type-body" :class="toastType === 'success' ? 'text-green-400' : 'text-red-500'">
@@ -167,13 +167,13 @@ onBeforeUnmount(() => {
     <section class="w-full bg-black pt-10">
       <div class="mx-auto">
         <h2
-          class="form-title will-change-transform type-h4 text-center text-[#FFFFFF] pb-[30px]"
+          class="form-title will-change-transform type-h4 text-center text-[#FFFFFF] pb-[1.875rem]"
         >
           {{ formTitle }}
         </h2>
 
         <p
-          class="form-desc will-change-transform type-lead type-measure mx-auto md:pb-[60px] pb-[88px] text-[#FFFFFF]"
+          class="form-desc will-change-transform type-lead type-measure mx-auto md:pb-[3.75rem] pb-[5.5rem] text-[#FFFFFF]"
         >
           {{ formDescription }}
         </p>
@@ -191,7 +191,7 @@ onBeforeUnmount(() => {
           >
           <div class="form-left will-change-transform">
             <h3
-              class="type-h5 pb-[30px] text-[#FFFFFF]"
+              class="type-h5 pb-[1.875rem] text-[#FFFFFF]"
             >
               {{ topicTitle }}
             </h3>
@@ -205,11 +205,11 @@ onBeforeUnmount(() => {
               :placeholder="topicInput"
               :aria-label="topicInput"
               :maxlength="fieldLimits.topic"
-              class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+              class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
             >
 
             <h3
-              class="type-h5 pt-[40px] pb-[30px] text-[#FFFFFF]"
+              class="type-h5 pt-[2.5rem] pb-[1.875rem] text-[#FFFFFF]"
             >
               {{ servicesTitle }}
             </h3>
@@ -223,10 +223,10 @@ onBeforeUnmount(() => {
               :placeholder="servicesInput"
               :aria-label="servicesTitle"
               :maxlength="fieldLimits.services"
-              class="type-body w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[233px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+              class="type-body w-full resize-none p-4 rounded-lg border border-white/10 bg-black/60 px-4 h-[14.5625rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
             />
 
-            <div class="flex mt-[18px] pb-[10px] md:pb-[110px] items-center gap-[36px]">
+            <div class="flex mt-[1.125rem] pb-[0.625rem] md:pb-[6.875rem] items-center gap-[2.25rem]">
               <div>
                 <input
                   ref="fileInputRef"
@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
 
                 <div v-if="selectedFile" class="mt-2 flex items-center gap-3">
                   <p
-                    class="type-small max-w-[260px] truncate text-white/80"
+                    class="type-small max-w-[16.25rem] truncate text-white/80"
                   >
                     {{ selectedFile.name }}
                   </p>
@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
 
           <div class="form-right will-change-transform">
             <h3
-              class="type-h5 pt-[40px] md:pt-0 pb-[30px] text-[#FFFFFF]"
+              class="type-h5 pt-[2.5rem] md:pt-0 pb-[1.875rem] text-[#FFFFFF]"
             >
               {{ $t("common.contacts") }}
             </h3>
@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
                 :placeholder="fullNamePh"
                 :aria-label="fullNamePh"
                 :maxlength="fieldLimits.fullName"
-                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -296,7 +296,7 @@ onBeforeUnmount(() => {
                 :placeholder="jobTitlePh"
                 :aria-label="jobTitlePh"
                 :maxlength="fieldLimits.jobTitle"
-                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -308,7 +308,7 @@ onBeforeUnmount(() => {
                 :placeholder="companyPh"
                 :aria-label="companyPh"
                 :maxlength="fieldLimits.company"
-                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -320,7 +320,7 @@ onBeforeUnmount(() => {
                 :placeholder="phonePh"
                 :aria-label="phonePh"
                 :maxlength="fieldLimits.phone"
-                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
 
               <input
@@ -333,14 +333,14 @@ onBeforeUnmount(() => {
                 :placeholder="emailPh"
                 :aria-label="emailPh"
                 :maxlength="fieldLimits.email"
-                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[60px] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
+                class="type-body w-full rounded-lg border border-white/10 bg-black/60 px-4 h-[3.75rem] text-white placeholder:text-white/60 outline-none transition focus:border-[#03cb00] focus:ring-0"
               >
             </div>
           </div>
         </form>
 
         <p
-          class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[29px] mt-[48px]"
+          class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[1.8125rem] mt-[3rem]"
         >
           {{ $t("contacts.form.agreement") }}
           <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
           type="submit"
           form="contact-request-form"
           :disabled="sending"
-          class="form-send will-change-transform ob-button mb-[6px]"
+          class="form-send will-change-transform ob-button mb-[0.375rem]"
         >
           {{ sending ? $t("common.sending") : $t("common.send") }}
         </button>

@@ -192,9 +192,9 @@ onBeforeUnmount(() => {
 .spline-scene-viewer__loader {
   width: 2.25rem;
   height: 2.25rem;
-  border: 2px solid rgba(255, 255, 255, 0.18);
+  border: 0.125rem solid rgba(255, 255, 255, 0.18);
   border-top-color: #f4f4f5;
-  border-radius: 9999px;
+  border-radius: 624.9375rem;
   animation: spline-loader-spin 0.85s linear infinite;
 }
 

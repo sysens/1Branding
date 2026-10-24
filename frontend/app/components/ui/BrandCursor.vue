@@ -85,7 +85,7 @@ onBeforeUnmount(() => cleanup?.());
 
 <style>
 .brand-cursor, .brand-cursor-trails { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483000; }
-.brand-cursor { width: 32px; height: 32px; will-change: transform; }
+.brand-cursor { width: 2rem; height: 2rem; will-change: transform; }
 .brand-cursor-trails { width: 100%; height: 100%; }
 @media (hover: hover) and (pointer: fine) {
   .brand-cursor-active, .brand-cursor-active *:not(input):not(textarea):not(select) { cursor: none !important; }

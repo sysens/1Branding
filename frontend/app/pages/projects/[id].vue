@@ -272,27 +272,27 @@ const loading = computed(() => pending.value || !data.value);
 
     <div class="relative z-10">
       <div class="bg-cover bg-center bg-no-repeat">
-        <div class="relative md:pt-[60px] pt-[30px]">
+        <div class="relative md:pt-[3.75rem] pt-[1.875rem]">
           <div
-            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 -z-10 h-[140px] w-[92%] max-w-[1400px] rounded-full"
+            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 -z-10 h-[8.75rem] w-[92%] max-w-[87.5rem] rounded-full"
             :style="headerGlowStyle"
           />
           <div class="m"/>
 
           <div
-            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[440px] w-[92%] max-w-[1400px] rounded-full"
+            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[27.5rem] w-[92%] max-w-[87.5rem] rounded-full"
             :style="headerGlowStyle"
           />
         </div>
 
-        <div class="md:py-[115px] md:pt-[114px] pt-[20px]">
+        <div class="md:py-[7.1875rem] md:pt-[7.125rem] pt-[1.25rem]">
           <div
             v-if="section1"
-            class="md:flex containerr gap-[147px] mt-[120px] items-center justify-between"
+            class="md:flex containerr gap-[9.1875rem] mt-[7.5rem] items-center justify-between"
           >
             <div class="flex-1">
               <h1
-                class="hero-title type-h1 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[40px]"
+                class="hero-title type-h1 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[2.5rem]"
               >
                 {{ section1.projectTitle }}
               </h1>
@@ -302,7 +302,7 @@ const loading = computed(() => pending.value || !data.value);
                  phones too, at a reading measure. -->
             <div class="flex-1">
               <p
-                class="hero-text type-body type-measure text-[#FFFFFF] text-left md:pb-0 pb-[50px]"
+                class="hero-text type-body type-measure text-[#FFFFFF] text-left md:pb-0 pb-[3.125rem]"
               >
                 {{ section1.text }}
               </p>
@@ -312,7 +312,7 @@ const loading = computed(() => pending.value || !data.value);
       </div>
 
       <div
-        class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[440px] w-[92%] max-w-[1400px] rounded-full"
+        class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[27.5rem] w-[92%] max-w-[87.5rem] rounded-full"
         :style="headerGlowStyle"
       />
 
@@ -361,12 +361,12 @@ const loading = computed(() => pending.value || !data.value);
 
 <style scoped>
 .project-next {
-  padding-bottom: 120px;
+  padding-bottom: 7.5rem;
   text-align: center;
 }
 
 .project-next h2 {
-  margin: 0 0 28px;
+  margin: 0 0 1.75rem;
   color: #fff;
   font-family: var(--app-font-display);
   font-size: var(--type-h2-size);
@@ -379,7 +379,7 @@ const loading = computed(() => pending.value || !data.value);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px 28px;
+  gap: 1rem 1.75rem;
   align-items: center;
 }
 

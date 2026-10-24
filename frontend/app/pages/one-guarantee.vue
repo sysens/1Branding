@@ -125,11 +125,11 @@ onMounted(async () => {
               </video>
 
               <div
-                class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[60px] pt-[30px]"
+                class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[3.75rem] pt-[1.875rem]"
               >
 
                 <h1
-                  class="text-[#FFFFFF] md:pt-[127px] pt-[137px] md:pb-[60px] pb-[30px] text-center products"
+                  class="text-[#FFFFFF] md:pt-[7.9375rem] pt-[8.5625rem] md:pb-[3.75rem] pb-[1.875rem] text-center products"
                 ><span class="sr-only">{{ $t("seo.oneGuarantee.h1") }}</span></h1>
               </div>
             </div>
@@ -144,15 +144,15 @@ onMounted(async () => {
         <GuaranteeMarquee :rows="2" :show-title="false" :show-button="false">
           <template #header>
             <div class="containerr">
-              <div class="md:px-0 px-[20px]">
+              <div class="md:px-0 px-[1.25rem]">
                 <h2
-                  class="type-h2 text-[#FFFFFF] md:px-0 md:mt-[130px] text-center pb-[29px]"
+                  class="type-h2 text-[#FFFFFF] md:px-0 md:mt-[8.125rem] text-center pb-[1.8125rem]"
                 >
                   {{ $t("oneGuarantee.clientsTitle") }}
                 </h2>
 
                 <p
-                  class="type-body type-measure mx-auto text-[#FFFFFF] pb-[43px] text-center"
+                  class="type-body type-measure mx-auto text-[#FFFFFF] pb-[2.6875rem] text-center"
                 >
                   {{ $t("oneGuarantee.clientsSubtitle") }}
                 </p>

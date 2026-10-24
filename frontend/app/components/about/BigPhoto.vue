@@ -34,7 +34,7 @@ const imageSrc = computed(() => media(section1.value?.image?.url));
           height="700"
           loading="eager"
           fetchpriority="high"
-          class="mission-img w-full md:h-[700px] h-[366px] object-cover md:rounded-[30px] rounded-[20px]"
+          class="mission-img w-full md:h-[43.75rem] h-[22.875rem] object-cover md:rounded-[1.875rem] rounded-[1.25rem]"
         />
       </div>
     </div>

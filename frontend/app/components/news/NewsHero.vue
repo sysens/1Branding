@@ -50,11 +50,11 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
 </script>
 
 <template>
-  <div ref="root" class="mb-[133px]">
+  <div ref="root" class="mb-[8.3125rem]">
     <div>
       <div class="products">
         <div
-          class="flex gap-2 justify-center items-center md:pt-[120px] pt-[120px] md:pb-[60px] pb-[37px]"
+          class="flex gap-2 justify-center items-center md:pt-[7.5rem] pt-[7.5rem] md:pb-[3.75rem] pb-[2.3125rem]"
         >
           <p class="type-small text-white">
             <time v-if="published" :datetime="published.iso">{{ published.label }}</time>
@@ -62,7 +62,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         </div>
 
         <h1
-          class="type-h1 text-white max-w-[1000px] mx-auto md:mb-[60px] mb-[40px] text-center px-[20px] md:px-0"
+          class="type-h1 text-white max-w-[62.5rem] mx-auto md:mb-[3.75rem] mb-[2.5rem] text-center px-[1.25rem] md:px-0"
         >
           {{ title }}
         </h1>
@@ -73,34 +73,34 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
           v-if="heroImageSrc"
           :src="heroImageSrc"
           :alt="title"
-          class="gsapDiv md:h-[700px] h-[542px] object-cover rounded-[30px] w-full"
+          class="gsapDiv md:h-[43.75rem] h-[33.875rem] object-cover rounded-[1.875rem] w-full"
         />
       </div>
 
       <p
-        class="leftBlock type-body md:columns-2 my-[40px] gap-[100px] text-[#FFFFFF]"
+        class="leftBlock type-body md:columns-2 my-[2.5rem] gap-[6.25rem] text-[#FFFFFF]"
       >
         {{ text }}
       </p>
 
-      <div class="md:flex justify-between gap-[10px]">
-        <div class="md:w-[34%] md:h-[531px] h-[300px] mb-[5px]">
+      <div class="md:flex justify-between gap-[0.625rem]">
+        <div class="md:w-[34%] md:h-[33.1875rem] h-[18.75rem] mb-[0.3125rem]">
           <img
             v-if="leftImg"
             :src="leftImg"
             :alt="title"
             loading="lazy"
-            class="leftSide leftImg w-full h-full object-cover md:rounded-l-[30px] mb-[5px]"
+            class="leftSide leftImg w-full h-full object-cover md:rounded-l-[1.875rem] mb-[0.3125rem]"
           >
         </div>
 
-        <div class="md:w-[66%] md:h-[531px] h-[300px]">
+        <div class="md:w-[66%] md:h-[33.1875rem] h-[18.75rem]">
           <img
             v-if="rightImg"
             :src="rightImg"
             :alt="title"
             loading="lazy"
-            class="rightSide rightImg w-full h-full object-cover md:rounded-r-[30px] rounded-b-[20px] md:rounded-b-[0px]"
+            class="rightSide rightImg w-full h-full object-cover md:rounded-r-[1.875rem] rounded-b-[1.25rem] md:rounded-b-[0px]"
           >
         </div>
       </div>

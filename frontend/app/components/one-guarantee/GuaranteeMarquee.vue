@@ -77,15 +77,15 @@ const rowsConfig = computed(() =>
         :class="row.animClass"
         :style="{ '--marquee-duration': marqueeDuration }"
       >
-        <div class="flex md:gap-[30px] gap-[20px] md:px-[15px] px-[10px]">
+        <div class="flex md:gap-[1.875rem] gap-[1.25rem] md:px-[0.9375rem] px-[0.625rem]">
           <div
             v-for="(item, i) in itemsToRender"
             :key="row.key + '-a-' + i"
-            class="md:w-[520px] w-[300px] h-[306px] shrink-0"
+            class="md:w-[32.5rem] w-[18.75rem] h-[19.125rem] shrink-0"
             :class="row.opacity"
           >
             <div
-              class="relative h-full w-full rounded-[30px] overflow-hidden bg-[#0b0b0b] md:py-[48px] py-[30px] px-[30px] border-[1px] border-[#FFFFFF1F]"
+              class="relative h-full w-full rounded-[1.875rem] overflow-hidden bg-[#0b0b0b] md:py-[3rem] py-[1.875rem] px-[1.875rem] border-[1px] border-[#FFFFFF1F]"
             >
               <div
                 class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0D0D0D] to-[#1f1e1e]"
@@ -93,12 +93,12 @@ const rowsConfig = computed(() =>
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
-                  <div class="md:pb-[12px] pb-[20px] md:mb-[12px]">
+                  <div class="md:pb-[0.75rem] pb-[1.25rem] md:mb-[0.75rem]">
                     <img class="block" src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p
-                    class="type-small line-clamp-5 mb-[30px] text-[#8f8f8f]"
+                    class="type-small line-clamp-5 mb-[1.875rem] text-[#8f8f8f]"
                   >
                     {{ item.text }}
                   </p>
@@ -106,7 +106,7 @@ const rowsConfig = computed(() =>
 
                 <div>
                   <p
-                    class="type-h5 pb-[15px] text-[#FFFFFF]"
+                    class="type-h5 pb-[0.9375rem] text-[#FFFFFF]"
                   >
                     {{ item.author }}
                   </p>
@@ -123,17 +123,17 @@ const rowsConfig = computed(() =>
         </div>
 
         <div
-          class="flex md:gap-[30px] gap-[20px] md:px-[15px] px-[10px]"
+          class="flex md:gap-[1.875rem] gap-[1.25rem] md:px-[0.9375rem] px-[0.625rem]"
           aria-hidden="true"
         >
           <div
             v-for="(item, i) in itemsToRender"
             :key="row.key + '-b-' + i"
-            class="md:w-[520px] w-[300px] h-[306px] shrink-0"
+            class="md:w-[32.5rem] w-[18.75rem] h-[19.125rem] shrink-0"
             :class="row.opacity"
           >
             <div
-              class="relative h-full w-full rounded-[30px] overflow-hidden bg-[#0b0b0b] md:py-[48px] py-[30px] px-[30px] border-[1px] border-[#FFFFFF1F]"
+              class="relative h-full w-full rounded-[1.875rem] overflow-hidden bg-[#0b0b0b] md:py-[3rem] py-[1.875rem] px-[1.875rem] border-[1px] border-[#FFFFFF1F]"
             >
               <div
                 class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0D0D0D] to-[#1f1e1e]"
@@ -141,12 +141,12 @@ const rowsConfig = computed(() =>
 
               <div class="relative h-full flex flex-col justify-between">
                 <div>
-                  <div class="md:pb-[12px] pb-[20px]">
+                  <div class="md:pb-[0.75rem] pb-[1.25rem]">
                     <img class="block" src="/OneGuarantee/group-2.png" alt="" >
                   </div>
 
                   <p
-                    class="type-small line-clamp-5 mb-[30px] text-[#8f8f8f]"
+                    class="type-small line-clamp-5 mb-[1.875rem] text-[#8f8f8f]"
                   >
                     {{ item.text }}
                   </p>
@@ -154,7 +154,7 @@ const rowsConfig = computed(() =>
 
                 <div>
                   <p
-                    class="type-h5 pb-[15px] text-[#FFFFFF]"
+                    class="type-h5 pb-[0.9375rem] text-[#FFFFFF]"
                   >
                     {{ item.author }}
                   </p>

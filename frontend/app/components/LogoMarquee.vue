@@ -263,10 +263,10 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 .logo-marquee__tile {
   position: relative;
   flex-shrink: 0;
-  width: 100px;
-  height: 50px;
+  width: 6.25rem;
+  height: 3.125rem;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   user-select: none;
   pointer-events: none;
 }
@@ -283,9 +283,9 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
 
 @media (min-width: 768px) {
   .logo-marquee__tile {
-    width: 200px;
-    height: 100px;
-    border-radius: 10px;
+    width: 12.5rem;
+    height: 6.25rem;
+    border-radius: 0.625rem;
   }
 }
 
@@ -341,7 +341,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
    column count is topped up on the client (fillWideScreen). */
 @media (min-width: 1920px) {
   .logo-marquee--background .logo-marquee__tile {
-    width: clamp(200px, min(10.42vw, 18.52vh), 400px);
+    width: clamp(12.5rem, min(10.42vw, 18.52vh), 25rem);
     height: auto;
     aspect-ratio: 2 / 1;
   }

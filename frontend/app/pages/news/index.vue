@@ -64,11 +64,11 @@ useGsapContext(root, ({ gsap }) => {
 
       <div class="relative z-10 bg-black">
         <div
-          class="bg-[url('/home/Ellipse.png')] md:pt-[60px] pt-[30px] bg-contain bg-top bg-no-repeat"
+          class="bg-[url('/home/Ellipse.png')] md:pt-[3.75rem] pt-[1.875rem] bg-contain bg-top bg-no-repeat"
         >
 
           <h1
-            class="hero-title type-h1 text-white max-w-[1000px] md:pt-0 pt-[120px] md:mt-[159px] mt-[37px] md:pb-[50px] pb-[30px] mx-auto md:mb-[77px] text-center"
+            class="hero-title type-h1 text-white max-w-[62.5rem] md:pt-0 pt-[7.5rem] md:mt-[9.9375rem] mt-[2.3125rem] md:pb-[3.125rem] pb-[1.875rem] mx-auto md:mb-[4.8125rem] text-center"
           >
             {{ $t("newsPage.title") }}
           </h1>
