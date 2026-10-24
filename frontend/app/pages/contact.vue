@@ -88,7 +88,7 @@ onMounted(async () => {
         >
 
           <h1
-            class="products intro-slide-in type-h1 text-[#FFFFFF] md:pt-[6.5625rem] pt-[7.375rem] md:pb-[5.1875rem] pb-[3.375rem] text-center"
+            class="products intro-slide-in type-h2 text-[#FFFFFF] md:pt-[6.5625rem] pt-[7.375rem] md:pb-[5.1875rem] pb-[3.375rem] text-center"
           >
             {{ $t("contacts.title") }}
           </h1>

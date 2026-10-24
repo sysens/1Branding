@@ -77,12 +77,14 @@
   gap: 4rem;
 }
 
+/* An inner page's title: the h2 step, as on the site's other pages (the h1
+   step is the landing's). Its sections take the h3 step. */
 .service-hero__title {
   margin: 0;
   font-family: var(--app-font-display);
-  font-size: var(--type-h1-size);
-  line-height: var(--type-h1-lh);
-  letter-spacing: var(--type-h1-ls);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-ls);
   font-weight: 600;
 }
 
@@ -142,9 +144,9 @@
 .service-heading {
   margin: 0 0 2.5rem;
   font-family: var(--app-font-display);
-  font-size: var(--type-h2-size);
-  line-height: var(--type-h2-lh);
-  letter-spacing: var(--type-h2-ls);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
   font-weight: 600;
 }
 
@@ -277,10 +279,10 @@
 .service-plans__name {
   margin: 0;
   color: #c9cbce;
-  font-family: var(--app-font-display);
-  font-size: var(--type-h5-size);
-  line-height: var(--type-h5-lh);
-  letter-spacing: var(--type-h5-ls);
+  font-family: var(--app-font-sans);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   font-weight: 600;
 }
 
@@ -472,9 +474,9 @@
 .service-cta h2 {
   margin: 0;
   font-family: var(--app-font-display);
-  font-size: var(--type-h2-size);
-  line-height: var(--type-h2-lh);
-  letter-spacing: var(--type-h2-ls);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
   font-weight: 600;
 }
 

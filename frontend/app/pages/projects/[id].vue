@@ -292,7 +292,7 @@ const loading = computed(() => pending.value || !data.value);
           >
             <div class="flex-1">
               <h1
-                class="hero-title type-h1 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[2.5rem]"
+                class="hero-title type-h2 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[2.5rem]"
               >
                 {{ section1.projectTitle }}
               </h1>

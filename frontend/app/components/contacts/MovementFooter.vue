@@ -47,16 +47,16 @@ const year = new Date().getFullYear();
   width: min(31.875rem, 48%);
   margin-left: 46%;
 }
-/* Type: the title is the h1 step (72px at 1440, 56 at 1000, 36 on a phone),
-   the text the body step, the copyright the caption step. */
+/* Type: the title is the h2 step (56px at 1440, 66 at 1920), the text the
+   body step, the copyright the caption step. */
 h2 {
   margin: 0;
   color: #f3f3fb;
   font-family: var(--app-font-display);
-  font-size: var(--type-h1-size);
+  font-size: var(--type-h2-size);
   font-weight: 600;
-  line-height: var(--type-h1-lh);
-  letter-spacing: var(--type-h1-ls);
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-ls);
 }
 p {
   margin: 0.75rem 0 1.75rem;

@@ -187,10 +187,11 @@ const resolveMedia = useCmsMedia();
     >
 
     <div class="containerr relative z-1">
-      <!-- The section heading: the h1 step. The padding keeps the space its old
-           120px (68px on phones) line height left around it. -->
+      <!-- The section heading (One Guarantee page): the h2 step of the inner
+           pages, the designed 62px. The padding keeps the space its old 120px
+           (68px on phones) line height left around it. -->
       <h2
-        class="type-h1 text-white text-center py-[0.875rem] md:py-[1.625rem]"
+        class="type-h2 text-white text-center py-[0.875rem] md:py-[1.625rem]"
       >
         {{ sectionTitle }}
       </h2>

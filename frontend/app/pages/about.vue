@@ -38,7 +38,7 @@ usePageSeo({
       >
 
         <h1
-          class="products intro-slide-in type-h1 px-4 pt-[8.5625rem] pb-[1.875rem] text-center text-[#FFFFFF] md:pt-[7.9375rem] md:pb-[3.75rem]"
+          class="products intro-slide-in type-h2 px-4 pt-[8.5625rem] pb-[1.875rem] text-center text-[#FFFFFF] md:pt-[7.9375rem] md:pb-[3.75rem]"
         >
           {{ $t("aboutPage.title") }}
         </h1>

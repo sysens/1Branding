@@ -62,7 +62,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         </div>
 
         <h1
-          class="type-h1 text-white max-w-[62.5rem] mx-auto md:mb-[3.75rem] mb-[2.5rem] text-center px-[1.25rem] md:px-0"
+          class="type-h2 text-white max-w-[62.5rem] mx-auto md:mb-[3.75rem] mb-[2.5rem] text-center px-[1.25rem] md:px-0"
         >
           {{ title }}
         </h1>

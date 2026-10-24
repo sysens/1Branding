@@ -180,7 +180,7 @@ const highlightedText = computed(() => {
         <!-- One brand word on the display step; <wbr> lets it break after
              "ONE" on the narrowest phones instead of running off the screen. -->
         <h2
-          class="og-title will-change-transform type-display-s type-caps text-[#FFFFFF] text-center pt-20 pb-[2.375rem]"
+          class="og-title will-change-transform type-display-s type-caps [font-size:min(var(--type-display-s-size),6rem)] text-[#FFFFFF] text-center pt-20 pb-[2.375rem]"
         >
           <span class="text-[#15FF00]">{{ $t("brand.one").toUpperCase() }}</span
           ><wbr>{{ s2Title.replace(/^ONE/i, "") }}

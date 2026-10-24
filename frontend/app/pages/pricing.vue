@@ -122,13 +122,14 @@ usePageSeo({
   text-align: center;
 }
 
+/* The page title: the h2 step, as on the site's other inner pages. */
 .pricing-intro h1 {
   margin: 0;
   color: #fff;
   font-family: var(--app-font-display);
-  font-size: var(--type-h1-size);
-  line-height: var(--type-h1-lh);
-  letter-spacing: var(--type-h1-ls);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-ls);
   font-weight: 600;
 }
 
