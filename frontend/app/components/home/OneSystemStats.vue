@@ -190,11 +190,13 @@ onBeforeUnmount(() => {
   text-wrap: balance;
 }
 
-/* Steps: the figure display-xl, its label h2, the closing slogan h1. Each
-   letter of the wave (.stats__char) takes its line's size, tracking and the
-   blur in em, so the animation scales with the step. */
+/* A fitted composition, sized as designed (value 180, label 50, closing 65
+   cap heights on the 2000px frame) and capped by the screen's height so a
+   statement fits one screen; its faces and tracking are those of the
+   display-xl, h2 and h1 steps. Each letter of the wave (.stats__char) takes
+   its line's size, tracking and the blur in em, so the animation scales. */
 .stats__line--value {
-  font-size: var(--type-display-xl-size);
+  font-size: min(max(calc(14.7 * var(--fvw)), 5.5rem), 30vh);
   font-weight: 700;
   line-height: var(--type-display-xl-lh);
   letter-spacing: var(--type-display-xl-ls);
@@ -202,14 +204,14 @@ onBeforeUnmount(() => {
 
 .stats__line--label {
   margin-top: 0.12em;
-  font-size: var(--type-h2-size);
+  font-size: min(max(calc(4.1 * var(--fvw)), 1.45rem), 8.3vh);
   font-weight: 600;
   line-height: var(--type-h2-lh);
   letter-spacing: var(--type-h2-ls);
 }
 
 .stats__line--closing {
-  font-size: var(--type-h1-size);
+  font-size: min(max(calc(5.3 * var(--fvw)), 2rem), 10.8vh);
   font-weight: 600;
   line-height: var(--type-h1-lh);
   letter-spacing: var(--type-h1-ls);

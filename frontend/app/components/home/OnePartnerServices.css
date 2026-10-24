@@ -313,17 +313,18 @@
   flex: none;
 }
 
-/* The section's last line: the h3 step, one line centred under the list and
-   the card. Each sentence is a box of its own, so a narrow screen breaks
-   the line between them, never inside one. */
+/* The section's last line: the h4 step (its size beside the card before),
+   one line centred under the list and the card. Each sentence is a box of
+   its own, so a narrow screen breaks the line between them, never inside
+   one. */
 .services__closing {
   margin: clamp(2.5rem, calc(4.5 * var(--vw)), 5.5rem) 0 0;
   padding-inline: 1.25rem;
   font-family: var(--app-font-display);
-  font-size: var(--type-h3-size);
+  font-size: var(--type-h4-size);
   font-weight: 600;
-  line-height: var(--type-h3-lh);
-  letter-spacing: var(--type-h3-ls);
+  line-height: var(--type-h4-lh);
+  letter-spacing: var(--type-h4-ls);
   text-align: center;
 }
 
