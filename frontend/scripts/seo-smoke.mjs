@@ -50,7 +50,15 @@ for (const path of PAGES) {
 
 let res = await get("/robots.txt");
 const robotsTxt = await res.text();
-check("robots.txt", res.status === 200 && robotsTxt.includes(`Sitemap: ${ORIGIN}/sitemap.xml`) && !/Disallow:\s*\/\s*$/m.test(robotsTxt), String(res.status));
+// Cloudflare's managed block in front of ours disallows AI training bots
+// (GPTBot, ClaudeBot...): only the groups for every crawler ("*") and for
+// Googlebot/Yandex/Bingbot must leave the site open.
+const groups = robotsTxt.split(/\n\s*\n/).map((block) => ({
+  agents: [...block.matchAll(/^User-agent:\s*(.+)$/gim)].map((match) => match[1].trim().toLowerCase()),
+  blocksAll: /^Disallow:\s*\/\s*$/im.test(block),
+}));
+const searchBlocked = groups.some((group) => group.blocksAll && group.agents.some((agent) => ["*", "googlebot", "yandex", "bingbot"].includes(agent)));
+check("robots.txt", res.status === 200 && robotsTxt.includes(`Sitemap: ${ORIGIN}/sitemap.xml`) && !searchBlocked, `${res.status}${searchBlocked ? ", search crawlers blocked" : ""}`);
 
 res = await get("/sitemap.xml");
 const sitemap = await res.text();
