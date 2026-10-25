@@ -226,6 +226,20 @@ const submit = async (ip, payload) => {
   ruStudy = await projects.findOne({ documentId: study.documentId, locale: 'ru', populate });
   check('case study: edited entries are not overwritten', enStudy?.section1?.projectTitle === 'Owner title' && ruStudy?.section1?.projectTitle === 'Свой заголовок', `${enStudy?.section1?.projectTitle} / ${ruStudy?.section1?.projectTitle}`);
 
+  // Blog articles: the uz locale exists, an article is published once in en, ru
+  // and uz with its pictures, and is not created again on the next boot.
+  const { applyBlogArticles } = require(path.join(appDir, 'dist/src/utils/blog-articles.js'));
+  const uzLocale = await strapi.plugin('i18n').service('locales').findByCode('uz');
+  check('blog: uz locale added on boot', Boolean(uzLocale), uzLocale?.name);
+  const fileHash = (await strapi.db.query('plugin::upload.file').findOne({ where: { id: fileId } }))?.hash || '';
+  const v = (title) => ({ title, text: 'Intro.\n\n## Heading\n\n- item' });
+  const testArticle = { key: 'e2e-article', image: fileHash.replace(/_[^_]+$/, ''), images: [], en: v('E2E article'), ru: v('Статья E2E'), uz: v('E2E maqola') };
+  await applyBlogArticles(strapi, [testArticle]);
+  await applyBlogArticles(strapi, [testArticle]);
+  const posts = await news.findMany({ locale: 'en', filters: { title: 'E2E article' }, populate: ['image'] });
+  const postUz = posts[0] && await news.findOne({ documentId: posts[0].documentId, locale: 'uz' });
+  check('blog: article published once in en, ru and uz with its picture', posts.length === 1 && posts[0].image?.id === fileId && postUz?.title === 'E2E maqola', JSON.stringify({ n: posts.length, image: posts[0]?.image?.id, uz: postUz?.title }));
+
   await app.destroy();
   const failed = results.filter((x) => !x.ok).length;
   console.log(`\n${results.length - failed}/${results.length} passed`);

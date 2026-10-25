@@ -3,6 +3,7 @@ import { checkUploadStorage } from "./utils/check-upload-storage";
 import { removeOrphanContactUploads } from "./utils/contact-uploads";
 import { ensureNewsTranslations } from "./utils/news-translations";
 import { ensureProjectCopy } from "./utils/project-copy";
+import { ensureBlogArticles, ensureUzbekLocale } from "./utils/blog-articles";
 
 const isApiSingleType = (
   uid: string,
@@ -129,6 +130,11 @@ export default {
     await ensureProjectCopy(strapi).catch((error) => {
       strapi.log.error(`Case study copy was not applied: ${error instanceof Error ? error.message : String(error)}`);
     });
+    await ensureUzbekLocale(strapi)
+      .then(() => ensureBlogArticles(strapi))
+      .catch((error) => {
+        strapi.log.error(`Blog articles were not published: ${error instanceof Error ? error.message : String(error)}`);
+      });
 
     // Contact-form uploads never attached to a submission are deleted hourly.
     strapi.cron.add({
