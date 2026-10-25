@@ -104,7 +104,7 @@ const textIsLong = computed(() => (section3.value?.text ?? "").trim().length > 1
     <div class="containerr">
       <div class="w-full md:pt-[10.4375rem] pt-[6.25rem]">
         <h2
-          class="cp-title type-h2 text-white mb-[1.6875rem] md:px-0 px-[1.25rem] text-center will-change-transform"
+          class="cp-title type-h3 text-white mb-[1.6875rem] md:px-0 px-[1.25rem] text-center will-change-transform"
         >
           {{ section3?.title || $t("project.palette") }}
         </h2>

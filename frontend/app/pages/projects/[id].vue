@@ -385,9 +385,9 @@ const loading = computed(() => pending.value || !data.value);
   margin: 0 0 1.75rem;
   color: #fff;
   font-family: var(--app-font-display);
-  font-size: var(--type-h2-size);
-  line-height: var(--type-h2-lh);
-  letter-spacing: var(--type-h2-ls);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-lh);
+  letter-spacing: var(--type-h3-ls);
   font-weight: 600;
 }
 

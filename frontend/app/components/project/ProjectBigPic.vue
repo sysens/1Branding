@@ -110,7 +110,7 @@ const textIsLong = computed(() => (section2.value.text ?? "").trim().length > 18
     <div class="md:pt-[7.375rem] pt-[6.25rem]">
       <div v-if="section2" class="containerr">
         <h2
-          class="section-title type-h2 text-[#FFFFFF] text-center will-change-transform"
+          class="section-title type-h3 text-[#FFFFFF] text-center will-change-transform"
         >
           {{ section2.title }}
         </h2>
