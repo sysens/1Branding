@@ -2,7 +2,7 @@ import { isPlaceholderCopy, toMetaDescription } from "../../app/utils/seo";
 import { SITE_LOCALES, localizedPath, type SiteLocale } from "../../app/utils/locales";
 import { SERVICE_PAGES } from "../../app/utils/servicePages";
 
-type CmsLocale = "ru" | "en";
+type CmsLocale = "ru" | "en" | "uz";
 type Collection = "newsPages_connection" | "projectsPages_connection";
 type SingleType = "landingPage" | "aboutPage" | "contactsPage" | "price" | "oneGuarantee";
 type Node = {
@@ -26,9 +26,10 @@ type FetchCms = (url: string, options: {
 }) => Promise<SitemapResponse>;
 
 const PAGE_SIZE = 100;
-// The CMS has entries in English and Russian only; Uzbek pages of CMS
-// articles and case studies do not exist (they would repeat the English text).
-const CMS_LOCALES: readonly CmsLocale[] = ["ru", "en"];
+// CMS articles and case studies in each language they are written in. Most
+// have English and Russian versions; the blog articles have Uzbek ones too (an
+// Uzbek page without its own version repeats the English text, so it is left out).
+const CMS_LOCALES: readonly CmsLocale[] = ["ru", "en", "uz"];
 const collections: Record<Collection, string> = {
   newsPages_connection: "news",
   projectsPages_connection: "projects",

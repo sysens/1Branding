@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { articlePlainText } from "~/utils/articleText";
 import { computed, ref } from "vue";
 import NewsHero from "~/components/news/NewsHero.vue";
 import NewsSlider from "~/components/news/NewsSlider.vue";
@@ -72,7 +73,7 @@ if (!news.value) {
 }
 
 const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news.title"));
-const seoDescription = computed(() => toMetaDescription(news.value?.text) || t("seo.news.description"));
+const seoDescription = computed(() => toMetaDescription(articlePlainText(news.value?.text ?? "")) || t("seo.news.description"));
 // The languages this article is written in (its hreflang alternates).
 const articleLocales = computed(() => {
   const own = data.value?.data?.newsPage;

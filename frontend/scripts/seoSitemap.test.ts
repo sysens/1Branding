@@ -17,18 +17,20 @@ describe("CMS sitemap", () => {
       const { page, pageSize, locale } = options.body.variables;
       requests.push({ locale, page, pageSize, query: options.body.query });
       const nodes = (collection: string) => {
+        // Uzbek: one article has an Uzbek version, no case study does.
+        if (locale === "uz") return collection === "news" ? [{ documentId: "shared & one" }] : [];
         if (collection !== "news") return [{ documentId: collection, updatedAt: "2026-06-02T00:00:00.000Z" }];
         if (page === 2) return locale === "ru" ? [{ documentId: "ru-only" }] : [{ documentId: "en-only" }];
         return [{ documentId: "shared & one", updatedAt: "2026-06-01T00:00:00.000Z" }];
       };
-      const connection = (collection: string) => ({ nodes: nodes(collection), pageInfo: { pageCount: collection === "news" ? 2 : 1 } });
+      const connection = (collection: string) => ({ nodes: nodes(collection), pageInfo: { pageCount: collection === "news" && locale !== "uz" ? 2 : 1 } });
       return { data: {
         newsPages_connection: connection("news"),
         projectsPages_connection: connection("project"),
       } };
     });
-    expect(requests).toHaveLength(4);
-    expect(requests.map(({ locale, page }) => `${locale}:${page}`)).toEqual(["ru:1", "ru:2", "en:1", "en:2"]);
+    expect(requests).toHaveLength(5);
+    expect(requests.map(({ locale, page }) => `${locale}:${page}`)).toEqual(["ru:1", "ru:2", "en:1", "en:2", "uz:1"]);
     expect(requests.every(({ pageSize, query }) => pageSize === 100 && query.includes("updatedAt") && query.includes("pageCount"))).toBe(true);
     const urls = capture(xml);
     // English is the default language ("/"), Russian lives under "/ru".
@@ -47,8 +49,10 @@ describe("CMS sitemap", () => {
     expect(urls).toContain("https://example.test/services/logo-design");
     expect(urls).toContain("https://example.test/ru/services/razrabotka-logotipa");
     expect(urls).toContain("https://example.test/uz/services/logotip-yaratish");
-    // CMS articles have no Uzbek version.
-    expect(urls.some((url) => url.startsWith("https://example.test/uz/news/"))).toBe(false);
+    // Only an article with an Uzbek version has an Uzbek URL.
+    expect(urls).toContain("https://example.test/uz/news/shared%20%26%20one");
+    expect(urls).not.toContain("https://example.test/uz/news/en-only");
+    expect(urls.some((url) => url.startsWith("https://example.test/uz/projects/"))).toBe(false);
     // x-default points at the English (default) page.
     expect(xml).toContain('hreflang="x-default" href="https://example.test/"');
     expect(urls.length).toBe(new Set(urls).size);

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import ArticleInline from "~/components/news/ArticleInline.vue";
+import { articleBlocks, isStructuredArticle } from "~/utils/articleText";
 
 const root = ref<HTMLElement | null>(null);
 
@@ -42,6 +44,10 @@ const published = computed(() => {
   };
 });
 const text = computed(() => (props.news?.text ?? "").toString());
+const blocks = computed(() => articleBlocks(text.value));
+// A short news text keeps the design's two columns; an article with headings
+// is read in one column at a reading measure.
+const structured = computed(() => isStructuredArticle(text.value));
 const heroImageSrc = computed(() => resolveImage(props.news?.image?.url));
 
 const images = computed(() => props.news?.images_connection?.nodes ?? []);
@@ -77,11 +83,18 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
         />
       </div>
 
-      <p
-        class="leftBlock type-body md:columns-2 my-[2.5rem] gap-[6.25rem] text-[#FFFFFF]"
+      <div
+        class="leftBlock type-body my-[2.5rem] text-[#FFFFFF]"
+        :class="structured ? 'news-article' : 'md:columns-2 gap-[6.25rem]'"
       >
-        {{ text }}
-      </p>
+        <template v-for="(block, index) in blocks" :key="index">
+          <h2 v-if="block.type === 'h2'" class="type-h3"><ArticleInline :parts="block.parts" /></h2>
+          <ul v-else-if="block.type === 'ul'">
+            <li v-for="(item, itemIndex) in block.items" :key="itemIndex"><ArticleInline :parts="item" /></li>
+          </ul>
+          <p v-else><ArticleInline :parts="block.parts" /></p>
+        </template>
+      </div>
 
       <div class="md:flex justify-between gap-[0.625rem]">
         <div class="md:w-[34%] md:h-[33.1875rem] h-[18.75rem] mb-[0.3125rem]">
@@ -107,3 +120,40 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
     </div>
   </div>
 </template>
+
+<style scoped>
+.leftBlock p + p {
+  margin-top: 1em;
+}
+
+.news-article {
+  max-width: var(--type-measure);
+  margin-inline: auto;
+}
+
+.news-article h2 {
+  margin: 2.5rem 0 1rem;
+  font-family: var(--app-font-display);
+}
+
+.news-article p + p,
+.news-article ul + p,
+.news-article p + ul {
+  margin-top: 1em;
+}
+
+.news-article ul {
+  padding-left: 1.25em;
+  list-style: disc;
+}
+
+.news-article li + li {
+  margin-top: 0.4em;
+}
+
+.news-article :deep(.article-link) {
+  color: #0ccc3c;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+</style>

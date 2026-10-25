@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { articlePlainText } from "~/utils/articleText";
 import { computed, ref, watch } from "vue";
 
 const root = ref<HTMLElement | null>(null);
@@ -119,7 +120,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
               <p
                 class="type-body type-measure text-white line-clamp-5"
               >
-                {{ item.text || "" }}
+                {{ articlePlainText(item.text || "") }}
               </p>
             </div>
           </div>
