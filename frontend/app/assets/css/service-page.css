@@ -379,8 +379,14 @@
   transform: rotate(90deg);
 }
 
-.service-faq details[open] .service-faq__icon::after {
+.service-faq details[open]:not(.is-closing) .service-faq__icon::after {
   transform: rotate(0deg);
+}
+
+/* The box that slides (utils/smoothDetails.ts): it clips the answer while its
+   height eases. */
+.service-faq__answer {
+  overflow: hidden;
 }
 
 .service-faq details p {
@@ -392,23 +398,6 @@
   font-size: var(--type-body-size);
   line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-ls);
-}
-
-/* Answers slide open where the browser can animate to an auto height. */
-@supports (interpolate-size: allow-keywords) {
-  .service-faq {
-    interpolate-size: allow-keywords;
-  }
-
-  .service-faq details::details-content {
-    height: 0;
-    overflow: clip;
-    transition: height 0.5s cubic-bezier(0.32, 0.72, 0, 1), content-visibility 0.5s allow-discrete;
-  }
-
-  .service-faq details[open]::details-content {
-    height: auto;
-  }
 }
 
 .service-related {

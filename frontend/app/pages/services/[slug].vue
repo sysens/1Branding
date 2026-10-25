@@ -5,6 +5,7 @@ import { COMPANY } from "~/utils/company";
 import { SITE_LOCALES, toSiteLocale } from "~/utils/locales";
 import { loadServiceCopy } from "~/utils/serviceCopy";
 import { serviceBySlug, servicePath, servicesHubPath, serviceByKey } from "~/utils/servicePages";
+import { toggleDetails } from "~/utils/smoothDetails";
 
 // One service's page (/services/<slug>, its slug in each language): what it
 // is and costs, what it includes, how the work goes, questions, related
@@ -212,9 +213,10 @@ usePageSeo({
       <section class="service-section" aria-labelledby="service-faq">
         <h2 id="service-faq" v-blur-reveal class="service-heading">{{ copy.faq.title }}</h2>
         <div class="service-faq">
+          <!-- Native <details>, slid open and closed by toggleDetails. -->
           <details v-for="item in copy.faq.items" :key="item.q" v-rise>
-            <summary><h3>{{ item.q }}</h3><span class="service-faq__icon" aria-hidden="true" /></summary>
-            <p>{{ item.a }}</p>
+            <summary @click="toggleDetails"><h3>{{ item.q }}</h3><span class="service-faq__icon" aria-hidden="true" /></summary>
+            <div class="service-faq__answer"><p>{{ item.a }}</p></div>
           </details>
         </div>
       </section>
