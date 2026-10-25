@@ -50,6 +50,7 @@ const { data: prices } = await useCmsQuery<{ priceCategories?: PriceListCategory
 );
 
 const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+const { uzs, uzsNote } = await useUzsPrice();
 const plans = computed(() => {
   if (!service.priceCategory) return [];
   const category = prices.value?.data?.priceCategories?.find(
@@ -246,12 +247,13 @@ usePageSeo({
                 <template v-for="(part, index) in priceParts(plan.price)" :key="index">
                   <span v-if="part.word">{{ part.text }}</span><template v-else>{{ part.text }}</template>
                 </template>
+                <small v-if="uzs(plan.amount)" class="service-plans__uzs">{{ uzs(plan.amount) }}</small>
               </td>
             </tr>
           </tbody>
         </table>
         <p v-rise class="service-note">
-          {{ t("servicesPage.pricesNote") }}
+          {{ [t("servicesPage.pricesNote"), uzsNote].filter(Boolean).join(" ") }}
           <NuxtLink :to="localePath('/pricing')">{{ t("servicesPage.allPrices") }}</NuxtLink>
         </p>
       </section>

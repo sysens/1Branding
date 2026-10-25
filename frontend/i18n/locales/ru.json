@@ -741,7 +741,10 @@
     "tableService": "Услуга",
     "tablePackage": "Пакет",
     "tablePrice": "Цена",
-    "perSlide": "за слайд"
+    "perSlide": "за слайд",
+    "uzsMillion": "≈ {amount} млн сум",
+    "uzsThousand": "≈ {amount} тыс. сум",
+    "uzsNote": "Суммы в сумах приблизительные, по курсу Центрального банка Узбекистана на {date}: 1 USD = {rate} сум."
   },
   "project": {
     "palette": "Цветовая палитра",

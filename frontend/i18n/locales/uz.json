@@ -741,7 +741,10 @@
     "tableService": "Xizmat",
     "tablePackage": "Paket",
     "tablePrice": "Narx",
-    "perSlide": "slayd uchun"
+    "perSlide": "slayd uchun",
+    "uzsMillion": "≈ {amount} mln soʻm",
+    "uzsThousand": "≈ {amount} ming soʻm",
+    "uzsNote": "Soʻmdagi summalar taxminiy, Oʻzbekiston Markaziy banki kursi boʻyicha, {date}: 1 USD = {rate} soʻm."
   },
   "project": {
     "palette": "Rang palitrasi",

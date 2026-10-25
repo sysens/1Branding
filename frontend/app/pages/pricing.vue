@@ -11,6 +11,7 @@ const origin = useSiteOrigin();
 // The same request as the slider's (one key): the table and the structured
 // data repeat the cards' prices as plain text.
 const { categories, categoryTitle, categoryPage } = await usePriceCategories();
+const { uzs, uzsNote } = await useUzsPrice();
 
 const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 const rows = computed(() => categories.value.flatMap((category) => {
@@ -102,11 +103,15 @@ usePageSeo({
                   <template v-else>{{ row.category }}</template>
                 </td>
                 <td>{{ row.plan }}</td>
-                <td>{{ row.price }}</td>
+                <td>
+                  {{ row.price }}
+                  <span v-if="uzs(row.amount)" class="pricing-table__uzs">{{ uzs(row.amount) }}</span>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
+        <p v-if="uzsNote" class="pricing-table__note">{{ uzsNote }}</p>
       </section>
 
       <div class="mx-auto max-w-[103.75rem]">
@@ -204,6 +209,27 @@ usePageSeo({
 .pricing-table td:last-child {
   color: #fff;
   font-weight: 600;
+}
+
+/* The same price in so'm, under the dollar one; the note gives the rate. */
+.pricing-table__uzs {
+  display: block;
+  margin-top: 0.25rem;
+  color: #8f9297;
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
+  font-weight: 400;
+}
+
+.pricing-table__note {
+  margin: 1rem 0 0;
+  color: #8f9297;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
+  text-align: right;
 }
 
 .pricing-table a {

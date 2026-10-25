@@ -49,10 +49,13 @@
               <span class="costs-card__summary">
                 <span class="costs-card__name">{{ item.title }}</span>
 
-                <span class="costs-card__price">
-                  <span v-if="!fromAfter" class="costs-card__from">{{ fromLabel }}</span>
-                  <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
-                  <span v-if="fromAfter" class="costs-card__from">{{ fromLabel }}</span>
+                <span class="costs-card__prices">
+                  <span class="costs-card__price">
+                    <span v-if="!fromAfter" class="costs-card__from">{{ fromLabel }}</span>
+                    <span class="costs-card__amount">{{ formatPrice(item.price) }}</span>
+                    <span v-if="fromAfter" class="costs-card__from">{{ fromLabel }}</span>
+                  </span>
+                  <span v-if="uzs(priceAmount(item.price))" class="costs-card__uzs">{{ uzs(priceAmount(item.price)) }}</span>
                 </span>
               </span>
 
@@ -75,9 +78,11 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 import CostsOrbitalGlow from "~/components/costs/CostsOrbitalGlow.vue";
+import { priceAmount } from "~/composables/usePriceCategories";
 
 const { t } = useI18n();
 const { categories: priceCategories, categoryTitle, categoryDescription, categoryPage } = await usePriceCategories();
+const { uzs } = await useUzsPrice();
 
 // "from" before the price, or after it where the language puts it there
 // (Uzbek "$900 dan"), as servicesPage.priceFrom ("from {price}") says.
@@ -266,6 +271,24 @@ const toggleDetails = (categoryIndex: number, itemIndex: number) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* The dollar price, and under it the same in so'm (small, approximate). */
+.costs-card__prices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.costs-card__uzs {
+  font-family: var(--app-font-sans);
+  font-weight: 400;
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
 }
 
 .costs-card__price {

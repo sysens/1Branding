@@ -741,7 +741,10 @@
     "tableService": "Service",
     "tablePackage": "Package",
     "tablePrice": "Price",
-    "perSlide": "per slide"
+    "perSlide": "per slide",
+    "uzsMillion": "≈ UZS {amount} million",
+    "uzsThousand": "≈ UZS {amount} thousand",
+    "uzsNote": "Amounts in UZS are approximate, at the Central Bank of Uzbekistan's rate for {date}: 1 USD = {rate} UZS."
   },
   "project": {
     "palette": "Colour palette",
