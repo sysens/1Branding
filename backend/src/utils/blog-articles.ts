@@ -257,6 +257,141 @@ OneBrandingʼda logotipni alohida buyurtma qilish mumkin — $900 dan. Firma usl
 Har bir xizmat haqida batafsil: [logotip yaratish](/uz/services/logotip-yaratish), [firma uslubi](/uz/services/firma-uslubi) va [brendbuk](/uz/services/brendbuk).`,
     },
   },
+  {
+    key: "brand-book-guide",
+    slug: "what-is-a-brand-book",
+    image: "image_1",
+    images: ["grechno", "streetvibe"],
+    en: {
+      title: "What is a brand book and what goes into it",
+      text: `A brand book is the rulebook of a brand. It shows how to use the logo, colours, typography and graphics, with examples of what to do and what to avoid. Here is what it contains, when a business needs one and how it is made.
+
+## Why a brand needs written rules
+
+A brand rarely stays with the people who designed it. The marketing team, printers, sign makers, a social media agency and a website developer all work with it, and without written rules each of them improves on it in their own way. After a year the logo is stretched on one sign, the colours drift on the packaging and every post looks different. A brand book gives everyone the same answers: which logo version goes where, which colours to use, how much space to leave and what a layout should look like.
+
+## What a brand book includes
+
+- Brand essentials: the idea, positioning and tone of voice.
+- Logo versions, clear space, minimum sizes and examples of misuse.
+- The colour palette with values for print and screen.
+- Typefaces and the typographic hierarchy: headings, body text, captions.
+- Graphic elements, patterns and the style of imagery.
+- Layout rules shown on real applications: packaging, signage, social media, documents.
+- Templates: stationery, social media posts, presentations.
+
+Together with the document you receive the final logo files in vector, print and web formats and the source files, so the rules can be applied from the first day.
+
+## Brand book or brand guidelines
+
+The terms overlap. Guidelines usually mean a shorter, practical guide to the logo and the identity. A brand book also explains the brand’s idea, positioning and tone of voice, so that copy and campaigns follow the same line as the design. Which format a business needs depends on how many people work with the brand.
+
+## When you need one
+
+- Several designers, agencies or printers work with your brand.
+- You have branches, franchisees or partners who make their own materials.
+- You are launching packaging, signage or a website, and every piece has to look like one brand.
+- You are refreshing an existing brand and want the new rules to stick.
+
+If the brand does not have an identity yet, the identity comes first: a brand book can only describe a system that exists. For an existing logo, the first step is a review of the logo and identity, so that the rules are worth following.
+
+## How a brand book is made
+
+At OneBranding the work goes in five steps: a brief and research into the strategy, identity and every place where the brand appears; the structure of the book for this business; the rules and the page design, each rule shown on the brand’s own applications; rounds of revisions with your feedback; and the hand-over of the brand book with the final files, templates and source files.
+
+## Price and timeline
+
+At OneBranding a brand book is created within the branding packages: Launch Base from $1,900, One Pro from $2,900 and Global ultimate from $5,900. A brand book is usually made together with a focused identity, which takes 2 to 6 weeks. The final price depends on what the book has to cover and is agreed after the brief.
+
+More about the service: [brand book](/services/brand-book), [brand identity](/services/brand-identity) and [the difference between a logo, an identity and a brand book](/news/logo-identity-brand-book).`,
+    },
+    ru: {
+      title: "Что такое брендбук и что в него входит",
+      text: `Брендбук — это свод правил бренда. В нём показано, как использовать логотип, цвета, шрифты и графику, с примерами того, как делать нужно и как нельзя. Разбираем, из чего он состоит, когда он нужен бизнесу и как его создают.
+
+## Зачем бренду записанные правила
+
+Бренд редко остаётся в руках тех, кто его создал. С ним работают маркетологи, типографии, производители вывесок, SMM-агентство и разработчик сайта, и без записанных правил каждый дорабатывает его по-своему. Через год логотип растянут на вывеске, цвета на упаковке «поплыли», а каждый пост выглядит по-разному. Брендбук даёт всем одинаковые ответы: какая версия логотипа где используется, какие цвета брать, сколько оставлять свободного места и как выглядит макет.
+
+## Что входит в брендбук
+
+- Основа бренда: идея, позиционирование и тон коммуникации.
+- Версии логотипа, охранное поле, минимальные размеры и примеры неправильного использования.
+- Цветовая палитра со значениями для печати и экрана.
+- Шрифты и типографическая иерархия: заголовки, основной текст, подписи.
+- Графические элементы, паттерны и стиль изображений.
+- Правила вёрстки на реальных носителях: упаковка, вывески, соцсети, документы.
+- Шаблоны: деловая документация, посты для соцсетей, презентации.
+
+Вместе с документом вы получаете финальные файлы логотипа в векторе, для печати и для веба и исходники, чтобы правилами можно было пользоваться с первого дня.
+
+## Брендбук или гайдлайн
+
+Понятия пересекаются. Гайдлайном обычно называют более короткое практическое руководство по логотипу и фирменному стилю. Брендбук объясняет ещё и идею бренда, позиционирование и тон коммуникации, чтобы тексты и рекламные кампании шли в одной линии с дизайном. Какой формат нужен, зависит от того, сколько людей работает с брендом.
+
+## Когда брендбук нужен
+
+- С вашим брендом работают несколько дизайнеров, агентств или типографий.
+- У вас есть филиалы, франчайзи или партнёры, которые сами делают материалы.
+- Вы запускаете упаковку, вывески или сайт, и всё должно выглядеть как один бренд.
+- Вы обновляете существующий бренд и хотите, чтобы новые правила прижились.
+
+Если у бренда ещё нет фирменного стиля, сначала создаётся он: брендбук может описать только систему, которая уже есть. Для существующего логотипа первый шаг — аудит логотипа и фирменного стиля, чтобы правилам было что закреплять.
+
+## Как создают брендбук
+
+В OneBranding работа идёт в пять этапов: бриф и изучение стратегии, фирменного стиля и всех мест, где появляется бренд; структура брендбука под ваш бизнес; правила и дизайн страниц, где каждое правило показано на ваших собственных носителях; раунды правок по вашим комментариям; передача брендбука вместе с финальными файлами, шаблонами и исходниками.
+
+## Стоимость и сроки
+
+В OneBranding брендбук создаётся в рамках пакетов брендинга: Launch Base — от $1 900, One Pro — от $2 900 и Global ultimate — от $5 900. Обычно брендбук делают вместе с фирменным стилем, на это уходит от 2 до 6 недель. Итоговая стоимость зависит от того, что должен охватить брендбук, и согласуется после брифа.
+
+Подробнее: [разработка брендбука](/ru/services/brendbuk), [фирменный стиль](/ru/services/firmennyj-stil) и [в чём разница между логотипом, фирменным стилем и брендбуком](/ru/news/logo-identity-brand-book).`,
+    },
+    uz: {
+      title: "Brendbuk nima va unga nimalar kiradi",
+      text: `Brendbuk — brendning qoidalar toʻplami. Unda logotip, ranglar, shriftlar va grafikadan qanday foydalanish kerakligi, toʻgʻri va notoʻgʻri misollar bilan koʻrsatiladi. Quyida u nimalardan iborat ekani, biznesga qachon kerakligi va qanday yaratilishini koʻrib chiqamiz.
+
+## Brendga yozma qoidalar nega kerak
+
+Brend kamdan-kam hollarda uni yaratganlar qoʻlida qoladi. U bilan marketing jamoasi, bosmaxonalar, peshlavha ustalari, SMM agentligi va sayt dasturchisi ishlaydi, yozma qoidalar boʻlmasa esa har biri uni oʻzicha «yaxshilaydi». Bir yildan keyin peshlavhada logotip choʻzilgan, qadoqdagi ranglar oʻzgarib ketgan, har bir post boshqacha koʻrinadi. Brendbuk hammaga bir xil javob beradi: logotipning qaysi versiyasi qayerda ishlatiladi, qaysi ranglar olinadi, qancha boʻsh joy qoldiriladi va maket qanday koʻrinadi.
+
+## Brendbukka nimalar kiradi
+
+- Brend asosi: gʻoya, pozitsiya va muloqot ohangi.
+- Logotip versiyalari, himoya maydoni, minimal oʻlchamlar va notoʻgʻri foydalanish misollari.
+- Chop etish va ekran uchun qiymatlari bilan rang palitrasi.
+- Shriftlar va tipografik ierarxiya: sarlavhalar, asosiy matn, izohlar.
+- Grafik elementlar, naqshlar va tasvirlar uslubi.
+- Real tashuvchilarda joylashtirish qoidalari: qadoq, peshlavhalar, ijtimoiy tarmoqlar, hujjatlar.
+- Shablonlar: ish hujjatlari, ijtimoiy tarmoqlar uchun postlar, taqdimotlar.
+
+Hujjat bilan birga logotipning vektor, bosma va veb formatidagi yakuniy fayllari hamda manba fayllar beriladi, shuning uchun qoidalardan birinchi kundan foydalanish mumkin.
+
+## Brendbuk yoki gaydlayn
+
+Bu tushunchalar bir-biriga yaqin. Gaydlayn deb odatda logotip va firma uslubi boʻyicha qisqaroq, amaliy qoʻllanmaga aytiladi. Brendbuk esa brend gʻoyasi, pozitsiyasi va muloqot ohangini ham tushuntiradi, shunda matnlar va reklama kampaniyalari dizayn bilan bir yoʻnalishda boradi. Qaysi format kerakligi brend bilan qancha odam ishlashiga bogʻliq.
+
+## Brendbuk qachon kerak
+
+- Brendingiz bilan bir nechta dizayner, agentlik yoki bosmaxona ishlaydi.
+- Filiallaringiz, franchayzilaringiz yoki materiallarni oʻzi tayyorlaydigan hamkorlaringiz bor.
+- Qadoq, peshlavha yoki saytni ishga tushiryapsiz va hammasi bitta brenddek koʻrinishi kerak.
+- Mavjud brendni yangilayapsiz va yangi qoidalar oʻrnashib qolishini xohlaysiz.
+
+Agar brendda hali firma uslubi boʻlmasa, avval u yaratiladi: brendbuk faqat mavjud tizimni tasvirlay oladi. Mavjud logotip uchun birinchi qadam — logotip va firma uslubini tahlil qilish, shunda qoidalar mustahkamlashga arziydigan narsani mustahkamlaydi.
+
+## Brendbuk qanday yaratiladi
+
+OneBrandingʼda ish besh bosqichda boradi: brif hamda strategiya, firma uslubi va brend paydo boʻladigan barcha joylarni oʻrganish; biznesingizga mos brendbuk tuzilmasi; qoidalar va sahifalar dizayni, bunda har bir qoida brendingizning oʻz tashuvchilarida koʻrsatiladi; fikrlaringiz boʻyicha tuzatish bosqichlari; brendbukni yakuniy fayllar, shablonlar va manba fayllar bilan topshirish.
+
+## Narx va muddat
+
+OneBrandingʼda brendbuk brending paketlari doirasida yaratiladi: Launch Base — $1 900 dan, One Pro — $2 900 dan va Global ultimate — $5 900 dan. Odatda brendbuk firma uslubi bilan birga tayyorlanadi, bu 2 haftadan 6 haftagacha vaqt oladi. Yakuniy narx brendbuk nimalarni qamrab olishi kerakligiga bogʻliq va brifdan keyin kelishiladi.
+
+Batafsil: [brendbuk yaratish](/uz/services/brendbuk), [firma uslubi](/uz/services/firma-uslubi) va [logotip, firma uslubi va brendbukning farqi](/uz/news/logo-identity-brand-book).`,
+    },
+  },
 ];
 
 const NEWS = "api::news-page.news-page";
