@@ -745,7 +745,8 @@
     "perSlide": "slayd uchun",
     "uzsMillion": "≈ {amount} mln soʻm",
     "uzsThousand": "≈ {amount} ming soʻm",
-    "uzsNote": "Soʻmdagi summalar taxminiy, Oʻzbekiston Markaziy banki kursi boʻyicha, {date}: 1 USD = {rate} soʻm."
+    "uzsNote": "Soʻmdagi summalar taxminiy, Oʻzbekiston Markaziy banki kursi boʻyicha, {date}: 1 USD = {rate} soʻm.",
+    "uzsNoteMarket": "Soʻmdagi summalar taxminiy, {date} kursi boʻyicha: 1 USD = {rate} soʻm."
   },
   "project": {
     "palette": "Rang palitrasi",

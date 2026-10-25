@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { formatRate, formatRateDate, uzsAmount } from "../app/utils/uzs";
-import { parseCbuRate } from "../server/utils/usdRate";
+import { parseCbuRate, parseErApiRate, usdRate } from "../server/utils/usdRate";
 
 const RATE = 11838.92;
 
@@ -28,9 +28,28 @@ describe("prices in so'm", () => {
   });
 
   test("reads the Central Bank's answer", () => {
-    expect(parseCbuRate([{ Ccy: "USD", Rate: "11838.92", Date: "24.10.2026" }])).toEqual({ rate: RATE, date: "2026-10-24" });
+    expect(parseCbuRate([{ Ccy: "USD", Rate: "11838.92", Date: "24.10.2026" }])).toEqual({ rate: RATE, date: "2026-10-24", source: "cbu" });
     expect(parseCbuRate([{ Ccy: "EUR", Rate: "13000", Date: "24.10.2026" }])).toBeNull();
     expect(parseCbuRate([{ Ccy: "USD", Rate: "", Date: "24.10.2026" }])).toBeNull();
     expect(parseCbuRate("<html>")).toBeNull();
+  });
+
+  test("reads ExchangeRate-API's answer", () => {
+    expect(parseErApiRate({ result: "success", time_last_update_unix: 1792886551, rates: { UZS: 11871.2 } }))
+      .toEqual({ rate: 11871.2, date: "2026-10-25", source: "er-api" });
+    expect(parseErApiRate({ result: "error", rates: { UZS: 11871.2 } })).toBeNull();
+    expect(parseErApiRate({ result: "success", time_last_update_unix: 1792886551, rates: {} })).toBeNull();
+  });
+
+  // Abroad the bank does not answer: the rate comes from ExchangeRate-API.
+  test("prefers the Central Bank and falls back to ExchangeRate-API", async () => {
+    const asked: string[] = [];
+    const rate = await usdRate(async (url) => {
+      asked.push(url);
+      if (url.includes("cbu.uz")) throw new Error("timeout");
+      return { result: "success", time_last_update_unix: 1792886551, rates: { UZS: 11871.2 } };
+    });
+    expect(asked.length).toBe(2);
+    expect(rate).toEqual({ rate: 11871.2, date: "2026-10-25", source: "er-api" });
   });
 });

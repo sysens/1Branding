@@ -3,11 +3,12 @@ import { toSiteLocale } from "~/utils/locales";
 
 /**
  * Dollar prices also in so'm: "≈ 10.7 mln so'm" under "$900", at the Central
- * Bank of Uzbekistan's rate (server/api/usd-rate.get.ts), with a note naming
- * the rate and its date. Without a rate both are empty and the price lists
- * show dollars only.
+ * Bank of Uzbekistan's rate or ExchangeRate-API's (server/utils/usdRate.ts),
+ * with a note naming the rate and its date; `uzsCredit` says the note needs
+ * ExchangeRate-API's credit link. Without a rate all are empty and the price
+ * lists show dollars only.
  */
-type RateResponse = { rate: number | null; date: string | null };
+type RateResponse = { rate: number | null; date: string | null; source: "cbu" | "er-api" | null };
 
 export const useUzsPrice = async () => {
   // Before the await: after it a composable has no current component instance.
@@ -22,9 +23,11 @@ export const useUzsPrice = async () => {
   };
 
   const uzsNote = computed(() => {
-    const { rate, date } = data.value || {};
-    return rate && date ? t("pricing.uzsNote", { date: formatRateDate(date), rate: formatRate(rate, siteLocale.value) }) : "";
+    const { rate, date, source } = data.value || {};
+    if (!rate || !date) return "";
+    return t(source === "cbu" ? "pricing.uzsNote" : "pricing.uzsNoteMarket", { date: formatRateDate(date), rate: formatRate(rate, siteLocale.value) });
   });
+  const uzsCredit = computed(() => Boolean(data.value?.rate) && data.value?.source === "er-api");
 
-  return { uzs, uzsNote };
+  return { uzs, uzsNote, uzsCredit };
 };

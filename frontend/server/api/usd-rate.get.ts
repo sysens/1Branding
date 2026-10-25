@@ -6,9 +6,9 @@ type GetJson = (url: string, options: { timeout: number; parseResponse: (text: s
 const getJson = $fetch as unknown as GetJson;
 
 // The so'm rate for the price lists (app/composables/useUzsPrice.ts); null
-// fields when the Central Bank's rate is not available.
+// fields when no rate is available.
 export default defineEventHandler(async (event) => {
   setHeader(event, "Cache-Control", "public, max-age=3600");
   const rate = await usdRate((url, options) => getJson(url, { ...options, parseResponse: JSON.parse }));
-  return rate ?? { rate: null, date: null };
+  return rate ?? { rate: null, date: null, source: null };
 });

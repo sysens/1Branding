@@ -11,7 +11,7 @@ const origin = useSiteOrigin();
 // The same request as the slider's (one key): the table and the structured
 // data repeat the cards' prices as plain text.
 const { categories, categoryTitle, categoryPage } = await usePriceCategories();
-const { uzs, uzsNote } = await useUzsPrice();
+const { uzs, uzsNote, uzsCredit } = await useUzsPrice();
 
 const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 const rows = computed(() => categories.value.flatMap((category) => {
@@ -111,7 +111,10 @@ usePageSeo({
             </tbody>
           </table>
         </div>
-        <p v-if="uzsNote" class="pricing-table__note">{{ uzsNote }}</p>
+        <p v-if="uzsNote" class="pricing-table__note">
+          {{ uzsNote }}
+          <a v-if="uzsCredit" href="https://www.exchangerate-api.com" lang="en">Rates By Exchange Rate API</a>
+        </p>
       </section>
 
       <div class="mx-auto max-w-[103.75rem]">

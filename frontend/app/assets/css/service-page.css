@@ -376,6 +376,12 @@
   color: var(--service-green);
 }
 
+/* The exchange rate's credit: a quiet link in the note's own colour. */
+.service-note .service-note__credit {
+  color: inherit;
+  text-decoration-color: rgb(255 255 255 / 0.35);
+}
+
 .service-faq {
   border-top: 1px solid var(--service-line);
 }

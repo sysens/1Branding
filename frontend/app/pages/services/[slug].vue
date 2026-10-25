@@ -50,7 +50,7 @@ const { data: prices } = await useCmsQuery<{ priceCategories?: PriceListCategory
 );
 
 const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
-const { uzs, uzsNote } = await useUzsPrice();
+const { uzs, uzsNote, uzsCredit } = await useUzsPrice();
 const plans = computed(() => {
   if (!service.priceCategory) return [];
   const category = prices.value?.data?.priceCategories?.find(
@@ -254,6 +254,7 @@ usePageSeo({
         </table>
         <p v-rise class="service-note">
           {{ [t("servicesPage.pricesNote"), uzsNote].filter(Boolean).join(" ") }}
+          <a v-if="uzsCredit" href="https://www.exchangerate-api.com" class="service-note__credit" lang="en">Rates By Exchange Rate API</a>
           <NuxtLink :to="localePath('/pricing')">{{ t("servicesPage.allPrices") }}</NuxtLink>
         </p>
       </section>
