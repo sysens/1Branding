@@ -191,7 +191,7 @@ watch(locale, async () => {
       <NuxtLink
         v-for="item in items"
         :key="item.documentId"
-        :to="toNewsSlug(item.documentId)"
+        :to="toNewsSlug(item.slug || item.documentId)"
         class="keen-slider__slide min-h-[1px] h-auto rounded-[1.25rem] bg-[#FFFFFF0D] block"
       >
         <article class="rounded-[0.875rem] overflow-hidden">

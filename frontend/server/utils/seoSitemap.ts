@@ -7,6 +7,7 @@ type Collection = "newsPages_connection" | "projectsPages_connection";
 type SingleType = "landingPage" | "aboutPage" | "contactsPage" | "price" | "oneGuarantee";
 type Node = {
   documentId?: string | null;
+  slug?: string | null;
   updatedAt?: string | null;
   section1?: { projectTitle?: string | null; text?: string | null } | null;
   section2?: { text?: string | null } | null;
@@ -56,11 +57,11 @@ const staticPages: Array<{ path: string; source?: SingleType | Collection }> = [
 const query = `
   query SitemapEntries($page: Int!, $pageSize: Int!, $locale: I18NLocaleCode) {
     newsPages_connection(locale: $locale, pagination: { page: $page, pageSize: $pageSize }) {
-      nodes { documentId updatedAt }
+      nodes { documentId slug updatedAt }
       pageInfo { pageCount }
     }
     projectsPages_connection(locale: $locale, pagination: { page: $page, pageSize: $pageSize }) {
-      nodes { documentId updatedAt section1 { projectTitle text } section2 { text } }
+      nodes { documentId slug updatedAt section1 { projectTitle text } section2 { text } }
       pageInfo { pageCount }
     }
     landingPage(locale: $locale) { updatedAt }
@@ -139,13 +140,15 @@ export async function buildSitemap(siteUrl: string, graphqlUrl: string, fetchCms
           if (collection === "projectsPages_connection" && isPlaceholderCopy(
             `${node?.section1?.projectTitle || ""} ${toMetaDescription(node?.section1?.text || node?.section2?.text)}`,
           )) continue;
-          const path = `/${segment}/${encodeURIComponent(id)}`;
-          const group = groups.get(path) ?? { paths: {}, updatedAt: {} };
+          // The readable address when the entry has a slug (shared by every language).
+          const path = `/${segment}/${encodeURIComponent(node?.slug?.trim() || id)}`;
+          const key = `${segment}:${id}`;
+          const group = groups.get(key) ?? { paths: {}, updatedAt: {} };
           group.paths[locale] = localizedPath(path, locale);
           const updatedAt = dateOrEmpty(node?.updatedAt);
           if (updatedAt > (group.updatedAt[locale] || "")) group.updatedAt[locale] = updatedAt;
           cmsDates[collection] = latest(cmsDates[collection], updatedAt);
-          groups.set(path, group);
+          groups.set(key, group);
         }
       }
       page += 1;

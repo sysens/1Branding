@@ -42,7 +42,9 @@ const GRAPHQL_URL = useGraphqlUrl();
 const cmsMedia = useCmsMedia();
 
 const route = useRoute();
-const documentId = computed(() => String(route.params.id || "").trim());
+// The address carries the case study's slug (or, on old links, its documentId).
+const routeKey = computed(() => String(route.params.id || "").trim());
+const documentId = await useCmsDocumentId("projectsPages", routeKey);
 
 definePageMeta({ key: (route) => route.fullPath });
 if (!documentId.value) {
@@ -55,6 +57,7 @@ if (!GRAPHQL_URL) {
 type Media = { url: string | null; documentId?: string | null };
 
 type ProjectsPage = {
+  slug?: string | null;
   locale?: string | null;
   localizations?: Array<{ locale?: string | null } | null> | null;
   projectColor?: string | null;
@@ -91,6 +94,7 @@ type GqlRes = {
 const query = `
   query ProjectsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     projectsPage(documentId: $documentId, locale: $locale) {
+      slug
       locale
       localizations { locale }
       projectColor
@@ -121,6 +125,7 @@ const query = `
       }
     }
     fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
+      slug
       projectColor
       section1 {
         projectTitle
@@ -171,14 +176,25 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: "Project not found" });
 }
 
+// An old link by documentId moves for good to the readable address.
+const slug = computed(() => page.value?.slug?.trim() || "");
+if (slug.value && routeKey.value !== slug.value) {
+  await navigateTo(useLocalePath()(`/projects/${slug.value}`), { redirectCode: 301 });
+}
+
 const section1 = computed(() => page.value?.section1 ?? null);
 const section2 = computed(() => page.value?.section2 ?? null);
 const section3 = computed(() => page.value?.section3 ?? null);
 
 const projectName = computed(() => section1.value?.projectTitle?.trim() || "");
-const seoTitle = computed(() =>
-  projectName.value ? `${projectName.value} — ${t("seo.project")}` : t("seo.projects.title")
-);
+// Search results show about 60 characters: a case study's name already says
+// what was made ("Raviosta: logo and identity for an Italian restaurant"), so
+// "— branding case study" is added only when it still fits.
+const seoTitle = computed(() => {
+  if (!projectName.value) return t("seo.projects.title");
+  const withKind = `${projectName.value} — ${t("seo.project")}`;
+  return withKind.length <= 60 ? withKind : projectName.value;
+});
 const seoDescription = computed(() =>
   toMetaDescription(section1.value?.text || section2.value?.text) ||
   t("seo.projectDescription", { title: projectName.value || "OneBranding" })

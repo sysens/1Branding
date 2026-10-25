@@ -4,6 +4,7 @@
  */
 export type NewsNode = {
   documentId: string;
+  slug?: string | null;
   title?: string | null;
   text?: string | null;
   createdAt?: string | null;
@@ -24,7 +25,7 @@ export type NewsPage = { nodes: NewsNode[]; pageInfo: NewsPageInfo };
 const QUERY = `
   query NewsPagesConnection($page: Int!, $pageSize: Int!, $locale: I18NLocaleCode) {
     newsPages_connection(locale: $locale, pagination: { page: $page, pageSize: $pageSize }) {
-      nodes { documentId title text createdAt publishedAt updatedAt image { url } }
+      nodes { documentId slug title text createdAt publishedAt updatedAt image { url } }
       pageInfo { page pageSize pageCount total }
     }
   }

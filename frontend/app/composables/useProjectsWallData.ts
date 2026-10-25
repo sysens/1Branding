@@ -6,6 +6,7 @@ type ProjectMedia = {
 
 type ProjectNode = {
   documentId?: string | null;
+  slug?: string | null;
   section1?: {
     projectTitle?: string | null;
     images?: Array<ProjectMedia | null> | null;
@@ -41,6 +42,7 @@ const PROJECTS_WALL_QUERY = `
     ) {
       nodes {
         documentId
+        slug
         section1 {
           projectTitle
           images { url }
@@ -99,7 +101,7 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
           // The CMS projects still carry "Lorem ipsum" titles: those never
           // become the image's alt or the link's name.
           title: cmsText(project.section1?.projectTitle) || t("project.untitled"),
-          to: localePath({ path: `/projects/${id}` }),
+          to: localePath({ path: `/projects/${project.slug?.trim() || id}` }),
         };
       })
       .filter((project): project is ProjectWallItem => project !== null)

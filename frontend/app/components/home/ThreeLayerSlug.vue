@@ -16,6 +16,7 @@ type Media = { url: string | null };
 
 type ProjectNode = {
   documentId: string;
+  slug?: string | null;
   createdAt?: string | null;
   section1: {
     projectTitle?: string | null;
@@ -53,6 +54,7 @@ const query = `
         ) {
           nodes {
             documentId
+            slug
             createdAt
             section1 {
               projectTitle
@@ -71,6 +73,7 @@ const query = `
         ) {
           nodes {
             documentId
+            slug
             createdAt
             section1 {
               projectTitle
@@ -152,7 +155,7 @@ const marqueeItems = computed<MarqueeItem[]>(() => {
           key: `${catIdx}-${projectIdx}-${id}`,
           title,
           src,
-          to: localePath(`/projects/${id}`),
+          to: localePath(`/projects/${project?.slug?.trim() || id}`),
         };
       })
       .filter((item): item is MarqueeItem => item !== null);

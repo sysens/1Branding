@@ -9,6 +9,7 @@ import { isSiteLocale, toSiteLocale } from "~/utils/locales";
 type Media = { url?: string | null };
 type NewsItem = {
   documentId?: string | null;
+  slug?: string | null;
   locale?: string | null;
   localizations?: Array<{ locale?: string | null } | null> | null;
   title?: string | null;
@@ -28,7 +29,9 @@ const { t, locale } = useI18n();
 const route = useRoute();
 const graphqlUrl = useGraphqlUrl();
 const cmsMedia = useCmsMedia();
-const documentId = computed(() => String(route.params.id || "").trim());
+// The address carries the article's slug (or, on old links, its documentId).
+const routeKey = computed(() => String(route.params.id || "").trim());
+const documentId = await useCmsDocumentId("newsPages", routeKey);
 
 // A new route instance avoids stale content (and stale SEO) on client-side ID changes.
 definePageMeta({ key: (route) => route.fullPath });
@@ -43,13 +46,13 @@ if (!graphqlUrl) {
 const query = `
   query NewsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     newsPage(documentId: $documentId, locale: $locale) {
-      documentId locale title text createdAt publishedAt updatedAt
+      documentId slug locale title text createdAt publishedAt updatedAt
       localizations { locale }
       image { url }
       images_connection { nodes { url } }
     }
     fallbackNewsPage: newsPage(documentId: $documentId, locale: $fallbackLocale) {
-      documentId locale title text createdAt publishedAt updatedAt
+      documentId slug locale title text createdAt publishedAt updatedAt
       localizations { locale }
       image { url }
       images_connection { nodes { url } }
@@ -70,6 +73,12 @@ if (error.value || (!news.value && (data.value?.errors?.length || !data.value?.d
 }
 if (!news.value) {
   throw createError({ statusCode: 404, statusMessage: "News article not found" });
+}
+
+// An old link by documentId moves for good to the readable address.
+const slug = computed(() => news.value?.slug?.trim() || "");
+if (slug.value && routeKey.value !== slug.value) {
+  await navigateTo(useLocalePath()(`/news/${slug.value}`), { redirectCode: 301 });
 }
 
 const seoTitle = computed(() => news.value?.title?.trim() || t("seo.news.title"));
@@ -143,7 +152,7 @@ useGsapContext(pageRoot, ({ gsap }) => {
     <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
     <div class="relative z-10">
       <div
-        class="bg-[url('/home/Ellipse.png')] md:pt-[3.75rem] pt-[1.875rem] bg-contain bg-top bg-no-repeat"
+        class="page-glow md:pt-[3.75rem] pt-[1.875rem]"
       >
 
         <div class="containerr">
