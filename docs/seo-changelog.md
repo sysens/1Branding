@@ -4,6 +4,10 @@ What changed on the site and when, for search. When rankings or traffic move, co
 
 ## 2026-10-25
 
+- Late evening: Google Analytics 4 and Yandex Metrika on (Railway variables), with the goals `generate_lead`, `phone_click`, `social_click`; Yandex Webmaster (DNS) and Bing Webmaster (meta tag) verified, sitemaps submitted (Yandex's sitemap tool was read-only that day).
+- Late evening: prices also in so'm, approximate, at the Central Bank of Uzbekistan's rate (`/pricing`, service pages); structured data keeps USD.
+- Late evening: "Brands that trust us" lists only OneBranding's own clients (33); the design's list of slidor's French clients was removed.
+- Late evening: the contact form asks for consent to the processing of personal data (checkbox); `Permissions-Policy` header.
 - Evening: browsers revalidate a page's HTML on every visit (`Cache-Control: max-age=0, s-maxage=300`, also on a 304), so none keeps HTML that points at a previous build's files; before, a page opened again within minutes of a deploy could load without its stylesheet (`server/plugins/page-cache-control.ts`).
 - Evening: an old case study or article address (`/ProjectSlug/<id>`, `/NewsSlug/<id>`) answers with one 301 straight to its readable address, not two.
 - Evening: case study pages: section headings one step below the page title (h3, 40 / 26px; the title is 56 / 32px).
