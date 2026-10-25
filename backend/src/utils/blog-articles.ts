@@ -12,6 +12,8 @@ import type { Core } from "@strapi/strapi";
 type Version = { title: string; text: string };
 export type Article = {
   key: string;
+  /** The article's address, /news/<slug>, in every language. */
+  slug: string;
   /** Uploaded pictures by file name: the hero, then up to two more. */
   image: string;
   images: string[];
@@ -23,6 +25,7 @@ export type Article = {
 const ARTICLES: Article[] = [
   {
     key: "logo-price-2026",
+    slug: "logo-cost-tashkent-2026",
     image: "Raviosta",
     images: ["299", "streetvibe"],
     en: {
@@ -166,6 +169,7 @@ Narxlar AQSh dollarida, boshlangʻich narxlar, 2026-yil holatiga.`,
   },
   {
     key: "logo-identity-brandbook",
+    slug: "logo-identity-brand-book",
     image: "grechno",
     images: ["image_1", "Raviosta"],
     en: {
@@ -286,9 +290,9 @@ export const applyBlogArticles = async (strapi: Core.Strapi, articles: Article[]
     const images = (await Promise.all(article.images.map((name) => fileId(strapi, name)))).filter((id): id is number => id !== null);
     const media = { image, images };
 
-    const document = (await documents.create({ locale: "en", data: { ...article.en, ...media } } as never)) as { documentId: string };
+    const document = (await documents.create({ locale: "en", data: { ...article.en, slug: article.slug, ...media } } as never)) as { documentId: string };
     for (const locale of ["ru", "uz"] as const) {
-      await documents.update({ documentId: document.documentId, locale, data: { ...article[locale], ...media } } as never);
+      await documents.update({ documentId: document.documentId, locale, data: { ...article[locale], slug: article.slug, ...media } } as never);
     }
     created[article.key] = document.documentId;
     await store.set({ key: STORE_KEY, value: created });

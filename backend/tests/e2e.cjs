@@ -212,13 +212,15 @@ const submit = async (ip, payload) => {
     section3: { title: 'Color palette', text: lorem, colorCard: [{ HexColorCode: '#B9878A' }] },
   } });
   const copy = (title) => ({ title, intro: 'Intro.', detailTitle: 'Detail', detail: 'Detail text.', paletteTitle: 'Palette', palette: 'Palette text.' });
-  const studies = [{ documentId: study.documentId, colors: ['#111111', '#222222'], en: copy('Brand: logo'), ru: copy('Бренд: логотип') }];
+  const studies = [{ documentId: study.documentId, colors: ['#111111', '#222222'], slug: 'e2e-brand-logo', en: copy('Brand: logo'), ru: copy('Бренд: логотип'), uz: copy('Brend: logotip') }];
   const populate = { section1: { populate: ['images'] }, section2: { populate: ['image'] }, section3: { populate: ['colorCard'] } };
   await applyProjectCopy(strapi, studies);
   let enStudy = await projects.findOne({ documentId: study.documentId, locale: 'en', populate });
   let ruStudy = await projects.findOne({ documentId: study.documentId, locale: 'ru', populate });
   check('case study: copy, palette and pictures', enStudy?.section1?.projectTitle === 'Brand: logo' && enStudy?.section1?.images?.length === 1 && enStudy?.section2?.image?.id === fileId && enStudy?.section3?.colorCard?.map((c) => c.HexColorCode).join() === '#111111,#222222', JSON.stringify({ t: enStudy?.section1?.projectTitle, i: enStudy?.section1?.images?.length, c: enStudy?.section3?.colorCard?.length }));
   check('case study: ru version with the pictures', ruStudy?.section1?.projectTitle === 'Бренд: логотип' && ruStudy?.section1?.images?.length === 1 && ruStudy?.section2?.image?.id === fileId, ruStudy?.section1?.projectTitle);
+  const uzStudy = await projects.findOne({ documentId: study.documentId, locale: 'uz', populate });
+  check('case study: uz version and one slug for every language', uzStudy?.section1?.projectTitle === 'Brend: logotip' && enStudy?.slug === 'e2e-brand-logo' && ruStudy?.slug === 'e2e-brand-logo', `${uzStudy?.section1?.projectTitle} / ${enStudy?.slug} / ${ruStudy?.slug}`);
   await projects.update({ documentId: study.documentId, locale: 'en', data: { section1: { projectTitle: 'Owner title', text: 'Owner text.', images: [fileId] } } });
   await projects.update({ documentId: study.documentId, locale: 'ru', data: { section1: { projectTitle: 'Свой заголовок', text: 'Свой текст.', images: [fileId] } } });
   await applyProjectCopy(strapi, studies);
@@ -233,12 +235,12 @@ const submit = async (ip, payload) => {
   check('blog: uz locale added on boot', Boolean(uzLocale), uzLocale?.name);
   const fileHash = (await strapi.db.query('plugin::upload.file').findOne({ where: { id: fileId } }))?.hash || '';
   const v = (title) => ({ title, text: 'Intro.\n\n## Heading\n\n- item' });
-  const testArticle = { key: 'e2e-article', image: fileHash.replace(/_[^_]+$/, ''), images: [], en: v('E2E article'), ru: v('Статья E2E'), uz: v('E2E maqola') };
+  const testArticle = { key: 'e2e-article', slug: 'e2e-article', image: fileHash.replace(/_[^_]+$/, ''), images: [], en: v('E2E article'), ru: v('Статья E2E'), uz: v('E2E maqola') };
   await applyBlogArticles(strapi, [testArticle]);
   await applyBlogArticles(strapi, [testArticle]);
   const posts = await news.findMany({ locale: 'en', filters: { title: 'E2E article' }, populate: ['image'] });
   const postUz = posts[0] && await news.findOne({ documentId: posts[0].documentId, locale: 'uz' });
-  check('blog: article published once in en, ru and uz with its picture', posts.length === 1 && posts[0].image?.id === fileId && postUz?.title === 'E2E maqola', JSON.stringify({ n: posts.length, image: posts[0]?.image?.id, uz: postUz?.title }));
+  check('blog: article published once in en, ru and uz with its picture', posts.length === 1 && posts[0].image?.id === fileId && postUz?.title === 'E2E maqola' && postUz?.slug === 'e2e-article', JSON.stringify({ n: posts.length, image: posts[0]?.image?.id, uz: postUz?.title }));
 
   await app.destroy();
   const failed = results.filter((x) => !x.ok).length;

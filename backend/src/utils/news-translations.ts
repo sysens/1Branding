@@ -20,6 +20,23 @@ const TRANSLATIONS: Translation[] = [
       "В итоге бренд выглядит громче, увереннее и актуальнее, оставаясь верным своей ДНК.",
     ].join("\n\n"),
   },
+  {
+    documentId: "zztkud74sbscajz3k646rykf",
+    locale: "uz",
+    title: "Pepsi 2025-yilda firma uslubini qanday yangiladi",
+    text: [
+      "2025-yilda Pepsi yangilangan firma uslubini taqdim etdi: brend oʻz merosiga qaytdi va zamonaviy xarakterini kuchaytirdi. Yangi dizayn klassik logotipni yangicha talqin qiladi: u kontrastliroq, toʻyinganroq va ishonchliroq boʻldi. Markaziy element — qizil-oq-koʻk toʻlqinli taniqli doira — yanada ifodali grafika va aniq shakllarga ega boʻldi, shuning uchun brend raqamli muhitda ham, peshtaxtada ham yaxshiroq koʻzga tashlanadi.",
+      "Tipografikaga alohida eʼtibor qaratildi. Yangi shrift qalinroq va ifodaliroq, u brendning energiyasi va jasoratini taʼkidlaydi. Toʻq ranglar va minimalistik yondashuv bilan birga bu qadoq, reklama va mediaga oson koʻchadigan kuchli vizual tilni yaratadi.",
+      "Yangilanish Pepsi strategiyasini ham aks ettiradi: tanilishi va merosini saqlagan holda yangi auditoriyaga yaqinlashish. Bu nostalgiya va zamonaviylik oʻrtasidagi muvozanat boʻlib, unda klassik elementlar kelajak uchun vositaga aylanadi.",
+      "Natijada brend baland ovozliroq, ishonchliroq va dolzarbroq koʻrinadi va oʻz DNKsiga sodiq qoladi.",
+    ].join("\n\n"),
+  },
+];
+
+// Readable addresses (/news/<slug>) for articles published without one; the
+// slug is shared by every language.
+const SLUGS: Array<{ documentId: string; slug: string }> = [
+  { documentId: "zztkud74sbscajz3k646rykf", slug: "pepsi-brand-identity-2025" },
 ];
 
 // A Russian word left in the English article ("more contrasted, насыщенный and
@@ -31,14 +48,22 @@ const TEXT_FIXES: TextFix[] = [
 const NEWS = "api::news-page.news-page";
 
 type Media = { id: number } | null | undefined;
-type NewsEntry = { text?: string | null; image?: Media; images?: Media[] | null } | null;
+type NewsEntry = { slug?: string | null; text?: string | null; image?: Media; images?: Media[] | null } | null;
 
 export const applyNewsTranslations = async (
   strapi: Core.Strapi,
   translations: Translation[],
   fixes: TextFix[],
+  slugs: Array<{ documentId: string; slug: string }> = [],
 ): Promise<void> => {
   const documents = strapi.documents(NEWS);
+
+  for (const { documentId, slug } of slugs) {
+    const entry = (await documents.findOne({ documentId, locale: "en" })) as { slug?: string | null } | null;
+    if (!entry || entry.slug) continue;
+    await documents.update({ documentId, locale: "en", data: { slug } } as never);
+    strapi.log.info(`Bootstrap gave news article ${documentId} the slug ${slug}`);
+  }
 
   for (const { documentId, locale, title, text } of translations) {
     const existing = await documents.findOne({ documentId, locale });
@@ -51,6 +76,8 @@ export const applyNewsTranslations = async (
       data: {
         title,
         text,
+        // Strapi does not copy the shared slug into a new language version.
+        slug: source.slug ?? null,
         image: source.image?.id ?? null,
         images: (source.images ?? []).flatMap((file) => (file ? [file.id] : [])),
       },
@@ -67,4 +94,4 @@ export const applyNewsTranslations = async (
 };
 
 export const ensureNewsTranslations = (strapi: Core.Strapi): Promise<void> =>
-  applyNewsTranslations(strapi, TRANSLATIONS, TEXT_FIXES);
+  applyNewsTranslations(strapi, TRANSLATIONS, TEXT_FIXES, SLUGS);
