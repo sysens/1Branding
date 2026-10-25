@@ -19,6 +19,18 @@
   ],
   "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQABAAA4BaJYgC7AEMyd3F7wAA/vfHP0K64M5ZbhytaValwNj0sltUeltDMfJkyWcD85yRfdtYCIMh1W9FkBHI6f1dD7nRRVCFDTBUAAA="
  },
+ "/home/award/numeral.webp": {
+  "w": 1600,
+  "h": 1920,
+  "v": "bc1833ca",
+  "widths": [
+   400,
+   800,
+   1200,
+   1600
+  ],
+  "alpha": true
+ },
  "/home/awards/artwork/11.webp": {
   "w": 416,
   "h": 234,

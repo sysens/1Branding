@@ -29,6 +29,8 @@ const SOURCES = [
   { dir: "home/social", widths: [360] },
   { dir: "home/awards/artwork", widths: [208] },
   { dir: "home/awards", widths: [683], files: ["stage.v1.webp", "stage-ceiling.v1.webp"], alpha: true },
+  // The Awwwards "1" (scripts/render-award-numeral.mjs).
+  { dir: "home/award", widths: [400, 800, 1200], alpha: true },
   { dir: "home/parts", widths: [], alpha: true },
   { dir: "logoss/thumbs", widths: [200] },
   { dir: "globe", widths: [580], files: ["preview-green.v1.webp", "preview.v1.webp"] },

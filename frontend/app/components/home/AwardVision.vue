@@ -1,62 +1,15 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import type { AwardNumeral } from "~/utils/awardNumeral";
+import OptImage from "~/components/ui/OptImage.vue";
 
 // "One vision. Every solution." — the Awwwards 2026 card: copy on the left, a
-// chrome-and-black numeral "1" on the right. The numeral is modelled and lit
-// in three.js (utils/awardNumeral.ts), not an image; it is set up once the
-// section comes near and drawn again only when its box changes size.
+// chrome-and-green numeral "1" on the right. The numeral is a picture of its
+// three.js model (utils/award/numeralModel.js) drawn once by
+// scripts/render-award-numeral.mjs: building the model in the visitor's
+// browser held the page for about a second as the sections above it
+// animated, and showed nothing where WebGL is off.
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-
-const box = ref<HTMLElement | null>(null);
-const canvas = ref<HTMLCanvasElement | null>(null);
-const ready = ref(false);
-let numeral: AwardNumeral | null = null;
-let cleanup: (() => void) | undefined;
-let disposed = false;
-
-const draw = () => {
-  if (!numeral || !box.value) return;
-  numeral.resize(box.value.clientWidth, box.value.clientHeight);
-  numeral.render();
-};
-
-const start = async () => {
-  if (numeral || !canvas.value) return;
-  try {
-    const { createAwardNumeral } = await import("~/utils/awardNumeral");
-    if (disposed || !canvas.value) return;
-    numeral = createAwardNumeral(canvas.value);
-    draw();
-    ready.value = true;
-  } catch (error) {
-    console.warn("Award numeral:", error instanceof Error ? error.message : "WebGL unavailable");
-  }
-};
-
-onMounted(() => {
-  const element = box.value;
-  if (!element) return;
-  const near = new IntersectionObserver((entries) => {
-    if (entries.some((entry) => entry.isIntersecting)) void start();
-  }, { rootMargin: "800px 0px" });
-  const sized = new ResizeObserver(draw);
-  near.observe(element);
-  sized.observe(element);
-  cleanup = () => {
-    near.disconnect();
-    sized.disconnect();
-  };
-});
-
-onBeforeUnmount(() => {
-  disposed = true;
-  cleanup?.();
-  numeral?.dispose();
-  numeral = null;
-});
 </script>
 
 <template>
@@ -69,8 +22,17 @@ onBeforeUnmount(() => {
       </h2>
       <p v-blur-reveal class="vision__label">{{ t("home.vision.label") }}</p>
       <p v-blur-reveal class="vision__year">{{ t("home.vision.year") }}</p>
-      <div ref="box" class="vision__numeral" :class="{ 'is-ready': ready }" role="img" aria-label="A chrome and black numeral one">
-        <canvas ref="canvas" class="vision__canvas" aria-hidden="true" />
+      <div v-rise class="vision__numeral">
+        <OptImage
+          src="/home/award/numeral.webp"
+          alt=""
+          sizes="(max-width: 767px) min(100vw, 26rem), 40vw"
+          width="1600"
+          height="1920"
+          :preview="false"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <NuxtLink v-rise :to="localePath('/about')" class="vision__button ob-button ob-button--dark">{{ t("home.vision.cta") }}</NuxtLink>
     </div>
@@ -175,21 +137,17 @@ onBeforeUnmount(() => {
   top: 0;
   width: calc(800 * var(--u));
   height: calc(960 * var(--u));
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  /* The floor reflection fades out before the canvas edge. */
+  /* The floor reflection fades out before the picture's edge. */
   -webkit-mask-image: linear-gradient(#000 88%, transparent);
   mask-image: linear-gradient(#000 88%, transparent);
 }
 
-.vision__numeral.is-ready {
-  opacity: 1;
-}
-
-.vision__canvas {
+/* :deep: the <img> is inside OptImage's <picture>. */
+.vision__numeral :deep(img) {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 /* The Russian and Uzbek lines are longer than "Every solution.": where the
@@ -275,9 +233,4 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .vision__numeral {
-    transition: none;
-  }
-}
 </style>
