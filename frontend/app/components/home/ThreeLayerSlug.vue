@@ -190,7 +190,7 @@ const rowsConfig = computed(() => {
 });
 
 const root = useTemplateRef<HTMLElement>("root");
-const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
+const { isRevealed, load } = useImageBatchReveal(root, ".marquee-image");
 </script>
 
 <template>
@@ -209,21 +209,27 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
       <div class="w-[120%] -ml-[10%] relative z-[1]">
         <div class="w-full overflow-hidden space-y-2">
           <div
-            v-for="(row, rowIndex) in rowsConfig"
+            v-for="row in rowsConfig"
             :key="row.key"
             class="flex w-max will-change-transform"
             :class="row.animClass"
             :style="{ '--marquee-duration': marqueeDuration }"
           >
             <div class="flex items-center gap-2 px-1">
+              <!-- The pictures are rendered about a screen before the row
+                   (useImageBatchReveal's `load`), so on /about they do not
+                   compete with the first screen; until then a box of the same
+                   size keeps the layout and the link its text. Eager once
+                   rendered, since the row is revealed when all are in. -->
               <a
-                v-for="(item, itemIndex) in marqueeItems"
+                v-for="item in marqueeItems"
                 :key="row.key + '-a-' + item.key"
                 :href="item.to"
                 class="shrink-0 block"
                 @click.prevent="navigateSafely(item.to)"
               >
                 <NuxtImg
+                  v-if="load"
                   :src="item.src"
                   :alt="item.title"
                   width="486"
@@ -233,10 +239,11 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
                   fit="cover"
                   loading="eager"
                   decoding="async"
-                  :fetchpriority="rowIndex === 0 && itemIndex < 5 ? 'high' : 'auto'"
+                  fetchpriority="low"
                   class="marquee-image md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 object-cover rounded-[1.25rem] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
+                <span v-else class="block md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 rounded-[1.25rem] md:rounded-[1.875rem]"><span class="sr-only">{{ item.title }}</span></span>
               </a>
             </div>
 
@@ -250,6 +257,7 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
                 @click.prevent="navigateSafely(item.to)"
               >
                 <NuxtImg
+                  v-if="load"
                   :src="item.src"
                   alt=""
                   width="486"
@@ -259,10 +267,11 @@ const { isRevealed } = useImageBatchReveal(root, ".marquee-image");
                   fit="cover"
                   loading="eager"
                   decoding="async"
-                  fetchpriority="auto"
+                  fetchpriority="low"
                   class="marquee-image md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 object-cover rounded-[1.25rem] md:rounded-[1.875rem] select-none"
                   draggable="false"
                 />
+                <span v-else class="block md:h-[17.0625rem] h-[8.875rem] md:w-[30.375rem] w-[15.75rem] shrink-0 rounded-[1.25rem] md:rounded-[1.875rem]" />
               </a>
             </div>
           </div>

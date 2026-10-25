@@ -1,5 +1,6 @@
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -60,52 +61,31 @@ const waitForDecodeBatch = (
     });
   });
 
+/**
+ * A row of pictures that appears all at once: nothing is requested until the
+ * row is about a screen away (`load`; the component renders its <img>s only
+ * then, so they do not compete with the page's first screen), and the row is
+ * revealed once they are in and it is in view.
+ */
 export const useImageBatchReveal = (
   root: ElementRef,
   imageSelector = "img"
 ) => {
+  const load = ref(false);
   const imagesReady = ref(false);
   const hasEnteredViewport = ref(false);
   const isRevealed = computed(
     () => imagesReady.value && hasEnteredViewport.value
   );
 
-  let observer: IntersectionObserver | null = null;
+  const observers: IntersectionObserver[] = [];
   let mounted = false;
 
-  onMounted(async () => {
-    mounted = true;
-
-    const element = root.value;
-
-    if (!element) {
-      imagesReady.value = true;
-      hasEnteredViewport.value = true;
-      return;
-    }
-
-    const rect = element.getBoundingClientRect();
-    hasEnteredViewport.value =
-      rect.top < window.innerHeight + 200 && rect.bottom > -200;
-
-    observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-
-        hasEnteredViewport.value = true;
-        observer?.disconnect();
-        observer = null;
-      },
-      {
-        threshold: 0.01,
-        rootMargin: "200px 0px 200px 0px",
-      }
-    );
-    observer.observe(element);
-
+  const waitForImages = async (element: HTMLElement) => {
+    await nextTick();
     const images = Array.from(
       element.querySelectorAll<HTMLImageElement>(imageSelector)
-    );
+    ).filter((image) => image instanceof HTMLImageElement);
     const uniqueImages = Array.from(
       new Map(
         images.map((image) => [image.currentSrc || image.src, image] as const)
@@ -116,15 +96,51 @@ export const useImageBatchReveal = (
     await waitForDecodeBatch(uniqueImages, 1_500);
 
     if (mounted) imagesReady.value = true;
+  };
+
+  // Calls `onEnter` once the element is within `margin` of the viewport.
+  const whenNear = (element: HTMLElement, margin: string, onEnter: () => void) => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        onEnter();
+      },
+      { threshold: 0, rootMargin: margin }
+    );
+    observer.observe(element);
+    observers.push(observer);
+  };
+
+  onMounted(() => {
+    mounted = true;
+
+    const element = root.value;
+
+    if (!element) {
+      load.value = true;
+      imagesReady.value = true;
+      hasEnteredViewport.value = true;
+      return;
+    }
+
+    whenNear(element, "100% 0px 100% 0px", () => {
+      load.value = true;
+      void waitForImages(element);
+    });
+    whenNear(element, "200px 0px 200px 0px", () => {
+      hasEnteredViewport.value = true;
+    });
   });
 
   onBeforeUnmount(() => {
     mounted = false;
-    observer?.disconnect();
-    observer = null;
+    for (const observer of observers) observer.disconnect();
+    observers.length = 0;
   });
 
   return {
     isRevealed,
+    load,
   };
 };

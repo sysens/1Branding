@@ -156,12 +156,17 @@ const lastThree = computed(() => {
             {{ section3.subTitle }}
           </p>
 
+          <!-- Three pictures below the first screen: loaded when near, each at
+               a third of the row from md up. -->
           <div class="md:h-[33.1875rem] h-full md:flex block gap-[0.625rem]">
             <div class="flex-1 h-full">
               <NuxtImg
                 v-if="lastThree.left"
                 :src="lastThree.left.src"
                 :alt="lastThree.left.alt"
+                sizes="xs:100vw sm:100vw md:33vw lg:470px"
+                loading="lazy"
+                decoding="async"
                 class="img-left w-full md:h-full h-[18.75rem] object-cover pb-[0.625rem] md:pb-0 block md:rounded-l-[1.875rem] rounded-t-[1.25rem] md:rounded-t-[0px] md:rounded-tl-[1.25rem] will-change-transform"
               />
             </div>
@@ -171,6 +176,9 @@ const lastThree = computed(() => {
                 v-if="lastThree.center"
                 :src="lastThree.center.src"
                 :alt="lastThree.center.alt"
+                sizes="xs:100vw sm:100vw md:33vw lg:470px"
+                loading="lazy"
+                decoding="async"
                 class="img-center w-full md:h-full h-[18.75rem] pb-[0.625rem] md:pb-0 object-cover block will-change-transform"
               />
             </div>
@@ -180,6 +188,9 @@ const lastThree = computed(() => {
                 v-if="lastThree.right"
                 :src="lastThree.right.src"
                 :alt="lastThree.right.alt"
+                sizes="xs:100vw sm:100vw md:33vw lg:470px"
+                loading="lazy"
+                decoding="async"
                 class="img-right w-full md:h-full h-[18.75rem] object-cover block md:rounded-r-[1.875rem] rounded-b-[1.25rem] md:rounded-b-[0px] md:rounded-br-[1.25rem] will-change-transform"
               />
             </div>

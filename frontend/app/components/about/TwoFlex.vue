@@ -107,10 +107,15 @@ const section2WithImages = computed(() =>
             </p>
           </div>
 
+          <!-- Below the first screen: loaded when near, and at the size it is
+               shown (half the row from md up), not the original upload. -->
           <NuxtImg
             v-if="item.imageSrc"
             :src="item.imageSrc"
             :alt="item.image?.alternativeText?.trim() || item.title"
+            sizes="xs:100vw sm:100vw md:50vw lg:700px"
+            loading="lazy"
+            decoding="async"
             class="mission-img flex-1 md:w-[50%] md:h-[31.25rem] h-[14.625rem] w-full rounded-[1.875rem] will-change-transform"
           />
         </div>
