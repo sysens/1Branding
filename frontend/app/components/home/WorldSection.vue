@@ -14,7 +14,10 @@ const { t } = useI18n();
         <span v-blur-reveal class="world-section__word">{{ t("home.world.word") }}</span>
       </h2>
     </header>
-    <div v-rise class="world-section__globe">
+    <!-- No reveal of its own: the globe (its picture until the 3D one is
+         ready) is in place from the start, so "WORLD" comes in behind it
+         instead of showing through it while it fades in. -->
+    <div class="world-section__globe">
       <NetworkGlobe :show-labels="false" :controls="false" />
     </div>
     <h3 class="world-section__statement">
