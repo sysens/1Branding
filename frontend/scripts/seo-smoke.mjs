@@ -71,12 +71,14 @@ for (const [from, to] of REDIRECTS) {
   check(`301 ${from}`, res.status === 301 && (location === to || location === `${ORIGIN}${to}`), `${res.status} ${location}`);
 }
 
-// The www host is optional until its domain is attached; report it without failing.
+// The www host (a Cloudflare redirect rule) sends every address, with its path
+// and query, to the same address without www in one 301.
 try {
-  const www = await fetch(ORIGIN.replace("://", "://www."), { redirect: "manual" });
-  console.log(`INFO  www host answers ${www.status} ${www.headers.get("location") || ""}`);
+  const www = await fetch(`${ORIGIN.replace("://", "://www.")}/about?ref=smoke`, { redirect: "manual" });
+  const location = www.headers.get("location") || "";
+  check("301 www", www.status === 301 && location === `${ORIGIN}/about?ref=smoke`, `${www.status} ${location}`);
 } catch (error) {
-  console.log(`INFO  www host unreachable (${error.message})`);
+  check("301 www", false, error.message);
 }
 
 console.log(`\n${results.filter(Boolean).length}/${results.length} passed`);
