@@ -2,6 +2,7 @@ import type { Core, Schema, UID } from "@strapi/strapi";
 import { checkUploadStorage } from "./utils/check-upload-storage";
 import { removeOrphanContactUploads } from "./utils/contact-uploads";
 import { ensureNewsTranslations } from "./utils/news-translations";
+import { ensureProjectCopy } from "./utils/project-copy";
 
 const isApiSingleType = (
   uid: string,
@@ -124,6 +125,9 @@ export default {
     // Content, not configuration: a failure is logged and the site still starts.
     await ensureNewsTranslations(strapi).catch((error) => {
       strapi.log.error(`News translations were not applied: ${error instanceof Error ? error.message : String(error)}`);
+    });
+    await ensureProjectCopy(strapi).catch((error) => {
+      strapi.log.error(`Case study copy was not applied: ${error instanceof Error ? error.message : String(error)}`);
     });
 
     // Contact-form uploads never attached to a submission are deleted hourly.

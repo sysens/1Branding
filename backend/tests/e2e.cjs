@@ -201,6 +201,31 @@ const submit = async (ip, payload) => {
   ru = await news.findOne({ documentId: article.documentId, locale: 'ru' });
   check('news: an edited version is not overwritten', ru?.title === 'Edited', ru?.title);
 
+  // Case studies still in Lorem get their copy and palette with their own
+  // pictures, a Russian version is added, and edited entries are left alone.
+  const { applyProjectCopy } = require(path.join(appDir, 'dist/src/utils/project-copy.js'));
+  const projects = strapi.documents('api::projects-page.projects-page');
+  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+  const study = await projects.create({ locale: 'en', data: {
+    section1: { projectTitle: lorem, text: lorem, images: [fileId] },
+    section2: { title: 'Lorem ipsum dolor sit amet.', text: lorem, image: fileId },
+    section3: { title: 'Color palette', text: lorem, colorCard: [{ HexColorCode: '#B9878A' }] },
+  } });
+  const copy = (title) => ({ title, intro: 'Intro.', detailTitle: 'Detail', detail: 'Detail text.', paletteTitle: 'Palette', palette: 'Palette text.' });
+  const studies = [{ documentId: study.documentId, colors: ['#111111', '#222222'], en: copy('Brand: logo'), ru: copy('Бренд: логотип') }];
+  const populate = { section1: { populate: ['images'] }, section2: { populate: ['image'] }, section3: { populate: ['colorCard'] } };
+  await applyProjectCopy(strapi, studies);
+  let enStudy = await projects.findOne({ documentId: study.documentId, locale: 'en', populate });
+  let ruStudy = await projects.findOne({ documentId: study.documentId, locale: 'ru', populate });
+  check('case study: copy, palette and pictures', enStudy?.section1?.projectTitle === 'Brand: logo' && enStudy?.section1?.images?.length === 1 && enStudy?.section2?.image?.id === fileId && enStudy?.section3?.colorCard?.map((c) => c.HexColorCode).join() === '#111111,#222222', JSON.stringify({ t: enStudy?.section1?.projectTitle, i: enStudy?.section1?.images?.length, c: enStudy?.section3?.colorCard?.length }));
+  check('case study: ru version with the pictures', ruStudy?.section1?.projectTitle === 'Бренд: логотип' && ruStudy?.section1?.images?.length === 1 && ruStudy?.section2?.image?.id === fileId, ruStudy?.section1?.projectTitle);
+  await projects.update({ documentId: study.documentId, locale: 'en', data: { section1: { projectTitle: 'Owner title', text: 'Owner text.', images: [fileId] } } });
+  await projects.update({ documentId: study.documentId, locale: 'ru', data: { section1: { projectTitle: 'Свой заголовок', text: 'Свой текст.', images: [fileId] } } });
+  await applyProjectCopy(strapi, studies);
+  enStudy = await projects.findOne({ documentId: study.documentId, locale: 'en', populate });
+  ruStudy = await projects.findOne({ documentId: study.documentId, locale: 'ru', populate });
+  check('case study: edited entries are not overwritten', enStudy?.section1?.projectTitle === 'Owner title' && ruStudy?.section1?.projectTitle === 'Свой заголовок', `${enStudy?.section1?.projectTitle} / ${ruStudy?.section1?.projectTitle}`);
+
   await app.destroy();
   const failed = results.filter((x) => !x.ok).length;
   console.log(`\n${results.length - failed}/${results.length} passed`);
