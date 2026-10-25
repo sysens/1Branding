@@ -143,9 +143,11 @@ useGsapContext(root, ({ gsap }) => {
           <p class="type-lead type-measure text-[#8f8f8f] pb-[1.875rem]">
             {{ t("contacts.briefText") }}
           </p>
+          <!-- Only once the CMS has a brief file: a button that can never be
+               pressed only showed up dimmed. -->
           <button
+            v-if="briefFileUrl"
             type="button"
-            :disabled="!briefFileUrl"
             class="ob-button"
             @click="onDownloadBrief"
           >
