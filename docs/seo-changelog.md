@@ -4,6 +4,7 @@ What changed on the site and when, for search. When rankings or traffic move, co
 
 ## 2026-10-25
 
+- Night: blog article "What is a brand book and what goes into it" (en/ru/uz, /news/what-is-a-brand-book) for «что такое брендбук» and «brendbuk nima».
 - Night: Content-Security-Policy enforced (was report-only); it allows Yandex Metrika's frame and the Spline runtime's wasm, and `'unsafe-eval'` only on the home page (Spline).
 - Night: faster main pictures: /about (the pictures below no longer load with it), articles (hero shown from the first paint, at its size), /projects (resized wall pictures), /services (only the first card eager).
 - Late evening: Google Analytics 4 and Yandex Metrika on (Railway variables), with the goals `generate_lead`, `phone_click`, `social_click`; Yandex Webmaster (DNS) and Bing Webmaster (meta tag) verified, sitemaps submitted (Yandex's sitemap tool was read-only that day).
