@@ -99,6 +99,15 @@ Bepul kompaniya profillari: ta'rif, xizmatlar, 3–5 keys, sayt havolasi.
 ### 11) Behance va Dribbble
 OneBranding nomidan kompaniya profili, har keys alohida loyiha sifatida, ta'rifda sayt havolasi. Hozir CMS'da Behance havolasi faqat behance.net bosh sahifasiga olib boradi: profil ochilgach, uning manzilini bering, saytga ulayman.
 
+### 12) top.uz va pc.uz
+O'zbekistondagi kompaniyalar katalogi va mahsulot/xizmat katalogi. Yuridik nom, manzil, telefon, sayt. Raqobatchi brandingdesign.uz ikkalasida ham bor (25-oktabr 2026 tekshiruvi), Google ularni «branding uz» kabi so'rovlarda ko'rsatadi.
+
+### 13) Facebook va LinkedIn kompaniya sahifalari
+Facebook: https://www.facebook.com/pages/create, LinkedIn: https://www.linkedin.com/company/setup/new/. Nom, manzil, telefon va sayt havolasi yuqoridagi jadvaldagidek. Facebook sahifasidagi sharhlar va «shu yerda bo'lgan» belgilari ham ishonch signali: brandingdesign.uz'da 5.0 reyting.
+
+### 14) World Brand Design Society
+https://worldbranddesign.com: agentlik profili va keyslar. Xalqaro dizayn hamjamiyatida sayt havolasi bilan portfolio.
+
 ## 6. Tugatgandan keyin
 
 - Har profil manzilini [catalogs.csv](catalogs.csv)'ga yozing va menga yuboring: Google, Yandex va 2GIS havolalarini saytdagi JSON-LD'ga (sameAs, hasMap) qo'shaman.
