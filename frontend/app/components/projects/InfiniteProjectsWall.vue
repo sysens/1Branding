@@ -9,6 +9,15 @@ type WallCell = {
 
 const CELLS_PER_GRID = 20;
 
+// The tiles are 285px wide on phones, 390px up to 1024px and 500px above
+// (getMetrics() in useInfiniteProjectsWall.ts): resized webp copies instead of
+// the CMS originals (Cloudflare keeps each one after the first request).
+const WALL_WIDTHS = [640, 1024];
+const WALL_SIZES = "(max-width: 640px) 285px, (max-width: 1024px) 390px, 500px";
+const img = useImage();
+const wallSrc = (url: string, width = WALL_WIDTHS[0]!) => img(url, { width, format: "webp", quality: 80 });
+const wallSrcset = (url: string) => WALL_WIDTHS.map((width) => `${wallSrc(url, width)} ${width}w`).join(", ");
+
 const { projects } = await useProjectsWallData();
 const {
   containerRef,
@@ -56,7 +65,9 @@ useHead(() => ({
   link: projects.value.slice(0, 5).map((project) => ({
     rel: "preload",
     as: "image",
-    href: project.image,
+    href: wallSrc(project.image),
+    imagesrcset: wallSrcset(project.image),
+    imagesizes: WALL_SIZES,
   })),
 }));
 </script>
@@ -97,7 +108,9 @@ useHead(() => ({
             @dragstart.prevent
           >
             <img
-              :src="cell.item.image"
+              :src="wallSrc(cell.item.image)"
+              :srcset="wallSrcset(cell.item.image)"
+              :sizes="WALL_SIZES"
               :alt="cell.item.title"
               :loading="copy.primary ? 'eager' : 'lazy'"
               :fetchpriority="copy.primary && cell.index < 5 ? 'high' : 'auto'"

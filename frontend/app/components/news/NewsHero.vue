@@ -3,18 +3,6 @@ import { computed } from "vue";
 import ArticleInline from "~/components/news/ArticleInline.vue";
 import { articleBlocks, isStructuredArticle } from "~/utils/articleText";
 
-const root = ref<HTMLElement | null>(null);
-
-useGsapContext(root, ({ gsap }) => {
-    const main = root.value?.querySelector<HTMLElement>(".gsapDiv");
-    if (!main) return;
-
-    gsap.fromTo(
-      main,
-      { x: -160, opacity: 0 },
-      { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
-    );
-  });
 
 type Media = { url?: string | null };
 type NewsItem = {
@@ -56,7 +44,7 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
 </script>
 
 <template>
-  <div ref="root" class="mb-[8.3125rem]">
+  <div class="mb-[8.3125rem]">
     <div>
       <div class="products">
         <div
@@ -75,11 +63,16 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
       </div>
 
       <div>
+        <!-- The article's largest paint: at its shown size, first in line,
+             and visible from the first paint (a CSS slide, not a JS fade). -->
         <NuxtImg
           v-if="heroImageSrc"
           :src="heroImageSrc"
           :alt="title"
-          class="gsapDiv md:h-[43.75rem] h-[33.875rem] object-cover rounded-[1.875rem] w-full"
+          sizes="xs:100vw sm:100vw md:100vw lg:1400px"
+          loading="eager"
+          fetchpriority="high"
+          class="news-hero-image md:h-[43.75rem] h-[33.875rem] object-cover rounded-[1.875rem] w-full"
         />
       </div>
 
@@ -122,6 +115,24 @@ const rightImg = computed(() => resolveImage(images.value?.[1]?.url));
 </template>
 
 <style scoped>
+/* The slide the picture had from JS (x -160px, after 1s), now in CSS: it
+   starts with the first paint and never hides the picture. */
+.news-hero-image {
+  animation: news-hero-in 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s backwards;
+}
+
+@keyframes news-hero-in {
+  from {
+    translate: -10rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-hero-image {
+    animation: none;
+  }
+}
+
 .leftBlock p + p {
   margin-top: 1em;
 }

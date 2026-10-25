@@ -83,7 +83,7 @@ usePageSeo({
                 sizes="(min-width: 1320px) 420px, (min-width: 900px) 31vw, 92vw"
                 width="800"
                 height="600"
-                :loading="index < 3 ? 'eager' : 'lazy'"
+                :loading="index === 0 ? 'eager' : 'lazy'"
                 :fetchpriority="index === 0 ? 'high' : undefined"
                 decoding="async"
               />
