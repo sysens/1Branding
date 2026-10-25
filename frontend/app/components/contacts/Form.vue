@@ -343,7 +343,7 @@ onBeforeUnmount(() => {
           class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[1.8125rem] mt-[3rem]"
         >
           {{ $t("contacts.form.agreement") }}
-          <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
+          <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 py-[0.125rem] hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
         </p>
 
         <button

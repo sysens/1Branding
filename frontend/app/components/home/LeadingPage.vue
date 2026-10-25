@@ -289,7 +289,7 @@ const heroCopy = computed<HeroCopy>(() => {
 
 /* The landing's heading reveal (utils/reveal.ts) in CSS, so the hero comes
    in at first paint without waiting for the app: each line out of a blur,
-   fading in and rising a little, while a soft edge sweeps it in from left
+   rising a little, while a soft edge sweeps it in from left
    to right (apple.com's animated headline), the lines 0.15s apart. The
    sweep is a mask three times the line's width slid across it; the lead-in
    keeps its own fade-out mask under the sweep, so nothing jumps when the
@@ -322,9 +322,11 @@ const heroCopy = computed<HeroCopy>(() => {
   }
 }
 
+/* No fade: the sweep's mask already hides each line until its edge passes,
+   and text that starts at opacity 0 is not counted as painted, which made the
+   headline (the page's Largest Contentful Paint) wait for the animation. */
 @keyframes hero-line-in {
   from {
-    opacity: 0;
     filter: blur(1rem);
     translate: 0 0.28em;
   }

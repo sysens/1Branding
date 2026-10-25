@@ -529,6 +529,14 @@
     }
 }
 
+/* The green glow at the top of the inner pages: an 8 KB AVIF where the
+   browser takes it, else the 65 KB PNG (a WebP of this soft, transparent
+   gradient came out larger). It is the largest paint of some pages (contact). */
+.page-glow {
+    background: url("/home/Ellipse.png") top center / contain no-repeat;
+    background-image: image-set(url("/home/ellipse-glow.avif") type("image/avif"), url("/home/Ellipse.png") type("image/png"));
+}
+
 /* OptImage / optPictureHtml: the <picture> takes no box of its own, so styles
    written for the <img> (object-fit, absolute insets...) keep working. */
 .opt-picture {

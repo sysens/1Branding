@@ -34,7 +34,7 @@ usePageSeo({
 
     <div>
       <div
-        class="vg relative z-10 bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat pt-[1.875rem] md:pt-[3.75rem]"
+        class="vg relative z-10 page-glow pt-[1.875rem] md:pt-[3.75rem]"
       >
 
         <h1

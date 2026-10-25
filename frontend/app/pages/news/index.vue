@@ -64,7 +64,7 @@ useGsapContext(root, ({ gsap }) => {
 
       <div class="relative z-10 bg-black">
         <div
-          class="bg-[url('/home/Ellipse.png')] md:pt-[3.75rem] pt-[1.875rem] bg-contain bg-top bg-no-repeat"
+          class="page-glow md:pt-[3.75rem] pt-[1.875rem]"
         >
 
           <h1

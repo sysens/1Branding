@@ -95,7 +95,12 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
   let suppressClickUntil = 0;
   let resizeObserver: ResizeObserver | null = null;
 
-  const wallStyle = computed<CSSProperties>(() => ({
+  // Until the wall has measured its screen, the sizes come from the
+  // stylesheet (the same tile sizes at the same breakpoints, in
+  // InfiniteProjectsWall.vue): sizes for a 1280px screen written into the
+  // server's HTML moved every tile once a phone mounted the wall (CLS 1.0).
+  const measured = ref(false);
+  const wallStyle = computed<CSSProperties>(() => (!measured.value ? {} : {
     "--project-base-width": `${metrics.value.baseWidth}px`,
     "--project-base-height": `${metrics.value.baseHeight}px`,
     "--project-tile-width": `${metrics.value.tileWidth}px`,
@@ -171,6 +176,7 @@ export const useInfiniteProjectsWall = (): InfiniteWall => {
       ? (offsetY / previous.baseHeight) * next.baseHeight
       : -next.tileHeight * 0.35;
     metrics.value = next;
+    measured.value = true;
     gridCopies.value = {
       columns: Math.max(3, Math.ceil(container.clientWidth / next.baseWidth) + 2),
       rows: Math.max(3, Math.ceil(container.clientHeight / next.baseHeight) + 2),

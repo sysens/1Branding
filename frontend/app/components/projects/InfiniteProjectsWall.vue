@@ -114,7 +114,18 @@ useHead(() => ({
 </template>
 
 <style scoped>
+/* The wall's sizes before it measures its screen: the tiles of
+   getMetrics() in useInfiniteProjectsWall.ts (4 x 5 tiles of 16:9, 20px
+   apart; 500px wide, 390px up to 1024px, 285px up to 640px). Past 1920px the
+   script grows them with the root size once it runs. */
 .projects-wall {
+  --project-tile-width: 500px;
+  --project-wall-gap: 20px;
+  --project-tile-height: calc(var(--project-tile-width) * 9 / 16);
+  --project-base-width: calc(4 * (var(--project-tile-width) + var(--project-wall-gap)));
+  --project-base-height: calc(5 * (var(--project-tile-height) + var(--project-wall-gap)));
+  --project-grid-width: calc(var(--project-base-width) - var(--project-wall-gap));
+  --project-grid-height: calc(var(--project-base-height) - var(--project-wall-gap));
   position: fixed;
   inset: 0;
   z-index: 800;
@@ -126,6 +137,18 @@ useHead(() => ({
   overscroll-behavior: none;
   touch-action: none;
   user-select: none;
+}
+
+@media (max-width: 1024px) {
+  .projects-wall {
+    --project-tile-width: 390px;
+  }
+}
+
+@media (max-width: 640px) {
+  .projects-wall {
+    --project-tile-width: 285px;
+  }
 }
 
 .projects-wall--dragging {

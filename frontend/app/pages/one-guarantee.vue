@@ -125,7 +125,7 @@ onMounted(async () => {
               </video>
 
               <div
-                class="vg bg-[url('/home/Ellipse.png')] bg-contain bg-top bg-no-repeat relative z-10 md:pt-[3.75rem] pt-[1.875rem]"
+                class="vg page-glow relative z-10 md:pt-[3.75rem] pt-[1.875rem]"
               >
 
                 <h1
