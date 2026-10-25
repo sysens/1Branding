@@ -29,11 +29,17 @@ const loadingMore = ref(false);
 // has no news in it. Later pages keep that language, so the list never mixes.
 const listLocale = ref<CmsLocale>(locale.value);
 
+// "Show more" is a link to ?page=N, so crawlers reach every article: the
+// server renders the first N pages, the browser loads the next one in place.
+const route = useRoute();
+const requestedPages = computed(() => Math.min(25, Math.max(1, Number.parseInt(String(route.query.page ?? "1"), 10) || 1)));
+
 const fetchFirstPage = async () => {
+  const size = pageSize * requestedPages.value;
   try {
-    const current = await fetchNewsPage(1, pageSize, locale.value);
+    const current = await fetchNewsPage(1, size, locale.value);
     if (current.nodes.length || locale.value === "en") return { ...current, locale: locale.value };
-    return { ...(await fetchNewsPage(1, pageSize, "en")), locale: "en" as CmsLocale };
+    return { ...(await fetchNewsPage(1, size, "en")), locale: "en" as CmsLocale };
   } catch {
     // CMS down: an empty list rather than a 500 for the whole page.
     return { nodes: [] as NewsNode[], pageInfo: null as NewsPageInfo, locale: locale.value };
@@ -41,12 +47,12 @@ const fetchFirstPage = async () => {
 };
 
 // Rendered on the server and reused by the browser (no second request).
-const { data: firstPage } = await useAsyncData(() => `news-main-${locale.value}`, fetchFirstPage);
+const { data: firstPage } = await useAsyncData(() => `news-main-${locale.value}-${requestedPages.value}`, fetchFirstPage);
 
 watch(
   firstPage,
   (value) => {
-    page.value = 1;
+    page.value = requestedPages.value;
     items.value = value?.nodes ?? [];
     pageInfo.value = value?.pageInfo ?? null;
     listLocale.value = value?.locale ?? locale.value;
@@ -55,6 +61,8 @@ watch(
 );
 
 const canLoadMore = computed(() => {
+  const total = Number(pageInfo.value?.total);
+  if (Number.isFinite(total)) return items.value.length < total;
   const pi = pageInfo.value;
   if (!pi) return true;
   const current = Number(pi.page ?? page.value);
@@ -64,6 +72,7 @@ const canLoadMore = computed(() => {
 });
 
 const localePath = useLocalePath();
+const nextPageHref = computed(() => `${localePath("/news")}?page=${page.value + 1}`);
 
 const loadMore = async () => {
   if (loadingMore.value) return;
@@ -93,7 +102,7 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
         <NuxtLink
           v-for="item in items"
           :key="item.documentId"
-          :to="toNewsSlug(item.documentId)"
+          :to="toNewsSlug(item.slug || item.documentId)"
           class="block"
         >
           <!-- On phones the text sits under the picture, at the full width:
@@ -128,13 +137,16 @@ const toNewsSlug = (id: string) => localePath({ path: `/news/${id}` });
       </div>
     </div>
 
-    <button
-      :disabled="loadingMore || !canLoadMore"
+    <a
+      v-if="canLoadMore"
+      :href="nextPageHref"
+      :aria-busy="loadingMore"
       class="ob-button flex w-fit mx-auto mt-[3.125rem] mb-[6.25rem] md:my-[6.25rem]"
-      @click="loadMore"
+      @click.prevent="loadMore"
     >
       {{ $t("common.showMore") }}
-    </button>
+    </a>
+    <div v-else class="mt-[3.125rem] mb-[6.25rem] md:my-[6.25rem]" />
 
     <div class="md:containerr">
       <NewsSlider />

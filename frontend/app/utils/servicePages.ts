@@ -29,6 +29,8 @@ export interface ServicePage {
   /** The broader service this one is part of (breadcrumbs, links). */
   parent?: ServiceKey;
   related: ServiceKey[];
+  /** CMS case study tags shown as this service's work (none: no block). */
+  caseTags?: string[];
   /** Last content change, for the sitemap's lastmod. */
   updated: string;
 }
@@ -38,6 +40,7 @@ const UPDATED = "2026-10-23";
 export const SERVICE_PAGES: readonly ServicePage[] = [
   {
     key: "branding",
+    caseTags: ["Branding"],
     slugs: { en: "branding", ru: "brending", uz: "brending" },
     image: "/home/threeLayerLocal/26.webp",
     priceCategory: "Branding",
@@ -47,6 +50,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "logo",
+    caseTags: ["Logo"],
     slugs: { en: "logo-design", ru: "razrabotka-logotipa", uz: "logotip-yaratish" },
     image: "/home/threeLayerLocal/14.webp",
     priceCategory: "Logo",
@@ -56,6 +60,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "identity",
+    caseTags: ["Identity"],
     slugs: { en: "brand-identity", ru: "firmennyj-stil", uz: "firma-uslubi" },
     image: "/home/threeLayerLocal/22.webp",
     parent: "branding",
@@ -64,6 +69,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "brandbook",
+    caseTags: ["Identity"],
     slugs: { en: "brand-book", ru: "brendbuk", uz: "brendbuk" },
     image: "/home/threeLayerLocal/16.webp",
     parent: "branding",
@@ -79,6 +85,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "packaging",
+    caseTags: ["Packaging"],
     slugs: { en: "packaging-design", ru: "dizajn-upakovki", uz: "qadoq-dizayni" },
     image: "/home/threeLayerLocal/34.webp",
     priceCategory: "Packaging",
@@ -87,6 +94,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "print",
+    caseTags: ["Menu"],
     slugs: { en: "graphic-print-design", ru: "graficheskij-dizajn-i-poligrafiya", uz: "grafik-dizayn-va-poligrafiya" },
     image: "/home/threeLayerLocal/18.webp",
     related: ["identity", "packaging", "signage", "presentation"],
@@ -131,6 +139,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "uiux",
+    caseTags: ["UX/UI"],
     slugs: { en: "ui-ux-design", ru: "ui-ux-dizajn", uz: "ui-ux-dizayn" },
     image: "/home/threeLayerLocal/39.webp",
     related: ["web", "crm", "identity", "motion"],

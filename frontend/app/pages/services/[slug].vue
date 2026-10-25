@@ -81,6 +81,35 @@ const parent = computed(() => (service.parent ? {
   name: t(`servicePages.${service.parent}.name`),
   path: servicePath(service.parent, siteLocale.value),
 } : null));
+// The case studies tagged with this service (CMS), in the page's language or
+// in English where it has none.
+type CaseNode = { documentId?: string | null; slug?: string | null; section1?: { projectTitle?: string | null; images?: Array<{ url?: string | null } | null> | null } | null; tags?: Array<{ label?: string | null } | null> | null };
+const CASE_FIELDS = "nodes { documentId slug section1 { projectTitle images { url } } tags { label } }";
+const { data: caseData } = await useCmsQuery<{ projectsPages_connection?: { nodes?: CaseNode[] | null } | null; fallback?: { nodes?: CaseNode[] | null } | null }>(
+  "service-cases",
+  `query ServiceCases($locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode, $withFallback: Boolean!) {
+    projectsPages_connection(locale: $locale, pagination: { pageSize: 50 }) { ${CASE_FIELDS} }
+    fallback: projectsPages_connection(locale: $fallbackLocale, pagination: { pageSize: 50 }) @include(if: $withFallback) { ${CASE_FIELDS} }
+  }`,
+);
+const cmsMedia = useCmsMedia();
+const cases = computed(() => {
+  const tags = service.caseTags ?? [];
+  if (!tags.length) return [];
+  const own = caseData.value?.data?.projectsPages_connection?.nodes ?? [];
+  const nodes = own.length ? own : caseData.value?.data?.fallback?.nodes ?? [];
+  return nodes
+    .map((node) => ({
+      key: node?.documentId || "",
+      title: cmsText(node?.section1?.projectTitle),
+      image: cmsMedia(node?.section1?.images?.[0]?.url),
+      path: localePath(`/projects/${node?.slug?.trim() || node?.documentId}`),
+      match: (node?.tags ?? []).some((tag) => tags.includes(tag?.label?.trim() || "")),
+    }))
+    .filter((item) => item.key && item.title && item.image && item.match)
+    .slice(0, 3);
+});
+
 const related = computed(() => service.related.map((key) => ({
   key,
   name: t(`servicePages.${key}.name`),
@@ -200,21 +229,43 @@ usePageSeo({
 
       <section v-if="plans.length" class="service-section" aria-labelledby="service-prices">
         <h2 id="service-prices" v-blur-reveal class="service-heading">{{ t("servicesPage.pricesTitle", { name }) }}</h2>
-        <ul class="service-plans" data-reveal-row>
-          <li v-for="plan in plans" :key="plan.name" v-rise>
-            <p class="service-plans__name">{{ plan.name }}</p>
-            <!-- The words around the price follow each language's order ("от $900", "$900 dan"). -->
-            <p class="service-plans__price">
-              <template v-for="(part, index) in priceParts(plan.price)" :key="index">
-                <span v-if="part.word">{{ part.text }}</span><template v-else>{{ part.text }}</template>
-              </template>
-            </p>
-          </li>
-        </ul>
+        <!-- A table (package, price) drawn as the design's cards: the head is
+             for screen readers and search engines, each row is a card. -->
+        <table class="service-plans" data-reveal-row>
+          <thead class="sr-only">
+            <tr>
+              <th scope="col">{{ t("pricing.tablePackage") }}</th>
+              <th scope="col">{{ t("pricing.tablePrice") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="plan in plans" :key="plan.name" v-rise>
+              <th scope="row" class="service-plans__name">{{ plan.name }}</th>
+              <!-- The words around the price follow each language's order ("от $900", "$900 dan"). -->
+              <td class="service-plans__price">
+                <template v-for="(part, index) in priceParts(plan.price)" :key="index">
+                  <span v-if="part.word">{{ part.text }}</span><template v-else>{{ part.text }}</template>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <p v-rise class="service-note">
           {{ t("servicesPage.pricesNote") }}
           <NuxtLink :to="localePath('/pricing')">{{ t("servicesPage.allPrices") }}</NuxtLink>
         </p>
+      </section>
+
+      <section v-if="cases.length" class="service-section" aria-labelledby="service-cases">
+        <h2 id="service-cases" v-blur-reveal class="service-heading">{{ t("servicesPage.casesTitle") }}</h2>
+        <ul class="service-related" data-reveal-row>
+          <li v-for="item in cases" :key="item.key" v-rise>
+            <NuxtLink :to="item.path" class="service-card">
+              <NuxtImg :src="item.image" :alt="item.title" width="800" height="450" sizes="xs:90vw md:30vw" format="webp" fit="cover" loading="lazy" decoding="async" />
+              <span class="service-card__name">{{ item.title }}</span>
+            </NuxtLink>
+          </li>
+        </ul>
       </section>
 
       <section class="service-section" aria-labelledby="service-faq">

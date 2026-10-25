@@ -9,6 +9,7 @@
   overflow-x: clip;
   min-height: 100vh;
   background: #000 url("/home/Ellipse.png") top center / contain no-repeat;
+  background-image: image-set(url("/home/ellipse-glow.avif") type("image/avif"), url("/home/Ellipse.png") type("image/png"));
   color: #fff;
 }
 
@@ -45,7 +46,10 @@
   color: rgb(255 255 255 / 0.3);
 }
 
+/* Small links get a 24px-tall hit area (WCAG target size): vertical padding
+   on an inline link grows what can be tapped without moving the lines. */
 .service-crumbs a {
+  padding-block: 0.3rem;
   text-decoration: none;
   transition: color 0.25s ease;
 }
@@ -291,11 +295,23 @@
   list-style: none;
 }
 
-.service-plans li {
+.service-plans tbody {
+  display: contents;
+}
+
+.service-plans tr {
+  display: block;
   padding: 1.875rem 1.75rem;
   border: 1px solid rgb(3 203 0 / 0.45);
   border-radius: 1.5rem;
   background: radial-gradient(120% 120% at 0% 0%, rgb(3 203 0 / 0.16), rgb(3 203 0 / 0) 60%);
+}
+
+.service-plans__name,
+.service-plans__price {
+  display: block;
+  padding: 0;
+  text-align: left;
 }
 
 .service-plans__name {
@@ -336,6 +352,7 @@
 }
 
 .service-note a {
+  padding-block: 0.2rem;
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 0.2em;
