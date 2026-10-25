@@ -398,7 +398,7 @@
   },
   "aboutPage": {
     "title": "Meet our team",
-    "moreButton": "More",
+    "moreButton": "All projects",
     "cms": {
       "section1Title": "Meet our team",
       "section2": [
@@ -746,7 +746,8 @@
     "palette": "Colour palette",
     "more": "Want a project like this?",
     "services": "Our services",
-    "contact": "Discuss your project"
+    "contact": "Discuss your project",
+    "untitled": "OneBranding project"
   },
   "header": {
     "allServices": "All services",

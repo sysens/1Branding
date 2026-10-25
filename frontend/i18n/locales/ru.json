@@ -398,7 +398,7 @@
   },
   "aboutPage": {
     "title": "Познакомьтесь с нашей командой",
-    "moreButton": "Подробнее",
+    "moreButton": "Все проекты",
     "cms": {
       "section1Title": "Познакомьтесь с нашей командой",
       "section2": [
@@ -746,7 +746,8 @@
     "palette": "Цветовая палитра",
     "more": "Хотите похожий проект?",
     "services": "Наши услуги",
-    "contact": "Обсудить проект"
+    "contact": "Обсудить проект",
+    "untitled": "Проект OneBranding"
   },
   "header": {
     "allServices": "Все услуги",

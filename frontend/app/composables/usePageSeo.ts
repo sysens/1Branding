@@ -7,6 +7,7 @@ import {
   withSiteName,
   type BreadcrumbItem,
 } from "~/utils/seo";
+import { optEntry } from "~/utils/optImage";
 import { SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
 
 type JsonLd = Record<string, unknown>;
@@ -80,7 +81,13 @@ export const usePageSeo = (input: PageSeoInput) => {
     if (!value) return `${origin}${DEFAULT_OG_IMAGE.path}`;
     return /^https?:\/\//i.test(value) ? value : `${origin}${value.startsWith("/") ? "" : "/"}${value}`;
   });
-  const isDefaultImage = computed(() => image.value === `${origin}${DEFAULT_OG_IMAGE.path}`);
+  // Link previews size their card from these: the branded card's own, or the
+  // source size of a site image that has build-time copies (utils/optImage.ts).
+  const imageSize = computed(() => {
+    if (image.value === `${origin}${DEFAULT_OG_IMAGE.path}`) return DEFAULT_OG_IMAGE;
+    const entry = image.value.startsWith(origin) ? optEntry(image.value.slice(origin.length)) : null;
+    return entry ? { width: entry.w, height: entry.h } : null;
+  });
 
   const alternates = computed(() => {
     // One language alone has no alternates to name.
@@ -128,8 +135,8 @@ export const usePageSeo = (input: PageSeoInput) => {
     ogLocale: () => OG_LOCALES[lang.value],
     ogLocaleAlternate: () => alternateLocales.value.filter((code) => code !== lang.value).map((code) => OG_LOCALES[code]),
     ogImage: () => image.value,
-    ogImageWidth: () => (isDefaultImage.value ? DEFAULT_OG_IMAGE.width : undefined),
-    ogImageHeight: () => (isDefaultImage.value ? DEFAULT_OG_IMAGE.height : undefined),
+    ogImageWidth: () => imageSize.value?.width,
+    ogImageHeight: () => imageSize.value?.height,
     ogImageAlt: () => toValue(input.imageAlt) || fullTitle.value,
     twitterCard: "summary_large_image",
     twitterTitle: () => fullTitle.value,

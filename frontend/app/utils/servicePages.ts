@@ -42,7 +42,8 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     image: "/home/threeLayerLocal/26.webp",
     priceCategory: "Branding",
     related: ["logo", "identity", "brandbook", "strategy", "packaging"],
-    updated: UPDATED,
+    // Title moved off "branding agency", which is the home page's query.
+    updated: "2026-10-25",
   },
   {
     key: "logo",

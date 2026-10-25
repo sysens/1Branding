@@ -398,7 +398,7 @@
   },
   "aboutPage": {
     "title": "Jamoamiz bilan tanishing",
-    "moreButton": "Batafsil",
+    "moreButton": "Barcha loyihalar",
     "cms": {
       "section1Title": "Jamoamiz bilan tanishing",
       "section2": [
@@ -746,7 +746,8 @@
     "palette": "Rang palitrasi",
     "more": "Sizga ham shunday loyiha kerakmi?",
     "services": "Xizmatlarimiz",
-    "contact": "Loyihani muhokama qilish"
+    "contact": "Loyihani muhokama qilish",
+    "untitled": "OneBranding loyihasi"
   },
   "header": {
     "allServices": "Barcha xizmatlar",

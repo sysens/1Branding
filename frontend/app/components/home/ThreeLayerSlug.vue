@@ -140,8 +140,8 @@ const marqueeItems = computed<MarqueeItem[]>(() => {
       .map((project, projectIdx) => {
         const id = project?.documentId?.trim() || "";
         const title =
-          project?.section1?.projectTitle?.trim() ||
-          cat?.categoryName?.trim() ||
+          cmsText(project?.section1?.projectTitle) ||
+          cmsText(cat?.categoryName) ||
           "Project";
         const raw = project?.section1?.images?.[0]?.url ?? "";
         const src = resolveMedia(raw);

@@ -55,6 +55,7 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
   const cmsMedia = useCmsMedia();
   const localePath = useLocalePath();
   const gqlLocale = useCmsLocale();
+  const { t } = useI18n();
 
   const fetchProjects = async (
     localeValue: CmsLocale
@@ -95,7 +96,9 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
         return {
           id,
           image,
-          title: project.section1?.projectTitle?.trim() || "Project",
+          // The CMS projects still carry "Lorem ipsum" titles: those never
+          // become the image's alt or the link's name.
+          title: cmsText(project.section1?.projectTitle) || t("project.untitled"),
           to: localePath({ path: `/projects/${id}` }),
         };
       })
