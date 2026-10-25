@@ -184,6 +184,23 @@ const submit = async (ip, payload) => {
   const kept = Boolean(await strapi.db.query('plugin::upload.file').findOne({ where: { id: fileId } }));
   check('orphan upload removed, attached one kept', removed >= 1 && gone && kept, `removed ${removed}`);
 
+  // News translations: a language version is created once, with the English
+  // entry's pictures, and an edited one is never overwritten; a text fix applies once.
+  const { applyNewsTranslations } = require(path.join(appDir, 'dist/src/utils/news-translations.js'));
+  const news = strapi.documents('api::news-page.news-page');
+  const article = await news.create({ locale: 'en', data: { title: 'English title', text: 'It is more contrasted, насыщенный and confident.', image: fileId, images: [fileId] } });
+  const translations = [{ documentId: article.documentId, locale: 'ru', title: 'Русский заголовок', text: 'Русский текст.' }];
+  const fixes = [{ documentId: article.documentId, locale: 'en', from: 'насыщенный', to: 'richer' }];
+  await applyNewsTranslations(strapi, translations, fixes);
+  let ru = await news.findOne({ documentId: article.documentId, locale: 'ru', populate: ['image', 'images'] });
+  const en = await news.findOne({ documentId: article.documentId, locale: 'en', populate: ['image'] });
+  check('news: ru version created with the pictures', ru?.title === 'Русский заголовок' && ru?.image?.id === fileId && ru?.images?.length === 1, JSON.stringify({ title: ru?.title, image: ru?.image?.id, images: ru?.images?.length }));
+  check('news: English text fixed, its picture kept', en?.text === 'It is more contrasted, richer and confident.' && en?.image?.id === fileId, en?.text);
+  await news.update({ documentId: article.documentId, locale: 'ru', data: { title: 'Edited' } });
+  await applyNewsTranslations(strapi, translations, fixes);
+  ru = await news.findOne({ documentId: article.documentId, locale: 'ru' });
+  check('news: an edited version is not overwritten', ru?.title === 'Edited', ru?.title);
+
   await app.destroy();
   const failed = results.filter((x) => !x.ok).length;
   console.log(`\n${results.length - failed}/${results.length} passed`);
