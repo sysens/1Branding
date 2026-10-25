@@ -20,6 +20,13 @@ const services = computed(() => SERVICE_PAGES.map((page) => ({
   path: servicePath(page.key, siteLocale.value),
 })));
 
+// The title's face (Display Semibold) is fetched with the HTML: the hero is
+// visible from the first paint, and swapping the title in late moved the
+// picture and the buttons under it (a layout shift).
+useServerHead({
+  link: [{ rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Display-Semibold.woff2", crossorigin: "" }],
+});
+
 usePageSeo({
   title: computed(() => t("servicesHub.title")),
   description: computed(() => t("servicesHub.description")),
@@ -51,15 +58,24 @@ usePageSeo({
       </nav>
 
       <section class="service-hub__intro" aria-labelledby="services-hub-title">
-        <p v-rise class="service-eyebrow">{{ t("servicesHub.eyebrow") }}</p>
-        <h1 id="services-hub-title" v-blur-reveal class="service-hero__title">{{ t("servicesHub.h1") }}</h1>
-        <p v-rise class="service-hero__lead">{{ t("servicesHub.lead") }}</p>
+        <p class="service-eyebrow service-hero__intro">{{ t("servicesHub.eyebrow") }}</p>
+        <h1 id="services-hub-title" class="service-hero__title service-hero__intro" style="--intro-step: 1">{{ t("servicesHub.h1") }}</h1>
+        <p class="service-hero__lead service-hero__intro" style="--intro-step: 2">{{ t("servicesHub.lead") }}</p>
       </section>
 
       <section class="service-section" aria-labelledby="services-hub-list">
         <h2 id="services-hub-list" class="sr-only">{{ t("servicesHub.listTitle") }}</h2>
         <ul class="service-hub__grid" data-reveal-row>
-          <li v-for="(service, index) in services" :key="service.key" v-rise>
+          <!-- The first row is on screen as the page opens: it comes in with the
+               hero (CSS), not on the app's reveal, which kept the first
+               picture (the page's largest paint) hidden for seconds. -->
+          <li
+            v-for="(service, index) in services"
+            :key="service.key"
+            v-rise="index < 3 ? false : undefined"
+            :class="{ 'service-hero__intro': index < 3 }"
+            :style="index < 3 ? { '--intro-step': 3 + index } : undefined"
+          >
             <NuxtLink :to="service.path" class="service-card">
               <OptImage
                 :src="service.image"
@@ -68,6 +84,7 @@ usePageSeo({
                 width="800"
                 height="600"
                 :loading="index < 3 ? 'eager' : 'lazy'"
+                :fetchpriority="index === 0 ? 'high' : undefined"
                 decoding="async"
               />
               <span class="service-card__name">{{ service.name }}</span>

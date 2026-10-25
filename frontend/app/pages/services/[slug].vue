@@ -89,6 +89,13 @@ const related = computed(() => service.related.map((key) => ({
   path: servicePath(key, siteLocale.value),
 })));
 
+// The title's face (Display Semibold) is fetched with the HTML: the hero is
+// visible from the first paint, and swapping the title in late moved the
+// picture and the buttons under it (a layout shift).
+useServerHead({
+  link: [{ rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Display-Semibold.woff2", crossorigin: "" }],
+});
+
 usePageSeo({
   title: computed(() => copy.value!.title),
   description: computed(() => copy.value!.description),
@@ -150,15 +157,15 @@ usePageSeo({
 
       <section class="service-hero" aria-labelledby="service-title">
         <div class="service-hero__text">
-          <p v-rise class="service-eyebrow">{{ t("servicesPage.eyebrow") }}</p>
-          <h1 id="service-title" v-blur-reveal class="service-hero__title">{{ copy.h1 }}</h1>
-          <p v-rise class="service-hero__lead">{{ copy.lead }}</p>
-          <div v-rise class="service-hero__actions">
+          <p class="service-eyebrow service-hero__intro">{{ t("servicesPage.eyebrow") }}</p>
+          <h1 id="service-title" class="service-hero__title service-hero__intro" style="--intro-step: 1">{{ copy.h1 }}</h1>
+          <p class="service-hero__lead service-hero__intro" style="--intro-step: 2">{{ copy.lead }}</p>
+          <div class="service-hero__actions service-hero__intro" style="--intro-step: 3">
             <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="ob-button">{{ copy.cta.button }}</NuxtLink>
             <a :href="`tel:${COMPANY.phone.e164}`" class="service-hero__phone">{{ COMPANY.phone.display }}</a>
           </div>
         </div>
-        <div v-rise class="service-hero__picture">
+        <div class="service-hero__picture service-hero__intro" style="--intro-step: 2">
           <OptImage :src="service.image" :alt="copy.h1" sizes="(min-width: 900px) 46vw, 92vw" width="1200" height="900" loading="eager" fetchpriority="high" decoding="async" />
         </div>
       </section>

@@ -71,9 +71,12 @@ usePageSeo({
     <div class="relative z-10">
       <div class="vg md:pt-[3.75rem] pt-[1.875rem]">
 
-        <header class="pricing-intro">
-          <h1 v-blur-reveal>{{ $t("seo.price.h1") }}</h1>
-          <p v-rise>{{ $t("pricing.lead") }}</p>
+        <!-- The title comes in with the first paint (CSS), as on the other
+             inner pages: a reveal waiting for the app's JavaScript kept it
+             hidden for seconds on a slow phone. -->
+        <header class="pricing-intro intro-slide-in">
+          <h1>{{ $t("seo.price.h1") }}</h1>
+          <p>{{ $t("pricing.lead") }}</p>
         </header>
 
         <div class="mx-auto max-w-[110rem] touch-pan-y">

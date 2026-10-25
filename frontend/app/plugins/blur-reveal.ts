@@ -20,7 +20,9 @@ import { prefersReducedMotion, REVEAL_STEP_MS, revealIn } from "~/utils/reveal";
 // yet: the landing hydrates its sections lazily, and waiting for that made
 // content appear late and all at once. `data-blur-reveal="manual"` marks text
 // a section reveals itself (on a scroll cue); it shares the hidden state but is
-// not watched here.
+// not watched here. A value of `false` turns the reveal off for that element
+// (the first cards of a list that is on screen as the page opens, which come
+// in with CSS instead).
 
 const SELECTOR = '[data-blur-reveal]:not([data-blur-reveal="manual"]):not([data-revealed]), [data-rise]:not([data-revealed])';
 const CUE = 0.9;
@@ -82,12 +84,13 @@ const watchPage = () => {
   document.querySelectorAll<HTMLElement>(SELECTOR).forEach(watch);
 };
 
-const directive = (attribute: string): ObjectDirective<HTMLElement, number | undefined> => ({
-  getSSRProps: (binding) => ({
+const directive = (attribute: string): ObjectDirective<HTMLElement, number | false | undefined> => ({
+  getSSRProps: (binding) => (binding.value === false ? {} : {
     [attribute]: "",
     style: binding.value ? { "--reveal-delay": `${binding.value}s` } : undefined,
   }),
   mounted(element, binding) {
+    if (binding.value === false) return;
     if (!element.hasAttribute(attribute)) element.setAttribute(attribute, "");
     if (binding.value) element.style.setProperty("--reveal-delay", `${binding.value}s`);
     watch(element);

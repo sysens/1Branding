@@ -88,6 +88,28 @@
   font-weight: 600;
 }
 
+/* The hero is on screen as the page opens, so it comes in with the first
+   paint, as CSS, instead of a reveal that waits for the app's JavaScript: that
+   kept the title and lead hidden for seconds on a slow phone, and they are the
+   page's Largest Contentful Paint. It only rises (no fade): text that starts
+   at opacity 0 does not count as painted. */
+.service-hero__intro {
+  animation: service-hero-rise 0.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+  animation-delay: calc(var(--intro-step, 0) * 0.15s);
+}
+
+@keyframes service-hero-rise {
+  from {
+    translate: 0 1.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-hero__intro {
+    animation: none;
+  }
+}
+
 .service-hero__lead {
   max-width: var(--type-measure);
   margin: 1.75rem 0 0;
