@@ -31,30 +31,32 @@ const longTermImageCacheHeaders = {
 const publicAssetCacheHeaders = {
   "cache-control": "public, max-age=31536000",
 };
-// Content Security Policy in report-only mode: the browser reports what it
-// would block (in the console) without blocking anything, so it can be
-// tightened safely before it is enforced. It lists the hosts the site uses:
-// the CMS and its R2 media, Spline scenes, Cloudflare's analytics beacon, and
-// GA4 / Yandex Metrika for when their IDs are set (plugins/analytics.client.ts).
-const contentSecurityPolicy = [
+// Content Security Policy, enforced since 2026-10-25 after a run in
+// report-only mode: the pages, with GA4 and Yandex Metrika on, reported
+// nothing beyond what is listed here. It lists the hosts the site uses: the
+// CMS and its R2 media, Spline scenes (scene files and the runtime's wasm),
+// Cloudflare's analytics beacon, GA4 and Yandex Metrika (its tag frame too).
+const contentSecurityPolicy = (scriptExtra = "") => [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com https://mc.yandex.ru https://prod.spline.design",
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${scriptExtra} https://static.cloudflareinsights.com https://www.googletagmanager.com https://mc.yandex.ru https://prod.spline.design`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://onebrandingbackend.up.railway.app https://*.r2.dev https://prod.spline.design https://cloudflareinsights.com https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com",
-  "media-src 'self' blob: https://*.r2.dev",
+  "connect-src 'self' https://onebrandingbackend.up.railway.app https://*.r2.dev https://prod.spline.design https://cdn.spline.design https://cloudflareinsights.com https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com",
+  "media-src 'self' data: blob: https://*.r2.dev",
   "worker-src 'self' blob:",
-  "frame-src 'self'",
+  "frame-src 'self' https://mc.yandex.ru https://mc.yandex.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
 ].join("; ");
+// The home page's Spline scene: its runtime calls eval. No other page may.
+const homeContentSecurityPolicy = contentSecurityPolicy(" 'unsafe-eval'");
 const securityHeaders = {
   // Every subdomain (www included) is served over HTTPS by Cloudflare.
   "strict-transport-security": "max-age=31536000; includeSubDomains",
-  "content-security-policy-report-only": contentSecurityPolicy,
+  "content-security-policy": contentSecurityPolicy(),
   "x-frame-options": "SAMEORIGIN",
   "x-content-type-options": "nosniff",
   "referrer-policy": "strict-origin-when-cross-origin",
@@ -173,7 +175,9 @@ export default defineNuxtConfig({
     // and Uzbek under "/uz". The English pages used to be under "/en": those
     // links get one 301 to the final URL in server/middleware/legacy-urls.ts.
     ...Object.fromEntries(localePrefixes.flatMap((prefix) => [
-      ...cachedPages.map((path) => [path === "/" ? prefix || "/" : `${prefix}${path}`, pageCache]),
+      ...cachedPages.map((path) => path === "/"
+        ? [prefix || "/", { ...pageCache, headers: { "content-security-policy": homeContentSecurityPolicy } }]
+        : [`${prefix}${path}`, pageCache]),
       ...["/services/**", "/projects/**", "/news/**"].map((path) => [`${prefix}${path}`, pageCache]),
     ])),
     "/_ipx/**": {

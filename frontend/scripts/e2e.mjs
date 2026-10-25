@@ -73,6 +73,13 @@ try {
   check("other host gets its own cache entry", other.includes('href="https://onebranding.up.railway.app/"'), (other.match(/rel="canonical"[^>]*/) || [""])[0]);
 
   check("no x-powered-by header", !res.headers.get("x-powered-by"), res.headers.get("x-powered-by") || "");
+  // The CSP is enforced; only the home page (its Spline scene) may use eval.
+  check("home CSP enforced, eval allowed", /'unsafe-eval'/.test(res.headers.get("content-security-policy") || ""), (res.headers.get("content-security-policy") || "").slice(0, 60));
+  {
+    const about = await fetch(`${BASE}/about`, { headers });
+    const policy = about.headers.get("content-security-policy") || "";
+    check("page CSP enforced, no eval", policy.includes("frame-src 'self' https://mc.yandex.ru") && !policy.includes("'unsafe-eval'"), policy.slice(0, 60));
+  }
   check("permissions-policy set", /camera=\(\)/.test(res.headers.get("permissions-policy") || ""), res.headers.get("permissions-policy") || "");
   check("home lists every language", ["en", "ru", "uz", "x-default"].every((code) => first.includes(`hreflang="${code}"`)), "");
   res = await fetch(`${BASE}/ru`, { headers });
