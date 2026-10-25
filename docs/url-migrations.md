@@ -19,6 +19,8 @@ The pages now live at readable addresses; the old address by CMS document ID ans
 
 A new case study or article gets its slug in the admin panel (field "slug"); until it has one, its page stays at its document ID.
 
+The old address formats of 2026-10-13/14 (`/ProjectSlug/<id>`, `/NewsSlug/<id>`, with or without `/ru`, `/uz`, `/en`) also answer with one 301 straight to the slug (`server/utils/cmsSlugs.ts`, which reads the ids and slugs from the CMS every 10 minutes); when the CMS does not answer, they go to `/projects/<id>`, which redirects once more.
+
 ## 2026-10-23: service pages
 
 `/services/<category id>` (the CMS category) became the repo's own service pages with a slug in each language, for example `/services/logo-design`, `/ru/services/razrabotka-logotipa`, `/uz/services/logotip-yaratish`. `/services/rq51r0st097n29olxjbe1q5h` answers with a 301 to `/services/branding`, and a service slug of another language to the page's own (`server/middleware/legacy-urls.ts`).

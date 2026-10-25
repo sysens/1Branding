@@ -4,6 +4,11 @@ What changed on the site and when, for search. When rankings or traffic move, co
 
 ## 2026-10-25
 
+- Evening: browsers revalidate a page's HTML on every visit (`Cache-Control: max-age=0, s-maxage=300`, also on a 304), so none keeps HTML that points at a previous build's files; before, a page opened again within minutes of a deploy could load without its stylesheet (`server/plugins/page-cache-control.ts`).
+- Evening: an old case study or article address (`/ProjectSlug/<id>`, `/NewsSlug/<id>`) answers with one 301 straight to its readable address, not two.
+- Evening: case study pages: section headings one step below the page title (h3, 40 / 26px; the title is 56 / 32px).
+- Evening: sitemap lastmod 2026-10-25 for the pages that changed that day (site copy, and the service pages that now show case studies).
+- Evening: [ai-prompts.csv](ai-prompts.csv): 23 questions clients ask AI assistants (ru/uz/en), each with the page that answers it, to check every month.
 - Case studies: real titles, texts and palettes instead of "Lorem ipsum" (Poyqadam, Raviosta, RUSH, Street Vibe Tuning, grechno), in English, Russian and Uzbek; they are indexable and in the sitemap.
 - Readable addresses for case studies and articles (`/projects/<slug>`, `/news/<slug>`), the old ones 301 ([url-migrations.md](url-migrations.md)).
 - Blog: "How much does a logo cost in Tashkent in 2026?" and "Logo, brand identity and brand book: what is the difference?" in en/ru/uz; the Pepsi article in Russian and Uzbek. The CMS has an Uzbek locale.
@@ -25,4 +30,5 @@ What changed on the site and when, for search. When rankings or traffic move, co
 1. Run `node frontend/scripts/seo-crawl.mjs` and fix what it reports.
 2. Search Console: Pages (indexed vs. sitemap, "Duplicate", "Not found"), Performance by page, Core Web Vitals.
 3. Rerun the queries of [keyword-map.csv](keyword-map.csv) and note the positions there.
-4. Review content: prices, claims, team, case studies; update, merge or remove what is outdated, and note it here.
+4. Every month: ask the questions of [ai-prompts.csv](ai-prompts.csv) in ChatGPT, Perplexity, Gemini, Alice and Google (AI Overview), and note whether OneBranding is named or linked.
+5. Review content: prices, claims, team, case studies; update, merge or remove what is outdated, and note it here.
