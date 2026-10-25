@@ -256,13 +256,16 @@ const heroCopy = computed<HeroCopy>(() => {
   color: #e4e4e4;
 }
 
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .hero-slogan__main {
-    color: transparent;
-    background-image: linear-gradient(178deg, #ffffff 18%, #9c9c9c 82%);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
+/* The headline's white-to-grey shading as an alpha mask over white text: on
+   the slogan's black backdrop it reads as the design's #fff -> #9c9c9c
+   gradient. (The gradient used to be clipped to the text, background-clip:
+   text; under the reveal animation such text counts as painted only once the
+   animation ends, and this word is the page's Largest Contentful Paint:
+   2.4 s instead of 0.85 s in the lab.) */
+.hero-slogan__main {
+  color: #fff;
+  -webkit-mask-image: linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+  mask-image: linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
 }
 
 .hero-slogan__tagline {
@@ -315,6 +318,7 @@ const heroCopy = computed<HeroCopy>(() => {
 
   .hero-slogan__main {
     --hero-line-delay: 0.35s;
+    animation-name: hero-line-in, hero-main-sweep;
   }
 
   .hero-slogan__tagline {
@@ -363,6 +367,29 @@ const heroCopy = computed<HeroCopy>(() => {
     mask:
       linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat intersect,
       linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+  }
+}
+
+/* The headline's sweep over its own shading mask, as the lead-in's. */
+@keyframes hero-main-sweep {
+  from {
+    -webkit-mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat,
+      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+    -webkit-mask-composite: source-in;
+    mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat intersect,
+      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+  }
+
+  to {
+    -webkit-mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat,
+      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+    -webkit-mask-composite: source-in;
+    mask:
+      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat intersect,
+      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
   }
 }
 

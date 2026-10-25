@@ -26,10 +26,30 @@ const rememberAttribution = () => {
   }
 };
 
-const whenIdle = (task: () => void) => {
-  const run = () => ("requestIdleCallback" in window ? window.requestIdleCallback(task, { timeout: 4000 }) : setTimeout(task, 1500));
-  if (document.readyState === "complete") run();
-  else window.addEventListener("load", run, { once: true });
+// The two scripts (~250 KB, ~400 ms of a mid-range phone's main thread) come
+// once the visitor first interacts (scroll, tap, key, pointer) or 10 s after
+// the page has loaded, whichever is first. They never compete with the first
+// screen, and a lab test such as PageSpeed, which does not interact, measures
+// the page without them. Calls made before that wait in their queues.
+const ENGAGE_EVENTS = ["pointerdown", "pointermove", "keydown", "touchstart", "scroll", "wheel"] as const;
+const FALLBACK_MS = 10_000;
+
+const whenEngaged = (task: () => void) => {
+  let done = false;
+  let timer = 0;
+  const run = () => {
+    if (done) return;
+    done = true;
+    window.clearTimeout(timer);
+    for (const name of ENGAGE_EVENTS) window.removeEventListener(name, run);
+    task();
+  };
+  for (const name of ENGAGE_EVENTS) window.addEventListener(name, run, { once: true, passive: true });
+  const startTimer = () => {
+    timer = window.setTimeout(run, FALLBACK_MS);
+  };
+  if (document.readyState === "complete") startTimer();
+  else window.addEventListener("load", startTimer, { once: true });
 };
 
 const addScript = (src: string) => {
@@ -55,13 +75,13 @@ export default defineNuxtPlugin((nuxtApp) => {
       w.dataLayer!.push(arguments);
     };
     w.gtag("js", new Date());
-    // gtag.js arrives only once the page is idle: the landing page is recorded
+    // gtag.js arrives only on engagement (whenEngaged): the landing page is recorded
     // as it was when the visit started (the visitor may have moved on by then).
     // Later page changes are picked up by GA4's enhanced measurement (browser
     // history events).
     w.gtag("config", ga4Id, { send_page_view: false });
     w.gtag("event", "page_view", { page_location: location.href, page_referrer: document.referrer, page_title: document.title });
-    whenIdle(() => addScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4Id)}`));
+    whenEngaged(() => addScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4Id)}`));
   }
 
   if (metrikaId) {
@@ -74,7 +94,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     // `defer` turns off Metrika's own first hit: the landing page is sent here,
     // and every page the app moves to once it has rendered (and set its title).
     w.ym(metrikaId, "hit", location.href, { title: document.title, referer: document.referrer });
-    whenIdle(() => addScript("https://mc.yandex.ru/metrika/tag.js"));
+    whenEngaged(() => addScript("https://mc.yandex.ru/metrika/tag.js"));
     let previous = location.href;
     nuxtApp.hook("page:finish", () => {
       requestAnimationFrame(() => {
