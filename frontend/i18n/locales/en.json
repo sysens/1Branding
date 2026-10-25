@@ -494,7 +494,8 @@
       "company": "Company*",
       "phone": "Phone*",
       "email": "E-mail*",
-      "agreement": "By sending the request, you agree to the processing of your personal data as described in our",
+      "agreement": "I agree to the processing of my personal data as described in the",
+      "consentRequired": "Please agree to the processing of your personal data.",
       "privacyLink": "privacy policy"
     }
   },

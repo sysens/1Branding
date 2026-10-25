@@ -59,6 +59,8 @@ const securityHeaders = {
   "x-content-type-options": "nosniff",
   "referrer-policy": "strict-origin-when-cross-origin",
   "cross-origin-opener-policy": "same-origin",
+  // The site needs none of the device features; nothing on it (or embedded in it) may ask.
+  "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
 };
 const cachedPages = ["/", "/about", "/contact", "/pricing", "/one-guarantee", "/projects", "/news", "/services", "/privacy"];
 // Every language but the default one lives under its own prefix.

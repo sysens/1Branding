@@ -61,6 +61,9 @@ export const useContactForm = (notify: Notify) => {
   const emailVal = ref("");
   const selectedFile = ref<File | null>(null);
   const honeypotVal = ref("");
+  // The visitor's consent to the processing of their personal data (the
+  // checkbox under the form); the request is not sent without it.
+  const consentVal = ref(false);
   const sending = ref(false);
 
   let formOpenedAt = 0;
@@ -111,6 +114,7 @@ export const useContactForm = (notify: Notify) => {
       emailVal.value.trim().length > LIMITS.email;
     if (tooLong) return t("common.error");
     if (!selectedFile.value) return t("common.fileRequired");
+    if (!consentVal.value) return t("contacts.form.consentRequired");
     return null;
   };
 
@@ -153,6 +157,7 @@ export const useContactForm = (notify: Notify) => {
   const reset = () => {
     for (const field of [topicVal, servicesVal, fullNameVal, jobTitleVal, companyVal, phoneVal, emailVal]) field.value = "";
     selectedFile.value = null;
+    consentVal.value = false;
     uploaded = null;
     formOpenedAt = Date.now();
   };
@@ -216,6 +221,7 @@ export const useContactForm = (notify: Notify) => {
     emailVal,
     selectedFile,
     honeypotVal,
+    consentVal,
     sending,
     setFile,
     submit,

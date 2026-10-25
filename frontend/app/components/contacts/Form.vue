@@ -49,6 +49,7 @@ const {
   emailVal,
   selectedFile,
   honeypotVal,
+  consentVal,
   sending,
   setFile,
   submit,
@@ -339,12 +340,23 @@ onBeforeUnmount(() => {
           </div>
         </form>
 
-        <p
-          class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[1.8125rem] mt-[3rem]"
+        <!-- Consent to the processing of personal data: required to send
+             (useContactForm checks it). The input belongs to the form above. -->
+        <label
+          class="form-agree will-change-transform type-lead type-measure text-[#FFFFFF] mb-[1.8125rem] mt-[3rem] flex items-start gap-[0.875rem] cursor-pointer"
         >
-          {{ $t("contacts.form.agreement") }}
-          <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 py-[0.125rem] hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
-        </p>
+          <input
+            v-model="consentVal"
+            type="checkbox"
+            form="contact-request-form"
+            required
+            class="form-agree__box"
+          >
+          <span>
+            {{ $t("contacts.form.agreement") }}
+            <NuxtLink :to="localePath('/privacy')" class="underline underline-offset-4 py-[0.125rem] hover:text-[#03cb00]">{{ $t("contacts.form.privacyLink") }}</NuxtLink>
+          </span>
+        </label>
 
         <button
           type="submit"
@@ -360,6 +372,17 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* The consent checkbox: square, green when ticked, one line-height tall so it
+   sits on the first line of the text. */
+.form-agree__box {
+  flex: none;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-top: calc((var(--type-lead-lh) * var(--type-lead-size) - 1.375rem) / 2);
+  accent-color: #03cb00;
+  cursor: pointer;
+}
+
 .contact-hp {
   position: absolute;
   left: -10000px;

@@ -73,6 +73,7 @@ try {
   check("other host gets its own cache entry", other.includes('href="https://onebranding.up.railway.app/"'), (other.match(/rel="canonical"[^>]*/) || [""])[0]);
 
   check("no x-powered-by header", !res.headers.get("x-powered-by"), res.headers.get("x-powered-by") || "");
+  check("permissions-policy set", /camera=\(\)/.test(res.headers.get("permissions-policy") || ""), res.headers.get("permissions-policy") || "");
   check("home lists every language", ["en", "ru", "uz", "x-default"].every((code) => first.includes(`hreflang="${code}"`)), "");
   res = await fetch(`${BASE}/ru`, { headers });
   check("/ru renders", res.status === 200 && (await res.text()).includes('lang="ru'), String(res.status));
@@ -144,6 +145,7 @@ try {
   res = await fetch(`${BASE}/contact`, { headers });
   const contact = await res.text();
   check("/contact renders the form with its limits", contact.includes("form-send") && contact.includes('maxlength="200"'), "");
+  check("/contact asks for consent to the processing of personal data", /type="checkbox"[^>]*form="contact-request-form"[^>]*required/.test(contact), "");
 
   // Private address down: pages still render through the public URL.
   await new Promise((r) => proxy.close(r));

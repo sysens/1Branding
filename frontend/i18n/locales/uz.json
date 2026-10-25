@@ -494,7 +494,8 @@
       "company": "Kompaniya*",
       "phone": "Telefon*",
       "email": "E-mail*",
-      "agreement": "Soʻrovni yuborib, shaxsiy maʼlumotlaringiz qayta ishlanishiga rozilik bildirasiz. Batafsil:",
+      "agreement": "Shaxsiy maʼlumotlarimni qayta ishlashga rozilik beraman. Batafsil:",
+      "consentRequired": "Shaxsiy maʼlumotlaringizni qayta ishlashga rozilik bering.",
       "privacyLink": "maxfiylik siyosati"
     }
   },
