@@ -12,15 +12,20 @@ const { t } = useI18n();
 withDefaults(defineProps<{ logos?: string[]; numeral?: boolean; transition?: boolean }>(), { logos: () => [], numeral: true, transition: true });
 
 // The clients' white logos (public/home/partners, trimmed to their artwork and
-// 98px tall: twice the strip's logo height). A page can pass its own list.
-const PARTNER_LOGOS = [
-  "202-burger", "anvar-usta", "apex-pizza", "art-anor", "asakabank", "barberra",
-  "bliss", "brono-360", "burger-king", "cyber-nat", "deco-360", "dodo-kids",
-  "gloss-maxx", "grechno", "hayaati", "lemonart", "luqmam", "marinno",
-  "mayda-manti", "nescafe", "nivea", "omaf", "overspray", "ozpermit",
-  "perfect-candy", "poyqadam", "raviosta", "red-bull", "starbucks", "street-77",
-  "wok",
-].map((name) => `/home/partners/${name}.webp`);
+// 98px tall: twice the strip's logo height), with the brand names that are
+// their alt text. A page can pass its own list.
+const PARTNERS: Record<string, string> = {
+  "202-burger": "202 Burger", "anvar-usta": "Anvar Usta", "apex-pizza": "Apex Pizza", "art-anor": "Art-Anor",
+  "asakabank": "Asakabank", "barberra": "Barberra", "bliss": "Bliss", "brono-360": "Brono 360",
+  "burger-king": "Burger King", "cyber-nat": "Cyber Nat", "deco-360": "Deco 360", "dodo-kids": "Dodo Kids",
+  "gloss-maxx": "Gloss Maxx", "grechno": "Grechno", "hayaati": "Hayaati", "lemonart": "Lemon Art",
+  "luqmam": "Luqmam", "marinno": "Marinno", "mayda-manti": "Mayda Manti", "nescafe": "Nescafé",
+  "nivea": "Nivea", "omaf": "OMAF", "overspray": "Overspray", "ozpermit": "OzPermit",
+  "perfect-candy": "Perfect Candy", "poyqadam": "Poyqadam", "raviosta": "Raviosta", "red-bull": "Red Bull",
+  "starbucks": "Starbucks", "street-77": "Street 77", "wok": "WOK",
+};
+const PARTNER_LOGOS = Object.keys(PARTNERS).map((name) => `/home/partners/${name}.webp`);
+const PARTNER_NAMES = Object.values(PARTNERS);
 
 const year = computed(() => t("home.awards.year") || "2026");
 const title = computed(() => t("home.awards.title") || "Awwward");
@@ -30,7 +35,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
 <template>
   <section id="awards" class="awards-section" aria-labelledby="awards-title">
     <div class="awards-section__brands" role="group" :aria-label="$t('a11y.clients')">
-      <Brands :logos="logos.length ? logos : PARTNER_LOGOS" :duration-seconds="160" />
+      <Brands :logos="logos.length ? logos : PARTNER_LOGOS" :alts="logos.length ? [] : PARTNER_NAMES" :duration-seconds="160" />
     </div>
     <header class="awards-section__heading">
       <h2 id="awards-title">

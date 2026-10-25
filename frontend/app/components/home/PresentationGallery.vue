@@ -11,6 +11,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 type Slide = { src: string; ratio: number };
 
 const { t } = useI18n();
+const portfolioAlt = usePortfolioAlt();
 const localePath = useLocalePath();
 
 const wide = 2.6; // 16:9 project shots cropped to a banner
@@ -78,7 +79,7 @@ onBeforeUnmount(() => {
             <OptImage
               :src="slide.src"
               :sizes="slideSizes(slide)"
-              alt=""
+              :alt="portfolioAlt(slide.src)"
               loading="lazy"
               decoding="async"
               draggable="false"

@@ -15,6 +15,7 @@ const ROWS = [
 
 // A slide is 26vw wide (32vw on phones): the drawn width that picks its copy.
 const SLIDE_SIZES = "(max-width: 479px) 32vw, 26vw";
+const portfolioAlt = usePortfolioAlt();
 
 const root = ref<HTMLElement | null>(null);
 let frame = 0;
@@ -63,7 +64,7 @@ onBeforeUnmount(() => {
           <OptImage
             :src="src"
             :sizes="SLIDE_SIZES"
-            alt=""
+            :alt="portfolioAlt(src)"
             width="1600"
             height="900"
             loading="lazy"

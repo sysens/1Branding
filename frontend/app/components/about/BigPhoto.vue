@@ -25,11 +25,13 @@ const imageSrc = computed(() => media(section1.value?.image?.url));
   <div class="mt-10px">
     <div ref="root" class="containerr">
       <div class="flex items-center">
+        <!-- Every screen size is named: a bare "100vw" made @nuxt/image list
+             1px and 2px copies, so phones downloaded the 1400px one. -->
         <NuxtImg
           v-if="imageSrc"
           :src="imageSrc"
           :alt="section1?.image?.alternativeText?.trim() || `${section1?.title || ''} — OneBranding`"
-          sizes="100vw md:1400px"
+          sizes="xs:100vw sm:100vw md:100vw lg:1400px"
           width="1400"
           height="700"
           loading="eager"

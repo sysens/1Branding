@@ -7,10 +7,13 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "250px 0px" })
 const props = withDefaults(
   defineProps<{
     logos?: string[];
+    /** The brand name of each logo (its alt), in the same order. */
+    alts?: string[];
     durationSeconds?: number;
   }>(),
   {
     logos: () => [],
+    alts: () => [],
   }
 );
 
@@ -51,7 +54,7 @@ const marqueeDuration = computed(() => {
             v-for="(src, i) in loopedLogos"
             :key="'a-' + i"
             :src="src"
-            alt=""
+            :alt="i < baseLogos.length ? (alts[i] ?? '') : ''"
             class="h-[1.6875rem] w-auto max-w-[9.375rem] md:max-w-[15.625rem] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
             loading="lazy"
             decoding="async"

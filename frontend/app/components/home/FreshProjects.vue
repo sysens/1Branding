@@ -13,6 +13,7 @@ const rows = [
 ].map((row) => ({ ...row, cards: row.cards.map((id) => `/home/threeLayerLocal/${id}.webp`) }));
 
 const { t } = useI18n();
+const portfolioAlt = usePortfolioAlt();
 const localePath = useLocalePath();
 </script>
 
@@ -27,7 +28,7 @@ const localePath = useLocalePath();
         <div class="fresh__track">
           <div v-for="copy in 2" :key="copy" class="fresh__set">
             <div v-for="src in row.cards" :key="`${copy}-${src}`" class="fresh__card">
-              <OptImage :src="src" sizes="(max-width: 767px) 70vw, 25.25vw" alt="" width="505" height="285" loading="lazy" decoding="async" draggable="false" />
+              <OptImage :src="src" sizes="(max-width: 767px) 70vw, 25.25vw" :alt="copy === 1 ? portfolioAlt(src) : ''" width="505" height="285" loading="lazy" decoding="async" draggable="false" />
             </div>
           </div>
         </div>
