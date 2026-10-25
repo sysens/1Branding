@@ -1,6 +1,7 @@
 # Every Monday (and on demand) checks what search engines see on the live
 # site: status, title, description, canonical, robots, H1 and hreflang of the
-# key pages in every language, robots.txt, the sitemap and the old-URL 301s.
+# key pages in every language, robots.txt, the sitemap and the old-URL 301s;
+# then crawls every sitemap URL and internal link (scripts/seo-crawl.mjs).
 name: SEO smoke test
 
 on:
@@ -21,6 +22,9 @@ jobs:
           node-version: 24
       - name: Live SEO checks
         run: node scripts/seo-smoke.mjs https://onebrandingworld.com
+      # Every sitemap URL and every internal link, as a crawler sees them.
+      - name: Live site crawl
+        run: node scripts/seo-crawl.mjs https://onebrandingworld.com
       # The same values after hydration in a real browser. Playwright goes in
       # a scratch folder, not the project (which would install everything).
       - name: Hydrated SEO checks
