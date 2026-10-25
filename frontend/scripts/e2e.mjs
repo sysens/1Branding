@@ -51,12 +51,17 @@ try {
   const firstMs = Date.now() - t;
   check("home renders through the private URL", res.status === 200 && proxyHits > 0, `${res.status}, ${proxyHits} proxy hits, ${firstMs} ms`);
   check("cache-control set", /s-maxage=300/.test(res.headers.get("cache-control") || ""), res.headers.get("cache-control"));
+  // Browsers revalidate a page's HTML, so none keeps one that points at a previous build's files.
+  check("browsers revalidate pages", /(^|, )max-age=0\b/.test(res.headers.get("cache-control") || ""), res.headers.get("cache-control"));
+  const lastModified = res.headers.get("last-modified");
   check("canonical uses the forwarded host", first.includes('href="https://onebrandingworld.com/"'), (first.match(/rel="canonical"[^>]*/) || [""])[0]);
   // The page's data (CMS media URLs among it) is in its extracted payload.
   const payloadSrc = (first.match(/data-src="([^"]+)"/) || [])[1]?.replace(/&amp;/g, "&");
   const payload = payloadSrc ? await (await fetch(BASE + payloadSrc, { headers })).text() : "";
   check("home has CMS content", payload.includes("r2.dev"), payloadSrc || "no payload");
 
+  res = await fetch(`${BASE}/`, { headers: { ...headers, "if-modified-since": lastModified || "" } });
+  check("a revalidated page is a 304 the browser still revalidates", res.status === 304 && /(^|, )max-age=0\b/.test(res.headers.get("cache-control") || ""), `${res.status} ${res.headers.get("cache-control")}`);
   const hitsBefore = proxyHits;
   t = Date.now();
   res = await fetch(`${BASE}/`, { headers });
@@ -96,6 +101,9 @@ try {
     // One hop from the old /en prefix, a trailing slash and the old CMS category.
     ["/en/About", "/about"],
     ["/en/ProjectSlug/abc", "/projects/abc"],
+    // A case study or article by its document id goes straight to its slug.
+    ["/ProjectSlug/whppp7vemlh9ra7ufsf3z0ky", "/projects/raviosta-restaurant-identity"],
+    ["/ru/NewsSlug/zztkud74sbscajz3k646rykf", "/ru/news/pepsi-brand-identity-2025"],
     ["/ru/", "/ru"],
     ["/about/", "/about"],
     ["/services/rq51r0st097n29olxjbe1q5h", "/services/branding"],

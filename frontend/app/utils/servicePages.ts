@@ -36,6 +36,8 @@ export interface ServicePage {
 }
 
 const UPDATED = "2026-10-23";
+// The pages that show related case studies ("Our work") since this date.
+const CASES_ADDED = "2026-10-25";
 
 export const SERVICE_PAGES: readonly ServicePage[] = [
   {
@@ -56,7 +58,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     priceCategory: "Logo",
     parent: "branding",
     related: ["identity", "brandbook", "branding", "packaging"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "identity",
@@ -65,7 +67,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     image: "/home/threeLayerLocal/22.webp",
     parent: "branding",
     related: ["logo", "brandbook", "print", "branding"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "brandbook",
@@ -74,7 +76,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     image: "/home/threeLayerLocal/16.webp",
     parent: "branding",
     related: ["identity", "logo", "branding", "print"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "strategy",
@@ -90,7 +92,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     image: "/home/threeLayerLocal/34.webp",
     priceCategory: "Packaging",
     related: ["branding", "photo", "print", "motion"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "print",
@@ -98,7 +100,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     slugs: { en: "graphic-print-design", ru: "graficheskij-dizajn-i-poligrafiya", uz: "grafik-dizayn-va-poligrafiya" },
     image: "/home/threeLayerLocal/18.webp",
     related: ["identity", "packaging", "signage", "presentation"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "social",
@@ -143,7 +145,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
     slugs: { en: "ui-ux-design", ru: "ui-ux-dizajn", uz: "ui-ux-dizayn" },
     image: "/home/threeLayerLocal/39.webp",
     related: ["web", "crm", "identity", "motion"],
-    updated: UPDATED,
+    updated: CASES_ADDED,
   },
   {
     key: "crm",

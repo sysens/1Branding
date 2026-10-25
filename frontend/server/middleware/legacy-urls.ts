@@ -1,4 +1,5 @@
 import { LEGACY_SERVICE_IDS, serviceByKey, serviceBySlug } from "../../app/utils/servicePages";
+import { withCmsSlug, type FetchSlugs } from "../utils/cmsSlugs";
 
 /**
  * One permanent redirect from any old or non-canonical page address to its
@@ -11,6 +12,8 @@ import { LEGACY_SERVICE_IDS, serviceByKey, serviceBySlug } from "../../app/utils
  *   casing of the current ones;
  * - service pages: the old CMS category id, or a service's slug in another
  *   language, to the slug of the requested language.
+ * - an old case study or article address by its CMS document id, to its
+ *   readable one (/ProjectSlug/<id> to /projects/<slug>, server/utils/cmsSlugs.ts).
  * The language prefix (/ru, /uz) and the query string are kept.
  *
  * Only page shapes are touched (one segment, or a section plus an id without a
@@ -77,15 +80,18 @@ export const canonicalPagePath = (pathname: string): string | null => {
   return `${prefix}${base}/${id}`;
 };
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   if (event.method !== "GET" && event.method !== "HEAD") return;
   const url = getRequestURL(event);
   const host = (getRequestHeader(event, "x-forwarded-host") || getRequestHeader(event, "host") || "").split(",")[0]!.trim().toLowerCase();
   const bareHost = host.startsWith("www.") ? host.slice(4) : "";
 
   const canonical = canonicalPagePath(url.pathname);
-  const path = canonical ?? url.pathname;
   if (!bareHost && (!canonical || canonical === url.pathname)) return;
+  // The id address of a case study or article would redirect once more, to its slug.
+  const path = canonical
+    ? await withCmsSlug(canonical, String(useRuntimeConfig(event).public.graphqlUrl || ""), $fetch as unknown as FetchSlugs)
+    : url.pathname;
   const location = bareHost ? `https://${bareHost}${path}${url.search}` : `${path}${url.search}`;
   return sendRedirect(event, location, 301);
 });
