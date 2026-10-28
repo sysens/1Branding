@@ -14,6 +14,8 @@ export const ONE_PROTOTYPES = {
   mascot: true,
   /** /projects: 3D showroom of the case studies (components/prototype/OneShowroom.vue). */
   showroom: true,
+  /** /projects: the project wall as a drifting dome lens (components/prototype/OneDomeWall.vue). */
+  domeWall: true,
 } as const;
 
 export type OnePrototype = keyof typeof ONE_PROTOTYPES;

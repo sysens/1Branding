@@ -14,7 +14,8 @@ const showroomOpen = ref(route.query.view === "showroom");
 // The showroom renders only in the browser, where the CMS refuses origins
 // other than the live site (local and preview hosts). The projects are fetched
 // here, on the server, and handed to it.
-const showroomProjects = showroomPrototype.value ? (await useProjectsWallData()).projects : null;
+const domeWallPrototype = usePrototype("domeWall");
+const showroomProjects = showroomPrototype.value || domeWallPrototype.value ? (await useProjectsWallData()).projects : null;
 const SHOWROOM_LABEL: Record<string, { open: string; close: string }> = {
   en: { open: "3D Showroom", close: "Project wall" },
   ru: { open: "3D-шоурум", close: "Стена проектов" },
@@ -45,8 +46,10 @@ usePageSeo({
     </header>
 
     <ClientOnly v-if="showroomPrototype && showroomOpen">
-      <LazyPrototypeOneShowroom :projects="showroomProjects?.value" @close="showroomOpen = false" />
+      <LazyPrototypeOneShowroom :projects="showroomProjects ?? undefined" @close="showroomOpen = false" />
     </ClientOnly>
+    <!-- The template unwraps the computed: showroomProjects is the array here. -->
+    <LazyPrototypeOneDomeWall v-else-if="domeWallPrototype && showroomProjects?.length" :projects="showroomProjects" />
     <InfiniteProjectsWall v-else />
     <button v-if="showroomPrototype" type="button" class="projects-mode" @click="showroomOpen = !showroomOpen">
       {{ showroomOpen ? showroomLabel.close : showroomLabel.open }}
