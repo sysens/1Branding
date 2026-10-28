@@ -14,9 +14,9 @@ import type { LandingMedia } from "~/types/landingPayload";
 // start. Hydrating the whole page up front was one ~340ms main-thread task.
 const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 
-// PROTOTYPE "2500 → ONE" hero (components/home/HeroOneAssembly.vue). Set to
-// false to switch it off; ?hero=classic shows the classic hero for comparison.
-const HERO_ONE_ENABLED = true;
+// PROTOTYPE "2500 → ONE" hero (components/home/HeroOneAssembly.vue), switched
+// in utils/prototypes.ts; ?hero=classic shows the classic hero for comparison.
+const heroOnePrototype = usePrototype("hero");
 
 const cmsMedia = useCmsMedia();
 const { t, locale } = useI18n();
@@ -25,7 +25,7 @@ const { landingPage, seo: landingSeo } = await useLandingPayload();
 useHomePageReady();
 const pageRoot = ref<HTMLElement | null>(null);
 useAmbientSurfaces(pageRoot);
-const heroOne = computed(() => HERO_ONE_ENABLED && route.query.hero !== "classic");
+const heroOne = computed(() => heroOnePrototype.value && route.query.hero !== "classic");
 // The wall dims only once the mark has drawn its first frame (no WebGL: no dim).
 const heroOneReady = ref(false);
 

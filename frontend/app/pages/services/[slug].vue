@@ -14,6 +14,8 @@ import { toggleDetails } from "~/utils/smoothDetails";
 
 const route = useRoute();
 const { t, locale } = useI18n();
+const lensPrototype = usePrototype("lens");
+const packLabPrototype = usePrototype("packLab");
 const localePath = useLocalePath();
 const origin = useSiteOrigin();
 const siteLocale = computed(() => toSiteLocale(locale.value));
@@ -199,6 +201,14 @@ usePageSeo({
           <OptImage :src="service.image" :alt="copy.h1" sizes="(min-width: 900px) 46vw, 92vw" width="1200" height="900" loading="eager" fetchpriority="high" decoding="async" />
         </div>
       </section>
+
+      <!-- PROTOTYPES (utils/prototypes.ts): before/after lens and the packaging lab. -->
+      <ClientOnly v-if="lensPrototype && service.key === 'branding'">
+        <LazyPrototypeOneLens />
+      </ClientOnly>
+      <ClientOnly v-if="packLabPrototype && service.key === 'packaging'">
+        <LazyPrototypeOnePackLab />
+      </ClientOnly>
 
       <section class="service-section service-intro">
         <p v-for="(paragraph, index) in copy.intro" :key="index" v-rise>{{ paragraph }}</p>

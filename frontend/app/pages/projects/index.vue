@@ -1,11 +1,22 @@
 <script setup lang="ts">
 // A full-screen project wall: no site footer.
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import InfiniteProjectsWall from "~/components/projects/InfiniteProjectsWall.vue";
 
 definePageMeta({ footer: false, header: false });
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
+const route = useRoute();
+// PROTOTYPE (utils/prototypes.ts): a 3D showroom as a second way to view the
+// work; ?view=showroom opens it directly.
+const showroomPrototype = usePrototype("showroom");
+const showroomOpen = ref(route.query.view === "showroom");
+const SHOWROOM_LABEL: Record<string, { open: string; close: string }> = {
+  en: { open: "3D Showroom", close: "Project wall" },
+  ru: { open: "3D-шоурум", close: "Стена проектов" },
+  uz: { open: "3D shourum", close: "Loyihalar devori" },
+};
+const showroomLabel = computed(() => SHOWROOM_LABEL[locale.value] ?? SHOWROOM_LABEL.en!);
 const localePath = useLocalePath();
 const origin = useSiteOrigin();
 usePageSeo({
@@ -29,7 +40,13 @@ usePageSeo({
       <NuxtLink :to="localePath('/services')">{{ $t("projectsPage.services") }}</NuxtLink>
     </header>
 
-    <InfiniteProjectsWall />
+    <ClientOnly v-if="showroomPrototype && showroomOpen">
+      <LazyPrototypeOneShowroom @close="showroomOpen = false" />
+    </ClientOnly>
+    <InfiniteProjectsWall v-else />
+    <button v-if="showroomPrototype" type="button" class="projects-mode" @click="showroomOpen = !showroomOpen">
+      {{ showroomOpen ? showroomLabel.close : showroomLabel.open }}
+    </button>
     <NuxtLink :to="localePath('/')" class="projects-back">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
       <span>{{ $t("projectsPage.back") }}</span>
@@ -38,6 +55,39 @@ usePageSeo({
 </template>
 
 <style scoped>
+/* PROTOTYPE: switch between the project wall and the 3D showroom. */
+.projects-mode {
+  position: fixed;
+  z-index: 810;
+  top: max(1.25rem, env(safe-area-inset-top));
+  right: max(1.25rem, env(safe-area-inset-right));
+  min-height: 2.9rem;
+  padding: 0.65rem 1.25rem;
+  border: 1px solid #03cb00;
+  border-radius: 62.4375rem;
+  background: rgb(0 0 0 / 0.72);
+  color: #20e848;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-body-size);
+  font-weight: 600;
+  line-height: var(--type-body-lh);
+  cursor: pointer;
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.projects-mode:hover,
+.projects-mode:focus-visible {
+  transform: translateY(-2px);
+  background: rgb(3 203 0 / 0.16);
+}
+
+.projects-mode:focus-visible {
+  outline: 0.1875rem solid #03cb00;
+  outline-offset: 0.1875rem;
+}
+
 .projects-back {
   position: fixed;
   z-index: 810;
