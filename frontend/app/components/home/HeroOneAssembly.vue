@@ -52,7 +52,6 @@ const vertexShader = /* glsl */ `
   uniform float uScroll;
   uniform float uTime;
   uniform float uWave;
-  uniform vec2 uStartSize;
   uniform vec2 uOneSize;
   uniform float uScatterScale;
   varying vec2 vUv;
@@ -60,8 +59,8 @@ const vertexShader = /* glsl */ `
   varying float vLight;
   varying float vEdge;
 
-  float easeInOutCubic(float t) {
-    return t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2.0, 3.0) / 2.0;
+  float easeOutQuart(float t) {
+    return 1.0 - pow(1.0 - t, 4.0);
   }
 
   mat2 rot(float a) {
@@ -70,23 +69,26 @@ const vertexShader = /* glsl */ `
   }
 
   void main() {
-    // Each tile starts its flight a little later than the one to its left.
-    float t = easeInOutCubic(clamp((uAssemble - aDelay * 0.55) / 0.45, 0.0, 1.0));
+    // Entrance: each tile grows out of a point and glides into the mark along
+    // a straight, decelerating path; the center of the word fills first and
+    // the edges follow like a ripple. No spin and no arcs: calm, not busy.
+    float raw = clamp((uAssemble - aDelay * 0.5) / 0.5, 0.0, 1.0);
+    float t = easeOutQuart(raw);
+    float grow = easeOutQuart(clamp(raw * 1.6, 0.0, 1.0));
     float s = uScatter;
 
     vec3 one = aTarget;
     one.z += sin(uTime * 1.3 + aTarget.x * 0.9 + aTarget.y * 0.6) * 0.06 * uWave;
     vec3 p = mix(aStart, one, t);
-    // Arc towards the viewer during the flight.
-    p.z += sin(t * 3.14159) * (1.2 + aSeed * 1.6);
     p = mix(p, aScatter, s);
 
     // Scroll: the mark breaks towards the camera like a tunnel.
     p.z += uScroll * (5.0 + aSeed * 9.0);
     p.xy *= 1.0 + uScroll * 0.35;
 
-    vec2 size = mix(uStartSize, uOneSize, t) * mix(1.0, uScatterScale, s);
-    float spin = (1.0 - t) * (aSeed - 0.5) * 1.6 + s * (aSeed - 0.5) * 0.9;
+    vec2 size = uOneSize * grow * mix(1.0, uScatterScale, s);
+    // A slight tilt that settles as the tile lands; a little more when scattered.
+    float spin = (1.0 - t) * (aSeed - 0.5) * 0.35 + s * (aSeed - 0.5) * 0.9;
     vec2 corner = rot(spin) * (position.xy * size);
 
     vec4 mv = modelViewMatrix * vec4(p + vec3(corner, 0.0), 1.0);
@@ -94,9 +96,9 @@ const vertexShader = /* glsl */ `
 
     vUv = uv;
     vCell = aCell;
-    // Tiles still in the wall are as dim as the wall; assembled ones are lit.
-    vLight = mix(0.42, 1.0, max(t, s)) * (1.0 - uScroll * 0.85);
-    vEdge = t * (1.0 - s);
+    vLight = mix(0.55, 1.0, max(t, s)) * (1.0 - uScroll * 0.85);
+    // The green rim only comes in once the tile has settled.
+    vEdge = smoothstep(0.75, 1.0, raw) * (1.0 - s);
   }
 `;
 
@@ -120,7 +122,9 @@ const fragmentShader = /* glsl */ `
     vec2 p = (vUv - 0.5) * vec2(2.0, 1.0);
     float d = roundBox(p, vec2(1.0, 0.5), 0.12);
     if (d > 0.0) discard;
-    vec3 color = texture2D(uAtlas, vCell + vUv * uCellSize).rgb * vLight;
+    // Sampling stays 3% inside the cell, so small (mipmapped) tiles never pick
+    // up the neighbouring logo's colours at their edges.
+    vec3 color = texture2D(uAtlas, vCell + (0.03 + vUv * 0.94) * uCellSize).rgb * vLight;
     // Thin brand-green rim once the tile has joined the mark.
     float rim = smoothstep(-0.07, -0.015, d);
     color = mix(color, uGreen, rim * vEdge * 0.85);
@@ -278,12 +282,13 @@ onMounted(async () => {
     uScroll: { value: 0 },
     uTime: { value: 0 },
     uWave: { value: reducedMotion ? 0 : 1 },
-    uStartSize: { value: new THREE.Vector2(1.6, 0.8) },
     uOneSize: { value: new THREE.Vector2(0.3, 0.15) },
     uScatterScale: { value: 4.2 },
     uOpacity: { value: 1 },
   };
-  const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: true, depthWrite: true });
+  // Opaque tiles (round corners are discarded) and a distinct depth per tile:
+  // no blending order to get wrong, so overlapping tiles never flicker.
+  const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: false, depthWrite: true });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.frustumCulled = false;
   const group = new THREE.Group();
@@ -304,7 +309,6 @@ onMounted(async () => {
     const columns = mobile ? 20 : 30;
     const tileW = (markWidth / columns) * 0.94;
     uniforms.uOneSize.value.set(tileW, tileW / 2);
-    uniforms.uStartSize.value.set(Math.min(viewWidth / 6, 2.4), Math.min(viewWidth / 6, 2.4) / 2);
     const markHeight = markWidth * word[0]!.aspect;
     const centerY = viewHeight * (mobile ? 0.16 : 0.13);
     // Screen position of the mark (fraction of the hero height) for the backdrop and the hint.
@@ -313,16 +317,25 @@ onMounted(async () => {
     host.style.setProperty("--one-width", `${(markWidth / viewWidth) * 100}%`);
 
     const random = seeded(2500);
+    const halfDiagonal = Math.hypot(markWidth, markHeight) / 2;
     for (let i = 0; i < count; i++) {
       const w = word[i]!;
-      aTarget[i * 3] = (w.x - 0.5) * markWidth + tileW / 2;
-      aTarget[i * 3 + 1] = centerY + (0.5 - w.y) * markHeight;
+      const targetX = (w.x - 0.5) * markWidth + tileW / 2;
+      const targetY = centerY + (0.5 - w.y) * markHeight;
+      aTarget[i * 3] = targetX;
+      aTarget[i * 3 + 1] = targetY;
       aTarget[i * 3 + 2] = (random() - 0.5) * 0.25;
 
-      // Start: a tile of the tilted wall behind the mark.
-      aStart[i * 3] = (random() - 0.5) * viewWidth * 1.5;
-      aStart[i * 3 + 1] = (random() - 0.5) * viewHeight * 1.4;
-      aStart[i * 3 + 2] = -6;
+      // Start: a point a little outside and behind its place in the word, in
+      // the direction away from the word's center (slightly fanned), so the
+      // tiles condense inward into the mark. Each one at its own depth.
+      const dx = targetX, dy = targetY - centerY;
+      const fromCenter = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx) + (random() - 0.5) * 0.7;
+      const reach = markWidth * (0.12 + random() * 0.22);
+      aStart[i * 3] = targetX + Math.cos(angle) * reach;
+      aStart[i * 3 + 1] = targetY + Math.sin(angle) * reach;
+      aStart[i * 3 + 2] = aTarget[i * 3 + 2]! - (1.2 + random() * 2.4);
 
       // Scatter: a loose shell around the mark, mostly in front of it.
       const theta = random() * Math.PI * 2;
@@ -335,7 +348,8 @@ onMounted(async () => {
       aCell[i * 2] = (cell % ATLAS_COLS) / ATLAS_COLS;
       // The atlas canvas has its origin top-left; textures sample from bottom-left.
       aCell[i * 2 + 1] = 1 - (Math.floor(cell / ATLAS_COLS) + 1) / ATLAS_ROWS;
-      aDelay[i] = w.x * 0.7 + random() * 0.3;
+      // The center of the word fills first, the edges follow like a ripple.
+      aDelay[i] = (fromCenter / halfDiagonal) * 0.8 + random() * 0.2;
       aSeed[i] = random();
     }
     for (const name of ["aStart", "aTarget", "aScatter", "aCell", "aDelay", "aSeed"]) {
@@ -397,8 +411,9 @@ onMounted(async () => {
     uniforms.uTime.value = time;
 
     if (!reducedMotion) {
-      if (assembleStart < 0) assembleStart = time + 0.35;
-      uniforms.uAssemble.value = Math.min(1, Math.max(0, (time - assembleStart) / 2.6));
+      // A short pause while the wall dims, then a calm 3 s assembly.
+      if (assembleStart < 0) assembleStart = time + 0.5;
+      uniforms.uAssemble.value = Math.min(1, Math.max(0, (time - assembleStart) / 3));
       if (uniforms.uAssemble.value >= 1 && !showHint.value && assembleStart > 0 && time - assembleStart < 4) showHint.value = true;
 
       // Critically damped spring towards the hold state.
