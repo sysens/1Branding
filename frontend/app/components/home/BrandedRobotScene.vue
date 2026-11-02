@@ -14,32 +14,59 @@ let preloadObserver: IntersectionObserver | null = null;
 let visibilityObserver: IntersectionObserver | null = null;
 let nearViewport = false;
 let inViewport = false;
-let started = false;
 let generation = 0;
 
-// The robot's entrance is the scene's Spline "Start" event, and play() fires it
-// again on every resume. So the scene is played once, the first time it shows;
-// after that, off screen only its rendering pauses (renderMode "manual" skips
-// whole frames) and the entrance does not run again.
+// The robot stands as its entrance in the scene ends (camera pulled back, arms
+// up) from its first frame, and stays so. The entrance and the arms' idle
+// swing are the Transition actions of the scene's Spline "Start" events, and
+// the head turns to the cursor through two "LookAt" events; the runtime reads
+// these from the scene's data each time it plays, so before it plays they are
+// taken out and every part they move is put straight into its last state.
+// This is the runtime's own data, not its typed API: if it is not there, the
+// robot plays its entrance as before.
+type SceneTween = { data: { state?: string | null } };
+type SceneAction = { data: { type: string; object?: string; tweens?: SceneTween[] } };
+type SceneEvent = { data: { type: string; disabled?: boolean; actions?: SceneAction[] } };
+type SceneEntity = { data?: { events?: SceneEvent[] } };
+type SceneEvents = { eventContext?: { page?: { traverseEntity?: (visit: (entity: SceneEntity) => void) => void } } };
+
+const holdFinalPose = (scene: Application) => {
+  const events: SceneEvents | undefined = scene.eventManager;
+  const poses: Array<[string, string]> = [];
+  events?.eventContext?.page?.traverseEntity?.((entity) => {
+    for (const { data } of entity.data?.events ?? []) {
+      if (data.type === "LookAt") data.disabled = true;
+      if (data.type !== "Start" || !data.actions) continue;
+      for (const { data: action } of data.actions) {
+        if (action.type !== "Transition") continue;
+        const state = [...(action.tweens ?? [])].reverse().find((tween) => tween.data.state)?.data.state;
+        if (action.object && state) poses.push([action.object, state]);
+      }
+      data.actions = data.actions.filter((action) => action.data.type !== "Transition");
+    }
+  });
+  for (const [id, state] of poses) {
+    const object = scene.findObjectById(id);
+    if (object) object.state = state;
+  }
+};
+
+// The robot does not move, so off screen (or in a hidden tab) its rendering
+// pauses: renderMode "manual" skips whole frames.
 const updatePlayback = () => {
   if (!application || !ready.value) return;
   const visible = inViewport && !document.hidden;
-  if (!started) {
-    if (!visible) return;
-    started = true;
-    application.play();
-    return;
-  }
   (application as Application & { renderMode: "auto" | "manual" }).renderMode = visible ? "auto" : "manual";
   if (visible) application.requestRender();
 };
+
+const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
 const clear = () => {
   controller?.abort();
   controller = null;
   application?.dispose();
   application = null;
-  started = false;
   ready.value = false;
 };
 
@@ -61,10 +88,20 @@ const load = async () => {
     });
     await scene.load(resolveBrandedRobotScene(props.scene), undefined, { signal: abort.signal });
     if (current !== generation) { scene.dispose(); return; }
+    // The entrance began as the scene loaded: stop it, take it out and play
+    // the scene again, already standing; it shows once that frame is drawn.
     scene.stop();
+    try {
+      holdFinalPose(scene);
+    } catch {
+      // The runtime's data has changed shape: the entrance plays instead.
+    }
+    scene.play();
     application = scene;
+    await nextFrame();
+    await nextFrame();
+    if (current !== generation) return;
     ready.value = true;
-    scene.requestRender();
     updatePlayback();
   } catch (error) {
     scene?.dispose();
