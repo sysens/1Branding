@@ -126,17 +126,29 @@ onBeforeUnmount(() => {
    its side paddings, and the section is one screen plus that overflow (x1.1 of
    scroll per pixel of travel, as in the reference). */
 .gallery {
-  /* The height caps keep the whole screen (header gap, heading, row, the
-     intro-size description, bar) within the window, from 1920 x 1080 down
-     to short laptops (1366 x 768). */
-  --card-h: min(34vw, 36vh, 100svh - 36rem);
+  /* The heading and the description follow the site's type, which grows with
+     the width; here they are also capped by the screen's height (at 1920 x
+     1080 and 1366 x 768 the caps change nothing), so a wide, short screen
+     (21:9, 32:9) does not spend its height on them. */
+  --title-size: min(var(--section-title-size), 9.1svh);
+  --text-size: min(var(--type-intro-size), 3.2svh);
+  --track-gap: min(clamp(1.5rem, 3vw, 3.5rem), 5.5svh);
+  --text-gap: clamp(1.25rem, min(4vw, 6svh), 5rem);
+  --bar-gap: clamp(1rem, 2vw, 1.75rem);
+  /* The row takes the height the rest of the screen leaves: the header gap,
+     two heading lines, the gaps, four lines of description (plus a fifth's
+     worth of slack) and the bar. It was 100svh - 36rem, but past 1920px the
+     rem grows with the width, so on a 32:9 screen that left a sliver. Never
+     more than 36% of the height or 34% of the width, as before. */
+  --room: calc(100svh - 6.5rem - 2.1 * var(--title-size) - var(--track-gap) - var(--text-gap) - 5.2 * var(--text-size) - var(--bar-gap) - 2.5rem);
+  --card-h: max(6rem, min(34vw, 36vh, var(--room)));
   --start-padding: max(1.5rem, 27vw);
   /* The width of the description's text (also set on it below): the intro
      measure (--type-measure-intro, 40.5em), written in the step's size
      because it is used here, on other elements. The row's travel ends with
      the last card's right edge on the text's right edge, so the end padding
      is the text's side margin. */
-  --description-width: min(100vw - 3rem, 40.5 * var(--type-intro-size));
+  --description-width: min(100vw - 3rem, 40.5 * var(--text-size));
   --end-padding: calc((100vw - var(--description-width)) / 2);
   --travel: max(0px, calc(var(--card-h) * var(--track-units) + var(--start-padding) + var(--end-padding) - 100vw));
   position: relative;
@@ -165,7 +177,7 @@ onBeforeUnmount(() => {
   padding-inline: 1.5rem;
   color: #000;
   font-family: var(--app-font-display);
-  font-size: var(--section-title-size);
+  font-size: var(--title-size);
   font-weight: 600;
   line-height: var(--type-h1-lh);
   letter-spacing: var(--type-h1-ls);
@@ -196,7 +208,7 @@ onBeforeUnmount(() => {
 .gallery__track {
   display: flex;
   gap: calc(var(--card-h) * 0.015);
-  margin-top: clamp(1.5rem, 3vw, 3.5rem);
+  margin-top: var(--track-gap);
   padding-left: var(--start-padding);
   will-change: transform;
 }
@@ -231,11 +243,11 @@ onBeforeUnmount(() => {
 .gallery__description {
   box-sizing: content-box;
   max-width: var(--description-width);
-  margin: clamp(1.25rem, min(4vw, 6vh), 5rem) auto 0;
+  margin: var(--text-gap) auto 0;
   padding-inline: 1.5rem;
   color: #606060;
   font-family: var(--type-intro-family);
-  font-size: var(--type-intro-size);
+  font-size: var(--text-size);
   line-height: var(--type-intro-lh);
   letter-spacing: var(--type-intro-ls);
   text-align: left;
@@ -247,7 +259,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 1rem;
   width: min(100% - 3rem, 48rem);
-  margin: clamp(1rem, 2vw, 1.75rem) auto 0;
+  margin: var(--bar-gap) auto 0;
 }
 
 .gallery__progress-line {

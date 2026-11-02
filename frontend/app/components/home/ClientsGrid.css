@@ -23,6 +23,13 @@
   pointer-events: none;
 }
 
+/* The light comes in out of the black of the block above, like a shadow
+   lifting (an eased fade over the top quarter), and fades out at the bottom. */
+.clients__backdrop {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.06) 5%, rgb(0 0 0 / 0.2) 10%, rgb(0 0 0 / 0.45) 15%, rgb(0 0 0 / 0.72) 20%, rgb(0 0 0 / 0.9) 25%, #000 30%, #000 84%, transparent);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.06) 5%, rgb(0 0 0 / 0.2) 10%, rgb(0 0 0 / 0.45) 15%, rgb(0 0 0 / 0.72) 20%, rgb(0 0 0 / 0.9) 25%, #000 30%, #000 84%, transparent);
+}
+
 .clients__layer {
   translate: 0 calc(var(--parallax, 0px) * var(--depth, 0));
   will-change: translate;
@@ -83,6 +90,17 @@
 .clients.is-live .clients__blob,
 .clients.is-live .clients__glow {
   animation-play-state: running;
+}
+
+/* With the living gradient up the CSS glows step aside, and the table drops
+   its backdrop blur: blurring a canvas that changes every frame is costly. */
+.clients.has-gradient .clients__blob {
+  display: none;
+}
+
+.clients.has-gradient .clients__table {
+  background: rgb(6 14 9 / 0.78);
+  backdrop-filter: none;
 }
 
 @keyframes clients-drift-top {

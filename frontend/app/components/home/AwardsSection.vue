@@ -13,19 +13,25 @@ withDefaults(defineProps<{ logos?: string[]; numeral?: boolean; transition?: boo
 
 // The clients' white logos (public/home/partners, trimmed to their artwork and
 // 98px tall: twice the strip's logo height), with the brand names that are
-// their alt text. A page can pass its own list.
-const PARTNERS: Record<string, string> = {
-  "202-burger": "202 Burger", "anvar-usta": "Anvar Usta", "apex-pizza": "Apex Pizza", "art-anor": "Art-Anor",
-  "asakabank": "Asakabank", "barberra": "Barberra", "bliss": "Bliss", "brono-360": "Brono 360",
-  "burger-king": "Burger King", "cyber-nat": "Cyber Nat", "deco-360": "Deco 360", "dodo-kids": "Dodo Kids",
-  "gloss-maxx": "Gloss Maxx", "grechno": "Grechno", "hayaati": "Hayaati", "lemonart": "Lemon Art",
-  "luqmam": "Luqmam", "marinno": "Marinno", "mayda-manti": "Mayda Manti", "nescafe": "Nescafé",
-  "nivea": "Nivea", "omaf": "OMAF", "overspray": "Overspray", "ozpermit": "OzPermit",
-  "perfect-candy": "Perfect Candy", "poyqadam": "Poyqadam", "raviosta": "Raviosta", "red-bull": "Red Bull",
-  "starbucks": "Starbucks", "street-77": "Street 77", "wok": "WOK",
+// their alt text and the width / height of their artwork, which Brands turns
+// into a height that gives every logo about the same visual area. A page can
+// pass its own list.
+const PARTNERS: Record<string, [name: string, ratio: number]> = {
+  "202-burger": ["202 Burger", 1.98], "anvar-usta": ["Anvar Usta", 2.602], "apex-pizza": ["Apex Pizza", 3.653],
+  "art-anor": ["Art-Anor", 3.571], "asakabank": ["Asakabank", 4.102], "barberra": ["Barberra", 1.194],
+  "bliss": ["Bliss", 1.061], "brono-360": ["Brono 360", 5.071], "burger-king": ["Burger King", 0.918],
+  "cyber-nat": ["Cyber Nat", 2.99], "deco-360": ["Deco 360", 2.439], "dodo-kids": ["Dodo Kids", 2.408],
+  "gloss-maxx": ["Gloss Maxx", 1.786], "grechno": ["Grechno", 3.592], "hayaati": ["Hayaati", 2.602],
+  "lemonart": ["Lemon Art", 17.241], "luqmam": ["Luqmam", 1.653], "marinno": ["Marinno", 3.837],
+  "mayda-manti": ["Mayda Manti", 2.459], "nescafe": ["Nescafé", 3.673], "nivea": ["Nivea", 1],
+  "omaf": ["OMAF", 1.582], "overspray": ["Overspray", 1.714], "ozpermit": ["OzPermit", 3.092],
+  "perfect-candy": ["Perfect Candy", 6.667], "poyqadam": ["Poyqadam", 3.408], "raviosta": ["Raviosta", 1.449],
+  "red-bull": ["Red Bull", 2.694], "starbucks": ["Starbucks", 1.01], "street-77": ["Street 77", 3.582],
+  "wok": ["WOK", 3.265],
 };
 const PARTNER_LOGOS = Object.keys(PARTNERS).map((name) => `/home/partners/${name}.webp`);
-const PARTNER_NAMES = Object.values(PARTNERS);
+const PARTNER_NAMES = Object.values(PARTNERS).map(([name]) => name);
+const PARTNER_RATIOS = Object.values(PARTNERS).map(([, ratio]) => ratio);
 
 const year = computed(() => t("home.awards.year") || "2026");
 const title = computed(() => t("home.awards.title") || "Awwward");
@@ -35,7 +41,12 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
 <template>
   <section id="awards" class="awards-section" aria-labelledby="awards-title">
     <div class="awards-section__brands" role="group" :aria-label="$t('a11y.clients')">
-      <Brands :logos="logos.length ? logos : PARTNER_LOGOS" :alts="logos.length ? [] : PARTNER_NAMES" :duration-seconds="160" />
+      <Brands
+        :logos="logos.length ? logos : PARTNER_LOGOS"
+        :alts="logos.length ? [] : PARTNER_NAMES"
+        :ratios="logos.length ? [] : PARTNER_RATIOS"
+        :duration-seconds="160"
+      />
     </div>
     <header class="awards-section__heading">
       <h2 id="awards-title">
@@ -54,7 +65,8 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
    collapsing its negative margin through and sliding the next section under. */
 .awards-section { position: relative; z-index: 30; display: flow-root; isolation: isolate; background: #000; color: #fff; }
 .awards-section__brands { display: flex; align-items: center; height: 7.5rem; overflow: clip; mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent); }
-.awards-section__brands :deep(img) { height: 1.75rem; max-width: 8.4375rem; filter: grayscale(1); opacity: .64; }
+/* The base height is a ratio-3 logo's; Brands sets --logo-scale per logo. */
+.awards-section__brands :deep(img) { height: calc(2.125rem * var(--logo-scale, 1)); max-width: none; filter: grayscale(1); opacity: .64; }
 .awards-section__brands :deep(.spaceBetween) { min-height: 3.125rem; }
 .awards-section__heading { position: relative; z-index: 2; text-align: center; padding-inline: 1.25rem; }
 .awards-section__heading h2 { margin: 0; font-family: var(--app-font-display); font-weight: 700; }
@@ -68,7 +80,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
 .awards-section__heading p { margin: -2px 0 0; font-family: var(--app-font-display); font-size: var(--type-h4-size); font-weight: 400; line-height: var(--type-h4-lh); letter-spacing: var(--type-h4-ls); text-wrap: balance; }
 @media (max-width: 599px) {
   .awards-section__brands { height: 5.625rem; }
-  .awards-section__brands :deep(img) { height: 1.375rem; max-width: 6.875rem; }
+  .awards-section__brands :deep(img) { height: calc(1.5rem * var(--logo-scale, 1)); }
   .awards-section__heading { padding-inline: 0.75rem; }
   .awards-section__year { -webkit-text-stroke-width: 1px; }
   .awards-section__heading p { max-width: 19.375rem; margin: 0.625rem auto 0; }

@@ -30,39 +30,49 @@
             {{ $t("nav.contacts") }}
           </a>
 
-          <!-- The language switcher, a select in the shadcn style: the trigger
-               shows the current language, the list each language by its own
-               name. Escape or a click outside closes it. -->
-          <div ref="langRoot" class="lang-select" @keydown.esc="closeDeskLang(true)">
+          <!-- The language switcher: the trigger is a nav item showing the
+               current language; the list, a dark glass panel, shows each
+               language's code, its own name and a check on the current one.
+               Escape or a click outside closes it. -->
+          <div ref="langRoot" class="lang-switch" @keydown.esc="closeDeskLang(true)" @focusout="onLangFocusOut">
             <button
               ref="langTrigger"
               type="button"
-              class="lang-select__trigger"
+              class="site-nav__link site-nav__lang"
               aria-haspopup="true"
               aria-controls="lang-select-list"
               :aria-expanded="isDeskLangOpen"
               :aria-label="`${$t('a11y.language')}: ${LANGUAGE_NAMES[lang]}`"
               @click="isDeskLangOpen = !isDeskLangOpen"
+              @keydown.down.prevent="openDeskLang"
+              @keydown.up.prevent="openDeskLang"
             >
               <span>{{ lang.toUpperCase() }}</span>
-              <svg class="lang-select__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" /></svg>
+              <svg class="lang-switch__chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
             </button>
 
-            <Transition name="lang-select">
-              <div v-show="isDeskLangOpen" id="lang-select-list" class="lang-select__content">
+            <Transition name="lang-switch">
+              <div v-show="isDeskLangOpen" id="lang-select-list" class="lang-switch__panel" @keydown="onLangListKeydown">
                 <!-- Links, not buttons: crawlers follow them to the other languages. -->
                 <a
-                  v-for="code in LANGS"
+                  v-for="(code, index) in LANGS"
                   :key="code"
                   :href="langHref(code)"
                   :hreflang="code"
                   :lang="code"
-                  class="lang-select__item"
+                  class="lang-switch__item"
+                  :class="{ 'is-active': code === lang }"
+                  :style="{ '--i': index }"
                   :aria-current="code === lang ? 'true' : undefined"
                   @click="onLangLink($event, code)"
                 >
-                  <span>{{ LANGUAGE_NAMES[code] }}</span>
-                  <svg v-if="code === lang" class="lang-select__check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5" /></svg>
+                  <span class="lang-switch__code">{{ code }}</span>
+                  <span class="lang-switch__name">{{ LANGUAGE_NAMES[code] }}</span>
+                  <svg class="lang-switch__check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
                 </a>
               </div>
             </Transition>
@@ -75,7 +85,7 @@
             class="site-guarantee"
             @click="onNav($event, localePath('/one-guarantee'))"
           >
-            <span class="site-guarantee__one">{{ $t("brand.one") }}</span>{{ $t("brand.oneGuaranteeSuffix") }}
+            <span class="site-guarantee__one">{{ $t("brand.one") }}</span><span class="site-guarantee__rest">{{ $t("brand.oneGuaranteeSuffix") }}</span>
           </a>
         </div>
 
@@ -281,7 +291,9 @@ import { LANGUAGE_NAMES, SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/u
 import { serviceBySlug, servicePath } from "~/utils/servicePages";
 
 type AppLocale = SiteLocale;
-const LANGS = SITE_LOCALES;
+// The switchers offer English and Russian only. The Uzbek pages are still
+// served (and listed in hreflang and the sitemap), just not offered here.
+const LANGS: SiteLocale[] = SITE_LOCALES.filter((code) => code !== "uz");
 
 const isMobileMenuOpen = useState<boolean>("mobileMenuOpen", () => false);
 const isLangOpen = useState<boolean>("mobileLangOpen", () => false);
@@ -335,6 +347,35 @@ const onDocPointerDown = (event: PointerEvent) => {
   if (isDeskLangOpen.value && !langRoot.value?.contains(event.target as Node)) closeDeskLang();
 };
 onMounted(() => document.addEventListener("pointerdown", onDocPointerDown));
+
+// Arrow keys: on the trigger they open the list on the current language; in
+// the list they move between the languages (wrapping; Home and End go to the
+// ends). Tab moves through the links as usual, and focus going on to anything
+// outside the select closes it (a click that focuses nothing, as on Safari,
+// is left to the pointerdown handler, so it still reaches the link).
+const langItems = () => Array.from(langRoot.value?.querySelectorAll<HTMLAnchorElement>(".lang-switch__item") ?? []);
+const focusLangItem = (index: number) => {
+  const items = langItems();
+  if (items.length) items[(index + items.length) % items.length]?.focus();
+};
+const openDeskLang = async () => {
+  isDeskLangOpen.value = true;
+  await nextTick();
+  focusLangItem(Math.max(0, LANGS.indexOf(lang.value)));
+};
+const onLangListKeydown = (event: KeyboardEvent) => {
+  const items = langItems();
+  const current = items.indexOf(document.activeElement as HTMLAnchorElement);
+  const moves: Record<string, number> = { ArrowDown: current + 1, ArrowUp: current - 1, Home: 0, End: items.length - 1 };
+  const next = moves[event.key];
+  if (next === undefined) return;
+  event.preventDefault();
+  focusLangItem(next);
+};
+const onLangFocusOut = (event: FocusEvent) => {
+  const next = event.relatedTarget as Node | null;
+  if (next && !langRoot.value?.contains(next)) closeDeskLang();
+};
 
 const pickLang = async (val: AppLocale) => {
   isLangOpen.value = false;
@@ -521,16 +562,52 @@ onBeforeUnmount(() => {
   color: #03cb00;
 }
 
+/* OneGuarantee pill. At rest it is lit: liquid green light fills it and keeps
+   flowing, the text is dark on it, two beams run round the outline in
+   opposite directions (meeting and flaring twice a lap), the pill pulses and
+   a white sheen runs back across "Guarantee". Hovered, the light drains out
+   to the left and it goes quiet: black, white text, one green beam orbiting
+   and "One" breathing. The beams are conic gradients turned by
+   --guarantee-angle / --guarantee-back and masked to a ring the width of the
+   border; the forward beam and the flow never restart, so nothing jumps. */
+@property --guarantee-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@property --guarantee-back {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+
+/* The black shade's soft front over the green: 114% = fully lit, 0% = dark. */
+@property --guarantee-fill {
+  syntax: "<percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+
 .site-guarantee {
+  --guarantee-angle: 0deg;
+  --guarantee-speed: 4.5s;
+  --guarantee-fill: 114%;
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 2.25rem;
   padding: 0 1.125rem;
-  border: 1px solid rgb(64 140 52 / 0.85);
+  border: 1px solid #03cb00;
   border-radius: 2.5rem;
-  background: #000;
-  color: #fff;
+  background:
+    linear-gradient(90deg, transparent calc(var(--guarantee-fill) - 14%), #000 var(--guarantee-fill)) 0 0 / 100% 100% no-repeat,
+    linear-gradient(110deg, #03cb00 0%, #7dff6b 22%, #0b9a2c 48%, #03cb00 70%, #7dff6b 100%) 0% 50% / 300% 100% no-repeat,
+    #000;
+  box-shadow: 0 0 0.875rem rgb(3 203 0 / 0.4);
+  color: #021d08;
   font-family: var(--app-font-sans);
   font-size: var(--type-small-size);
   font-weight: 600;
@@ -538,129 +615,292 @@ onBeforeUnmount(() => {
   letter-spacing: var(--type-small-ls);
   white-space: nowrap;
   text-decoration: none;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  /* Coming back to rest: the light pours in, the text darkens as it arrives. */
+  transition: --guarantee-fill 0.9s cubic-bezier(0.45, 0, 0.2, 1), color 0.5s ease 0.35s, box-shadow 0.6s ease, border-color 0.6s ease;
+}
+
+.site-guarantee__one {
+  color: #000;
+  transition: color 0.5s ease 0.35s;
 }
 
 .site-guarantee:hover,
 .site-guarantee:focus-visible {
-  border-color: #03cb00;
-  box-shadow: 0 0 1.125rem rgb(3 203 0 / 0.45);
+  --guarantee-fill: 0%;
+  border-color: rgb(64 140 52 / 0.85);
+  box-shadow: none;
+  color: #fff;
+  /* Hovering: the light drains and the text turns white straight away. */
+  transition: --guarantee-fill 0.9s cubic-bezier(0.45, 0, 0.2, 1), color 0.3s ease, box-shadow 0.6s ease, border-color 0.6s ease;
 }
 
-.site-guarantee__one {
+.site-guarantee:hover .site-guarantee__one,
+.site-guarantee:focus-visible .site-guarantee__one {
   color: #36c536;
+  transition: color 0.3s ease;
 }
 
-/* The language select, in the shadcn style (dark theme): an outlined
-   trigger with a chevron, and a popover list with a check on the current
-   language. */
-.lang-select {
+.site-guarantee::before,
+.site-guarantee::after {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  padding: 0.078rem;
+  border-radius: inherit;
+  background:
+    conic-gradient(from var(--guarantee-angle), transparent 0deg 240deg, rgb(3 203 0 / 0.15) 280deg, #03cb00 335deg, #c9ffbf 354deg, transparent 360deg),
+    conic-gradient(from var(--guarantee-back), transparent 0deg, #f2ffe9 4deg, #6bff5c 14deg, rgb(3 203 0 / 0.55) 42deg, transparent 110deg 360deg);
+  content: "";
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* The glow: the same beams, blurred and a little wider. */
+.site-guarantee::after {
+  padding: 0.156rem;
+  filter: blur(0.1875rem);
+  opacity: 0.8;
+}
+
+/* Hovered: only the forward beam. */
+.site-guarantee:hover::before,
+.site-guarantee:hover::after,
+.site-guarantee:focus-visible::before,
+.site-guarantee:focus-visible::after {
+  background: conic-gradient(from var(--guarantee-angle), transparent 0deg 240deg, rgb(3 203 0 / 0.15) 280deg, #03cb00 335deg, #c9ffbf 354deg, transparent 360deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-guarantee {
+    animation:
+      guarantee-orbit var(--guarantee-speed) linear infinite,
+      guarantee-reverse 2.4s linear infinite,
+      guarantee-charge 1.6s ease-in-out 0.5s infinite,
+      guarantee-flow 3.2s ease-in-out infinite alternate;
+  }
+
+  .site-guarantee__rest {
+    background: linear-gradient(100deg, #021d08 36%, #d9ffd2 46%, #fff 50%, #d9ffd2 54%, #021d08 64%) 0 0 / 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: guarantee-shine 1.6s linear 0.7s infinite;
+  }
+
+  .site-guarantee:hover,
+  .site-guarantee:focus-visible {
+    animation:
+      guarantee-orbit var(--guarantee-speed) linear infinite,
+      guarantee-flow 3.2s ease-in-out infinite alternate;
+  }
+
+  .site-guarantee:hover .site-guarantee__rest,
+  .site-guarantee:focus-visible .site-guarantee__rest {
+    background: none;
+    color: inherit;
+    animation: none;
+  }
+
+  .site-guarantee:hover .site-guarantee__one,
+  .site-guarantee:focus-visible .site-guarantee__one {
+    animation: guarantee-breathe var(--guarantee-speed) ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-guarantee::before,
+  .site-guarantee::after {
+    display: none;
+  }
+}
+
+@keyframes guarantee-orbit {
+  to { --guarantee-angle: 360deg; }
+}
+
+@keyframes guarantee-reverse {
+  from { --guarantee-back: 360deg; }
+  to { --guarantee-back: 0deg; }
+}
+
+@keyframes guarantee-breathe {
+  0%, 100% { text-shadow: none; }
+  50% { text-shadow: 0 0 0.5rem rgb(3 203 0 / 0.7); }
+}
+
+/* Light from within: a white inner glow and the green halo pulse together. */
+@keyframes guarantee-charge {
+  0%, 100% { box-shadow: 0 0 0.875rem rgb(3 203 0 / 0.4), inset 0 0 0.25rem rgb(255 255 255 / 0.25); }
+  50% { box-shadow: 0 0 1.75rem rgb(3 203 0 / 0.7), inset 0 0 0.625rem rgb(255 255 255 / 0.55); }
+}
+
+/* The flood keeps moving: its highlights slosh back and forth. */
+@keyframes guarantee-flow {
+  from { background-position: 0 0, 0% 50%, 0 0; }
+  to { background-position: 0 0, 100% 50%, 0 0; }
+}
+
+/* The highlight sits at the middle of a 250%-wide gradient: from 0% to 100%
+   it crosses the word from its right edge to its left. */
+@keyframes guarantee-shine {
+  from { background-position: 0% 0; }
+  to { background-position: 100% 0; }
+}
+
+/* The language switcher: the trigger is a nav item (green with its chevron
+   turned while open); the list is a dark glass panel under the header, each
+   option showing its code, its own name and a check on the current one. The
+   options come in one after another as it opens. */
+.lang-switch {
   position: relative;
 }
 
-.lang-select__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  height: 2rem;
-  padding: 0 0.5rem 0 0.6875rem;
-  border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: 0.5rem;
-  background: rgb(255 255 255 / 0.04);
-  color: #fafafa;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-small-size);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: var(--type-small-ls);
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+.lang-switch__chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.lang-select__trigger:hover {
-  background: rgb(255 255 255 / 0.08);
-}
-
-.lang-select__trigger[aria-expanded="true"],
-.lang-select__trigger:focus-visible {
-  border-color: rgb(3 203 0 / 0.7);
-  outline: none;
-  box-shadow: 0 0 0 0.1875rem rgb(3 203 0 / 0.2);
-}
-
-.lang-select__chevron,
-.lang-select__check {
-  flex: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
-.lang-select__chevron {
-  width: 0.875rem;
-  height: 0.875rem;
-  opacity: 0.6;
-  transition: transform 0.2s ease;
-}
-
-.lang-select__trigger[aria-expanded="true"] .lang-select__chevron {
-  transform: rotate(180deg);
-}
-
-.lang-select__content {
-  position: absolute;
-  top: calc(100% + 0.625rem);
-  left: 0;
-  z-index: 10;
-  min-width: 10rem;
-  padding: 0.25rem;
-  border: 1px solid #27272a;
-  border-radius: 0.5rem;
-  background: #09090b;
-  box-shadow: 0 0.625rem 2.375rem -10px rgb(0 0 0 / 0.65), 0 0.625rem 1.25rem -15px rgb(0 0 0 / 0.45);
-}
-
-.lang-select__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.4375rem 0.5rem;
-  border-radius: 0.3125rem;
-  color: #fafafa;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-small-size);
-  font-weight: 400;
-  line-height: var(--type-small-lh);
-  letter-spacing: var(--type-small-ls);
-  text-decoration: none;
-  outline: none;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.lang-select__item:hover,
-.lang-select__item:focus-visible {
-  background: #27272a;
-}
-
-.lang-select__check {
-  width: 1rem;
-  height: 1rem;
+.site-nav__lang[aria-expanded="true"] {
   color: #03cb00;
 }
 
-.lang-select-enter-active,
-.lang-select-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
+.site-nav__lang[aria-expanded="true"] .lang-switch__chevron {
+  transform: rotate(180deg);
 }
 
-.lang-select-enter-from,
-.lang-select-leave-to {
+.lang-switch__panel {
+  position: absolute;
+  top: calc(100% + 1.25rem);
+  left: 50%;
+  z-index: 30;
+  display: grid;
+  gap: 0.125rem;
+  min-width: 10.25rem;
+  padding: 0.375rem;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 0.875rem;
+  /* Nearly opaque: the header's own backdrop blur keeps a nested one from
+     reaching the page behind. */
+  background: rgb(12 14 12 / 0.96);
+  box-shadow: 0 1.375rem 2.75rem -0.875rem rgb(0 0 0 / 0.7), 0 0 1.75rem rgb(3 203 0 / 0.1);
+  transform-origin: 50% 0;
+  translate: -50% 0;
+}
+
+.lang-switch__item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5625rem;
+  color: #c9cec9;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  font-weight: 500;
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-switch__item:hover,
+.lang-switch__item:focus-visible {
+  background: rgb(3 203 0 / 0.1);
+  color: #fff;
+  outline: none;
+}
+
+.lang-switch__item:focus-visible {
+  box-shadow: inset 0 0 0 1px rgb(3 203 0 / 0.55);
+}
+
+.lang-switch__item.is-active {
+  color: #fff;
+}
+
+.lang-switch__code {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.25rem;
+  border-radius: 0.3125rem;
+  background: rgb(255 255 255 / 0.06);
+  color: #9aa19c;
+  font-size: var(--type-label-size);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-switch__item.is-active .lang-switch__code {
+  background: rgb(3 203 0 / 0.16);
+  color: #03cb00;
+}
+
+.lang-switch__name {
+  flex: 1;
+}
+
+.lang-switch__check {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #03cb00;
   opacity: 0;
-  transform: translateY(-4px) scale(0.97);
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.lang-switch__item.is-active .lang-switch__check {
+  opacity: 1;
+  transform: none;
+}
+
+.lang-switch-enter-active {
+  transition: opacity 0.18s ease, transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lang-switch-leave-active {
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.lang-switch-enter-from,
+.lang-switch-leave-to {
+  opacity: 0;
+  transform: translateY(-0.375rem) scale(0.96);
+}
+
+.lang-switch-enter-active .lang-switch__item {
+  animation: lang-switch-item 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(40ms + var(--i) * 45ms);
+}
+
+@keyframes lang-switch-item {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-switch-enter-active,
+  .lang-switch-leave-active,
+  .lang-switch__chevron {
+    transition: none;
+  }
+
+  .lang-switch-enter-active .lang-switch__item {
+    animation: none;
+  }
 }
 
 /* Phones and tablets: the 76px bar takes the wordmark a step up (h3, 26px on

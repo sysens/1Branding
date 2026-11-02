@@ -164,10 +164,11 @@ const go = (step: 1 | -1) => {
 .compare-section__arrow {
   display: grid;
   place-items: center;
-  /* About half the first draft's 75 x 100: the chevrons no longer outweigh
-     the pictures. */
-  width: max(2rem, calc(40 * var(--u)));
-  height: max(2.6rem, calc(56 * var(--u)));
+  /* A small chevron (the first draft's was 75 x 100, then 40 x 56): it
+     points the way without competing with the pictures. Never under 1.5rem
+     wide, so it stays an easy target. */
+  width: max(1.5rem, calc(24 * var(--u)));
+  height: max(2rem, calc(34 * var(--u)));
   padding: 0;
   border: 0;
   background: none;

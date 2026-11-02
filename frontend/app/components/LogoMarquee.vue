@@ -145,6 +145,65 @@ onMounted(() => {
 });
 onBeforeUnmount(() => window.removeEventListener("resize", onResize));
 
+// Hero background only, with a mouse or trackpad: the wall leans a little
+// towards the pointer (the whole tilted track turns in 3D, so the tiles seem
+// to tip). The pointer is eased in a rAF loop that runs only while it is
+// catching up, and nothing is listened to while the hero is off screen or
+// motion is reduced.
+const tilt = ref<HTMLElement | null>(null);
+let stopPointer: (() => void) | undefined;
+onMounted(() => {
+  const wall = targetRef.value;
+  const layer = tilt.value;
+  if (!props.asBackground || !wall || !layer) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const target = { x: 0.5, y: 0.5 };
+  const now = { x: 0.5, y: 0.5 };
+  let frame = 0;
+  const paint = () => {
+    frame = 0;
+    now.x += (target.x - now.x) * 0.08;
+    now.y += (target.y - now.y) * 0.08;
+    const dx = now.x - 0.5;
+    const dy = now.y - 0.5;
+    layer.style.setProperty("--wall-rx", `${(-dy * 5).toFixed(3)}deg`);
+    layer.style.setProperty("--wall-ry", `${(dx * 6).toFixed(3)}deg`);
+    layer.style.setProperty("--wall-tx", `${(-dx * 1.75).toFixed(3)}rem`);
+    layer.style.setProperty("--wall-ty", `${(-dy * 1.25).toFixed(3)}rem`);
+    const settled = Math.abs(target.x - now.x) + Math.abs(target.y - now.y) < 0.001;
+    if (!settled) frame = requestAnimationFrame(paint);
+  };
+  const schedule = () => {
+    if (!frame) frame = requestAnimationFrame(paint);
+  };
+  const onMove = (event: PointerEvent) => {
+    if (!isActive.value || event.pointerType !== "mouse") return;
+    const box = wall.getBoundingClientRect();
+    // Below or above the hero the wall settles back flat.
+    const inside = event.clientY <= box.bottom && event.clientY >= box.top;
+    target.x = inside ? (event.clientX - box.left) / box.width : 0.5;
+    target.y = inside ? (event.clientY - box.top) / box.height : 0.5;
+    schedule();
+  };
+  const onLeave = () => {
+    target.x = 0.5;
+    target.y = 0.5;
+    schedule();
+  };
+  window.addEventListener("pointermove", onMove, { passive: true });
+  document.documentElement.addEventListener("pointerleave", onLeave);
+  window.addEventListener("blur", onLeave);
+  stopPointer = () => {
+    if (frame) cancelAnimationFrame(frame);
+    window.removeEventListener("pointermove", onMove);
+    document.documentElement.removeEventListener("pointerleave", onLeave);
+    window.removeEventListener("blur", onLeave);
+  };
+});
+onBeforeUnmount(() => stopPointer?.());
+
 const baseLogos = computed(() => (props.logos?.length ? props.logos : staticLogos));
 const marqueeDuration = computed(() => `${props.durationSeconds}s`);
 
@@ -228,6 +287,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
     :class="[rootClass, { 'logo-marquee--paused': !isActive }]"
     :aria-hidden="props.asBackground ? 'true' : undefined"
   >
+    <div ref="tilt" :class="props.asBackground ? 'logo-marquee__tilt' : 'contents'">
     <div :class="innerWrapClass">
       <div class="w-full h-full rotate-[10deg] overflow-hidden">
         <div :class="[trackClass, colsGapClass]">
@@ -253,6 +313,7 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
           </div>
         </div>
       </div>
+    </div>
     </div>
   </section>
 </template>
@@ -356,5 +417,14 @@ const colsGapClass = computed(() => (props.asBackground ? "gap-[4px]" : "gap-[2p
   .logo-marquee__col {
     animation: none !important;
   }
+}
+
+/* The hero wall's lean towards the pointer (set from the pointer in JS; at
+   rest it is flat). */
+.logo-marquee__tilt {
+  position: absolute;
+  inset: 0;
+  transform: perspective(100rem) rotateX(var(--wall-rx, 0deg)) rotateY(var(--wall-ry, 0deg)) translate3d(var(--wall-tx, 0rem), var(--wall-ty, 0rem), 0);
+  transform-origin: 50% 60%;
 }
 </style>

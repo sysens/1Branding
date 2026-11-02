@@ -578,3 +578,238 @@
     animation: none;
   }
 }
+
+/* ---- The scene follows the path: --progress (0..1) is set on the screen by
+   the component; everything below reads it. ---- */
+.audit__screen {
+  --progress: 0;
+  isolation: isolate;
+}
+
+.audit__frame,
+.audit__plan,
+.audit__text,
+.audit__button {
+  position: relative;
+  z-index: 1;
+}
+
+/* A green aurora that travels with the path from A to B and swells as it goes. */
+.audit__screen::before {
+  position: absolute;
+  top: 56%;
+  left: 50%;
+  z-index: 0;
+  width: calc(1400 * var(--u));
+  height: calc(900 * var(--u));
+  background: radial-gradient(closest-side, rgb(0 245 98 / 0.24), rgb(0 190 80 / 0.09) 55%, transparent 100%);
+  content: "";
+  opacity: calc(0.2 + var(--progress) * 0.8);
+  pointer-events: none;
+  transform: translate(calc(-50% + (var(--progress) - 0.5) * 900 * var(--u)), -50%) scale(calc(0.7 + var(--progress) * 0.55));
+  will-change: transform, opacity;
+}
+
+/* A dot grid behind the path, revealed from A towards B: the business mapped. */
+.audit__screen::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgb(0 245 98 / 0.32) calc(1.6 * var(--u)), transparent calc(2.3 * var(--u)));
+  background-size: calc(44 * var(--u)) calc(44 * var(--u));
+  clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
+  content: "";
+  opacity: 0.55;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 62% 52% at 50% 60%, #000 15%, transparent 75%);
+  mask-image: radial-gradient(ellipse 62% 52% at 50% 60%, #000 15%, transparent 75%);
+}
+
+/* "From problem" steps back while "to progress." earns its green. */
+.audit__heading > span:first-child {
+  color: color-mix(in oklab, #fff calc(100% - var(--progress) * 40%), #6b6f73);
+}
+
+.audit__heading .audit__green {
+  color: color-mix(in oklab, var(--green) calc(15% + var(--progress) * 85%), #2f3431);
+  text-shadow: 0 0 calc(var(--progress) * 38 * var(--u)) rgb(0 245 98 / calc(var(--progress) * 0.45));
+}
+
+/* The comet's tail. */
+.audit__trail {
+  fill: var(--green);
+}
+
+.audit__ring {
+  position: relative;
+}
+
+.audit__ring::before,
+.audit__ring::after,
+.audit__step::after {
+  position: absolute;
+  border: calc(2.5 * var(--u)) solid var(--green);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.audit__ring::before,
+.audit__ring::after {
+  inset: calc(-4.5 * var(--u));
+  border-radius: 50%;
+}
+
+.audit__step::after {
+  inset: calc(-2 * var(--u));
+  border-radius: inherit;
+}
+
+.audit__bar,
+.audit__arrow,
+.audit__core {
+  transform-box: fill-box;
+}
+
+.audit__bar {
+  transform-origin: 50% 100%;
+}
+
+.audit__core {
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Each step ignites: a ripple off the card and its own icon move. */
+  .audit__step.is-lit::after {
+    animation: audit-ripple 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .audit__step--audit.is-lit .audit__icon {
+    animation: audit-scan 1s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  }
+
+  .audit__step--analysis.is-lit .audit__bar {
+    animation: audit-bar 0.7s cubic-bezier(0.2, 0.8, 0.2, 1.25) both;
+  }
+
+  .audit__step--analysis.is-lit .audit__bar:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .audit__step--analysis.is-lit .audit__bar:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .audit__step--strategy.is-lit .audit__target {
+    stroke-dasharray: 1 1;
+    animation: audit-draw 0.8s ease-out both;
+  }
+
+  .audit__step--strategy.is-lit .audit__core {
+    animation: audit-hit 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4) 0.45s both;
+  }
+
+  .audit__step--action.is-lit .audit__arrow {
+    animation: audit-shoot 0.8s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  }
+
+  /* The step the path has just reached keeps breathing until the next one lights. */
+  .audit__step.is-current {
+    animation: audit-breathe 2.2s ease-in-out 0.9s infinite;
+  }
+
+  .audit__end--start.is-lit .audit__letter {
+    animation: audit-pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4) both;
+  }
+
+  /* Arriving at B: two shock waves. */
+  .audit__end--target.is-lit .audit__ring::before {
+    animation: audit-wave 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
+  }
+
+  .audit__end--target.is-lit .audit__ring::after {
+    animation: audit-wave 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s both;
+  }
+}
+
+@keyframes audit-ripple {
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.32); }
+}
+
+@keyframes audit-scan {
+  0% { transform: none; }
+  30% { transform: translate(-8%, -6%) rotate(-14deg); }
+  62% { transform: translate(7%, 4%) rotate(10deg); }
+  100% { transform: none; }
+}
+
+@keyframes audit-bar {
+  from { transform: scaleY(0.1); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes audit-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes audit-hit {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@keyframes audit-shoot {
+  0% { opacity: 0; transform: translate(-30%, 30%); }
+  55% { opacity: 1; transform: translate(14%, -14%); }
+  100% { transform: none; }
+}
+
+@keyframes audit-breathe {
+  50% { box-shadow: 0 0 calc(60 * var(--u)) rgb(0 245 98 / 0.38), inset 0 0 calc(26 * var(--u)) rgb(0 245 98 / 0.14); }
+}
+
+@keyframes audit-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.12); }
+  100% { transform: none; }
+}
+
+@keyframes audit-wave {
+  0% { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.1); }
+}
+
+/* Phones: the path runs down, so the aurora and the grid follow it downwards. */
+@media (max-width: 767px) {
+  .audit__screen {
+    position: relative;
+  }
+
+  .audit__screen::before {
+    top: calc(35% + var(--progress) * 25%);
+    width: 150vw;
+    height: 120vw;
+    transform: translate(-50%, -50%) scale(calc(0.75 + var(--progress) * 0.45));
+  }
+
+  .audit__screen::after {
+    background-size: 1.375rem 1.375rem;
+    background-image: radial-gradient(circle, rgb(0 245 98 / 0.3) 0.0625rem, transparent 0.1rem);
+    clip-path: inset(0 0 calc((1 - var(--progress)) * 100%) 0);
+    -webkit-mask-image: radial-gradient(ellipse 80% 45% at 30% 55%, #000 15%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 45% at 30% 55%, #000 15%, transparent 75%);
+  }
+
+  /* The steps lose their cards here, so the card ripple and breathing go too;
+     the icon moves still play. */
+  .audit__step::after {
+    display: none;
+  }
+
+  .audit__step.is-current {
+    animation: none;
+  }
+}

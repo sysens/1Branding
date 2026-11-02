@@ -78,6 +78,7 @@
     "invalidEmailOrPhone": "Please check the email and phone number."
   },
   "home": {
+    "scrollHint": "Scroll",
     "freshProjects": "fresh projects",
     "earthDives": {
       "title": "What we offer",
@@ -712,6 +713,16 @@
     ]
   },
   "projectsPage": {
+    "explore": "Explore",
+    "category": "Project category",
+    "allCategories": "All categories",
+    "displayMode": "Display mode",
+    "slider": "Slider",
+    "grid": "Grid",
+    "about": "About",
+    "discover": "Discover",
+    "list": "All projects",
+    "position": "{title}, {current} of {total}",
     "back": "Back to Home",
     "services": "Our services",
     "unavailable": "Projects are unavailable right now."

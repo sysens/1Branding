@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import VelarisGradient from "~/components/ui/VelarisGradient.vue";
 
 // "Brands that trust us" (after slidor.agency/agence): a 6-column table of
 // client names. As on slidor, a name lights up when the pointer passes over it
 // (or it is tapped) and stays lit; once every name is lit, confetti bursts over
 // the table. The cells fade in as a wave when the table first comes into view.
-// The green light behind it floats (each glow drifts slowly on its own loop)
-// and lags the scroll a little, at its own depth, for a gentle parallax.
+// The green light behind it is a living WebGL gradient in the brand greens
+// (ui/VelarisGradient); until it is up, or without WebGL, three CSS glows
+// float in its place. The diagonal sweep lags the scroll a little for a
+// gentle parallax.
 // The names: OneBranding's own clients, the brands of the partner logo strip
 // (public/home/partners, the owner's "Logos White" set) and of the case
 // studies, in alphabetical order. (The design's list, slidor's French
@@ -36,6 +39,7 @@ const root = ref<HTMLElement | null>(null);
 const section = ref<HTMLElement | null>(null);
 const confetti = ref<HTMLCanvasElement | null>(null);
 const live = ref(false);
+const gradient = ref(false);
 
 const cells = computed(() => CLIENTS.map((name, index) => ({
   name,
@@ -186,10 +190,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section ref="section" class="clients" :class="{ 'is-live': live }" aria-labelledby="clients-title">
-    <!-- The floating light: three soft glows and the diagonal sweep, each on
-         its own drift loop and parallax depth (--depth). -->
+  <section ref="section" class="clients" :class="{ 'is-live': live, 'has-gradient': gradient }" aria-labelledby="clients-title">
+    <!-- The light: the living gradient (or, as a fallback, three soft glows)
+         and the diagonal sweep, each layer at its own parallax depth (--depth). -->
     <div class="clients__backdrop" aria-hidden="true">
+      <VelarisGradient :intensity="0.7" @ready="gradient = true" @lost="gradient = false" />
       <span class="clients__layer" style="--depth: 0.16"><span class="clients__blob clients__blob--top" /></span>
       <span class="clients__layer" style="--depth: 0.1"><span class="clients__blob clients__blob--left" /></span>
       <span class="clients__layer" style="--depth: 0.22"><span class="clients__blob clients__blob--bottom" /></span>

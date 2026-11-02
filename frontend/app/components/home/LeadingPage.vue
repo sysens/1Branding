@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { LandingPageContent } from "~/types/landingPayload";
 
 const props = defineProps<{
@@ -83,6 +83,24 @@ const heroCopy = computed<HeroCopy>(() => {
 
   return DEFAULT_HERO_COPY;
 });
+
+// The lead-in and the headline come in letter by letter (the dash first), then
+// the tagline. Each letter starts barely visible rather than hidden, so the
+// headline is painted with the first frame and stays the page's LCP. The
+// letters are visual only; screen readers and search engines get the words
+// from the sr-only copy in the heading.
+const letters = (text: string) => [...text].map((char) => (char === " " ? " " : char));
+const leadLetters = computed(() => letters(heroCopy.value.leadText));
+const mainLetters = computed(() => letters(heroCopy.value.mainText));
+
+// "Scroll" hint at the hero's foot; it leaves once the page has moved.
+const scrolled = ref(false);
+const onScroll = () => { scrolled.value = window.scrollY > 40; };
+onMounted(() => {
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+});
+onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
 </script>
 
 <template>
@@ -97,17 +115,35 @@ const heroCopy = computed<HeroCopy>(() => {
                heading's text (the template compiler drops plain whitespace
                between tags); visually they collapse. -->
           <span class="hero-slogan__eyebrow">{{ `${$t("seo.heroEyebrow")} ` }}</span>
-          <span class="hero-slogan__lead" lang="en">
-            <span class="hero-slogan__dash" aria-hidden="true" />{{ `${heroCopy.leadText} ` }}
+          <!-- The lead-in and the headline as words; the letters below are
+               visual only. -->
+          <span class="sr-only" lang="en">{{ `${heroCopy.leadText} ${heroCopy.mainText} ` }}</span>
+          <span class="hero-slogan__lead" lang="en" aria-hidden="true">
+            <span class="hero-slogan__dash hero-letter" style="--i: 0" /><span
+              v-for="(char, index) in leadLetters"
+              :key="`lead-${index}`"
+              class="hero-letter"
+              :style="{ '--i': index + 1 }"
+            >{{ char }}</span>{{ " " }}
           </span>
 
-          <span class="hero-slogan__main" lang="en">{{ `${heroCopy.mainText} ` }}</span>
+          <span class="hero-slogan__main" lang="en" aria-hidden="true"><span
+            v-for="(char, index) in mainLetters"
+            :key="`main-${index}`"
+            class="hero-letter"
+            :style="{ '--i': index }"
+          >{{ char }}</span>{{ " " }}</span>
 
           <span class="hero-slogan__tagline" lang="en">
-            <span v-for="part in heroCopy.taglineParts" :key="part">{{ `${part} ` }}</span>
+            <span v-for="(part, index) in heroCopy.taglineParts" :key="part" class="hero-slogan__part" :style="{ '--i': index }">{{ `${part} ` }}</span>
           </span>
         </h1>
       </div>
+    </div>
+
+    <div class="hero-scroll" :class="{ 'is-hidden': scrolled }" aria-hidden="true">
+      <span class="hero-scroll__line" />
+      <span class="hero-scroll__label">{{ $t("home.scrollHint") }}</span>
     </div>
   </div>
 </template>
@@ -268,6 +304,19 @@ const heroCopy = computed<HeroCopy>(() => {
   mask-image: linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
 }
 
+/* A mask clips everything outside its box, and the letters come in out of a
+   glow that reaches past the text: the box gets 0.3em of room on every side
+   (taken back by negative margins, so nothing moves), and the shading's stops
+   sit where 18% and 82% fell on the text alone. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-slogan__main {
+    padding: 0.3em;
+    margin: calc(-0.21em - 0.3em) -0.3em -0.3em;
+    -webkit-mask-image: linear-gradient(178deg, #000 29%, rgb(0 0 0 / 0.61) 71%);
+    mask-image: linear-gradient(178deg, #000 29%, rgb(0 0 0 / 0.61) 71%);
+  }
+}
+
 .hero-slogan__tagline {
   display: flex;
   flex-wrap: wrap;
@@ -290,106 +339,170 @@ const heroCopy = computed<HeroCopy>(() => {
   }
 }
 
-/* The landing's heading reveal (utils/reveal.ts) in CSS, so the hero comes
-   in at first paint without waiting for the app: each line out of a blur,
-   rising a little, while a soft edge sweeps it in from left
-   to right (apple.com's animated headline), the lines 0.15s apart. The
-   sweep is a mask three times the line's width slid across it; the lead-in
-   keeps its own fade-out mask under the sweep, so nothing jumps when the
-   sweep ends. */
+/* The hero comes in in CSS, at first paint, without waiting for the app: the
+   eyebrow rises in, then the lead-in and the headline letter by letter (the
+   dash first), each letter brightening out of its own soft glow while its
+   line rises a little, then the tagline's sentences one after another.
+   The letters change only paint (colour, outline colour, text-shadow), never
+   opacity, filter, position or transform: any of those gives a letter a
+   paint layer of its own, and then every letter is a separate Largest
+   Contentful Paint candidate, too small to win, and a logo tile becomes the
+   page's LCP instead of the headline. Every piece starts barely visible
+   (0.04), not hidden, so the headline is painted with the first frame. Its
+   shading is the mask on .hero-slogan__main (white letters under it), not a
+   gradient clipped to the text, which Chrome would count as painted only
+   once the animation ended. */
+.hero-slogan__lead {
+  --letter-start: 0.15s;
+  --letter-step: 0.05s;
+}
+
+.hero-slogan__main {
+  --letter-start: 0.55s;
+  --letter-step: 0.075s;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .hero-slogan__eyebrow,
-  .hero-slogan__lead,
-  .hero-slogan__main,
-  .hero-slogan__tagline {
-    animation:
-      hero-line-in 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) var(--hero-line-delay) backwards,
-      hero-line-sweep 1.1s cubic-bezier(0.45, 0, 0.25, 1) var(--hero-line-delay) backwards;
-  }
-
   .hero-slogan__eyebrow {
-    --hero-line-delay: 0.05s;
+    animation: hero-part-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   }
 
-  .hero-slogan__lead {
-    --hero-line-delay: 0.2s;
-    animation-name: hero-line-in, hero-lead-sweep;
-  }
-
+  .hero-slogan__lead,
   .hero-slogan__main {
-    --hero-line-delay: 0.35s;
-    animation-name: hero-line-in, hero-main-sweep;
+    animation: hero-line-rise 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) var(--letter-start) both;
   }
 
-  .hero-slogan__tagline {
-    --hero-line-delay: 0.5s;
-  }
-}
-
-/* No fade: the sweep's mask already hides each line until its edge passes,
-   and text that starts at opacity 0 is not counted as painted, which made the
-   headline (the page's Largest Contentful Paint) wait for the animation. */
-@keyframes hero-line-in {
-  from {
-    filter: blur(1rem);
-    translate: 0 0.28em;
-  }
-}
-
-@keyframes hero-line-sweep {
-  from {
-    -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat;
-    mask: linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat;
+  .hero-letter {
+    animation: hero-letter-in 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--letter-start) + var(--i) * var(--letter-step));
   }
 
-  to {
-    -webkit-mask: linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat;
-    mask: linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat;
+  .hero-slogan__lead .hero-letter {
+    animation-name: hero-outline-in;
+  }
+
+  .hero-slogan__dash.hero-letter {
+    animation-name: hero-dash-in;
+  }
+
+  .hero-slogan__part {
+    animation: hero-part-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(1.15s + var(--i) * 0.12s);
   }
 }
 
-@keyframes hero-lead-sweep {
-  from {
-    -webkit-mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat,
-      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
-    -webkit-mask-composite: source-in;
-    mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat intersect,
-      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
-  }
+@keyframes hero-line-rise {
+  from { translate: 0 0.3em; }
+}
 
-  to {
-    -webkit-mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat,
-      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
-    -webkit-mask-composite: source-in;
-    mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat intersect,
-      linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
+/* Headline letters: white out of a white glow. */
+@keyframes hero-letter-in {
+  from {
+    color: rgb(255 255 255 / 0.04);
+    text-shadow: 0 0 0.3em rgb(255 255 255 / 0.85);
   }
 }
 
-/* The headline's sweep over its own shading mask, as the lead-in's. */
-@keyframes hero-main-sweep {
+/* Lead-in letters are an outline: the outline brightens out of a green glow. */
+@keyframes hero-outline-in {
   from {
-    -webkit-mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat,
-      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
-    -webkit-mask-composite: source-in;
-    mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 100% 0 / 300% 100% no-repeat intersect,
-      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+    -webkit-text-stroke-color: rgb(32 232 72 / 0.04);
+    text-shadow: 0 0 0.25em rgb(32 232 72 / 0.8);
+  }
+}
+
+@keyframes hero-dash-in {
+  from {
+    border-color: rgb(32 232 72 / 0.04);
+    box-shadow: 0 0 0.3em rgb(32 232 72 / 0.8);
+  }
+}
+
+@keyframes hero-part-in {
+  from {
+    opacity: 0.04;
+    transform: translate3d(0, 0.6em, 0);
+  }
+}
+
+/* "Scroll": a thin line with a light running down it, beside the slogan's
+   bottom right; it fades in after the slogan and away once the page moves. */
+.leading-page-shell {
+  position: relative;
+}
+
+.hero-scroll {
+  position: absolute;
+  right: clamp(1.25rem, calc(2.4 * var(--fvw)), 3rem);
+  bottom: calc(3.5svh + 0.375rem);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  color: rgb(255 255 255 / 0.6);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.hero-scroll.is-hidden {
+  opacity: 0;
+  transform: translateY(0.5rem);
+}
+
+.hero-scroll__line {
+  position: relative;
+  width: 1px;
+  height: 3.5rem;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.18);
+}
+
+.hero-scroll__line::after {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, #20e848);
+  box-shadow: 0 0 0.375rem #20e848;
+  content: "";
+  transform: translateY(-100%);
+}
+
+/* The label step, set vertically. */
+.hero-scroll__label {
+  font-family: var(--app-font-sans);
+  font-size: var(--type-label-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+/* The entrance is on the parts, so the container's own opacity transition
+   (hiding on scroll) is not held by a finished animation. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-scroll > * {
+    animation: hero-scroll-in 0.8s ease 1.8s both;
   }
 
-  to {
-    -webkit-mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat,
-      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
-    -webkit-mask-composite: source-in;
-    mask:
-      linear-gradient(90deg, #000 40%, transparent 60%) 0% 0 / 300% 100% no-repeat intersect,
-      linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
+  .hero-scroll__line::after {
+    animation: hero-scroll-run 1.8s cubic-bezier(0.6, 0, 0.3, 1) 2.2s infinite;
+  }
+}
+
+@keyframes hero-scroll-in {
+  from { opacity: 0; transform: translateY(-0.5rem); }
+}
+
+@keyframes hero-scroll-run {
+  0% { transform: translateY(-100%); }
+  70%, 100% { transform: translateY(260%); }
+}
+
+@media (max-width: 767px) {
+  .hero-scroll {
+    display: none;
   }
 }
 

@@ -4,7 +4,9 @@ withDefaults(defineProps<{ direction?: "to-light" | "to-dark" }>(), { direction:
 
 <template>
   <div class="hero-light-transition" :class="{ 'hero-light-transition--reverse': direction === 'to-dark' }" aria-hidden="true">
-    <div class="hero-light-transition__surface"><div class="hero-light-transition__light" /></div>
+    <div class="hero-light-transition__clip">
+      <div class="hero-light-transition__surface"><div class="hero-light-transition__light" /></div>
+    </div>
   </div>
 </template>
 
@@ -18,8 +20,19 @@ withDefaults(defineProps<{ direction?: "to-light" | "to-dark" }>(), { direction:
   /* Ultra-wide screens: at 2:1 the light would be two screens tall on 32:9. */
   max-height: max(22rem, 100svh);
   margin-bottom: -1px;
-  overflow: clip;
   pointer-events: none;
+  /* The masked light below is its own layer, and at fractional zoom (e.g. 33%
+     on a retina screen) its edges fall on part of a device pixel; the black
+     hero showed through them as a grey hairline. This plain white underlay is
+     snapped to the pixel grid and sits under the part of the light that is
+     already white, so those edge pixels blend into white instead. */
+  background: linear-gradient(to bottom, transparent 75%, #fff 88%);
+}
+
+.hero-light-transition__clip {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
   isolation: isolate;
   /* Fade the entire leading edge so the light never starts at a cut-off line. */
   mask-image: linear-gradient(to bottom, transparent, #000 15%);
@@ -45,6 +58,9 @@ withDefaults(defineProps<{ direction?: "to-light" | "to-dark" }>(), { direction:
 .hero-light-transition--reverse {
   margin-top: -1px;
   margin-bottom: 0;
+  background: linear-gradient(to top, transparent 75%, #fff 88%);
+}
+.hero-light-transition--reverse .hero-light-transition__clip {
   mask-image: linear-gradient(to bottom, #000 85%, transparent);
 }
 .hero-light-transition--reverse .hero-light-transition__surface {

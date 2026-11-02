@@ -78,6 +78,7 @@
     "invalidEmailOrPhone": "E-mail va telefon raqamini tekshiring."
   },
   "home": {
+    "scrollHint": "Pastga",
     "freshProjects": "yangi loyihalar",
     "earthDives": {
       "title": "Takliflarimiz",
@@ -712,6 +713,16 @@
     ]
   },
   "projectsPage": {
+    "explore": "Batafsil",
+    "category": "Loyiha toifasi",
+    "allCategories": "Barcha toifalar",
+    "displayMode": "Koʻrinish",
+    "slider": "Slayder",
+    "grid": "Toʻr",
+    "about": "Biz haqimizda",
+    "discover": "Koʻrish",
+    "list": "Barcha loyihalar",
+    "position": "{title}, {current} / {total}",
     "back": "Bosh sahifaga qaytish",
     "services": "Xizmatlarimiz",
     "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti."

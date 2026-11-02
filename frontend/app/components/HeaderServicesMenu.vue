@@ -425,4 +425,52 @@ onBeforeUnmount(() => clearTimeout(closer));
 .svc__more a:focus-visible {
   color: #03cb00;
 }
+
+/* Short laptop screens: the panel tightens so the whole list fits under the
+   header without scrolling inside (it still scrolls on very short windows).
+   First the spacing, with a description kept to two lines; below 720px of
+   height each description is one line. Only the vertical padding changes, so
+   the width steps above keep their own. */
+@media (max-height: 54rem) {
+  .svc__panel {
+    padding-block: 1.25rem;
+  }
+
+  .svc__list {
+    gap: 0.125rem;
+  }
+
+  .svc__item {
+    padding-block: 0.75rem;
+  }
+
+  .svc__text {
+    gap: 0.25rem;
+  }
+
+  .svc__desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .svc__column {
+    gap: 0.5rem;
+  }
+
+  .svc__more {
+    padding-top: 0.625rem;
+  }
+}
+
+@media (max-height: 45rem) {
+  .svc__panel {
+    padding-block: 1rem;
+  }
+
+  .svc__desc {
+    -webkit-line-clamp: 1;
+  }
+}
 </style>

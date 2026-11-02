@@ -9,15 +9,25 @@ const props = withDefaults(
     logos?: string[];
     /** The brand name of each logo (its alt), in the same order. */
     alts?: string[];
+    /** The width / height of each logo's artwork, in the same order. */
+    ratios?: number[];
     durationSeconds?: number;
   }>(),
   {
     logos: () => [],
     alts: () => [],
+    ratios: () => [],
   }
 );
 
-const baseLogos = computed(() => props.logos.filter(Boolean));
+// A height multiplier (--logo-scale, read by the parent's CSS) that evens out
+// visual weight: a logo of ratio 3 keeps the base height, squarer ones grow
+// and very wide ones shrink (within limits), so each covers about the same area.
+const logoScale = (ratio?: number) => (ratio ? Math.min(1.35, Math.max(0.45, Math.sqrt(3 / ratio))) : 1);
+
+const baseLogos = computed(() => props.logos
+  .map((src, i) => ({ src, alt: props.alts[i] ?? "", style: { "--logo-scale": logoScale(props.ratios[i]).toFixed(3) } }))
+  .filter((logo) => Boolean(logo.src)));
 
 const MIN_ITEMS_FOR_SMOOTH = 24;
 
@@ -51,10 +61,11 @@ const marqueeDuration = computed(() => {
       >
         <div class="flex items-center gap-16 px-8">
           <img
-            v-for="(src, i) in loopedLogos"
+            v-for="(logo, i) in loopedLogos"
             :key="'a-' + i"
-            :src="src"
-            :alt="i < baseLogos.length ? (alts[i] ?? '') : ''"
+            :src="logo.src"
+            :style="logo.style"
+            :alt="i < baseLogos.length ? logo.alt : ''"
             class="h-[1.6875rem] w-auto max-w-[9.375rem] md:max-w-[15.625rem] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
             loading="lazy"
             decoding="async"
@@ -64,9 +75,10 @@ const marqueeDuration = computed(() => {
 
         <div class="flex items-center gap-16 px-8" aria-hidden="true">
           <img
-            v-for="(src, i) in loopedLogos"
+            v-for="(logo, i) in loopedLogos"
             :key="'b-' + i"
-            :src="src"
+            :src="logo.src"
+            :style="logo.style"
             alt=""
             class="h-[1.6875rem] w-auto max-w-[9.375rem] md:max-w-[15.625rem] shrink-0 object-contain md:h-[3.0625rem] opacity-90 select-none pointer-events-none"
             loading="lazy"

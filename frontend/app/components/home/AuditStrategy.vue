@@ -4,8 +4,11 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 // "Business audit & strategy — From problem to progress." A path from the
 // current state (A) through Audit, Analysis, Strategy and Action to the target
 // state (B). While the path crosses the screen each step lights up green in
-// turn and the connector after it fills toward the next one, a spark riding
-// its tip. Coordinates are the design's (2000px frame), scaled by --u.
+// turn and the connector after it fills toward the next one, a comet riding
+// its tip. The whole scene follows the same --progress (0..1, set on the
+// screen): a green aurora travels from A to B, a dot grid is revealed behind
+// the path and "to progress." turns green. Coordinates are the design's
+// (2000px frame), scaled by --u.
 
 type Step = { key: "audit" | "analysis" | "strategy" | "action"; x: number; y: number };
 const STEPS: Step[] = [
@@ -38,7 +41,9 @@ const screen = ref<HTMLElement | null>(null);
 // 0..6 nodes lit (A, the four steps, B) and how far each link has filled.
 const lit = ref(0);
 const fills = ref<number[]>(LINKS.map(() => 0));
-const spark = ref<{ x: number; y: number; on: boolean }>({ x: 0, y: 0, on: false });
+// The comet: its head and two trailing points a little further back on the link.
+const TRAIL = [0, 0.05, 0.1];
+const spark = ref<{ points: Array<{ x: number; y: number }>; on: boolean }>({ points: [], on: false });
 const paths = ref<SVGPathElement[]>([]);
 let frame = 0;
 let stop: (() => void) | undefined;
@@ -65,15 +70,22 @@ const render = () => {
   } else {
     progress = clamp01((window.innerHeight * 0.7 - rect.top) / rect.height);
   }
-  box.style.setProperty("--progress", progress.toFixed(4));
+  (screen.value ?? box).style.setProperty("--progress", progress.toFixed(4));
   const step = progress * LINKS.length;
   lit.value = progress <= 0 ? 0 : Math.min(LINKS.length + 1, Math.floor(step + 0.12) + 1);
   fills.value = LINKS.map((_, index) => ease(clamp01((step - index - 0.12) / 0.76)));
   const active = fills.value.findIndex((fill) => fill > 0 && fill < 1);
   const path = paths.value[active];
   if (active >= 0 && path) {
-    const point = path.getPointAtLength(path.getTotalLength() * fills.value[active]!);
-    spark.value = { x: point.x, y: point.y, on: true };
+    const length = path.getTotalLength();
+    const fill = fills.value[active]!;
+    spark.value = {
+      points: TRAIL.map((back) => {
+        const point = path.getPointAtLength(length * Math.max(0, fill - back));
+        return { x: point.x, y: point.y };
+      }),
+      on: true,
+    };
   } else {
     spark.value = { ...spark.value, on: false };
   }
@@ -87,6 +99,7 @@ onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     lit.value = LINKS.length + 1;
     fills.value = LINKS.map(() => 1);
+    screen.value?.style.setProperty("--progress", "1");
     return;
   }
   window.addEventListener("scroll", schedule, { passive: true });
@@ -159,8 +172,17 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
               r="8"
             />
             <g v-if="spark.on" class="audit__spark">
-              <circle :cx="spark.x" :cy="spark.y" r="11" filter="url(#audit-glow)" />
-              <circle :cx="spark.x" :cy="spark.y" r="5" />
+              <circle
+                v-for="(point, index) in spark.points.slice(1).reverse()"
+                :key="`trail-${index}`"
+                class="audit__trail"
+                :cx="point.x"
+                :cy="point.y"
+                :r="index === 0 ? 3 : 4.5"
+                :opacity="index === 0 ? 0.25 : 0.5"
+              />
+              <circle :cx="spark.points[0]!.x" :cy="spark.points[0]!.y" r="11" filter="url(#audit-glow)" />
+              <circle :cx="spark.points[0]!.x" :cy="spark.points[0]!.y" r="5" />
             </g>
           </svg>
 
@@ -173,7 +195,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
             v-for="(item, index) in STEPS"
             :key="item.key"
             class="audit__step"
-            :class="{ 'is-lit': lit >= index + 2 }"
+            :class="[`audit__step--${item.key}`, { 'is-lit': lit >= index + 2, 'is-current': lit === index + 2 }]"
             :style="at(item.x, item.y)"
           >
             <svg class="audit__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -182,14 +204,16 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
                 <path d="M15.4 15.4 20.5 20.5" />
               </template>
               <template v-else-if="item.key === 'analysis'">
-                <path d="M6.5 18v-4M12 18v-7.5M17.5 18V5" />
+                <path class="audit__bar" d="M6.5 18v-4" />
+                <path class="audit__bar" d="M12 18v-7.5" />
+                <path class="audit__bar" d="M17.5 18V5" />
               </template>
               <template v-else-if="item.key === 'strategy'">
-                <circle cx="12" cy="12" r="8.6" />
+                <circle class="audit__target" cx="12" cy="12" r="8.6" pathLength="1" />
                 <circle class="audit__core" cx="12" cy="12" r="3.8" />
               </template>
               <template v-else>
-                <path d="M6.5 17.5 17.5 6.5M9 6.5h8.5V15" />
+                <path class="audit__arrow" d="M6.5 17.5 17.5 6.5M9 6.5h8.5V15" />
               </template>
             </svg>
             <span class="audit__label">{{ t(`home.audit.steps.${item.key}`) }}</span>

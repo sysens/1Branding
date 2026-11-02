@@ -78,6 +78,7 @@
     "invalidEmailOrPhone": "Проверьте email и номер телефона."
   },
   "home": {
+    "scrollHint": "Листайте",
     "freshProjects": "свежие проекты",
     "earthDives": {
       "title": "Наши возможности",
@@ -712,6 +713,16 @@
     ]
   },
   "projectsPage": {
+    "explore": "Подробнее",
+    "category": "Категория проекта",
+    "allCategories": "Все категории",
+    "displayMode": "Режим просмотра",
+    "slider": "Слайдер",
+    "grid": "Сетка",
+    "about": "О нас",
+    "discover": "Смотреть",
+    "list": "Все проекты",
+    "position": "{title}, {current} из {total}",
     "back": "На главную",
     "services": "Наши услуги",
     "unavailable": "Проекты временно недоступны."
