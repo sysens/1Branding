@@ -7,6 +7,7 @@ type ProjectMedia = {
 type ProjectNode = {
   documentId?: string | null;
   slug?: string | null;
+  category?: { categoryName?: string | null } | null;
   section1?: {
     projectTitle?: string | null;
     images?: Array<ProjectMedia | null> | null;
@@ -26,6 +27,8 @@ export type ProjectWallItem = {
   id: string;
   image: string;
   title: string;
+  /** The CMS category's name, "" when the project has none. */
+  category: string;
   to: string;
 };
 
@@ -43,6 +46,7 @@ const PROJECTS_WALL_QUERY = `
       nodes {
         documentId
         slug
+        category { categoryName }
         section1 {
           projectTitle
           images { url }
@@ -101,6 +105,7 @@ export const useProjectsWallData = async (): Promise<ProjectsWallData> => {
           // The CMS projects still carry "Lorem ipsum" titles: those never
           // become the image's alt or the link's name.
           title: cmsText(project.section1?.projectTitle) || t("project.untitled"),
+          category: project.category?.categoryName?.trim() || "",
           to: localePath({ path: `/projects/${project.slug?.trim() || id}` }),
         };
       })
