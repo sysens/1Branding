@@ -14,10 +14,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Visitors who ask for reduced motion get the browser's own, unsmoothed scrolling.
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches
 
+  // A calmer wheel than the browser's own (80px a notch, eased a little
+  // longer), so the scroll-driven sections can be followed rather than run past.
   const lenis = new Lenis({
     smoothWheel: !reducedMotion,
-    lerp: 0.12,
-    wheelMultiplier: 1,
+    lerp: 0.1,
+    wheelMultiplier: 0.8,
     syncTouch: false,
     touchMultiplier: 1,
     infinite: false,
