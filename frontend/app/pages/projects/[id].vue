@@ -1,42 +1,17 @@
 <!-- app/pages/projects/[id].vue -->
 <script setup lang="ts">
-import Spinner from "~/components/Spinner.vue";
-
-import ColorSection from "~/components/project/ColorSection.vue";
-import ProjectBigPic from "~/components/project/ProjectBigPic.vue";
-import ProjectGrid from "~/components/project/ProjectGrid.vue";
-import { ref, computed } from "vue";
+// A case study: a white page with one centred column of sections (the
+// heading, the project's text, its pictures in rounded cards, the palette),
+// built from the CMS entry by buildCaseSections() (utils/caseStudy.ts) and
+// rendered by CaseSections. The slider and the grid on /projects open it.
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import CaseSections from "~/components/case-study/CaseSections.vue";
+import { buildCaseSections, casePlainText, type CaseStudyEntry } from "~/utils/caseStudy";
 import { isPlaceholderCopy, toMetaDescription } from "~/utils/seo";
 import { isSiteLocale } from "~/utils/locales";
 
 const { t } = useI18n();
-
-const root = ref<HTMLElement | null>(null);
-
-useGsapContext(root, ({ gsap }) => {
-    const el = root.value;
-    if (!el) return;
-
-    const title = el.querySelector<HTMLElement>(".hero-title");
-    const text = el.querySelector<HTMLElement>(".hero-text");
-
-    if (title) {
-      gsap.fromTo(
-        title,
-        { x: -160, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
-      );
-    }
-
-    if (text) {
-      gsap.fromTo(
-        text,
-        { x: 160, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, delay: 1, ease: "power3.out" }
-      );
-    }
-  });
 
 const GRAPHQL_URL = useGraphqlUrl();
 const cmsMedia = useCmsMedia();
@@ -54,32 +29,16 @@ if (!GRAPHQL_URL) {
   throw createError({ statusCode: 503, statusMessage: "Project content is unavailable" });
 }
 
-type Media = { url: string | null; documentId?: string | null };
+type Media = { url: string | null; width?: number | null; height?: number | null };
 
-type ProjectsPage = {
+type ProjectsPage = Omit<CaseStudyEntry, "section1"> & {
   slug?: string | null;
   locale?: string | null;
   localizations?: Array<{ locale?: string | null } | null> | null;
-  projectColor?: string | null;
-
   section1: {
     projectTitle: string;
     text: string;
     images_connection: { nodes: Media[] } | null;
-  } | null;
-
-  section2: {
-    title: string;
-    text: string;
-    id: string;
-    image: Media | null;
-  } | null;
-
-  section3: {
-    id: string;
-    title: string;
-    text: string;
-    colorCard: Array<{ HexColorCode: string; id: string }> | null;
   } | null;
 };
 
@@ -91,72 +50,59 @@ type GqlRes = {
   errors?: Array<{ message: string }>;
 };
 
+// Written out in full (no interpolation): scripts/dynamicSeo.test.ts parses it.
 const query = `
   query ProjectsPage($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     projectsPage(documentId: $documentId, locale: $locale) {
       slug
       locale
       localizations { locale }
-      projectColor
+      category { categoryName }
+      tags { label }
       section1 {
         projectTitle
         text
         images_connection {
-          nodes { url }
+          nodes { url width height }
         }
       }
       section2 {
         title
         text
-        id
-        image {
-          documentId
-          url
-        }
+        image { url width height }
       }
       section3 {
-        id
         title
         text
-        colorCard {
-          HexColorCode
-          id
-        }
+        colorCard { HexColorCode }
       }
     }
     fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
       slug
-      projectColor
+      category { categoryName }
+      tags { label }
       section1 {
         projectTitle
         text
         images_connection {
-          nodes { url }
+          nodes { url width height }
         }
       }
       section2 {
         title
         text
-        id
-        image {
-          documentId
-          url
-        }
+        image { url width height }
       }
       section3 {
-        id
         title
         text
-        colorCard {
-          HexColorCode
-          id
-        }
+        colorCard { HexColorCode }
       }
     }
   }
 `;
 
-const { data, error, pending } = await useCmsQuery<NonNullable<GqlRes["data"]>>(
+const { data, error } = await useCmsQuery<NonNullable<GqlRes["data"]>>(
   () => `project-${documentId.value}`,
   query,
   { variables: () => ({ documentId: documentId.value }) }
@@ -183,8 +129,17 @@ if (slug.value && routeKey.value !== slug.value) {
 }
 
 const section1 = computed(() => page.value?.section1 ?? null);
-const section2 = computed(() => page.value?.section2 ?? null);
-const section3 = computed(() => page.value?.section3 ?? null);
+const images = computed(() => section1.value?.images_connection?.nodes ?? []);
+
+const sections = computed(() =>
+  page.value
+    ? buildCaseSections(
+        { ...page.value, section1: section1.value && { ...section1.value, images: images.value } },
+        cmsMedia,
+        { palette: t("project.palette") }
+      )
+    : []
+);
 
 const projectName = computed(() => section1.value?.projectTitle?.trim() || "");
 // Search results show about 60 characters: a case study's name already says
@@ -196,7 +151,7 @@ const seoTitle = computed(() => {
   return withKind.length <= 60 ? withKind : projectName.value;
 });
 const seoDescription = computed(() =>
-  toMetaDescription(section1.value?.text || section2.value?.text) ||
+  toMetaDescription(casePlainText(section1.value?.text || page.value?.section2?.text)) ||
   t("seo.projectDescription", { title: projectName.value || "OneBranding" })
 );
 // The languages this case study is written in (its hreflang alternates).
@@ -205,9 +160,7 @@ const projectLocales = computed(() => {
   if (!own) return [];
   return [own.locale, ...(own.localizations ?? []).map((entry) => entry?.locale)].filter(isSiteLocale);
 });
-const seoImage = computed(() => cmsMedia(
-  section1.value?.images_connection?.nodes?.[0]?.url || section2.value?.image?.url
-));
+const seoImage = computed(() => cmsMedia(images.value[0]?.url || page.value?.section2?.image?.url));
 
 const localePath = useLocalePath();
 const origin = useSiteOrigin();
@@ -239,151 +192,54 @@ usePageSeo({
   alternates: projectLocales,
 });
 
-const resolveMedia = cmsMedia;
-
-const images = computed(() => {
-  const nodes = section1.value?.images_connection?.nodes ?? [];
-  return nodes.map((m) => resolveMedia(m?.url ?? "")).filter(Boolean);
-});
-
-const s2Image = computed(() => resolveMedia(section2.value?.image?.url ?? null));
-
-const gqlErrors = computed(
-  () => data.value?.errors?.map((e) => e.message).join(" | ") || ""
-);
-
-const topSrc = computed(() => images.value[0] || "");
-const bottomLeftSrc = computed(() => images.value[1] || "");
-const bottomRightSrc = computed(() => images.value[2] || "");
-
-const projectImages = computed(() => images.value);
-
-const normalizedColor = computed(() => {
-  const c = (page.value?.projectColor || "").trim();
-  if (!c) return "";
-  if (c.startsWith("#")) return c;
-  return "#" + c;
-});
-
-const headerGlowStyle = computed(() => {
-  const c = normalizedColor.value;
-  if (!c) return {};
-  return {
-    background: `radial-gradient(ellipse at center, ${c}70 0%, ${c}35 35%, transparent 70%)`,
-    filter: "blur(26px)",
-    opacity: "0.9",
-  } as Record<string, string>;
-});
-
-// A partial GraphQL error must not keep the full-screen spinner up forever.
-const loading = computed(() => pending.value || !data.value);
+// The page is white to its edges, also where the browser overscrolls.
+useHead({ bodyAttrs: { class: "case-study-document" } });
 </script>
 
 <template>
-  <div ref="root" class="relative overflow-x-hidden bg-black">
-    <Spinner v-if="loading" :size="542" />
+  <div class="case-study">
+    <CaseSections class="case-study__column" :sections="sections" />
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
-
-    <div class="relative z-10">
-      <div class="bg-cover bg-center bg-no-repeat">
-        <div class="relative md:pt-[3.75rem] pt-[1.875rem]">
-          <div
-            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-0 -z-10 h-[8.75rem] w-[92%] max-w-[87.5rem] rounded-full"
-            :style="headerGlowStyle"
-          />
-          <div class="m"/>
-
-          <div
-            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[27.5rem] w-[92%] max-w-[87.5rem] rounded-full"
-            :style="headerGlowStyle"
-          />
-        </div>
-
-        <div class="md:py-[7.1875rem] md:pt-[7.125rem] pt-[1.25rem]">
-          <div
-            v-if="section1"
-            class="md:flex containerr gap-[9.1875rem] mt-[7.5rem] items-center justify-between"
-          >
-            <div class="flex-1">
-              <h1
-                class="hero-title type-h2 flex-1 text-[#FFFFFF] md:text-start text-center md:pb-0 pb-[2.5rem]"
-              >
-                {{ section1.projectTitle }}
-              </h1>
-            </div>
-
-            <!-- The project's description is running text: left-aligned on
-                 phones too, at a reading measure. -->
-            <div class="flex-1">
-              <p
-                class="hero-text type-body type-measure text-[#FFFFFF] text-left md:pb-0 pb-[3.125rem]"
-              >
-                {{ section1.text }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1 -z-10 h-[27.5rem] w-[92%] max-w-[87.5rem] rounded-full"
-        :style="headerGlowStyle"
-      />
-
-      <div>
-        <ProjectGrid
-          v-if="!loading"
-          :title="projectName"
-          :images="projectImages"
-          :top-src="topSrc"
-          :bottom-left-src="bottomLeftSrc"
-          :bottom-right-src="bottomRightSrc"
-        />
-
-        <ProjectBigPic
-          v-if="!loading"
-          :title="section2?.title"
-          :text="section2?.text"
-          :image="s2Image"
-        />
-      </div>
-
-      <ColorSection
-        v-if="!loading"
-        :title="section3?.title"
-        :text="section3?.text"
-        :colors="section3?.colorCard"
-      />
-
-      <!-- From a case study to the services behind it and to a brief. -->
-      <section v-if="!loading" class="containerr project-next" aria-labelledby="project-next-title">
-        <h2 id="project-next-title">{{ $t("project.more") }}</h2>
-        <p>
-          <NuxtLink :to="localePath('/services')">{{ $t("project.services") }}</NuxtLink>
-          <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="project-next__cta ob-button">{{ $t("project.contact") }}</NuxtLink>
-        </p>
-      </section>
-
-      <div v-if="!GRAPHQL_URL || error || gqlErrors" class="hidden">
-        {{ !GRAPHQL_URL ? $t("common.graphqlUrlEmpty") : "" }}
-        {{ (error as any)?.message || "" }}
-        {{ gqlErrors }}
-      </div>
-    </div>
+    <!-- From a case study to the services behind it and to a brief. -->
+    <section class="case-study__column case-next" aria-labelledby="project-next-title">
+      <h2 id="project-next-title">{{ $t("project.more") }}</h2>
+      <p>
+        <NuxtLink :to="localePath('/services')">{{ $t("project.services") }}</NuxtLink>
+        <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="case-next__cta ob-button">{{ $t("project.contact") }}</NuxtLink>
+      </p>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.project-next {
-  padding-bottom: 7.5rem;
+/* Below the site's floating header; the column is 80% of the screen (the
+   design's 1152px at 1440), the screen less 20px margins on phones. */
+.case-study {
+  min-height: 100vh;
+  padding-top: clamp(8.5rem, 9vw, 9.5rem);
+  background: #fff;
+  color: #111;
+}
+
+.case-study__column {
+  width: min(100% - 2.5rem, 80 * var(--fvw));
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .case-study__column {
+    width: calc(100% - 2.5rem);
+  }
+}
+
+.case-next {
+  padding-block: clamp(5rem, 9vw, 9rem) clamp(5rem, 8vw, 8rem);
   text-align: center;
 }
 
-.project-next h2 {
+.case-next h2 {
   margin: 0 0 1.75rem;
-  color: #fff;
+  color: #111;
   font-family: var(--app-font-display);
   font-size: var(--type-h3-size);
   line-height: var(--type-h3-lh);
@@ -391,22 +247,27 @@ const loading = computed(() => pending.value || !data.value);
   font-weight: 600;
 }
 
-.project-next p {
+.case-next p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem 1.75rem;
   align-items: center;
+  margin: 0;
 }
 
-/* The text links (the call to action is the shared .ob-button). */
-.project-next a:not(.ob-button) {
-  color: #fff;
+/* The text link (the call to action is the shared .ob-button). */
+.case-next a:not(.ob-button) {
+  color: #111;
   font-family: var(--app-font-sans);
   font-size: var(--type-body-size);
   line-height: var(--type-body-lh);
   letter-spacing: var(--type-body-ls);
   text-decoration: underline;
   text-underline-offset: 0.2em;
+}
+
+:global(body.case-study-document) {
+  background: #fff;
 }
 </style>
