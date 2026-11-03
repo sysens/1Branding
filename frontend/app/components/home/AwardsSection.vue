@@ -9,13 +9,18 @@ const { t } = useI18n();
 // `numeral` is the green "1" in front of the stage's gallery; `transition` the
 // green-to-yellow glow under the stage that led into the yellow brand stories.
 // The landing leaves both out, other pages can keep them.
-withDefaults(defineProps<{ logos?: string[]; numeral?: boolean; transition?: boolean }>(), { logos: () => [], numeral: true, transition: true });
+// logos / alts / ratios: the strip's logos from the CMS (the landing passes
+// LandingPage > section3 > partnersLogo), their alt texts and width / height.
+withDefaults(
+  defineProps<{ logos?: string[]; alts?: string[]; ratios?: number[]; numeral?: boolean; transition?: boolean }>(),
+  { logos: () => [], alts: () => [], ratios: () => [], numeral: true, transition: true },
+);
 
-// The clients' white logos (public/home/partners, trimmed to their artwork and
-// 98px tall: twice the strip's logo height), with the brand names that are
-// their alt text and the width / height of their artwork, which Brands turns
-// into a height that gives every logo about the same visual area. A page can
-// pass its own list.
+// The fallback while the CMS has no logos: the clients' white logos
+// (public/home/partners, trimmed to their artwork and 98px tall: twice the
+// strip's logo height), with the brand names that are their alt text and the
+// width / height of their artwork, which Brands turns into a height that gives
+// every logo about the same visual area.
 const PARTNERS: Record<string, [name: string, ratio: number]> = {
   "202-burger": ["202 Burger", 1.98], "anvar-usta": ["Anvar Usta", 2.602], "apex-pizza": ["Apex Pizza", 3.653],
   "art-anor": ["Art-Anor", 3.571], "asakabank": ["Asakabank", 4.102], "barberra": ["Barberra", 1.194],
@@ -43,8 +48,8 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
     <div class="awards-section__brands" role="group" :aria-label="$t('a11y.clients')">
       <Brands
         :logos="logos.length ? logos : PARTNER_LOGOS"
-        :alts="logos.length ? [] : PARTNER_NAMES"
-        :ratios="logos.length ? [] : PARTNER_RATIOS"
+        :alts="logos.length ? alts : PARTNER_NAMES"
+        :ratios="logos.length ? ratios : PARTNER_RATIOS"
         :duration-seconds="160"
       />
     </div>

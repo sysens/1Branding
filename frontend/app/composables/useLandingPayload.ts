@@ -29,7 +29,8 @@ const LANDING_PAYLOAD_QUERY = `
     slogan { alternativeText caption }
     sloganMobile { alternativeText caption }
     section3 {
-      partnersLogo { url }
+      # GraphQL lists stop at defaultLimit (25) unless asked for more.
+      partnersLogo(pagination: { limit: 100 }) { url alternativeText name width height }
     }
     brandCollage {
       row1 { url formats }
