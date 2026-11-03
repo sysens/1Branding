@@ -36,6 +36,8 @@ const SOURCES = [
   { dir: "globe", widths: [580], files: ["preview-green.v1.webp", "preview.v1.webp"] },
   { dir: "home", widths: [480, 800, 1200, 1600], files: ["frenk.webp", "Frame331.jpg", "scene.jpg"] },
   { dir: "home/w1280", widths: [480, 800], files: ["Quaker.webp"] },
+  // The About page: the office photos (the hero is one of them) and the CEO.
+  { dir: "about-page", widths: [480, 800, 1200] },
 ];
 
 const PHOTO = { avif: { quality: 55, effort: 6, chromaSubsampling: "4:2:0" }, webp: { quality: 80, effort: 6 } };

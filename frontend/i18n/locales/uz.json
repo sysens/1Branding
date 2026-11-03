@@ -398,6 +398,36 @@
     "descFallback": "Brendingizni raqobatchilardan ajratib turadigan firma uslubini yaratamiz. Betakror konsepsiyalar va tanib olinadigan uslub."
   },
   "aboutPage": {
+    "hero": {
+      "line1": "Turli fikrlar.",
+      "line2": "Bitta umumiy gʻoya.",
+      "intro": "Strateglar, dizaynerlar va dasturchilar. Birinchi savoldan soʻnggi detalgacha bitta jamoa boʻlib ishlaymiz. Brendbuklarimiz har bir jamoaga shu gʻoyani saqlab qolish uchun aniqlik beradi."
+    },
+    "ceo": {
+      "name": "Ulugʻbek Xodjaev",
+      "jobTitle": "CEO",
+      "role": "OneBranding oʻsishi ortidagi kuch.",
+      "more": "Batafsil",
+      "meet": "CEO bilan tanishing",
+      "portraitAlt": "Ulugʻbek Xodjaev, OneBranding CEO’si",
+      "deskAlt": "Ulugʻbek Xodjaev OneBranding ofisida ishlamoqda",
+      "storyLabel": "Ulugʻbek qanday ishlaydi",
+      "story1": "Ulugʻbek brendingizni yaxlit biznes sifatida koʻrib chiqadi: mahsulot, pozitsiya, auditoriya, raqobatchilar va mijoz tajribasi. U xabaringiz qayerda taʼsirini yoʻqotishini, mijozlar qayerda ikkilanishini va eng kuchli imkoniyatlar qayerdaligini aniqlaydi. Bu tahlil aniq yoʻnalishga aylanadi.",
+      "questions1": "Nimani oʻzgartirish kerak? Nimaga sarmoya kiritishga arziydi?",
+      "questions2": "Qaysi qarorlar pozitsiyangizni mustahkamlaydi?",
+      "story2": "Brending va qadoqdan tortib raqamli mahsulotlar va biznes tizimlarigacha — u kerakli yechimlarni biznes maqsadlaringiz atrofida birlashtiradi. Siz brendingizni aniq tushunasiz, aniq tavsiyalar va amaliy yoʻl xaritasini olasiz: nimani yaxshilash kerak, nega bu muhim va qanday oldinga borish kerak.",
+      "askLine1": "biror narsa eʼtiboringizni tortdimi?",
+      "askLine2": "gaplashaylik.",
+      "askAccent": "yuzma-yuz.",
+      "contact": "bogʻlanish"
+    },
+    "office": {
+      "label": "OneBranding ofisi",
+      "reception": "Yashil gilamli OneBranding qabulxonasi",
+      "meeting": "Yugurish yoʻlakchasi yonidagi yashil majlis xonasi",
+      "desk": "OneBranding yozuvi ostidagi qabul stoli",
+      "lounge": "Oq divanlar va osma kreslolar bilan dam olish zonasi"
+    },
     "title": "Jamoamiz bilan tanishing",
     "moreButton": "Barcha loyihalar",
     "cms": {

@@ -398,6 +398,36 @@
     "descFallback": "We create brand identity that sets your brand apart from competitors. Unique concepts and a recognizable style."
   },
   "aboutPage": {
+    "hero": {
+      "line1": "Different minds.",
+      "line2": "One shared vision.",
+      "intro": "Strategists, designers and developers. Working as one, from the first question to the final detail. Our brandbooks give every team the clarity to carry that."
+    },
+    "ceo": {
+      "name": "Ulugʻbek Xodjaev",
+      "jobTitle": "CEO",
+      "role": "the force behind OneBranding’s growth.",
+      "more": "More",
+      "meet": "Meet our CEO",
+      "portraitAlt": "Ulugʻbek Xodjaev, CEO of OneBranding",
+      "deskAlt": "Ulugʻbek Xodjaev at work in the OneBranding office",
+      "storyLabel": "How Ulugʻbek works",
+      "story1": "Ulugʻbek examines your brand as a complete business: its product, positioning, audience, competitors and customer experience. He identifies where your message loses impact, where customers hesitate and where the strongest opportunities lie. That analysis becomes a clear direction.",
+      "questions1": "What needs to change? What deserves investment?",
+      "questions2": "Which decisions will strengthen your position?",
+      "story2": "From branding and packaging to digital experiences and business systems, he brings the right solutions together around your business goals. You get a clear understanding of your brand, focused recommendations and a practical roadmap: what to improve, why it matters and how to move forward.",
+      "askLine1": "something caught your eye?",
+      "askLine2": "let’s talk.",
+      "askAccent": "one to one.",
+      "contact": "contact"
+    },
+    "office": {
+      "label": "The OneBranding office",
+      "reception": "The OneBranding reception with its green carpet",
+      "meeting": "A green meeting room beside the running-track corridor",
+      "desk": "The front desk under the OneBranding sign",
+      "lounge": "The lounge with white sofas and hanging chairs"
+    },
     "title": "Meet our team",
     "moreButton": "All projects",
     "cms": {
