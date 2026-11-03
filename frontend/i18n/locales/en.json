@@ -730,7 +730,181 @@
       "title": "ReBranding",
       "accent": "Branding",
       "intro": "We create brands with a **distinct identity.** Our brandbooks give every team the clarity to carry that identity forward. As your business grows, your brand passes through new hands — designers, marketers, printers, developers and creative partners. A OneBranding brandbook keeps everyone working from the same vision, with the same precision. Every design decision becomes practical guidance. Clear rules. Real examples. Exact specifications. Your team knows how to represent your brand across packaging, campaigns, websites and physical spaces.",
-      "cover": "KFC packaging with Colonel Sanders' signature"
+      "cover": "KFC packaging with Colonel Sanders' signature",
+      "marquee": "OneBranding clients’ work: logos, packaging and campaigns"
+    },
+    "gallery": {
+      "label": "OneBranding packaging work",
+      "alt": "{name} packaging design",
+      "cta": "Projects",
+      "caption": "Explore more of our branding creatives"
+    },
+    "approach": {
+      "label": "The ONE approach: one vision for every touchpoint",
+      "eyebrow": "The ONE approach",
+      "line1": "one vision.",
+      "line2": "every touchpoint.",
+      "text": "Identity, packaging and digital. Designed to work as one.",
+      "cta": "View the full project",
+      "prev": "Previous",
+      "next": "Next",
+      "position": "{label}, {current} of {total}",
+      "items": {
+        "social": "Social",
+        "identity": "Identity",
+        "brandbook": "Brandbook",
+        "packaging": "Packaging",
+        "website": "Website",
+        "presentation": "Presentation",
+        "motion": "Motion"
+      }
+    },
+    "identity": {
+      "title": "Logo and brand identity",
+      "logo": {
+        "label": "Logo",
+        "line": "your logo introduces you.",
+        "alt": "The same packaging with the logo alone: grey, the name printed on every piece"
+      },
+      "identity": {
+        "label": "Brand identity",
+        "line": "your identity makes you unmistakable.",
+        "alt": "The packaging in a full identity: the brand's colours and marks on every piece"
+      },
+      "text": "We connect your logo, colours, typography and packaging into one distinctive visual system. Every detail works together. Every touchpoint strengthens recognition.",
+      "accent": "One brand. One visual language."
+    },
+    "brandbook": {
+      "title": "Every detail.",
+      "accent": "One standard.",
+      "intro": "30 practical guidelines for how your brand looks, speaks and shows up. One clear reference for every team.",
+      "eyebrow": "Inside your brandbook",
+      "foot": "One vision. Every application.",
+      "more": "Learn more",
+      "pricing": "Pricing",
+      "pricingLine": "Choose the right package for your needs.",
+      "items": [
+        {
+          "title": "Brand foundations",
+          "text": "Purpose, vision and mission."
+        },
+        {
+          "title": "Values & personality",
+          "text": "What your brand stands for."
+        },
+        {
+          "title": "Audience & positioning",
+          "text": "Who you serve. What sets you apart."
+        },
+        {
+          "title": "Brand story",
+          "text": "The narrative behind your brand."
+        },
+        {
+          "title": "Tone of voice",
+          "text": "How your brand speaks."
+        },
+        {
+          "title": "Tagline & messaging",
+          "text": "Approved slogans and key messages."
+        },
+        {
+          "title": "Primary logo",
+          "text": "The master mark and its proportions."
+        },
+        {
+          "title": "Logo variations",
+          "text": "Horizontal, stacked and responsive."
+        },
+        {
+          "title": "Clear space & minimum size",
+          "text": "Spacing and legibility rules."
+        },
+        {
+          "title": "Logo backgrounds",
+          "text": "Approved contrast and placement."
+        },
+        {
+          "title": "Monochrome logo",
+          "text": "Black, white and single-colour."
+        },
+        {
+          "title": "Incorrect logo use",
+          "text": "Distortions and treatments to avoid."
+        },
+        {
+          "title": "Colour palette",
+          "text": "Primary and supporting colours."
+        },
+        {
+          "title": "Colour specifications",
+          "text": "Pantone, CMYK, RGB and HEX."
+        },
+        {
+          "title": "Colour combinations",
+          "text": "Approved pairings and contrast."
+        },
+        {
+          "title": "Typography system",
+          "text": "Typefaces, weights and roles."
+        },
+        {
+          "title": "Type hierarchy",
+          "text": "Headlines, body text and captions."
+        },
+        {
+          "title": "Layout & grids",
+          "text": "Alignment, spacing and structure."
+        },
+        {
+          "title": "Graphic elements",
+          "text": "Shapes, patterns and textures."
+        },
+        {
+          "title": "Iconography",
+          "text": "Consistent icon style and sizing."
+        },
+        {
+          "title": "Illustration style",
+          "text": "Drawing language and visual cues."
+        },
+        {
+          "title": "Photography direction",
+          "text": "Subjects, lighting and composition."
+        },
+        {
+          "title": "Video & motion",
+          "text": "Movement, transitions and rhythm."
+        },
+        {
+          "title": "Social media templates",
+          "text": "Posts, stories and campaigns."
+        },
+        {
+          "title": "Advertising layouts",
+          "text": "Digital, print and outdoor."
+        },
+        {
+          "title": "Website & UI direction",
+          "text": "Brand application across screens."
+        },
+        {
+          "title": "Packaging guidelines",
+          "text": "Hierarchy and brand placement."
+        },
+        {
+          "title": "Stationery & documents",
+          "text": "Business cards, letters and reports."
+        },
+        {
+          "title": "Signage & environments",
+          "text": "Wayfinding and branded spaces."
+        },
+        {
+          "title": "Brand assets & handover",
+          "text": "File formats, naming and team access."
+        }
+      ]
     }
   },
   "pricing": {

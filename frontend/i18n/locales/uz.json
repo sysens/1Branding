@@ -730,7 +730,181 @@
       "title": "Rebrending",
       "accent": "Brending",
       "intro": "Biz **oʻziga xos qiyofaga ega** brendlar yaratamiz. Brendbuklarimiz har bir jamoaga shu qiyofani davom ettirish uchun aniqlik beradi. Biznesingiz oʻsgani sari brendingiz yangi qoʻllardan oʻtadi — dizaynerlar, marketologlar, matbaachilar, dasturchilar va ijodiy hamkorlar. OneBranding brendbuki hammani bir xil gʻoya va bir xil aniqlik bilan ishlashga yoʻnaltiradi. Har bir dizayn qarori amaliy qoʻllanmaga aylanadi. Aniq qoidalar. Haqiqiy misollar. Aniq texnik talablar. Jamoangiz brendni qadoqlarda, kampaniyalarda, saytlarda va jismoniy makonlarda qanday taqdim etishni biladi.",
-      "cover": "Polkovnik Sanders imzosi tushirilgan KFC qadoqlari"
+      "cover": "Polkovnik Sanders imzosi tushirilgan KFC qadoqlari",
+      "marquee": "OneBranding mijozlari uchun ishlar: logotiplar, qadoqlar va kampaniyalar"
+    },
+    "gallery": {
+      "label": "OneBranding qadoq ishlari",
+      "alt": "{name} qadoq dizayni",
+      "cta": "Loyihalar",
+      "caption": "Boshqa brending ishlarimizni koʻring"
+    },
+    "approach": {
+      "label": "ONE yondashuvi: har bir nuqtada bitta gʻoya",
+      "eyebrow": "ONE yondashuvi",
+      "line1": "bitta gʻoya.",
+      "line2": "har bir nuqtada.",
+      "text": "Identika, qadoq va raqamli muhit — bir butun boʻlib ishlash uchun yaratilgan.",
+      "cta": "Loyihani koʻrish",
+      "prev": "Oldingi",
+      "next": "Keyingi",
+      "position": "{label}, {current} / {total}",
+      "items": {
+        "social": "Ijtimoiy tarmoqlar",
+        "identity": "Identika",
+        "brandbook": "Brendbuk",
+        "packaging": "Qadoq",
+        "website": "Veb-sayt",
+        "presentation": "Taqdimot",
+        "motion": "Motion"
+      }
+    },
+    "identity": {
+      "title": "Logotip va brend identikasi",
+      "logo": {
+        "label": "Logotip",
+        "line": "logotipingiz sizni tanishtiradi.",
+        "alt": "Faqat logotipli oʻsha qadoq: kulrang, har bir buyumda nomi bor"
+      },
+      "identity": {
+        "label": "Brend identikasi",
+        "line": "identikangiz sizni boshqalar bilan adashtirib boʻlmaydigan qiladi.",
+        "alt": "Toʻliq identikadagi qadoq: har bir buyumda brend ranglari va belgilari"
+      },
+      "text": "Logotip, ranglar, tipografiya va qadoqni yagona, oʻziga xos vizual tizimga birlashtiramiz. Har bir detal birga ishlaydi. Har bir aloqa nuqtasi tanilishni kuchaytiradi.",
+      "accent": "Bitta brend. Bitta vizual til."
+    },
+    "brandbook": {
+      "title": "Har bir detal.",
+      "accent": "Bitta standart.",
+      "intro": "Brendingiz qanday koʻrinishi, gapirishi va oʻzini koʻrsatishi boʻyicha 30 ta amaliy qoida. Har bir jamoa uchun bitta aniq qoʻllanma.",
+      "eyebrow": "Brendbukingiz ichida",
+      "foot": "Bitta gʻoya. Har bir qoʻllanishda.",
+      "more": "Batafsil",
+      "pricing": "Narxlar",
+      "pricingLine": "Ehtiyojingizga mos paketni tanlang.",
+      "items": [
+        {
+          "title": "Brend asoslari",
+          "text": "Maqsad, qarash va missiya."
+        },
+        {
+          "title": "Qadriyatlar va xarakter",
+          "text": "Brendingiz nimaga tayanadi."
+        },
+        {
+          "title": "Auditoriya va pozitsiyalash",
+          "text": "Kimga xizmat qilasiz. Sizni nima ajratib turadi."
+        },
+        {
+          "title": "Brend tarixi",
+          "text": "Brendingiz ortidagi hikoya."
+        },
+        {
+          "title": "Muloqot ohangi",
+          "text": "Brendingiz qanday gapiradi."
+        },
+        {
+          "title": "Slogan va xabarlar",
+          "text": "Tasdiqlangan shiorlar va asosiy xabarlar."
+        },
+        {
+          "title": "Asosiy logotip",
+          "text": "Asosiy belgi va uning nisbatlari."
+        },
+        {
+          "title": "Logotip variantlari",
+          "text": "Gorizontal, vertikal va moslashuvchan."
+        },
+        {
+          "title": "Himoya maydoni va minimal oʻlcham",
+          "text": "Boʻshliq va oʻqilish qoidalari."
+        },
+        {
+          "title": "Logotip fonlari",
+          "text": "Ruxsat etilgan kontrast va joylashuv."
+        },
+        {
+          "title": "Monoxrom logotip",
+          "text": "Qora, oq va bir rangli."
+        },
+        {
+          "title": "Logotipdan notoʻgʻri foydalanish",
+          "text": "Qochish kerak boʻlgan buzilishlar va usullar."
+        },
+        {
+          "title": "Rang palitrasi",
+          "text": "Asosiy va qoʻshimcha ranglar."
+        },
+        {
+          "title": "Rang spetsifikatsiyalari",
+          "text": "Pantone, CMYK, RGB va HEX."
+        },
+        {
+          "title": "Rang kombinatsiyalari",
+          "text": "Ruxsat etilgan juftliklar va kontrast."
+        },
+        {
+          "title": "Tipografiya tizimi",
+          "text": "Shriftlar, qalinliklar va vazifalar."
+        },
+        {
+          "title": "Matn ierarxiyasi",
+          "text": "Sarlavhalar, asosiy matn va izohlar."
+        },
+        {
+          "title": "Maket va setkalar",
+          "text": "Tekislash, oraliqlar va tuzilma."
+        },
+        {
+          "title": "Grafik elementlar",
+          "text": "Shakllar, naqshlar va teksturalar."
+        },
+        {
+          "title": "Ikonografiya",
+          "text": "Ikonkalarning yagona uslubi va oʻlchami."
+        },
+        {
+          "title": "Illyustratsiya uslubi",
+          "text": "Chizish tili va vizual ishoralar."
+        },
+        {
+          "title": "Fotosurat yoʻnalishi",
+          "text": "Mavzular, yorugʻlik va kompozitsiya."
+        },
+        {
+          "title": "Video va motion",
+          "text": "Harakat, oʻtishlar va ritm."
+        },
+        {
+          "title": "Ijtimoiy tarmoq shablonlari",
+          "text": "Postlar, storislar va kampaniyalar."
+        },
+        {
+          "title": "Reklama maketlari",
+          "text": "Raqamli, bosma va tashqi reklama."
+        },
+        {
+          "title": "Veb-sayt va UI yoʻnalishi",
+          "text": "Brendni ekranlarda qoʻllash."
+        },
+        {
+          "title": "Qadoq qoidalari",
+          "text": "Ierarxiya va brend joylashuvi."
+        },
+        {
+          "title": "Ish hujjatlari",
+          "text": "Vizitkalar, xatlar va hisobotlar."
+        },
+        {
+          "title": "Yoʻnaltiruvchi belgilar va makonlar",
+          "text": "Navigatsiya va brendlangan makonlar."
+        },
+        {
+          "title": "Brend fayllari va topshirish",
+          "text": "Fayl formatlari, nomlash va jamoa uchun kirish."
+        }
+      ]
     }
   },
   "pricing": {

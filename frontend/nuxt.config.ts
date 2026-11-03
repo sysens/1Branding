@@ -51,8 +51,10 @@ const contentSecurityPolicy = (scriptExtra = "") => [
   "form-action 'self'",
   "object-src 'none'",
 ].join("; ");
-// The home page's Spline scene: its runtime calls eval. No other page may.
+// The Spline robot's runtime calls eval: only the pages that show it (the
+// home page, and /projects in its grid view) may.
 const homeContentSecurityPolicy = contentSecurityPolicy(" 'unsafe-eval'");
+const splinePages = ["/", "/projects"];
 const securityHeaders = {
   // Every subdomain (www included) is served over HTTPS by Cloudflare.
   "strict-transport-security": "max-age=31536000; includeSubDomains",
@@ -175,9 +177,10 @@ export default defineNuxtConfig({
     // and Uzbek under "/uz". The English pages used to be under "/en": those
     // links get one 301 to the final URL in server/middleware/legacy-urls.ts.
     ...Object.fromEntries(localePrefixes.flatMap((prefix) => [
-      ...cachedPages.map((path) => path === "/"
-        ? [prefix || "/", { ...pageCache, headers: { "content-security-policy": homeContentSecurityPolicy } }]
-        : [`${prefix}${path}`, pageCache]),
+      ...cachedPages.map((path) => [
+        path === "/" ? prefix || "/" : `${prefix}${path}`,
+        splinePages.includes(path) ? { ...pageCache, headers: { "content-security-policy": homeContentSecurityPolicy } } : pageCache,
+      ]),
       ...["/services/**", "/projects/**", "/news/**"].map((path) => [`${prefix}${path}`, pageCache]),
     ])),
     "/_ipx/**": {

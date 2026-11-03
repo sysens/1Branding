@@ -91,7 +91,7 @@ useHead({
   <div ref="page" class="projects-page" :class="{ 'is-live': live, [`is-aside-${aside}`]: Boolean(aside) }">
     <Transition name="projects-view" mode="out-in">
       <ProjectsSlider v-if="mode === 'slider'" key="slider" :projects="projects" :category="category" :opening="!live" @live="live = true" @reveal="onReveal" />
-      <ProjectsShowcase v-else key="grid" />
+      <ProjectsShowcase v-else key="grid" @slider="mode = 'slider'" />
     </Transition>
     <p v-if="!projects.length && mode === 'slider'" class="projects-empty">{{ $t("projectsPage.unavailable") }}</p>
 
