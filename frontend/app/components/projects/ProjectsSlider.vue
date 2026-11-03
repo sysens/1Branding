@@ -10,9 +10,9 @@ import { createPlane, createScene, VIEW_HEIGHT, type Picture, type Plane, type S
 // own project cards: 16:9, 500px wide (390 up to 1024px, 285 up to 640px,
 // growing with the site past 1920px), corners rounded 1.25rem.
 //
-// Opening: the brand's name and line rise into view; 2.5 s after the page
-// mounts they leave, and the projects' pictures fly in as a diamond mosaic and
-// fold into the column (utils/projectsIntro.ts). The overlay then comes in.
+// Opening: as soon as their pictures have loaded, the projects fly in as a
+// diamond mosaic and fold into the column (utils/projectsIntro.ts), with no
+// text before them. The overlay then comes in.
 //
 // Scrolling is free, with no snap: the wheel feeds an impulse that drains into
 // the target position, a drag moves it directly and leaves a glide behind, and
@@ -23,9 +23,10 @@ import { createPlane, createScene, VIEW_HEIGHT, type Picture, type Plane, type S
 //
 // A click on the centred slide reveals it at its own proportions (the others
 // make way), with its title above and its line below, a minimap of all the
-// projects at the right, and "Explore" under the diamond; a second click
-// opens the project. A click on another slide brings it to the centre and
-// reveals it on the way. The wheel, a drag or Escape put it back.
+// projects at the right, and "Explore" under the diamond; it stays revealed
+// (a second click does not leave the slider). A click on another slide
+// brings it to the centre and reveals it on the way. The wheel, a drag or
+// Escape put it back.
 //
 // The page is rendered on the server as a plain column of the same slides,
 // which shows if WebGL is missing; the projects' links are in the list for
@@ -63,8 +64,6 @@ const parts = (project: ProjectWallItem | undefined) => {
 
 const ui = reactive({
   phase: "text" as "text" | "mosaic" | "slider",
-  // The opening's text is taken out 1 s after it leaves.
-  textGone: !props.opening,
   live: false,
   gl: false,
   shown: false,
@@ -481,9 +480,10 @@ const onPointerUp = async (event: PointerEvent) => {
   const index = hitTest(event.clientX, event.clientY);
   if (index < 0) return;
   const item = mod(index, count.value);
-  if (reveal && reveal.index === item && reveal.state !== "collapsing") {
-    void navigateTo(props.projects[item]!.to);
-  } else if (reveal) {
+  // The revealed slide stays revealed: the slider does not leave for the
+  // case study.
+  if (reveal && reveal.index === item && reveal.state !== "collapsing") return;
+  if (reveal) {
     await collapse();
     go(index);
   } else if (item === mod(centre.value, count.value)) {
@@ -515,8 +515,7 @@ const onKeydown = async (event: KeyboardEvent) => {
     } else jumpTo(next);
   } else if (event.key === "Enter" && event.target === stage.value && current.value) {
     event.preventDefault();
-    if (reveal?.state === "shown") void navigateTo(current.value.to);
-    else void select(centre.value);
+    if (!reveal) void select(centre.value);
   }
 };
 
@@ -552,9 +551,6 @@ const startMosaic = () => {
   want();
 };
 
-let textTimer: ReturnType<typeof setTimeout> | undefined;
-// The opening's text holds for 2.5 s from here.
-const mountedAt = import.meta.client ? performance.now() : 0;
 let resizeObserver: ResizeObserver | undefined;
 
 // The card's size from the stylesheet (a hidden sizer), in world units; the
@@ -612,19 +608,14 @@ onMounted(async () => {
   if (still || !scene || !props.opening) {
     ui.phase = "slider";
     ui.shown = true;
-    ui.textGone = true;
     ui.live = true;
     emit("live");
     want();
     return;
   }
-  // The text holds for 2.5 s from the page's start, then the mosaic comes.
-  const elapsed = performance.now() - mountedAt;
-  textTimer = setTimeout(() => {
-    ui.shown = true;
-    startMosaic();
-    textTimer = setTimeout(() => { ui.textGone = true; }, 1000);
-  }, Math.max(0, 2500 - elapsed));
+  // The mosaic comes first, the moment the pictures are in.
+  ui.shown = true;
+  startMosaic();
 });
 
 onBeforeUnmount(() => {
@@ -632,7 +623,6 @@ onBeforeUnmount(() => {
   window.removeEventListener("keydown", onKeydown);
   resizeObserver?.disconnect();
   if (frame) cancelAnimationFrame(frame);
-  clearTimeout(textTimer);
   clearTimeout(categoryTimer);
   scene?.destroy();
 });
@@ -751,11 +741,6 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
       </button>
     </div>
 
-    <!-- The opening's name and line. -->
-    <div v-if="!ui.textGone" class="slider__intro" :class="{ 'is-leaving': ui.shown }" aria-hidden="true">
-      <p class="slider__intro-name"><span>OneBranding</span></p>
-      <p class="slider__intro-role"><span>{{ $t("seo.heroEyebrow") }}</span></p>
-    </div>
 
     <p class="sr-only" aria-live="polite">
       {{ current ? $t("projectsPage.position", { title: current.title, current: currentNumber, total: count }) : "" }}
@@ -793,8 +778,8 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
   user-select: none;
 }
 
-/* The pictures fade in as the opening's text leaves (0.6 s), or after 4 s
-   if the page's script never runs. */
+/* The pictures fade in (0.6 s) as the mosaic starts, or after 4 s if the
+   page's script never runs. */
 .slider__stage {
   position: absolute;
   inset: 0;
@@ -1208,69 +1193,6 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
   object-fit: cover;
 }
 
-/* The opening's name and line: left, half way down, each rising through a
-   mask, and leaving upwards. */
-.slider__intro {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 5vw;
-  pointer-events: none;
-}
-
-.slider__intro p {
-  margin: 0;
-  overflow: hidden;
-}
-
-.slider__intro span {
-  display: block;
-  translate: 0 100%;
-  animation: slider-intro-in 1s cubic-bezier(0.5, 1, 0.89, 1) forwards, slider-intro-out 0.5s cubic-bezier(0.32, 0, 0.67, 0) 3.5s forwards;
-}
-
-.slider.is-scripted .slider__intro span {
-  animation: slider-intro-in 1s cubic-bezier(0.5, 1, 0.89, 1) forwards;
-}
-
-.slider__intro-name {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4vw, 4rem);
-  font-weight: 400;
-  line-height: 1.1;
-}
-
-.slider__intro-role {
-  margin-top: 0.625rem !important;
-  font-family: var(--sans);
-  font-size: clamp(0.875rem, 1.25vw, 1.125rem);
-  font-weight: 300;
-  line-height: 1.3;
-  opacity: 0.5;
-}
-
-.slider__intro-role span {
-  animation-delay: 0.1s;
-}
-
-.slider.is-scripted .slider__intro.is-leaving span {
-  translate: 0 0;
-  animation: slider-intro-out 0.5s cubic-bezier(0.32, 0, 0.67, 0) forwards;
-}
-
-@keyframes slider-intro-in {
-  to { translate: 0 0; }
-}
-
-@keyframes slider-intro-out {
-  from { translate: 0 0; }
-  to { translate: 0 -100%; }
-}
-
 /* Phones (the original's layout): the counter at the bottom centre with the
    category over it; no crosshair. */
 @media (max-width: 768px) {
@@ -1300,10 +1222,6 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slider__intro {
-    display: none;
-  }
-
   .slider__stage {
     opacity: 1;
     animation: none;
