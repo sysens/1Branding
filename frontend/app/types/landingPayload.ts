@@ -4,6 +4,9 @@ export type AppLocale = "ru" | "en";
 
 export type LandingMedia = {
   url?: string | null;
+  name?: string | null;
+  width?: number | null;
+  height?: number | null;
   createdAt?: string | null;
   alternativeText?: string | null;
   caption?: string | null;

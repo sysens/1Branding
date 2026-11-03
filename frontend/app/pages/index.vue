@@ -30,9 +30,20 @@ const brandCollageRows = computed(() => {
     .filter((url): url is string => Boolean(url));
   return [urls(collage.row1), urls(collage.row2), urls(collage.row3)];
 });
-const partnerLogos = computed(() => (landingPage.value?.section3?.partnersLogo ?? [])
-  .map(item => cmsMedia(item.url ?? null))
-  .filter((url): url is string => Boolean(url)));
+// The clients' logos in the strip above Awwward come from the CMS (LandingPage >
+// section3 > partnersLogo), so editors add, remove and reorder them in Strapi.
+// Alt: the media's alternative text, else its file name; ratio: its width /
+// height, which evens out the logos' sizes in the strip.
+const partners = computed(() => (landingPage.value?.section3?.partnersLogo ?? [])
+  .map(item => ({
+    src: cmsMedia(item.url ?? null),
+    alt: item.alternativeText?.trim() || (item.name ?? "").replace(/\.[^.]+$/, ""),
+    ratio: item.width && item.height ? item.width / item.height : 0,
+  }))
+  .filter((logo): logo is { src: string; alt: string; ratio: number } => Boolean(logo.src)));
+const partnerLogos = computed(() => partners.value.map(logo => logo.src));
+const partnerAlts = computed(() => partners.value.map(logo => logo.alt));
+const partnerRatios = computed(() => partners.value.map(logo => logo.ratio));
 
 // CMS copy wins once an editor fills it in; scaffolding placeholders fall back to i18n.
 const seoTitle = computed(() => cmsSeoText(landingSeo.value?.title, 15) || t("seo.home.title"));
@@ -86,7 +97,14 @@ usePageSeo({
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
-          <LazyHomeAwardsSection :hydrate-on-visible="LAZY_HYDRATION" :numeral="false" :transition="false" />
+          <LazyHomeAwardsSection
+            :hydrate-on-visible="LAZY_HYDRATION"
+            :logos="partnerLogos"
+            :alts="partnerAlts"
+            :ratios="partnerRatios"
+            :numeral="false"
+            :transition="false"
+          />
           <!-- BrandStoriesSection (Apex / Perfect Candy / GreenGo) and the glow
                that led into it were taken off the landing; they stay for other pages. -->
           <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
