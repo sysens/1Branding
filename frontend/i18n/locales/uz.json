@@ -764,7 +764,13 @@
     "more": "Sizga ham shunday loyiha kerakmi?",
     "services": "Xizmatlarimiz",
     "contact": "Loyihani muhokama qilish",
-    "untitled": "OneBranding loyihasi"
+    "untitled": "OneBranding loyihasi",
+    "statement": {
+      "statement": "Bitta brend.\nBitta standart.\nNol taxmin.",
+      "title": "Izchil brend ortidagi tizim",
+      "text": "Brendbuk — brendingiz qanday koʻrinishi, qanday gapirishi va oʻzini qanday taqdim etishi boʻyicha ishchi qoʻllanma. U logotip, ranglar, tipografiya, vizual uslub va muloqotni yagona tizimga birlashtiradi, shunda identikani qoʻllash va saqlash osonlashadi.",
+      "alt": "Logotip, rang, shrift, vizual uslub va muloqot ohangi yagona brend tizimiga bogʻlangan"
+    }
   },
   "header": {
     "allServices": "Barcha xizmatlar",

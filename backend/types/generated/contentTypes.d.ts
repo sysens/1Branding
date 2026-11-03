@@ -984,6 +984,15 @@ export interface ApiProjectsPageProjectsPage
     };
   };
   attributes: {
+    brandSystem: Schema.Attribute.Component<
+      'projects-page.brand-system',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

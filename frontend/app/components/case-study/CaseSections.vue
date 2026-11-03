@@ -7,12 +7,14 @@ import type { CaseSection } from "~/utils/caseStudy";
 import CaseHero from "./CaseHero.vue";
 import CasePalette from "./CasePalette.vue";
 import CasePicture from "./CasePicture.vue";
+import CaseStatement from "./CaseStatement.vue";
 import CaseText from "./CaseText.vue";
 
 const SECTIONS: Record<CaseSection["type"], Component> = {
   hero: CaseHero,
   text: CaseText,
   picture: CasePicture,
+  statement: CaseStatement,
   palette: CasePalette,
 };
 

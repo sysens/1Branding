@@ -1,7 +1,31 @@
 import { describe, expect, test } from "bun:test";
-import { buildCaseSections, caseColor, caseHeading, casePlainText, caseTextParts } from "../app/utils/caseStudy";
+import { buildCaseSections, caseColor, caseHeading, casePlainText, caseStatementLines, caseTextParts } from "../app/utils/caseStudy";
 
 const media = (url?: string | null) => (url ? `https://cdn.test/${url}` : "");
+
+const COPY = {
+  palette: "Palette",
+  statement: {
+    statement: "One brand.\nOne standard.\nZero guesswork.",
+    title: "The system behind a consistent brand",
+    text: "A brandbook is the working reference.",
+    alt: "Logo, colour, type, imagery and voice",
+    image: { src: "/projects/brand-system.webp", width: 563, height: 446 },
+  },
+};
+
+const STATEMENT_COPY = {
+  type: "statement",
+  id: "statement",
+  image: { src: "/projects/brand-system.webp", width: 563, height: 446, alt: "Logo, colour, type, imagery and voice" },
+  lines: [
+    [{ text: "One", strong: true }, { text: " brand." }],
+    [{ text: "One", strong: true }, { text: " standard." }],
+    [{ text: "Zero", strong: true }, { text: " guesswork." }],
+  ],
+  title: "The system behind a consistent brand",
+  paragraphs: [[{ text: "A brandbook is the working reference." }]],
+};
 
 const ENTRY = {
   category: { categoryName: "Branding" },
@@ -60,9 +84,9 @@ describe("case study sections", () => {
     expect(caseColor("nope")).toBeNull();
   });
 
-  test("the page is heading, text, cover, story, pictures and palette, each picture once", () => {
-    const sections = buildCaseSections(ENTRY, media, { palette: "Palette" });
-    expect(sections.map((section) => section.id)).toEqual(["hero", "intro", "cover", "story", "picture-2", "palette-text", "palette"]);
+  test("the page is heading, text, cover, statement, story, pictures and palette, each picture once", () => {
+    const sections = buildCaseSections(ENTRY, media, COPY);
+    expect(sections.map((section) => section.id)).toEqual(["hero", "intro", "cover", "statement", "story", "picture-2", "palette-text", "palette"]);
     expect(sections[0]).toEqual({ type: "hero", id: "hero", name: "Brand: packaging for a fast-food chain", title: "Rebranding", accent: "branding" });
     expect(sections[2]).toEqual({ type: "picture", id: "cover", src: "https://cdn.test/cover.webp", alt: "Brand: packaging for a fast-food chain", width: 1710, height: 962 });
     expect(sections.at(-1)).toEqual({
@@ -73,7 +97,37 @@ describe("case study sections", () => {
     });
   });
 
-  test("an empty entry is just its heading", () => {
-    expect(buildCaseSections({}, media, { palette: "Palette" })).toEqual([{ type: "hero", id: "hero", name: "", title: "", accent: "" }]);
+  test("an empty entry is its heading and the statement in the site's own copy", () => {
+    expect(buildCaseSections({}, media, COPY)).toEqual([{ type: "hero", id: "hero", name: "", title: "", accent: "" }, STATEMENT_COPY]);
+  });
+
+  test("the statement block takes the editor's copy and picture, field by field", () => {
+    const [, statement] = buildCaseSections(
+      { brandSystem: { statement: "Built **to last**.\n\nOne voice.", title: "  ", text: "First.\n\nSecond **part**.", image: { url: "system.webp", width: 900, height: 800, alternativeText: "" } } },
+      media,
+      COPY
+    );
+    expect(statement).toEqual({
+      type: "statement",
+      id: "statement",
+      image: { src: "https://cdn.test/system.webp", alt: "Logo, colour, type, imagery and voice", width: 900, height: 800 },
+      lines: [
+        [{ text: "Built " }, { text: "to last", strong: true }, { text: "." }],
+        [{ text: "One", strong: true }, { text: " voice." }],
+      ],
+      title: "The system behind a consistent brand",
+      paragraphs: [[{ text: "First." }], [{ text: "Second " }, { text: "part", strong: true }, { text: "." }]],
+    });
+  });
+});
+
+describe("case study statement", () => {
+  test("each line's first word is green, without the punctuation after it", () => {
+    expect(caseStatementLines("Zero.\r\n  One   standard. ")).toEqual([
+      [{ text: "Zero", strong: true }, { text: "." }],
+      [{ text: "One", strong: true }, { text: " standard." }],
+    ]);
+    expect(caseStatementLines("— a dash first")).toEqual([[{ text: "— a dash first" }]]);
+    expect(caseStatementLines(null)).toEqual([]);
   });
 });

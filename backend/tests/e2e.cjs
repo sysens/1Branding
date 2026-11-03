@@ -227,6 +227,11 @@ const submit = async (ip, payload) => {
   enStudy = await projects.findOne({ documentId: study.documentId, locale: 'en', populate });
   ruStudy = await projects.findOne({ documentId: study.documentId, locale: 'ru', populate });
   check('case study: edited entries are not overwritten', enStudy?.section1?.projectTitle === 'Owner title' && ruStudy?.section1?.projectTitle === 'Свой заголовок', `${enStudy?.section1?.projectTitle} / ${ruStudy?.section1?.projectTitle}`);
+  // The brand-system block under the cover: its copy and picture, as the site reads them.
+  await projects.update({ documentId: study.documentId, locale: 'en', data: { brandSystem: { statement: '**One** brand.\nOne standard.', title: 'The system', text: 'A brandbook.', image: fileId } } });
+  res = await fetch(BASE + '/graphql', { method: 'POST', body: JSON.stringify({ query: `{ projectsPage(documentId: "${study.documentId}", locale: "en") { section1 { projectTitle } brandSystem { statement title text image { url } } } }` }), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token.accessKey } });
+  const studyGql = (await res.json().catch(() => ({}))).data?.projectsPage;
+  check('case study: brand system block over GraphQL, other sections kept', studyGql?.brandSystem?.statement === '**One** brand.\nOne standard.' && studyGql?.brandSystem?.title === 'The system' && Boolean(studyGql?.brandSystem?.image?.url) && studyGql?.section1?.projectTitle === 'Owner title', JSON.stringify(studyGql).slice(0, 200));
 
   // Blog articles: the uz locale exists, an article is published once in en, ru
   // and uz with its pictures, and is not created again on the next boot.

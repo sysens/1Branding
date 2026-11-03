@@ -764,7 +764,13 @@
     "more": "Want a project like this?",
     "services": "Our services",
     "contact": "Discuss your project",
-    "untitled": "OneBranding project"
+    "untitled": "OneBranding project",
+    "statement": {
+      "statement": "One brand.\nOne standard.\nZero guesswork.",
+      "title": "The system behind a consistent brand",
+      "text": "A brandbook is the working reference for how your brand looks, speaks and presents itself. It connects your logo, colours, typography, imagery and messaging into one system, making your identity easier to apply and maintain.",
+      "alt": "Logo, colour, type, imagery and voice joined into one brand system"
+    }
   },
   "header": {
     "allServices": "All services",

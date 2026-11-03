@@ -53,6 +53,16 @@
       "component": "projects-page.color-palette",
       "repeatable": false
     },
+    "brandSystem": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "projects-page.brand-system",
+      "repeatable": false
+    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",

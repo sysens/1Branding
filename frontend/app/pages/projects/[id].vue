@@ -1,7 +1,8 @@
 <!-- app/pages/projects/[id].vue -->
 <script setup lang="ts">
 // A case study: a white page with one centred column of sections (the
-// heading, the project's text, its pictures in rounded cards, the palette),
+// heading, the project's text, its pictures in rounded cards, the statement
+// beside its illustration, the palette),
 // built from the CMS entry by buildCaseSections() (utils/caseStudy.ts) and
 // rendered by CaseSections. The slider and the grid on /projects open it.
 import { computed } from "vue";
@@ -102,11 +103,48 @@ const query = `
   }
 `;
 
-const { data, error } = await useCmsQuery<NonNullable<GqlRes["data"]>>(
-  () => `project-${documentId.value}`,
-  query,
-  { variables: () => ({ documentId: documentId.value }) }
-);
+// The block under the cover (CaseStatement) is asked for on its own: while
+// the CMS has no such fields yet (Railway deploys the site and the CMS side
+// by side) this request alone fails and the block shows the site's own copy.
+// Once the CMS has them, the fields can join the query above.
+const statementQuery = `
+  query ProjectStatement($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+    projectsPage(documentId: $documentId, locale: $locale) {
+      brandSystem {
+        statement
+        title
+        text
+        image { url width height alternativeText }
+      }
+    }
+    fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
+      brandSystem {
+        statement
+        title
+        text
+        image { url width height alternativeText }
+      }
+    }
+  }
+`;
+
+type StatementRes = {
+  projectsPage?: Pick<CaseStudyEntry, "brandSystem"> | null;
+  fallbackProjectsPage?: Pick<CaseStudyEntry, "brandSystem"> | null;
+};
+
+const [{ data, error }, { data: statementData }] = await Promise.all([
+  useCmsQuery<NonNullable<GqlRes["data"]>>(
+    () => `project-${documentId.value}`,
+    query,
+    { variables: () => ({ documentId: documentId.value }) }
+  ),
+  useCmsQuery<StatementRes>(
+    () => `project-statement-${documentId.value}`,
+    statementQuery,
+    { variables: () => ({ documentId: documentId.value }) }
+  ),
+]);
 
 const page = computed(
   () =>
@@ -131,12 +169,34 @@ if (slug.value && routeKey.value !== slug.value) {
 const section1 = computed(() => page.value?.section1 ?? null);
 const images = computed(() => section1.value?.images_connection?.nodes ?? []);
 
+// The statement block's illustration where the CMS has none: the brand's
+// mark wired to logo, colour, type, imagery and voice.
+const STATEMENT_IMAGE = { src: "/projects/brand-system.webp", width: 563, height: 446 };
+
+// The statement block of the same entry as the rest of the page; its picture
+// is the same in every language, so the English one fills in.
+const brandSystem = computed(() => {
+  const own = statementData.value?.data?.projectsPage;
+  const fallback = statementData.value?.data?.fallbackProjectsPage?.brandSystem;
+  const system = own ? own.brandSystem : fallback;
+  return system?.image?.url || !fallback?.image?.url ? system : { ...system, image: fallback.image };
+});
+
 const sections = computed(() =>
   page.value
     ? buildCaseSections(
-        { ...page.value, section1: section1.value && { ...section1.value, images: images.value } },
+        { ...page.value, section1: section1.value && { ...section1.value, images: images.value }, brandSystem: brandSystem.value },
         cmsMedia,
-        { palette: t("project.palette") }
+        {
+          palette: t("project.palette"),
+          statement: {
+            statement: t("project.statement.statement"),
+            title: t("project.statement.title"),
+            text: t("project.statement.text"),
+            alt: t("project.statement.alt"),
+            image: STATEMENT_IMAGE,
+          },
+        }
       )
     : []
 );

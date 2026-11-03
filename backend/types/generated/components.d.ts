@@ -378,6 +378,20 @@ export interface PricePricing extends Struct.ComponentSchema {
   };
 }
 
+export interface ProjectsPageBrandSystem extends Struct.ComponentSchema {
+  collectionName: 'components_projects_page_brand_systems';
+  info: {
+    description: "Below the cover picture: an illustration beside a short statement (one line each, **stars** around the green words, otherwise each line's first word is green), then a heading and its paragraph. Empty fields show the site's own copy.";
+    displayName: 'Project: Brand system';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'>;
+    statement: Schema.Attribute.Text;
+    text: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface ProjectsPageColorCard extends Struct.ComponentSchema {
   collectionName: 'components_projects_page_color_cards';
   info: {
@@ -482,6 +496,7 @@ declare module '@strapi/strapi' {
       'one-guarantee-page.why-it-works': OneGuaranteePageWhyItWorks;
       'price.for-customers': PriceForCustomers;
       'price.pricing': PricePricing;
+      'projects-page.brand-system': ProjectsPageBrandSystem;
       'projects-page.color-card': ProjectsPageColorCard;
       'projects-page.color-palette': ProjectsPageColorPalette;
       'projects-page.hero-section': ProjectsPageHeroSection;

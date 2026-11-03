@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_projects_page_brand_systems",
+  "info": {
+    "displayName": "Project: Brand system",
+    "description": "Below the cover picture: an illustration beside a short statement (one line each, **stars** around the green words, otherwise each line's first word is green), then a heading and its paragraph. Empty fields show the site's own copy."
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "statement": {
+      "type": "text"
+    },
+    "title": {
+      "type": "string"
+    },
+    "text": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

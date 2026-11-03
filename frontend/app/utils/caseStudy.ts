@@ -1,6 +1,7 @@
 // A case study (/projects/<slug>) is one light column of sections, each a
 // small component in components/case-study/: the heading, a paragraph, a
-// picture in a rounded card, the palette. The CMS entry (ProjectsPage) is
+// picture in a rounded card, a statement beside an illustration, the
+// palette. The CMS entry (ProjectsPage) is
 // turned into that list here, so a new kind of section is one more type
 // below and one more component in CaseSections.vue; the page only renders
 // the list.
@@ -16,11 +17,40 @@ export type CaseSection =
   | { type: "text"; id: string; paragraphs: CaseTextPart[][] }
   /** A picture in a rounded card, the full width of the column. */
   | { type: "picture"; id: string; src: string; alt: string; width?: number; height?: number }
+  /** An illustration beside a short statement, one line each and its first
+      words in green ("One brand. / One standard. / Zero guesswork."), then a
+      green heading beside its paragraph. */
+  | {
+      type: "statement";
+      id: string;
+      image: { src: string; alt: string; width?: number; height?: number };
+      lines: CaseTextPart[][];
+      title: string;
+      paragraphs: CaseTextPart[][];
+    }
   | { type: "palette"; id: string; label: string; colors: CaseColor[] };
 
 export type CaseColor = { hex: string; ink: "light" | "dark" };
 
-export type CaseMedia = { url?: string | null; width?: number | null; height?: number | null };
+export type CaseMedia = {
+  url?: string | null;
+  width?: number | null;
+  height?: number | null;
+  alternativeText?: string | null;
+};
+
+/** The site's own copy and illustration for the statement block, where the
+    CMS has none. */
+export type CaseStatementCopy = {
+  statement: string;
+  title: string;
+  text: string;
+  alt: string;
+  image: { src: string; width: number; height: number };
+};
+
+/** What the sections need besides the CMS entry: the site's own copy. */
+export type CaseCopy = { palette: string; statement: CaseStatementCopy };
 
 /** The fields of a ProjectsPage entry the sections are made of. */
 export type CaseStudyEntry = {
@@ -37,6 +67,12 @@ export type CaseStudyEntry = {
     text?: string | null;
     colorCard?: Array<{ HexColorCode?: string | null } | null> | null;
   } | null;
+  brandSystem?: {
+    statement?: string | null;
+    title?: string | null;
+    text?: string | null;
+    image?: CaseMedia | null;
+  } | null;
 };
 
 const clean = (value?: string | null) => (value ?? "").replace(/\s+/g, " ").trim();
@@ -44,6 +80,17 @@ const clean = (value?: string | null) => (value ?? "").replace(/\s+/g, " ").trim
 // The first sentence: up to the first . ! ? or … (with any closing quotes or
 // brackets after it) that is followed by more text.
 const FIRST_SENTENCE = /^(.+?[.!?…]["'»”’)\]]*)\s+(?=\S)/;
+
+// A line's first word, without the punctuation after it ("Zero." -> "Zero");
+// none when the line opens with a dash or a quote.
+const FIRST_WORD = /^[\p{L}\p{N}][\p{L}\p{N}'’-]*/u;
+
+/** Text as parts, the phrases an editor wraps in **double asterisks** strong. */
+export const caseMarkedParts = (text: string): CaseTextPart[] =>
+  clean(text)
+    .split(/\*\*(.+?)\*\*/)
+    .map((part, index) => (index % 2 ? { text: part, strong: true } : { text: part }))
+    .filter((part) => part.text);
 
 /**
  * One paragraph as parts. Phrases the editor wraps in **double asterisks**
@@ -58,15 +105,34 @@ export const caseTextParts = (text: string, lead = ""): CaseTextPart[] => {
     return body ? [{ text: strong, strong: true }, { text: ` ${body}` }] : [{ text: strong, strong: true }];
   }
   if (!body) return [];
-  if (body.includes("**")) {
-    return body
-      .split(/\*\*(.+?)\*\*/)
-      .map((part, index) => (index % 2 ? { text: part, strong: true } : { text: part }))
-      .filter((part) => part.text);
-  }
+  if (body.includes("**")) return caseMarkedParts(body);
   const first = body.match(FIRST_SENTENCE)?.[1];
   return first ? [{ text: first, strong: true }, { text: body.slice(first.length) }] : [{ text: body }];
 };
+
+/**
+ * A statement written one line each, as lines of parts: the words an editor
+ * wraps in **double asterisks** are the green ones, otherwise each line's
+ * first word is ("One brand." -> "One" green, " brand." black).
+ */
+export const caseStatementLines = (text?: string | null): CaseTextPart[][] =>
+  (text ?? "")
+    .split(/\r?\n/)
+    .map(clean)
+    .filter(Boolean)
+    .map((line) => {
+      if (line.includes("**")) return caseMarkedParts(line);
+      const first = line.match(FIRST_WORD)?.[0];
+      return first ? [{ text: first, strong: true }, ...(line.length > first.length ? [{ text: line.slice(first.length) }] : [])] : [{ text: line }];
+    });
+
+/** Paragraphs (blank-line separated) as parts, strong only where marked. */
+const markedParagraphs = (text?: string | null) =>
+  (text ?? "")
+    .replace(/\r\n?/g, "\n")
+    .split(/\n\s*\n/)
+    .map(caseMarkedParts)
+    .filter((parts) => parts.length);
 
 /** Plain text without the editor's ** marks, for meta descriptions. */
 export const casePlainText = (text?: string | null) => clean(text).replace(/\*\*/g, "");
@@ -112,14 +178,15 @@ export const caseColor = (value?: string | null): CaseColor | null => {
 
 /**
  * The page's sections from its CMS entry, top to bottom: the heading, the
- * project's text, its first picture (the cover), then the story block with
- * its picture, the remaining pictures and the palette. A picture is shown
- * once even when several fields point to the same upload.
+ * project's text, its first picture (the cover), the statement block, then
+ * the story block with its picture, the remaining pictures and the palette.
+ * A picture is shown once even when several fields point to the same upload;
+ * the statement block takes the site's own copy for what the CMS leaves empty.
  */
 export const buildCaseSections = (
   entry: CaseStudyEntry,
   media: (url?: string | null) => string,
-  labels: { palette: string }
+  copy: CaseCopy
 ): CaseSection[] => {
   const sections: CaseSection[] = [];
   const name = clean(entry.section1?.projectTitle);
@@ -152,6 +219,25 @@ export const buildCaseSections = (
   text("intro", entry.section1?.text);
   picture(images[0], "cover", name);
 
+  const system = entry.brandSystem;
+  const illustration = media(system?.image?.url);
+  const lines = caseStatementLines(system?.statement);
+  const paragraphs = markedParagraphs(system?.text);
+  sections.push({
+    type: "statement",
+    id: "statement",
+    image: illustration
+      ? {
+          src: illustration,
+          alt: clean(system?.image?.alternativeText) || copy.statement.alt,
+          ...(system?.image?.width && system?.image?.height ? { width: system.image.width, height: system.image.height } : {}),
+        }
+      : { ...copy.statement.image, alt: copy.statement.alt },
+    lines: lines.length ? lines : caseStatementLines(copy.statement.statement),
+    title: clean(system?.title) || clean(copy.statement.title),
+    paragraphs: paragraphs.length ? paragraphs : markedParagraphs(copy.statement.text),
+  });
+
   const story = entry.section2;
   text("story", story?.text, story?.title);
   picture(story?.image, "story-picture", [name, clean(story?.title)].filter(Boolean).join(" — "));
@@ -160,7 +246,7 @@ export const buildCaseSections = (
   const palette = entry.section3;
   const colors = (palette?.colorCard ?? []).map((card) => caseColor(card?.HexColorCode)).filter((color): color is CaseColor => color !== null);
   text("palette-text", palette?.text, palette?.title);
-  if (colors.length) sections.push({ type: "palette", id: "palette", label: clean(palette?.title) || labels.palette, colors });
+  if (colors.length) sections.push({ type: "palette", id: "palette", label: clean(palette?.title) || copy.palette, colors });
 
   return sections;
 };
