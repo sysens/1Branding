@@ -1,14 +1,14 @@
 <script setup lang="ts">
 // The projects (after mathildedechiara.com): full screen, no site header or
-// footer. Two views of the same projects, switched at the bottom right: a
-// slider (one endless column, the default, which opens with the projects
-// assembling into a diamond) and the grid, the site's earlier endless wall
-// with its heading pill and way home. In the slider the category filter at
+// footer. Two views, switched at the bottom right: the slider (one endless
+// column of the projects, the default, which opens with them assembling
+// into a diamond) and the grid, a white page in the case studies' design
+// (ProjectsShowcase) with the way home. In the slider the category filter at
 // the top right greys out the other projects, the way home and the page's
 // heading sit at the top left and "About" on the right; they come in once
 // the slider has taken over.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import InfiniteProjectsWall from "~/components/projects/InfiniteProjectsWall.vue";
+import ProjectsShowcase from "~/components/projects/ProjectsShowcase.vue";
 import ProjectsSlider from "~/components/projects/ProjectsSlider.vue";
 
 definePageMeta({ footer: false, header: false });
@@ -85,22 +85,15 @@ useHead({
   <div ref="page" class="projects-page" :class="{ 'is-live': live, [`is-aside-${aside}`]: Boolean(aside) }">
     <Transition name="projects-view" mode="out-in">
       <ProjectsSlider v-if="mode === 'slider'" key="slider" :projects="projects" :category="category" :opening="!live" @live="live = true" @reveal="onReveal" />
-      <InfiniteProjectsWall v-else key="grid" />
+      <ProjectsShowcase v-else key="grid" />
     </Transition>
     <p v-if="!projects.length && mode === 'slider'" class="projects-empty">{{ $t("projectsPage.unavailable") }}</p>
 
-    <template v-if="mode === 'grid'">
-      <!-- The grid as it was: the page's heading over the wall, with the
-           way to the services, and the way home. -->
-      <header class="projects-heading">
-        <h1>{{ $t("seo.projects.h1") }}</h1>
-        <NuxtLink :to="localePath('/services')">{{ $t("projectsPage.services") }}</NuxtLink>
-      </header>
-      <NuxtLink :to="localePath('/')" class="projects-back">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
-        <span>{{ $t("projectsPage.back") }}</span>
-      </NuxtLink>
-    </template>
+    <!-- The grid's way home (its page carries the heading). -->
+    <NuxtLink v-if="mode === 'grid'" :to="localePath('/')" class="projects-back">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
+      <span>{{ $t("projectsPage.back") }}</span>
+    </NuxtLink>
 
     <header v-else class="projects-brand">
       <NuxtLink :to="localePath('/')" class="projects-brand__name projects-line" :aria-label="$t('projectsPage.back')">
@@ -313,7 +306,7 @@ useHead({
   gap: 0.5rem;
 }
 
-/* Over the wall's pictures the switch is a pill like the heading's. */
+/* Over the grid's white page the switch is a dark pill. */
 .projects-mode--grid {
   padding: 0.55rem 1.1rem;
   border-radius: 62.4375rem;
@@ -403,7 +396,7 @@ useHead({
   outline-offset: 0.25rem;
 }
 
-/* The grid's heading pill and way home, as on the earlier page. */
+/* The grid's way home, a white pill. */
 .projects-back {
   position: fixed;
   z-index: 810;
@@ -446,52 +439,6 @@ useHead({
 .projects-back:focus-visible {
   outline: 0.1875rem solid #03cb00;
   outline-offset: 0.1875rem;
-}
-
-.projects-heading {
-  position: fixed;
-  z-index: 810;
-  top: max(1.25rem, env(safe-area-inset-top));
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  max-width: calc(100vw - 2.5rem);
-  min-height: 2.9rem;
-  padding: 0.55rem 0.6rem 0.55rem 1.25rem;
-  border-radius: 62.4375rem;
-  background: rgb(0 0 0 / 0.72);
-  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.2);
-  color: #fff;
-  transform: translateX(-50%);
-  backdrop-filter: blur(0.75rem);
-  -webkit-backdrop-filter: blur(0.75rem);
-}
-
-.projects-heading h1 {
-  margin: 0;
-  overflow: hidden;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-small-size);
-  font-weight: 600;
-  line-height: var(--type-small-lh);
-  letter-spacing: var(--type-small-ls);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.projects-heading a {
-  flex: none;
-  padding: 0.3rem 0.9rem;
-  border-radius: 62.4375rem;
-  background: #03cb00;
-  color: #000;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  font-weight: 600;
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
-  text-decoration: none;
 }
 
 .projects-empty {
@@ -588,18 +535,6 @@ useHead({
 
   .projects-filters.is-open ~ .projects-about {
     visibility: hidden;
-  }
-
-  /* The grid's heading goes to the bottom on phones (as before), so the
-     view switch takes the top right. */
-  .projects-heading {
-    top: auto;
-    bottom: max(1.25rem, env(safe-area-inset-bottom));
-  }
-
-  .projects-mode--grid {
-    top: max(1.75rem, env(safe-area-inset-top));
-    bottom: auto;
   }
 
   /* The phone's category label waits for the opening, as the others do. */

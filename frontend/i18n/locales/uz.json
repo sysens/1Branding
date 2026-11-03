@@ -725,7 +725,13 @@
     "position": "{title}, {current} / {total}",
     "back": "Bosh sahifaga qaytish",
     "services": "Xizmatlarimiz",
-    "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti."
+    "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti.",
+    "showcase": {
+      "title": "Rebrending",
+      "accent": "Brending",
+      "intro": "Biz **oʻziga xos qiyofaga ega** brendlar yaratamiz. Brendbuklarimiz har bir jamoaga shu qiyofani davom ettirish uchun aniqlik beradi. Biznesingiz oʻsgani sari brendingiz yangi qoʻllardan oʻtadi — dizaynerlar, marketologlar, matbaachilar, dasturchilar va ijodiy hamkorlar. OneBranding brendbuki hammani bir xil gʻoya va bir xil aniqlik bilan ishlashga yoʻnaltiradi. Har bir dizayn qarori amaliy qoʻllanmaga aylanadi. Aniq qoidalar. Haqiqiy misollar. Aniq texnik talablar. Jamoangiz brendni qadoqlarda, kampaniyalarda, saytlarda va jismoniy makonlarda qanday taqdim etishni biladi.",
+      "cover": "Polkovnik Sanders imzosi tushirilgan KFC qadoqlari"
+    }
   },
   "pricing": {
     "serviceLink": "{name} xizmatiga nimalar kiradi",

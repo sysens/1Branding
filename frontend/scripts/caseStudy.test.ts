@@ -10,14 +10,14 @@ const COPY = {
     title: "The system behind a consistent brand",
     text: "A brandbook is the working reference.",
     alt: "Logo, colour, type, imagery and voice",
-    image: { src: "/projects/brand-system.webp", width: 563, height: 446 },
+    image: { src: "/case-study/brand-system.webp", width: 563, height: 446 },
   },
 };
 
 const STATEMENT_COPY = {
   type: "statement",
   id: "statement",
-  image: { src: "/projects/brand-system.webp", width: 563, height: 446, alt: "Logo, colour, type, imagery and voice" },
+  image: { src: "/case-study/brand-system.webp", width: 563, height: 446, alt: "Logo, colour, type, imagery and voice" },
   lines: [
     [{ text: "One", strong: true }, { text: " brand." }],
     [{ text: "One", strong: true }, { text: " standard." }],

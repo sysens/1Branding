@@ -7,6 +7,7 @@
 // rendered by CaseSections. The slider and the grid on /projects open it.
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import CaseNext from "~/components/case-study/CaseNext.vue";
 import CaseSections from "~/components/case-study/CaseSections.vue";
 import { buildCaseSections, casePlainText, type CaseStudyEntry } from "~/utils/caseStudy";
 import { isPlaceholderCopy, toMetaDescription } from "~/utils/seo";
@@ -169,10 +170,6 @@ if (slug.value && routeKey.value !== slug.value) {
 const section1 = computed(() => page.value?.section1 ?? null);
 const images = computed(() => section1.value?.images_connection?.nodes ?? []);
 
-// The statement block's illustration where the CMS has none: the brand's
-// mark wired to logo, colour, type, imagery and voice.
-const STATEMENT_IMAGE = { src: "/projects/brand-system.webp", width: 563, height: 446 };
-
 // The statement block of the same entry as the rest of the page; its picture
 // is the same in every language, so the English one fills in.
 const brandSystem = computed(() => {
@@ -182,21 +179,13 @@ const brandSystem = computed(() => {
   return system?.image?.url || !fallback?.image?.url ? system : { ...system, image: fallback.image };
 });
 
+const caseCopy = useCaseCopy();
 const sections = computed(() =>
   page.value
     ? buildCaseSections(
         { ...page.value, section1: section1.value && { ...section1.value, images: images.value }, brandSystem: brandSystem.value },
         cmsMedia,
-        {
-          palette: t("project.palette"),
-          statement: {
-            statement: t("project.statement.statement"),
-            title: t("project.statement.title"),
-            text: t("project.statement.text"),
-            alt: t("project.statement.alt"),
-            image: STATEMENT_IMAGE,
-          },
-        }
+        caseCopy.value
       )
     : []
 );
@@ -259,15 +248,7 @@ useHead({ bodyAttrs: { class: "case-study-document" } });
 <template>
   <div class="case-study">
     <CaseSections class="case-study__column" :sections="sections" />
-
-    <!-- From a case study to the services behind it and to a brief. -->
-    <section class="case-study__column case-next" aria-labelledby="project-next-title">
-      <h2 id="project-next-title">{{ $t("project.more") }}</h2>
-      <p>
-        <NuxtLink :to="localePath('/services')">{{ $t("project.services") }}</NuxtLink>
-        <NuxtLink :to="`${localePath('/contact')}#contact-request`" class="case-next__cta ob-button">{{ $t("project.contact") }}</NuxtLink>
-      </p>
-    </section>
+    <CaseNext class="case-study__column" />
   </div>
 </template>
 
@@ -290,41 +271,6 @@ useHead({ bodyAttrs: { class: "case-study-document" } });
   .case-study__column {
     width: calc(100% - 2.5rem);
   }
-}
-
-.case-next {
-  padding-block: clamp(5rem, 9vw, 9rem) clamp(5rem, 8vw, 8rem);
-  text-align: center;
-}
-
-.case-next h2 {
-  margin: 0 0 1.75rem;
-  color: #111;
-  font-family: var(--app-font-display);
-  font-size: var(--type-h3-size);
-  line-height: var(--type-h3-lh);
-  letter-spacing: var(--type-h3-ls);
-  font-weight: 600;
-}
-
-.case-next p {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem 1.75rem;
-  align-items: center;
-  margin: 0;
-}
-
-/* The text link (the call to action is the shared .ob-button). */
-.case-next a:not(.ob-button) {
-  color: #111;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
 }
 
 :global(body.case-study-document) {

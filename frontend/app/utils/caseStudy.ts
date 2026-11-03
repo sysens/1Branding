@@ -15,8 +15,9 @@ export type CaseSection =
   | { type: "hero"; id: string; name: string; title: string; accent: string }
   /** Running text, its key phrase in dark bold, the rest grey. */
   | { type: "text"; id: string; paragraphs: CaseTextPart[][] }
-  /** A picture in a rounded card, the full width of the column. */
-  | { type: "picture"; id: string; src: string; alt: string; width?: number; height?: number }
+  /** A picture in a rounded card, the full width of the column (ownMark:
+      the "Onebranding" mark is in the picture already). */
+  | { type: "picture"; id: string; src: string; alt: string; width?: number; height?: number; ownMark?: boolean }
   /** An illustration beside a short statement, one line each and its first
       words in green ("One brand. / One standard. / Zero guesswork."), then a
       green heading beside its paragraph. */

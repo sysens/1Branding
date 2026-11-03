@@ -2,10 +2,11 @@
 // A picture the full width of the column in a card with 24px corners, with
 // the small "Onebranding" mark at its top right. The mark is dark ink, as on
 // the design's light photographs; once the picture has loaded, a dark corner
-// under it turns it white.
+// under it turns it white. A picture that carries the mark itself (ownMark)
+// gets none.
 import { onMounted, ref } from "vue";
 
-const props = defineProps<{ src: string; alt: string; width?: number; height?: number; eager?: boolean }>();
+const props = defineProps<{ src: string; alt: string; width?: number; height?: number; eager?: boolean; ownMark?: boolean }>();
 
 const root = ref<HTMLElement | null>(null);
 const tone = ref<"dark" | "light">("dark");
@@ -38,6 +39,7 @@ const readCorner = () => {
 // otherwise it is read once it has (on the <img> itself: NuxtImg does not
 // pass its load event on).
 onMounted(() => {
+  if (props.ownMark) return;
   const image = root.value?.querySelector("img");
   if (image?.complete) readCorner();
   else image?.addEventListener("load", readCorner, { once: true });
@@ -60,7 +62,7 @@ const ratio = props.width && props.height ? `${props.width} / ${props.height}` :
       :fetchpriority="eager ? 'high' : 'auto'"
       decoding="async"
     />
-    <span class="case-picture__mark" aria-hidden="true"><span>One</span>branding</span>
+    <span v-if="!ownMark" class="case-picture__mark" aria-hidden="true"><span>One</span>branding</span>
   </figure>
 </template>
 

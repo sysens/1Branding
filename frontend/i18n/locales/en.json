@@ -725,7 +725,13 @@
     "position": "{title}, {current} of {total}",
     "back": "Back to Home",
     "services": "Our services",
-    "unavailable": "Projects are unavailable right now."
+    "unavailable": "Projects are unavailable right now.",
+    "showcase": {
+      "title": "ReBranding",
+      "accent": "Branding",
+      "intro": "We create brands with a **distinct identity.** Our brandbooks give every team the clarity to carry that identity forward. As your business grows, your brand passes through new hands — designers, marketers, printers, developers and creative partners. A OneBranding brandbook keeps everyone working from the same vision, with the same precision. Every design decision becomes practical guidance. Clear rules. Real examples. Exact specifications. Your team knows how to represent your brand across packaging, campaigns, websites and physical spaces.",
+      "cover": "KFC packaging with Colonel Sanders' signature"
+    }
   },
   "pricing": {
     "serviceLink": "What {name} includes",
