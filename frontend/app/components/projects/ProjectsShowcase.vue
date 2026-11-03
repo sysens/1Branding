@@ -2,8 +2,8 @@
 // The grid view of /projects: a white page made of the case studies'
 // sections (CaseSections), written by the site: what OneBranding makes
 // ("ReBranding & Branding"), why a brandbook, a cover picture, the statement
-// block and the way to a brief. It scrolls on its own over the full-screen
-// page, under the way home and the view switch.
+// block and the way to a brief. The document scrolls it, under the site
+// header.
 import { computed } from "vue";
 import CaseNext from "~/components/case-study/CaseNext.vue";
 import CaseSections from "~/components/case-study/CaseSections.vue";
@@ -40,15 +40,11 @@ const sections = computed(() =>
 </template>
 
 <style scoped>
-/* Below the way home and the view switch; the column is the case studies'
+/* Below the site's floating header, as a case study; the column is theirs
    (80% of the screen, the screen less 20px margins on phones). */
 .projects-showcase {
-  position: fixed;
-  z-index: 800;
-  inset: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-top: clamp(6.5rem, 9vw, 9.5rem);
+  min-height: 100vh;
+  padding-top: clamp(8.5rem, 9vw, 9.5rem);
   background: #fff;
   color: #111;
 }

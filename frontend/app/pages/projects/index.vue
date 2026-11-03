@@ -1,12 +1,12 @@
 <script setup lang="ts">
-// The projects (after mathildedechiara.com): full screen, no site header or
-// footer. Two views, switched at the bottom right: the slider (one endless
-// column of the projects, the default, which opens with them assembling
-// into a diamond) and the grid, a white page in the case studies' design
-// (ProjectsShowcase) with the way home. In the slider the category filter at
-// the top right greys out the other projects, the way home and the page's
-// heading sit at the top left and "About" on the right; they come in once
-// the slider has taken over.
+// The projects (after mathildedechiara.com). Two views, switched at the
+// bottom right: the slider (one endless column of the projects, the default,
+// which opens with them assembling into a diamond), full screen without the
+// site header or footer, and the grid, a white page in the case studies'
+// design (ProjectsShowcase) that scrolls like any page, under the site
+// header. In the slider the category filter at the top right greys out the
+// other projects, the way home and the page's heading sit at the top left
+// and "About" on the right; they come in once the slider has taken over.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import ProjectsShowcase from "~/components/projects/ProjectsShowcase.vue";
 import ProjectsSlider from "~/components/projects/ProjectsSlider.vue";
@@ -43,8 +43,12 @@ const mode = ref<"slider" | "grid">("slider");
 // The controls stay hidden through the opening, and step aside (up and out)
 // while a slide is revealed, coming back from below after.
 const live = ref(false);
+const nuxtApp = useNuxtApp();
 watch(mode, async (value) => {
   if (value === "grid") live.value = true;
+  // Either view starts at the top: the grid scrolls the document, the
+  // slider holds it still.
+  nuxtApp.$lenis?.scrollTo(0, { immediate: true, force: true });
   await nextTick();
   measureAbout();
 });
@@ -75,9 +79,11 @@ onMounted(async () => {
 });
 onBeforeUnmount(() => window.removeEventListener("resize", measureAbout));
 
+// The slider holds the document still; the grid is a white page that scrolls.
+const documentClass = computed(() => (mode.value === "grid" ? "projects-grid-document" : "projects-document"));
 useHead({
-  htmlAttrs: { class: "projects-document" },
-  bodyAttrs: { class: "projects-document" },
+  htmlAttrs: { class: documentClass },
+  bodyAttrs: { class: documentClass },
 });
 </script>
 
@@ -89,11 +95,9 @@ useHead({
     </Transition>
     <p v-if="!projects.length && mode === 'slider'" class="projects-empty">{{ $t("projectsPage.unavailable") }}</p>
 
-    <!-- The grid's way home (its page carries the heading). -->
-    <NuxtLink v-if="mode === 'grid'" :to="localePath('/')" class="projects-back">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 5-7 7 7 7M8 12h10" /></svg>
-      <span>{{ $t("projectsPage.back") }}</span>
-    </NuxtLink>
+    <!-- The grid is under the site header (the page's meta leaves it out for
+         the slider; it is teleported to <body>). -->
+    <Header v-if="mode === 'grid'" />
 
     <header v-else class="projects-brand">
       <NuxtLink :to="localePath('/')" class="projects-brand__name projects-line" :aria-label="$t('projectsPage.back')">
@@ -396,51 +400,6 @@ useHead({
   outline-offset: 0.25rem;
 }
 
-/* The grid's way home, a white pill. */
-.projects-back {
-  position: fixed;
-  z-index: 810;
-  top: max(1.25rem, env(safe-area-inset-top));
-  left: max(1.25rem, env(safe-area-inset-left));
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  min-height: 2.9rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: 62.4375rem;
-  background: #fff;
-  color: #252525;
-  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.2);
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  font-weight: 600;
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.projects-back svg {
-  width: 1.2rem;
-  height: 1.2rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2.2;
-}
-
-.projects-back:hover,
-.projects-back:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 0.28);
-}
-
-.projects-back:focus-visible {
-  outline: 0.1875rem solid #03cb00;
-  outline-offset: 0.1875rem;
-}
-
 .projects-empty {
   position: fixed;
   z-index: 805;
@@ -557,5 +516,10 @@ useHead({
   overflow: hidden;
   overscroll-behavior: none;
   background: #f7f5f2;
+}
+
+:global(html.projects-grid-document),
+:global(body.projects-grid-document) {
+  background: #fff;
 }
 </style>
