@@ -433,7 +433,8 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
 
 .hero-scroll {
   position: absolute;
-  right: clamp(1.25rem, calc(2.4 * var(--fvw)), 3rem);
+  /* At the content frame's right edge on screens wider than it. */
+  right: calc(clamp(1.25rem, calc(2.4 * var(--fvw)), 3rem) + var(--frame-side));
   bottom: calc(3.5svh + 0.375rem);
   z-index: 1;
   display: flex;

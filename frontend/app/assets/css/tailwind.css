@@ -86,9 +86,16 @@
        width, 1.44x the size), ~44px for a 1920px screen zoomed out to 20%.
        Every section grows by that same factor, because layout sizes are rem
        (16px = 1rem), never px (except hairlines and breakpoints), and --fvw
-       below follows the root past 1920px. Below 1920px nothing changes. */
+       below follows the root past 1920px. Below 1920px nothing changes.
+       The growth follows the screen's width only up to twice its height (the
+       widest the sections are laid out for: a 1920px screen's browser window
+       is about 1920 x 960): an ultrawide screen (21:9, 32:9) grows as a 2:1
+       one of its height would, so every section still fits its height, and
+       the content frame (below) stays centred with the backgrounds running
+       on to the screen's edges. 5120 x 1300 grows as 2600 x 1300 (18.5px);
+       2560 x 950 and 3840 x 950 stay at 16px, the frame 1920px. */
     html {
-        font-size: max(100%, 0.55556rem + 0.37037vw);
+        font-size: max(100%, 0.55556rem + min(0.37037vw, 0.74074vh));
     }
 
     :root {
