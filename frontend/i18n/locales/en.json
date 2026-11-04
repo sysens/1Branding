@@ -760,6 +760,7 @@
   },
   "projectsPage": {
     "explore": "Explore",
+    "open": "View project",
     "category": "Project category",
     "allCategories": "All categories",
     "displayMode": "Display mode",

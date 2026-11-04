@@ -760,6 +760,7 @@
   },
   "projectsPage": {
     "explore": "Подробнее",
+    "open": "Смотреть проект",
     "category": "Категория проекта",
     "allCategories": "Все категории",
     "displayMode": "Режим просмотра",

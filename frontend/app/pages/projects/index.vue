@@ -153,13 +153,20 @@ useHead({
 
 <style scoped>
 /* The overlay in the original's numbers: margins clamp(12px, 3vw, 48px),
-   text 1vw (12-16px), labels 1.25vw (14-18px) in the serif; the controls are
+   text 1vw (12-16px), labels 1.25vw (14-18px) in the site's display face
+   (the original's serif); the controls are
    white in difference mode, so they read as ink on the page and invert over
    a picture passing under them. */
 .projects-page {
   --edge: clamp(0.75rem, 3vw, 3rem);
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Left and right, the corners are those of the centred content frame:
+     the screen's up to 120rem (1920px at 16px), on an ultrawide screen the
+     frame in its middle (--frame-side is 0 until the screen is wider). */
+  --edge-x: calc(var(--edge) + var(--frame-side));
+  /* The site's own faces: SF Pro Display where the original sets its
+     serif, SF Pro Text for the rest. */
+  --serif: var(--app-font-display);
+  --sans: var(--app-font-sans);
   --text: clamp(0.75rem, 1vw, 1rem);
   --label: clamp(0.875rem, 1.25vw, 1.125rem);
   --ink: #111;
@@ -257,8 +264,7 @@ useHead({
   color: #fff;
   font-family: var(--serif);
   font-size: var(--label);
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.6;
   letter-spacing: 0.06em;
   text-decoration: underline 1px #6e6e6e;
@@ -271,7 +277,7 @@ useHead({
 
 .projects-filters {
   top: var(--edge);
-  right: var(--edge);
+  right: var(--edge-x);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -296,7 +302,7 @@ useHead({
 }
 
 .projects-mode {
-  right: var(--edge);
+  right: var(--edge-x);
   bottom: var(--edge);
   display: flex;
   flex-direction: column;
@@ -333,7 +339,7 @@ useHead({
 .projects-about {
   --delay: 0.14s;
   top: 50%;
-  right: var(--edge);
+  right: var(--edge-x);
   font-size: var(--text);
   letter-spacing: 0.12em;
   text-decoration: none;
@@ -351,7 +357,7 @@ useHead({
   position: fixed;
   z-index: 810;
   top: var(--edge);
-  left: var(--edge);
+  left: var(--edge-x);
   display: grid;
   justify-items: start;
   gap: 0.375rem;
@@ -436,8 +442,7 @@ useHead({
     color: #fff !important;
     font-family: var(--serif) !important;
     font-size: max(0.875rem, 1.25vw) !important;
-    font-style: italic;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.6;
     letter-spacing: 0.06em !important;
     text-transform: uppercase;

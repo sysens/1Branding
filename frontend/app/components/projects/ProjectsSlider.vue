@@ -11,7 +11,7 @@ import { createPlane, createScene, VIEW_HEIGHT, type Picture, type Plane, type S
 // growing with the site past 1920px), corners rounded 1.25rem.
 //
 // Opening: as soon as their pictures have loaded, the projects fly in as a
-// diamond mosaic and fold into the column (utils/projectsIntro.ts), with no
+// big "1" of diamonds and fold into the column (utils/projectsIntro.ts), with no
 // text before them. The overlay then comes in.
 //
 // Scrolling is free, with no snap: the wheel feeds an impulse that drains into
@@ -23,8 +23,9 @@ import { createPlane, createScene, VIEW_HEIGHT, type Picture, type Plane, type S
 //
 // A click on the centred slide reveals it at its own proportions (the others
 // make way), with its title above and its line below, a minimap of all the
-// projects at the right, and "Explore" under the diamond; it stays revealed
-// (a second click does not leave the slider). A click on another slide
+// projects at the right, "Explore" under the diamond and a "View project"
+// button under it at its left, the way into the project's own page; it stays
+// revealed (a second click does not leave the slider). A click on another slide
 // brings it to the centre and reveals it on the way. The wheel, a drag or
 // Escape put it back.
 //
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<{ projects: ProjectWallItem[]; category: 
 const emit = defineEmits<{ live: []; reveal: [shown: boolean] }>();
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 const img = useImage();
 const slideSrc = (url: string, width = 1280) => img(url, { width, format: "webp", quality: 80 });
 const thumbSrc = (url: string) => img(url, { width: 120, format: "webp", quality: 70 });
@@ -544,7 +546,8 @@ watch(() => ui.revealed >= 0, (shown) => emit("reveal", shown));
 
 const startMosaic = () => {
   ui.phase = "mosaic";
-  const repeats = Math.max(1, Math.ceil(30 / Math.max(count.value, 1)));
+  // At least 34 tiles, so the "1" stands upright (utils/projectsIntro.ts).
+  const repeats = Math.max(1, Math.ceil(34 / Math.max(count.value, 1)));
   const items = count.value * repeats;
   intro = createIntro(items, centre.value, (stage.value?.clientWidth || 16) / (stage.value?.clientHeight || 9), slide);
   introStart = performance.now();
@@ -724,6 +727,26 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
     >
       <span>{{ parts(revealedProject).line }}</span>
     </p>
+    <!-- Under a revealed slide, at its left: the way into the project's own
+         page. It keeps its pointer to itself, so the slider does not take
+         the press for a drag or a click on a slide. -->
+    <div
+      class="slider__open"
+      :class="{ 'is-on': ui.revealed >= 0 }"
+      :style="{ left: `${ui.rect.left}px`, top: `calc(${ui.rect.bottom}px + 0.75rem)` }"
+    >
+      <NuxtLink
+        :to="revealedProject?.to ?? localePath('/projects')"
+        class="slider__open-link"
+        :tabindex="ui.revealed >= 0 ? undefined : -1"
+        :aria-hidden="ui.revealed >= 0 ? undefined : 'true'"
+        @pointerdown.stop
+        @pointerup.stop
+      >
+        <span>{{ $t("projectsPage.open") }}<span class="sr-only">: {{ revealedProject?.title }}</span></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
+      </NuxtLink>
+    </div>
 
     <!-- All the projects, while one is revealed. -->
     <div class="slider__minimap" :class="{ 'is-on': ui.minimap }">
@@ -757,14 +780,17 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
 /* The slides are the projects wall's cards (16:9, 500px wide, 390px up to
    1024px, 285px up to 640px, in rem so they grow with the site past 1920px),
    no taller than the original's 35vh, 4vh apart; the margins
-   clamp(12px, 3vw, 48px); its serif (PP Editorial New) is a licensed face,
-   so Georgia, its own fallback, stands in. */
+   clamp(12px, 3vw, 48px); where the original sets its serif (PP Editorial
+   New) the site's display face stands in, upright. */
 .slider {
   --card-w: min(31.25rem, 62vh);
   --card-h: calc(var(--card-w) * 9 / 16);
   --edge: clamp(0.75rem, 3vw, 3rem);
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Left and right, the edges of the centred content frame (the screen
+     itself up to 120rem; see pages/projects/index.vue). */
+  --edge-x: calc(var(--edge) + var(--frame-side));
+  --serif: var(--app-font-display);
+  --sans: var(--app-font-sans);
   --ink: #111;
   --counter-end: 0px;
   position: fixed;
@@ -1000,7 +1026,7 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
 .slider__counter-wrap {
   position: absolute;
   top: 50%;
-  left: var(--edge);
+  left: var(--edge-x);
   display: flex;
   align-items: center;
   clip-path: inset(0 -100vw 0 0);
@@ -1013,8 +1039,7 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
   margin: 0;
   font-family: var(--serif);
   font-size: clamp(1.25rem, 2.5vw, 2.5rem);
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: lining-nums tabular-nums;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -1068,7 +1093,7 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
 .slider__category-wrap {
   position: absolute;
   bottom: var(--edge);
-  left: var(--edge);
+  left: var(--edge-x);
   overflow: hidden;
 }
 
@@ -1111,7 +1136,7 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
 .slider__title {
   font-family: var(--serif);
   font-size: clamp(2rem, 5vw, 5rem);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
@@ -1141,11 +1166,79 @@ const minimapFrom = computed(() => Math.max(1, Math.floor(count.value / 2)));
   transition: translate 0.6s cubic-bezier(0.5, 1, 0.89, 1) 0.4s;
 }
 
+/* "View project": a small ink pill that rises through its mask after the
+   line (0.5 s), green under the pointer. Hidden, it takes no clicks. */
+.slider__open {
+  position: absolute;
+  z-index: 4;
+  overflow: hidden;
+  padding: 0.25rem;
+  margin: -0.25rem;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 0.3s;
+}
+
+.slider__open.is-on {
+  pointer-events: auto;
+  visibility: visible;
+  transition: none;
+}
+
+.slider__open-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.85em 1.4em;
+  border-radius: 62.4375rem;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: clamp(0.75rem, 0.85vw, 0.9375rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  translate: 0 calc(100% + 0.5rem);
+  transition: translate 0.3s cubic-bezier(0.32, 0, 0.67, 0), background-color 0.25s ease, color 0.25s ease;
+}
+
+.slider__open.is-on .slider__open-link {
+  translate: 0 0;
+  transition: translate 0.6s cubic-bezier(0.5, 1, 0.89, 1) 0.5s, background-color 0.25s ease, color 0.25s ease;
+}
+
+.slider__open-link svg {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: transform 0.25s ease;
+}
+
+.slider__open-link:hover,
+.slider__open-link:focus-visible {
+  background: #03cb00;
+  color: #031c0b;
+}
+
+.slider__open-link:hover svg {
+  transform: translate(0.125rem, -0.125rem);
+}
+
+.slider__open-link:focus-visible {
+  outline: 0.125rem solid var(--ink);
+  outline-offset: 0.2rem;
+}
+
 /* The minimap: a column of thumbnails at the right, the middle ones first. */
 .slider__minimap {
   position: absolute;
   top: var(--edge);
-  right: var(--edge);
+  right: var(--edge-x);
   bottom: var(--edge);
   display: flex;
   flex-direction: column;

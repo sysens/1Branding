@@ -3,10 +3,11 @@
 // camera stands, t seconds after the mosaic starts. ProjectsSlider.vue draws
 // it with utils/projectsScene.ts and then takes the column over as its own.
 //
-// The pictures are square tiles (as tall as the slider's slides) on a lattice of five
-// columns, the lattice turned 45deg so every square reads as a diamond (each
-// picture turned back upright). Its rows glide in along the diagonal, by
-// turns from the lower left and the upper right, the middle rows first, each
+// The pictures are square tiles (as tall as the slider's slides) on a square
+// lattice turned 45deg, so every square reads as a diamond (each picture
+// turned back upright), laid out as a big "1", OneBranding's numeral (see
+// `oneCells`). The lattice's rows glide in along the diagonal, by turns from
+// the lower left and the upper right, the middle rows first, each
 // tile bending like a flag with its speed, while the camera eases back and the
 // whole mosaic bows like the face of a globe. Then the mosaic folds into the
 // slider: every tile drops or rises to its place in the column, turns square
@@ -14,7 +15,7 @@
 // camera comes back to its resting distance, so the column the slider takes
 // over is the mosaic's last frame.
 
-import { HALF_TAN, REST_Z, VIEW_HEIGHT } from "./projectsScene";
+import { HALF_TAN, REST_Z } from "./projectsScene";
 
 /** The slider's slide in world units: its size and the column's step. */
 export type SlideSize = { width: number; height: number; pitch: number };
@@ -48,11 +49,41 @@ const slope = (u: number) => {
 };
 const GLIDE_REFERENCE_SLOPE = slope(0.12);
 
-const COLUMNS = 5;
-const COLUMN_ORDER = [2, 1, 3, 0, 4];
 const ANGLE = Math.PI / 4;
 const COS = Math.cos(ANGLE);
 const SIN = Math.sin(ANGLE);
+// A row's tiles set off 70 ms apart, the leading one first (at most 4 steps).
+const LAG = 0.07;
+const MAX_LAG = 4 * LAG;
+
+/**
+ * The "1" in diamonds, for n tiles: cells (x, y) of the turned lattice as seen
+ * on screen, y downward, where x ≡ y (mod 2) and diagonal neighbours share an
+ * edge. A stem w tiles a row wide (a zigzag 2w cells across), a flag of w
+ * lines running down-left from the stem's top, each a tile shorter than the
+ * one above, and a base: the last two rows a tile wider each side. The stem
+ * is as tall as the count needs; a tile or two left over cap its top. Up to
+ * 60 tiles the stem is two tiles wide, beyond that three, so the numeral
+ * stays upright (from 34 tiles up, 1.3 to 2.7 times as tall as it is wide).
+ */
+export const oneCells = (n: number) => {
+  const w = n <= 60 ? 2 : 3;
+  const flagLength = w + 1;
+  const flag = Array.from({ length: w }, (_, line) => flagLength - line).reduce((sum, length) => sum + length, 0);
+  const rows = Math.max(Math.floor((n - flag - 4) / w), 2);
+  const rest = Math.max(n - flag - 4 - rows * w, 0);
+  const cells: Array<{ x: number; y: number }> = [];
+  for (let k = 0; k < rest; k++) cells.push({ x: 1 + 2 * k, y: -1 });
+  for (let y = 0; y < rows; y++) {
+    const p = y % 2;
+    for (let k = 0; k < w; k++) cells.push({ x: p + 2 * k, y });
+    if (y >= rows - 2) cells.push({ x: p - 2, y }, { x: p + 2 * w, y });
+  }
+  for (let line = 0; line < w; line++) {
+    for (let k = 1; k <= flagLength - line; k++) cells.push({ x: -k, y: k + 2 * line });
+  }
+  return cells.slice(0, n);
+};
 
 export type IntroTile = {
   /** Index into the opening's list (which may repeat the projects). */
@@ -92,37 +123,31 @@ export const createIntro = (count: number, centre: number, aspect: number, slide
   // The tiles are squares as tall as a slide, the rows a slide's step apart.
   const side = slide.height;
   const step = slide.pitch;
-  const viewWidth = VIEW_HEIGHT * aspect;
-  const columnPitch = side + 0.04 * viewWidth;
-  const columnX = Array.from({ length: COLUMNS }, (_, column) => (column - 2) * columnPitch);
-  const rows = Math.ceil(count / COLUMNS);
 
-  // The items, nearest the centred one first, dealt to the columns from the
-  // middle out.
-  const byDistance = Array.from({ length: count }, (_, index) => index).sort(
-    (a, b) => Math.min(Math.abs(a - centre), count - Math.abs(a - centre)) - Math.min(Math.abs(b - centre), count - Math.abs(b - centre)),
-  );
-  const perColumn = Array.from({ length: COLUMNS }, () => 0);
-  byDistance.forEach((_, index) => { perColumn[COLUMN_ORDER[index % COLUMNS]!]! += 1; });
-
-  // The lattice's slots, centred.
-  const slots: Array<{ column: number; row: number; x: number; y: number }> = [];
-  perColumn.forEach((length, column) => {
-    for (let row = 0; row < length; row++) slots.push({ column, row, x: columnX[column]!, y: ((rows - 1) / 2 - row) * step });
+  // The "1"'s cells as slots of the turned lattice, one slide's step apart
+  // along both of its axes: a cell (x, y) on screen is the lattice's column
+  // (x - y) / 2 and row -(x + y) / 2. The numeral is centred on the screen.
+  const screenX = (slot: { x: number; y: number }) => slot.x * COS - slot.y * SIN;
+  const screenY = (slot: { x: number; y: number }) => slot.x * SIN + slot.y * COS;
+  const slots = oneCells(count).map((cell) => {
+    const column = (cell.x - cell.y) / 2;
+    const row = -(cell.x + cell.y) / 2;
+    return { column, row, x: column * step, y: row * step };
   });
-  const middleX = (Math.min(...slots.map((slot) => slot.x)) + Math.max(...slots.map((slot) => slot.x))) / 2;
-  const middleY = (Math.min(...slots.map((slot) => slot.y)) + Math.max(...slots.map((slot) => slot.y))) / 2;
-  slots.forEach((slot) => { slot.x -= middleX; slot.y -= middleY; });
+  const middleX = (Math.min(...slots.map(screenX)) + Math.max(...slots.map(screenX))) / 2;
+  const middleY = (Math.min(...slots.map(screenY)) + Math.max(...slots.map(screenY))) / 2;
+  slots.forEach((slot) => {
+    slot.x -= middleX * COS + middleY * SIN;
+    slot.y -= middleY * COS - middleX * SIN;
+  });
 
   // Top to bottom on screen gets the items in column order, so the fold
   // moves every tile straight to its place.
-  const screenX = (slot: { x: number; y: number }) => slot.x * COS - slot.y * SIN;
-  const screenY = (slot: { x: number; y: number }) => slot.x * SIN + slot.y * COS;
   slots.sort((a, b) => screenY(b) - screenY(a) || screenX(a) - screenX(b));
   const items = Array.from({ length: count }, (_, index) => index).sort((a, b) => ringOffset(a, centre, count) - ringOffset(b, centre, count));
 
-  // The camera: far enough for the turned mosaic to fit (at least 6.5),
-  // starting a tenth closer.
+  // The camera: far enough for the turned mosaic to fit with a little room
+  // (and at least 6.5), starting a tenth closer.
   let fit = 0;
   for (const slot of slots) {
     for (const dx of [-0.5, 0.5]) {
@@ -133,7 +158,7 @@ export const createIntro = (count: number, centre: number, aspect: number, slide
       }
     }
   }
-  const distance = Math.max(fit, REST_Z * 1.3);
+  const distance = Math.max(fit * 1.06, REST_Z * 1.3);
   const cameraAt = (t: number) => 0.9 * distance + 0.1 * distance * easeInOut3(clamp01((t - 0.35) / 2.4));
 
   // The globe: the view's corner falls back 0.3 of the distance.
@@ -148,14 +173,21 @@ export const createIntro = (count: number, centre: number, aspect: number, slide
     return ((z + depth) / z) * ((height * aspect) / 2 * COS + (height / 2) * SIN);
   };
   const reach = Math.max(...slots.map((slot) => Math.abs(slot.x))) + side / 2;
-  const middleRow = (rows - 1) / 2;
+  const rowIndex = slots.map((slot) => slot.row);
+  const middleRow = (Math.min(...rowIndex) + Math.max(...rowIndex)) / 2;
+  // The middle rows first, the outermost ones about half a second later
+  // (0.22 s a row apart at most), however many rows the numeral has.
+  const furthestRow = Math.max(1, Math.floor(Math.max(...rowIndex.map((row) => Math.abs(row - middleRow)))));
+  const rowGap = Math.min(0.22, 0.5 / furthestRow);
 
   let assemblyEnd = 0.35 + 2.4;
   const tiles: IntroTile[] = slots.map((slot, index) => {
-    const direction = slot.row % 2 === 0 ? 1 : -1;
-    const rowStart = 0.1 + 0.22 * Math.floor(Math.abs(slot.row - middleRow));
-    const travel = offscreen(cameraAt(rowStart + (COLUMNS - 1) * 0.07)) + reach + side;
-    const lag = 0.07 * (direction > 0 ? COLUMNS - 1 - slot.column : slot.column);
+    const direction = ((slot.row % 2) + 2) % 2 === 0 ? 1 : -1;
+    const rowStart = 0.1 + rowGap * Math.floor(Math.abs(slot.row - middleRow));
+    const travel = offscreen(cameraAt(rowStart + MAX_LAG)) + reach + side;
+    // The row's leading tile (furthest along its way) sets off first.
+    const ahead = slots.filter((other) => other.row === slot.row && (direction > 0 ? other.column > slot.column : other.column < slot.column)).length;
+    const lag = Math.min(ahead * LAG, MAX_LAG);
     assemblyEnd = Math.max(assemblyEnd, rowStart + 1.8);
     return {
       item: items[index]!,
