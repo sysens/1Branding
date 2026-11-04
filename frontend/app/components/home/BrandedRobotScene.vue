@@ -16,33 +16,39 @@ let nearViewport = false;
 let inViewport = false;
 let generation = 0;
 
-// The robot stands as its entrance in the scene ends (camera pulled back, arms
-// up) from its first frame, and stays so. The entrance and the arms' idle
-// swing are the Transition actions of the scene's Spline "Start" events, and
-// the head turns to the cursor through two "LookAt" events; the runtime reads
-// these from the scene's data each time it plays, so before it plays they are
-// taken out and every part they move is put straight into its last state.
+// The robot does not play its entrance (asked for 2026-11-02): from its first
+// frame it stands as the entrance ends, camera pulled back. Everything else
+// still moves as the scene was made: the arms and hands keep their idle swing
+// and the head and upper body turn to the cursor (asked for 2026-11-04).
+// Both the entrance and the swing are Transition actions of the scene's Spline
+// "Start" events, and the runtime reads them from the scene's data each time it
+// plays; the entrance is the one that never repeats (the camera's). So before
+// it plays, that one is taken out and its part put straight into its last
+// state; the repeating ones (and the "LookAt" events) stay.
 // This is the runtime's own data, not its typed API: if it is not there, the
 // robot plays its entrance as before.
-type SceneTween = { data: { state?: string | null } };
+type SceneTween = { data: { state?: string | null; repeat?: number } };
 type SceneAction = { data: { type: string; object?: string; tweens?: SceneTween[] } };
 type SceneEvent = { data: { type: string; disabled?: boolean; actions?: SceneAction[] } };
 type SceneEntity = { data?: { events?: SceneEvent[] } };
 type SceneEvents = { eventContext?: { page?: { traverseEntity?: (visit: (entity: SceneEntity) => void) => void } } };
 
-const holdFinalPose = (scene: Application) => {
+const repeats = (action: SceneAction["data"]) => (action.tweens ?? []).some((tween) => (tween.data.repeat ?? 0) !== 0);
+
+const skipEntrance = (scene: Application) => {
   const events: SceneEvents | undefined = scene.eventManager;
   const poses: Array<[string, string]> = [];
   events?.eventContext?.page?.traverseEntity?.((entity) => {
     for (const { data } of entity.data?.events ?? []) {
-      if (data.type === "LookAt") data.disabled = true;
       if (data.type !== "Start" || !data.actions) continue;
       for (const { data: action } of data.actions) {
-        if (action.type !== "Transition") continue;
+        // A swinging part is left to its own Transition: put into its last
+        // state, it would hold there instead of swinging.
+        if (action.type !== "Transition" || repeats(action)) continue;
         const state = [...(action.tweens ?? [])].reverse().find((tween) => tween.data.state)?.data.state;
         if (action.object && state) poses.push([action.object, state]);
       }
-      data.actions = data.actions.filter((action) => action.data.type !== "Transition");
+      data.actions = data.actions.filter((action) => action.data.type !== "Transition" || repeats(action.data));
     }
   });
   for (const [id, state] of poses) {
@@ -51,8 +57,8 @@ const holdFinalPose = (scene: Application) => {
   }
 };
 
-// The robot does not move, so off screen (or in a hidden tab) its rendering
-// pauses: renderMode "manual" skips whole frames.
+// Off screen (or in a hidden tab) its rendering pauses: renderMode "manual"
+// skips whole frames.
 const updatePlayback = () => {
   if (!application || !ready.value) return;
   const visible = inViewport && !document.hidden;
@@ -92,7 +98,7 @@ const load = async () => {
     // the scene again, already standing; it shows once that frame is drawn.
     scene.stop();
     try {
-      holdFinalPose(scene);
+      skipEntrance(scene);
     } catch {
       // The runtime's data has changed shape: the entrance plays instead.
     }
