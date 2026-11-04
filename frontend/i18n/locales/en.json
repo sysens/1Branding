@@ -78,6 +78,22 @@
     "invalidEmailOrPhone": "Please check the email and phone number."
   },
   "home": {
+    "serviceBand": {
+      "items": [
+        "Brand identity",
+        "Logo design",
+        "Packaging design",
+        "Art direction",
+        "UI/UX design",
+        "Web design",
+        "Motion design",
+        "3D visuals",
+        "Presentation design",
+        "Social media design",
+        "Editorial design",
+        "Campaign design"
+      ]
+    },
     "scrollHint": "Scroll",
     "freshProjects": "fresh projects",
     "earthDives": {

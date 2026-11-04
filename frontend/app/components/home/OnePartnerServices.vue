@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import OptImage from "~/components/ui/OptImage.vue";
-import { computed, ref } from "vue";
+import RollText from "~/components/ui/RollText.vue";
+import { computed, onBeforeUnmount, reactive, ref } from "vue";
 import { optEntry } from "~/utils/optImage";
 import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
 import { servicePath, servicesHubPath } from "~/utils/servicePages";
 import { toSiteLocale } from "~/utils/locales";
 
 // "ONE PARTNER. EVERY SOLUTION." — the twelve services as a list; picking one
-// swaps the picture, name and line in the card beside it (the button stays).
+// swaps the picture, name and line in the card beside it (the button stays),
+// animated as scrolltide's Team Roster (see `select` below).
 // The list and its stand-in pictures come from utils/servicesCatalog.ts.
 
 const { t, locale } = useI18n();
@@ -36,8 +38,44 @@ const services = computed(() => SERVICE_CATALOG.map(({ id, page, image }) => {
   };
 }));
 
+// Picking a service (hover on desktops, a tap, a click or focus) moves the
+// selection as scrolltide's Team Roster does, timed from its video: at once
+// the card's picture starts to wipe down from the top over the one before
+// (which sinks a little under it), the arrow slides in before the new name
+// and out of the old one; then the two names roll their letters over,
+// carrying the bright and the grey colour across (RollText), and the card's
+// title rises in letter by letter. `rolled` holds the rows that have taken
+// part in a pick: the others never play, and nothing plays before the first.
 const selectedId = ref("02");
+const previousId = ref<string>();
+const picks = ref(0);
+const rolled = reactive(new Set<string>());
 const selected = computed(() => services.value.find((service) => service.id === selectedId.value)!);
+
+const select = (id: string) => {
+  if (id === selectedId.value) return;
+  rolled.add(selectedId.value);
+  rolled.add(id);
+  previousId.value = selectedId.value;
+  selectedId.value = id;
+  picks.value += 1;
+};
+
+// Hover picks only beside the card (900px and wider, with a mouse), after a
+// short pause so sweeping across the list does not flick through every row;
+// on narrower screens the pick opens under its row, so it waits for a tap.
+let hoverTimer: ReturnType<typeof setTimeout> | undefined;
+const besideCard = () => window.matchMedia("(min-width: 900px) and (hover: hover)").matches;
+const onPointerEnter = (event: PointerEvent, id: string) => {
+  if (event.pointerType !== "mouse" || !besideCard()) return;
+  clearTimeout(hoverTimer);
+  hoverTimer = setTimeout(() => select(id), 40);
+};
+const onPointerLeave = () => clearTimeout(hoverTimer);
+const onFocus = (id: string) => {
+  if (besideCard()) select(id);
+};
+onBeforeUnmount(() => clearTimeout(hoverTimer));
 </script>
 
 <template>
@@ -64,9 +102,20 @@ const selected = computed(() => services.value.find((service) => service.id === 
     <div class="services__body">
       <ul class="services__list">
         <li v-for="service in services" :key="service.id" v-rise class="services__item" :class="{ 'is-selected': service.id === selectedId }">
-          <button type="button" class="services__row" :aria-pressed="service.id === selectedId" @click="selectedId = service.id">
+          <button
+            type="button"
+            class="services__row"
+            :aria-pressed="service.id === selectedId"
+            @click="select(service.id)"
+            @focus="onFocus(service.id)"
+            @pointerenter="onPointerEnter($event, service.id)"
+            @pointerleave="onPointerLeave"
+          >
             <span class="services__number">{{ service.id }}</span>
-            <span class="services__name">{{ service.name }}</span>
+            <span class="services__name">
+              <svg class="services__pointer" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" /></svg>
+              <RollText :text="service.name" :on="service.id === selectedId" :live="rolled.has(service.id)" />
+            </span>
             <span class="services__description">{{ service.description }}</span>
             <svg class="services__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>
           </button>
@@ -86,16 +135,29 @@ const selected = computed(() => services.value.find((service) => service.id === 
 
       <aside class="services__side">
         <div v-rise class="services__card" aria-live="polite">
-          <p class="services__label"><span aria-hidden="true" />{{ t("home.services.selected") }}</p>
-          <Transition name="services-swap" mode="out-in">
-            <div :key="selected.id" class="services__selected">
-              <div class="services__picture">
-                <OptImage :src="selected.image" :sizes="selected.cardSizes" :alt="selected.name" width="1040" height="780" loading="lazy" decoding="async" />
+          <p class="services__label">
+            <span class="services__dot" aria-hidden="true" />{{ t("home.services.selected") }}
+            <span class="services__count" aria-hidden="true"><RollText :key="selected.id" :text="selected.id" :live="picks > 0" rise /> / {{ services.length }}</span>
+          </p>
+          <div class="services__selected">
+            <!-- Every service's picture, stacked: the picked one on top, the
+                 one before under it while the new one wipes in. -->
+            <div class="services__picture" :class="{ 'is-live': picks > 0 }">
+              <div
+                v-for="service in services"
+                :key="service.id"
+                class="services__layer"
+                :class="{ 'is-current': service.id === selectedId, 'is-previous': service.id === previousId }"
+                :aria-hidden="service.id === selectedId ? undefined : 'true'"
+              >
+                <OptImage :src="service.image" :sizes="service.cardSizes" :alt="service.id === selectedId ? service.name : ''" width="1040" height="780" loading="lazy" decoding="async" />
               </div>
-              <h3 class="services__card-title">{{ selected.name }}</h3>
-              <p class="services__tagline">{{ selected.tagline }}</p>
             </div>
-          </Transition>
+            <h3 class="services__card-title"><RollText :key="selected.id" :text="selected.name" :live="picks > 0" rise /></h3>
+            <Transition name="services-swap" mode="out-in">
+              <p :key="selected.id" class="services__tagline">{{ selected.tagline }}</p>
+            </Transition>
+          </div>
           <NuxtLink :to="selected.path" class="services__button ob-button">
             {{ t("home.services.explore") }}<span class="sr-only">: {{ selected.name }}</span>
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>

@@ -173,20 +173,69 @@
   outline-offset: 0.125rem;
 }
 
+/* As the Team Roster: the list is grey and the picked row bright. The rest
+   of the row brightens with the name's roll (0.15 s after the pick). */
 .services__number {
-  color: #b5b5b5;
+  color: #8a8a8a;
   font-weight: 400;
+  transition: color 0.3s ease 0.15s;
 }
 
+/* The name rolls from grey to white (RollText) once the arrow before it
+   has slid in. The arrow grows in the gap left of the name and the name
+   steps right as it comes; both move by transform only, so a long name
+   never rewraps and the row keeps its height. */
 .services__name {
+  --roll-idle: #8c8c8c;
+  --roll-active: #fff;
+  --roll-delay: 0.15s;
+  position: relative;
+  min-width: 0;
   font-weight: 600;
 }
 
+.services__name > .roll-text {
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+
+.services__item.is-selected .services__name > .roll-text {
+  transform: translateX(0.55em);
+}
+
+.services__pointer {
+  position: absolute;
+  top: 50%;
+  left: -0.45em;
+  width: 0.8em;
+  height: 0.8em;
+  margin-top: -0.4em;
+  opacity: 0;
+  fill: none;
+  stroke: #00e536;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: scale(0.3);
+  transform-origin: left center;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.services__item.is-selected .services__pointer {
+  opacity: 1;
+  transform: none;
+}
+
 .services__description {
-  color: #c4c4c4;
+  color: #8f8f8f;
   font-size: var(--type-caption-size);
   line-height: var(--type-caption-lh);
   letter-spacing: var(--type-caption-ls);
+  transition: color 0.3s ease 0.15s;
+}
+
+.services__item.is-selected .services__description {
+  color: #dcdcdc;
 }
 
 .services__arrow {
@@ -194,7 +243,7 @@
   width: 1.05em;
   height: 1.05em;
   fill: none;
-  stroke: #c4c4c4;
+  stroke: #8f8f8f;
   stroke-width: 1.6;
   transition: stroke 0.25s ease, transform 0.25s ease;
 }
@@ -258,18 +307,95 @@
   text-transform: uppercase;
 }
 
-.services__label span {
+.services__dot {
+  flex: none;
   width: 0.65em;
   height: 0.65em;
   border-radius: 50%;
   background: #00e536;
 }
 
+/* "02 / 12" at the label line's end, as the roster's "05 / 08". */
+.services__count {
+  margin-left: auto;
+  color: #6f6f6f;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.services__count .roll-text {
+  color: #e6e6e6;
+}
+
 .services__picture {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 0.6rem;
   background: #151515;
+}
+
+/* All twelve pictures share the box; only the picked one and, while it wipes
+   in, the one before it are shown. Hidden ones keep their layout, so they
+   load with the card and are ready when picked. */
+.services__layer {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+
+.services__layer.is-current {
+  z-index: 2;
+  visibility: visible;
+}
+
+.services__layer.is-previous {
+  z-index: 1;
+  visibility: visible;
+}
+
+/* The Team Roster wipe, as measured on its video: the new picture is
+   uncovered from the top down in about half a second, fast at first and
+   easing out (a fifth of the way in 40 ms, three quarters in 160 ms), while
+   the old one is pushed down under it. */
+@media (prefers-reduced-motion: no-preference) {
+  .services__picture.is-live .services__layer.is-current {
+    animation: services-wipe 0.5s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  .services__picture.is-live .services__layer.is-current :deep(img) {
+    animation: services-settle 0.6s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  .services__picture.is-live .services__layer.is-previous :deep(img) {
+    animation: services-sink 0.5s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+}
+
+@keyframes services-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes services-settle {
+  from {
+    transform: translateY(-3%) scale(1.03);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes services-sink {
+  to {
+    transform: translateY(12%);
+  }
 }
 
 /* The picked service grows with the card, so the button stays at its bottom. */
@@ -415,7 +541,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .services-swap-enter-active,
-  .services-swap-leave-active {
+  .services-swap-leave-active,
+  .services__pointer,
+  .services__name > .roll-text,
+  .services__number,
+  .services__description {
     transition: none;
   }
 }

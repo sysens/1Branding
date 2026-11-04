@@ -78,6 +78,22 @@
     "invalidEmailOrPhone": "E-mail va telefon raqamini tekshiring."
   },
   "home": {
+    "serviceBand": {
+      "items": [
+        "Brend identikasi",
+        "Logotip dizayni",
+        "Qadoq dizayni",
+        "Art-direkshn",
+        "UI/UX dizayn",
+        "Veb-dizayn",
+        "Motion dizayn",
+        "3D vizuallar",
+        "Taqdimot dizayni",
+        "Ijtimoiy tarmoqlar dizayni",
+        "Nashr dizayni",
+        "Kampaniya dizayni"
+      ]
+    },
     "scrollHint": "Pastga",
     "freshProjects": "yangi loyihalar",
     "earthDives": {
