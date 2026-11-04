@@ -111,7 +111,7 @@ onBeforeUnmount(() => {
             <span>{{ `${t("footerNew.pitchFirst")} ` }}</span>
             <span>{{ t("footerNew.pitchSecond") }}</span>
           </p>
-          <NuxtLink :to="localePath('/contact')" class="site-footer__start ob-button">
+          <NuxtLink :to="localePath('/contact')" class="site-footer__start">
             {{ t("footerNew.start") }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
           </NuxtLink>
@@ -151,7 +151,9 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* --u is one pixel of the 2000px design frame. */
+/* --u is one pixel of the 2000px design frame. The footer is set as the
+   onebranding-clean build's: one face (SF Pro Display) throughout, sizes in
+   the frame's pixels, a compact headline and a flat green button. */
 .site-footer {
   --u: calc(0.05 * var(--fvw));
   --green: #08e24f;
@@ -160,6 +162,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   background: #000;
   color: #fff;
+  font-family: var(--app-font-display);
 }
 
 .site-footer p {
@@ -184,16 +187,14 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-/* Type: the headline is the display-m step (128px at 1440, 160 at 1920, 52
-   on a phone); the rest follows the text and heading steps. */
 .site-footer__headline {
   display: flex;
   flex-direction: column;
-  font-family: var(--app-font-display);
-  font-size: var(--type-display-m-size);
+  font-size: calc(170 * var(--u));
   font-weight: 700;
-  line-height: var(--type-display-m-lh);
-  letter-spacing: var(--type-display-m-ls);
+  line-height: 0.85;
+  letter-spacing: -0.055em;
+  -webkit-text-stroke: calc(4 * var(--u)) currentColor;
 }
 
 .site-footer__green {
@@ -208,11 +209,9 @@ onBeforeUnmount(() => {
 }
 
 .site-footer__ready {
-  font-family: var(--app-font-display);
-  font-size: var(--type-h4-size);
-  font-weight: 600;
-  line-height: var(--type-h4-lh);
-  letter-spacing: var(--type-h4-ls);
+  font-size: calc(36 * var(--u));
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .site-footer__pitch {
@@ -220,23 +219,42 @@ onBeforeUnmount(() => {
   flex-direction: column;
   margin-top: calc(10 * var(--u)) !important;
   color: #94979b;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
+  font-size: calc(30 * var(--u));
+  line-height: 1.33;
+  letter-spacing: -0.01em;
 }
 
-/* The shared .ob-button under the call to action. */
 .site-footer__start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  width: calc(377 * var(--u));
+  height: calc(82 * var(--u));
   margin-top: calc(42 * var(--u));
+  border-radius: 999px;
+  background: var(--green);
+  color: #031c0b;
+  font-size: calc(31 * var(--u));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+.site-footer__start svg,
 .site-footer__link svg {
   width: 0.95em;
   height: 0.95em;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.2;
+}
+
+.site-footer__start:hover,
+.site-footer__start:focus-visible {
+  transform: scale(1.04);
+  box-shadow: 0 0 calc(40 * var(--u)) rgb(8 226 79 / 0.45);
 }
 
 .site-footer__columns {
@@ -247,11 +265,9 @@ onBeforeUnmount(() => {
 
 .site-footer__label {
   color: #9b9ea2;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-label-size);
+  font-size: calc(18 * var(--u));
   font-weight: 600;
-  line-height: var(--type-label-lh);
-  letter-spacing: var(--type-label-ls);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
@@ -269,10 +285,9 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 0.45em;
   color: #fff;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-lead-size);
-  line-height: var(--type-lead-lh);
-  letter-spacing: var(--type-lead-ls);
+  font-size: calc(26 * var(--u));
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   text-decoration: none;
   transition: color 0.25s ease, transform 0.25s ease;
 }
@@ -298,20 +313,16 @@ a.site-footer__link:focus-visible {
 }
 
 .site-footer__logo {
-  font-family: var(--app-font-display);
-  font-size: var(--type-h3-size);
-  font-weight: 600;
-  line-height: var(--type-h3-lh);
-  letter-spacing: var(--type-h3-ls);
+  font-size: calc(56 * var(--u));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 .site-footer__tagline {
   margin-top: calc(18 * var(--u)) !important;
   color: #9b9ea2;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
+  font-size: calc(25 * var(--u));
 }
 
 .site-footer__contact {
@@ -324,21 +335,17 @@ a.site-footer__link:focus-visible {
 
 .site-footer__phone {
   color: #fff;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
+  font-size: calc(28 * var(--u));
   text-decoration: none;
 }
 
+/* The office address (not in the clean build): the copyright's size. */
 .site-footer__address {
   max-width: 34em;
   margin-top: calc(14 * var(--u));
   color: #9b9ea2;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  font-size: calc(19 * var(--u));
+  line-height: 1.4;
   text-decoration: none;
 }
 
@@ -349,10 +356,7 @@ a.site-footer__link:focus-visible {
 .site-footer__copyright {
   margin-top: calc(22 * var(--u)) !important;
   color: #9b9ea2;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  font-size: calc(19 * var(--u));
 }
 
 .site-footer a:focus-visible {
@@ -366,14 +370,31 @@ a.site-footer__link:focus-visible {
     padding: 4.5rem 1.25rem 2rem;
   }
 
+  .site-footer__headline {
+    font-size: 15vw;
+    -webkit-text-stroke-width: 0.35vw;
+  }
+
   .site-footer__middle {
     flex-direction: column;
     gap: 2.5rem;
     margin-top: 3rem;
   }
 
+  .site-footer__ready {
+    font-size: 1.35rem;
+  }
+
+  .site-footer__pitch {
+    font-size: 1.05rem;
+  }
+
   .site-footer__start {
+    width: auto;
+    height: 3.4rem;
     margin-top: 1.5rem;
+    padding: 0 1.6rem;
+    font-size: 1.1rem;
   }
 
   .site-footer__columns {
@@ -381,13 +402,19 @@ a.site-footer__link:focus-visible {
     gap: 2.25rem 1.5rem;
   }
 
+  .site-footer__label {
+    font-size: 0.72rem;
+  }
+
   .site-footer__column ul {
     gap: 0.85rem;
     margin-top: 1rem;
   }
 
+  /* A finger-sized target on phones. */
   .site-footer__link {
     min-height: 1.5rem;
+    font-size: 1.05rem;
   }
 
   .site-footer__bottom {
@@ -397,10 +424,23 @@ a.site-footer__link:focus-visible {
     padding-top: 2rem;
   }
 
+  .site-footer__logo {
+    font-size: 2rem;
+  }
+
+  .site-footer__tagline,
+  .site-footer__phone {
+    font-size: 1rem;
+  }
+
   .site-footer__contact {
     align-items: flex-start;
     text-align: left;
   }
 
+  .site-footer__address,
+  .site-footer__copyright {
+    font-size: 0.8rem;
+  }
 }
 </style>
