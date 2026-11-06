@@ -4,7 +4,9 @@ import type { StrapiEnv } from "./upload";
 
 export default ({ env }: { env: StrapiEnv }) => {
   // With DATABASE_URL set (Railway's Postgres) the client is postgres even if
-  // DATABASE_CLIENT is missing; SQLite only for local development.
+  // DATABASE_CLIENT is missing; SQLite only for local development. Only logged
+  // here (`strapi build` loads this file too): in production the server refuses
+  // to start on an implicit SQLite fallback (src/utils/storage-guard.ts).
   const client =
     env("DATABASE_CLIENT", "") || (env("DATABASE_URL", "") ? "postgres" : "sqlite");
   if (client === "sqlite" && env("NODE_ENV", "development") === "production") {

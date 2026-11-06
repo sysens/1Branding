@@ -87,7 +87,7 @@ try {
   res = await fetch(`${BASE}/uz`, { headers });
   check("/uz renders", res.status === 200 && (await res.text()).includes('lang="uz'), String(res.status));
 
-  for (const page of ["/about", "/projects", "/contact", "/pricing", "/one-guarantee", "/news", "/services", "/privacy", "/uz/about", "/uz/contact"]) {
+  for (const page of ["/about", "/projects", "/showcase", "/contact", "/pricing", "/one-guarantee", "/news", "/services", "/privacy", "/uz/about", "/uz/contact"]) {
     res = await fetch(BASE + page, { headers, redirect: "manual" });
     check(`${page} renders`, res.status === 200, String(res.status));
   }

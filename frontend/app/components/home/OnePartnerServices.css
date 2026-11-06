@@ -91,26 +91,6 @@
   text-wrap: pretty;
 }
 
-.services__intro-links {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.1rem;
-  margin-left: 0.4rem;
-}
-
-.services__intro-links a {
-  color: #fff;
-  text-decoration: underline;
-  text-decoration-color: rgb(3 203 0 / 0.7);
-  text-underline-offset: 0.2em;
-  transition: color 0.25s ease;
-}
-
-.services__intro-links a:hover,
-.services__intro-links a:focus-visible {
-  color: #03cb00;
-}
-
 /* The list (52%) and the card (28%) of a frame 82% wide, as in the design;
    on very wide screens no wider than the site container (1450px). Both
    columns take the row's height, so the table and the card end on one line:
@@ -118,7 +98,8 @@
    bottom. */
 .services__body {
   display: grid;
-  grid-template-columns: minmax(0, 52fr) minmax(0, 28fr);
+  /* The card a little wider than before (28 of 80 parts), so its picture is larger. */
+  grid-template-columns: minmax(0, 48fr) minmax(0, 34fr);
   align-items: stretch;
   gap: calc(2.3 * var(--vw));
   width: min(calc(82.5 * var(--vw)), 100% - 2.5rem);
@@ -143,22 +124,25 @@
 
 .services__row {
   display: grid;
-  grid-template-columns: 3.4em minmax(0, 1fr) minmax(0, 1.25fr) 2em;
+  grid-template-columns: 2.4em minmax(0, 1.15fr) minmax(0, 1.2fr) 1.4em;
   align-items: center;
-  gap: 1em;
+  gap: 0.8em;
   flex: 1 1 auto;
   width: 100%;
-  min-height: 2.75em;
-  padding: 0.35em 0.75em;
+  min-height: 2.9em;
+  padding: 0.4em 0.8em;
   border: 0;
   border-radius: 0.55rem;
   background: transparent;
   color: inherit;
   font: inherit;
   font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
+  /* Larger than it was (the list read small next to the card): growing with
+     the width from the body size on a laptop (where the narrow column has no
+     room for more) to the lead size from 1920px, the names larger still. */
+  font-size: clamp(var(--type-body-size), calc(1.1 * var(--vw)), var(--type-lead-size));
+  line-height: var(--type-lead-lh);
+  letter-spacing: var(--type-lead-ls);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.25s ease;
@@ -191,6 +175,7 @@
   --roll-delay: 0.15s;
   position: relative;
   min-width: 0;
+  font-size: 1.05em;
   font-weight: 600;
 }
 
@@ -228,9 +213,9 @@
 
 .services__description {
   color: #8f8f8f;
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
+  font-size: clamp(var(--type-caption-size), calc(0.86 * var(--vw)), var(--type-small-size));
+  line-height: var(--type-small-lh);
+  letter-spacing: var(--type-small-ls);
   transition: color 0.3s ease 0.15s;
 }
 
@@ -429,8 +414,13 @@
   letter-spacing: var(--type-lead-ls);
 }
 
-/* The card's button: the shared .ob-button, placed at the card's start. */
+/* The card's button: the shared .ob-button, placed at the card's start, a
+   size down from the page buttons (60px tall, lead type), which were too big
+   for the card: 46px at most, its label in the body step. */
 .services__button {
+  --button-h: clamp(2.5rem, calc(2.6 * var(--vw)), 2.875rem);
+  --button-font: var(--type-body-size);
+  --button-pad: 1.5em;
   align-self: flex-start;
   margin-top: clamp(1.1rem, calc(1.4 * var(--vw)), 1.8rem);
 }
@@ -458,8 +448,9 @@
   display: inline-block;
 }
 
+/* "Working as" in white like the line before it; only "one." is green. */
 .services__closing-muted {
-  color: #a9a9a9;
+  color: #fff;
 }
 
 .services-swap-enter-active,

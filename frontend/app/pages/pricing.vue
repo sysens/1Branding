@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Warning from "~/components/costs/Warning.vue";
+import PricingCards from "~/components/costs/PricingCards.vue";
 import { computed } from "vue";
 import { priceAmount } from "~/composables/usePriceCategories";
 
@@ -8,26 +8,18 @@ const { t } = useI18n();
 const cmsSeo = await useCmsSeo("pricePage");
 const localePath = useLocalePath();
 const origin = useSiteOrigin();
-// The same request as the slider's (one key): the table and the structured
-// data repeat the cards' prices as plain text.
+// The same request as the cards' (one key): the structured data repeats
+// their prices.
 const { categories, categoryTitle, categoryPage } = await usePriceCategories();
-const { uzs, uzsNote, uzsCredit } = await useUzsPrice();
+const { uzsNote, uzsCredit } = await useUzsPrice();
 
-const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 const rows = computed(() => categories.value.flatMap((category) => {
   const page = categoryPage(category);
   return (category.pricing ?? [])
     .map((plan) => ({ plan: plan.title?.trim() || "", amount: priceAmount(plan.price) }))
     .filter((row) => row.plan && Number.isFinite(row.amount) && row.amount > 0)
     .sort((a, b) => a.amount - b.amount)
-    .map((row) => ({
-      ...row,
-      category: categoryTitle(category),
-      page,
-      price: page?.perSlide
-        ? t("servicesPage.pricePerSlide", { price: formatPrice(row.amount) })
-        : t("servicesPage.priceFrom", { price: formatPrice(row.amount) }),
-    }));
+    .map((row) => ({ ...row, category: categoryTitle(category), page }));
 }));
 
 usePageSeo({
@@ -66,10 +58,7 @@ usePageSeo({
 <template>
   <div class="relative min-h-screen bg-black overflow-hidden">
 
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
-
-    <div class="relative z-10">
+    <div class="pricing-body relative z-10">
       <div class="vg md:pt-[3.75rem] pt-[1.875rem]">
 
         <!-- The title comes in with the first paint (CSS), as on the other
@@ -80,53 +69,23 @@ usePageSeo({
           <p>{{ $t("pricing.lead") }}</p>
         </header>
 
-        <div class="mx-auto max-w-[110rem] touch-pan-y">
-          <CostsSlider />
-        </div>
       </div>
 
-      <section v-if="rows.length" class="pricing-table" aria-labelledby="pricing-table-title">
-        <h2 id="pricing-table-title">{{ $t("pricing.tableTitle") }}</h2>
-        <div class="pricing-table__scroll">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">{{ $t("pricing.tableService") }}</th>
-                <th scope="col">{{ $t("pricing.tablePackage") }}</th>
-                <th scope="col">{{ $t("pricing.tablePrice") }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in rows" :key="`${row.category}-${row.plan}`">
-                <td>
-                  <NuxtLink v-if="row.page" :to="row.page.path">{{ row.page.name }}</NuxtLink>
-                  <template v-else>{{ row.category }}</template>
-                </td>
-                <td>{{ row.plan }}</td>
-                <td>
-                  {{ row.price }}
-                  <span v-if="uzs(row.amount)" class="pricing-table__uzs">{{ uzs(row.amount) }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p v-if="uzsNote" class="pricing-table__note">
-          {{ uzsNote }}
-          <a v-if="uzsCredit" href="https://www.exchangerate-api.com" lang="en">Rates By Exchange Rate API</a>
-        </p>
-      </section>
-
-      <div class="mx-auto max-w-[103.75rem]">
-        <Warning />
-      </div>
+      <PricingCards class="pricing-cards" />
+      <p v-if="uzsNote" class="pricing-note">
+        {{ uzsNote }}
+        <a v-if="uzsCredit" href="https://www.exchangerate-api.com" lang="en">Rates By Exchange Rate API</a>
+      </p>
 
     </div>
   </div>
 </template>
 
 <style scoped>
+/* Above the cards' row, whose glow room reaches up under it. */
 .pricing-intro {
+  position: relative;
+  z-index: 1;
   max-width: 61.25rem;
   margin: 0 auto;
   padding: 6.875rem 1.25rem 0.625rem;
@@ -155,95 +114,42 @@ usePageSeo({
   letter-spacing: var(--type-body-ls);
 }
 
-.pricing-table {
-  max-width: 68.75rem;
-  margin: 2.5rem auto 5rem;
-  padding: 0 1.25rem;
+/* Room under the cards (and the rate line) before the footer. */
+.pricing-body {
+  /* At least the cards' glow (8rem under them, less the rate line) clear of
+     the footer. */
+  padding-bottom: clamp(6rem, calc(7 * var(--fvw)), 8rem);
 }
 
-.pricing-table h2 {
-  margin: 0 0 1.5rem;
-  color: #fff;
-  font-family: var(--app-font-display);
-  font-size: var(--type-h3-size);
-  line-height: var(--type-h3-lh);
-  letter-spacing: var(--type-h3-ls);
-  font-weight: 600;
+/* Below the title; the cards' glow reaches into the space around them. */
+.pricing-cards {
+  margin: clamp(2.5rem, calc(3.5 * var(--fvw)), 4.5rem) 0 0;
+}
+
+/* The rate the so'm amounts use: one quiet line under the cards. */
+.pricing-note {
+  position: relative;
+  z-index: 1;
+  max-width: 68.75rem;
+  margin: 2.5rem auto 0;
+  padding: 0 1.25rem;
+  color: #8f9297;
+  font-family: var(--app-font-sans);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-lh);
+  letter-spacing: var(--type-caption-ls);
   text-align: center;
 }
 
-.pricing-table__scroll {
-  overflow-x: auto;
-}
-
-.pricing-table table {
-  width: 100%;
-  min-width: 32.5rem;
-  border-collapse: collapse;
-  color: #d5d7da;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-lh);
-  letter-spacing: var(--type-body-ls);
-}
-
-.pricing-table th,
-.pricing-table td {
-  padding: 1rem 1.125rem;
-  border-bottom: 1px solid rgb(255 255 255 / 0.12);
-  text-align: left;
-}
-
-.pricing-table th {
-  color: #8f9297;
-  font-size: var(--type-label-size);
-  line-height: var(--type-label-lh);
-  letter-spacing: var(--type-label-ls);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.pricing-table td:last-child,
-.pricing-table th:last-child {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.pricing-table td:last-child {
-  color: #fff;
-  font-weight: 600;
-}
-
-/* The same price in so'm, under the dollar one; the note gives the rate. */
-.pricing-table__uzs {
-  display: block;
-  margin-top: 0.25rem;
-  color: #8f9297;
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
-  font-weight: 400;
-}
-
-.pricing-table__note {
-  margin: 1rem 0 0;
-  color: #8f9297;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
-  text-align: right;
-}
-
-.pricing-table a {
+.pricing-note a {
   color: #fff;
   text-decoration: underline;
   text-decoration-color: rgb(3 203 0 / 0.7);
   text-underline-offset: 0.2em;
 }
 
-.pricing-table a:hover,
-.pricing-table a:focus-visible {
+.pricing-note a:hover,
+.pricing-note a:focus-visible {
   color: #03cb00;
 }
 </style>

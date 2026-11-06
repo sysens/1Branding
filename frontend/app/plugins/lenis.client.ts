@@ -1,4 +1,5 @@
 import Lenis from "lenis"
+import { pendingLazySectionsOnScreen } from "~/utils/lazySections"
 
 // ScrollTrigger is loaded on demand: a static import here pulled GSAP and
 // ScrollTrigger (~40 KB compressed) into the entry chunk, i.e. into the
@@ -38,28 +39,55 @@ export default defineNuxtPlugin((nuxtApp) => {
   let historyNavigation = false
   window.addEventListener("popstate", () => { historyNavigation = true })
 
-  // Reload (and a full-page back/forward): the router's first navigation uses
-  // history.state.scroll as the saved position and otherwise scrolls to the
-  // top, but nothing wrote it before the page was left, so a reload jumped to
-  // the top. It is written a moment after each scroll settles (Chrome drops
-  // history changes made while the page is unloading; browsers also limit how
-  // often replaceState may run) and again on pagehide; the browser keeps
-  // history.state across a reload, so the router puts the page straight back.
+  // Reload (and a full-page back/forward) puts the page back where it was.
+  // The position is kept in two places:
+  // - sessionStorage, per address, written on every scroll: it survives a
+  //   reload and is up to date to the last frame, even for a reload pressed
+  //   while the page is still moving. (history.state alone was written only
+  //   250 ms after a scroll settled, since browsers limit how often
+  //   replaceState may run, and Chrome drops history changes made while the
+  //   page unloads; a quick F5 then restored an older spot, or none.)
+  // - history.state.scroll, a moment after each scroll settles: the router
+  //   uses it for back/forward within the app, where each entry needs its own.
+  // A reload takes the sessionStorage value; a back/forward the entry's own.
+  // The head script (nuxt.config.ts, restoreScrollScript) reads them the same
+  // way. While it is still putting the page back, scrollY is not the visitor's
+  // position yet, so nothing is saved then.
+  const root = document.documentElement
+  const storageKey = () => `ob-scroll:${location.pathname}${location.search}`
+  const restoringNow = () => root.classList.contains("ob-restoring")
+  const saveToStorage = () => {
+    if (restoringNow()) return
+    try {
+      sessionStorage.setItem(storageKey(), String(Math.round(window.scrollY)))
+    } catch { /* storage unavailable (private mode, quota): history.state still has it */ }
+  }
   const saveScroll = () => {
+    if (restoringNow()) return
     try {
       window.history.replaceState({ ...window.history.state, scroll: { left: window.scrollX, top: window.scrollY } }, "")
     } catch { /* history unavailable: the page starts at the top */ }
   }
   let saveTimer: ReturnType<typeof setTimeout> | undefined
   window.addEventListener("scroll", () => {
+    saveToStorage()
     clearTimeout(saveTimer)
     saveTimer = setTimeout(saveScroll, 250)
   }, { passive: true })
-  window.addEventListener("pagehide", saveScroll)
+  window.addEventListener("pagehide", () => {
+    saveToStorage()
+    saveScroll()
+  })
   const savedOnLoad = (): number | undefined => {
     const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined
     if (navigation?.type !== "reload" && navigation?.type !== "back_forward") return undefined
-    return (window.history.state?.scroll as { top?: number } | undefined)?.top
+    const fromHistory = (window.history.state?.scroll as { top?: number } | undefined)?.top
+    let fromStorage: number | undefined
+    try {
+      const stored = sessionStorage.getItem(storageKey())
+      if (stored !== null && Number.isFinite(Number(stored))) fromStorage = Number(stored)
+    } catch { /* storage unavailable */ }
+    return navigation.type === "reload" ? fromStorage ?? fromHistory : fromHistory ?? fromStorage
   }
   let firstLoad = true
   const restoreOnLoad = savedOnLoad()
@@ -72,11 +100,31 @@ export default defineNuxtPlugin((nuxtApp) => {
   for (const type of ["wheel", "touchstart", "keydown", "pointerdown"]) {
     window.addEventListener(type, markUserScroll, { passive: true })
   }
+  // Shows the page the head script hid for a reload (nuxt.config.ts,
+  // restoreScrollScript) once the position is final and the sections on screen
+  // show their state for it, not their first state: the lazily hydrated ones
+  // there have run their script (utils/lazySections.ts; at most 1.5 s), and two
+  // more frames pass, as scroll-driven sections redraw on the frame after a
+  // scroll.
+  const reveal = () => {
+    if (!root.classList.contains("ob-restoring")) return
+    const started = performance.now()
+    const whenSectionsReady = () => {
+      if (pendingLazySectionsOnScreen() > 0 && performance.now() - started < 1500) {
+        requestAnimationFrame(whenSectionsReady)
+        return
+      }
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("ob-restoring")))
+    }
+    requestAnimationFrame(whenSectionsReady)
+  }
   const restoreTo = (top: number, triesLeft = 20) => {
-    if (userScrolled) return
+    if (userScrolled) return reveal()
     lenis.scrollTo(top, { immediate: true, force: true })
     if (Math.abs(window.scrollY - top) > 2 && triesLeft > 0) {
       setTimeout(() => restoreTo(top, triesLeft - 1), 100)
+    } else {
+      reveal()
     }
   }
 
@@ -94,6 +142,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       requestAnimationFrame(() => {
         const route = nuxtApp.$router.currentRoute.value
         const routeChanged = prevFullPath !== route.fullPath
+        let restoring = false
 
         if (routeChanged && !route.hash) {
           const saved = firstLoad
@@ -101,14 +150,20 @@ export default defineNuxtPlugin((nuxtApp) => {
             : historyNavigation ? (window.history.state?.scroll as { top?: number } | undefined)?.top : undefined
           userScrolled = false
           if (typeof saved === "number" && saved > 0) {
+            restoring = true
             restoreTo(saved)
-          } else {
+          } else if (!firstLoad || saved === 0) {
             lenis.scrollTo(0, {
               immediate: true,
               force: true,
             })
           }
+          // The first page with nothing saved stays where the browser put it:
+          // the top for a new visit, the browser's own restore for a reload.
+          // (Forcing the top here sent a reload pressed mid-scroll to the top.)
         }
+        // restoreTo shows the page itself once the position is final.
+        if (!restoring) reveal()
         historyNavigation = false
         firstLoad = false
 

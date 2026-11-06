@@ -111,8 +111,8 @@ onBeforeUnmount(() => {
             <span>{{ `${t("footerNew.pitchFirst")} ` }}</span>
             <span>{{ t("footerNew.pitchSecond") }}</span>
           </p>
-          <NuxtLink :to="localePath('/contact')" class="site-footer__start">
-            {{ t("footerNew.start") }}
+          <NuxtLink :to="localePath('/contact')" class="site-footer__start site-guarantee">
+            <span class="site-guarantee__rest">{{ t("footerNew.start") }}</span>
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
           </NuxtLink>
         </div>
@@ -224,22 +224,20 @@ onBeforeUnmount(() => {
   letter-spacing: -0.01em;
 }
 
+/* The header's OneGuarantee pill (.site-guarantee, assets/css/guarantee-pill.css):
+   lit green with beams round its edge, dark at hover; here at the footer's
+   size. */
 .site-footer__start {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 0.5em;
   width: calc(377 * var(--u));
   height: calc(82 * var(--u));
   margin-top: calc(42 * var(--u));
-  border-radius: 999px;
-  background: var(--green);
-  color: #031c0b;
+  padding: 0;
   font-size: calc(31 * var(--u));
   font-weight: 700;
+  line-height: 1;
   letter-spacing: -0.02em;
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .site-footer__start svg,
@@ -249,12 +247,6 @@ onBeforeUnmount(() => {
   fill: none;
   stroke: currentColor;
   stroke-width: 2.2;
-}
-
-.site-footer__start:hover,
-.site-footer__start:focus-visible {
-  transform: scale(1.04);
-  box-shadow: 0 0 calc(40 * var(--u)) rgb(8 226 79 / 0.45);
 }
 
 .site-footer__columns {

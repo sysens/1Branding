@@ -39,7 +39,7 @@ const collections: Record<Collection, string> = {
 // The date the site's own copy (i18n, service pages) last changed in a way
 // worth recrawling: bump it with such a change. A page's lastmod is the later
 // of this and its CMS entry's updatedAt.
-export const SITE_COPY_UPDATED = "2026-10-25";
+export const SITE_COPY_UPDATED = "2026-11-06";
 
 // Pages in every language, with the CMS entry that feeds each one.
 const staticPages: Array<{ path: string; source?: SingleType | Collection }> = [
@@ -47,6 +47,7 @@ const staticPages: Array<{ path: string; source?: SingleType | Collection }> = [
   { path: "/about", source: "aboutPage" },
   { path: "/services" },
   { path: "/projects", source: "projectsPages_connection" },
+  { path: "/showcase" },
   { path: "/pricing", source: "price" },
   { path: "/one-guarantee", source: "oneGuarantee" },
   { path: "/news", source: "newsPages_connection" },

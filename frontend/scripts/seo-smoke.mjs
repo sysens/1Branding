@@ -6,7 +6,7 @@
 // robots.txt, the sitemap, and that old addresses answer with one 301.
 const ORIGIN = (process.argv[2] || process.env.SITE_URL || "https://onebrandingworld.com").replace(/\/+$/, "");
 const PAGES = [
-  "/", "/about", "/services", "/services/branding", "/services/logo-design", "/projects", "/pricing", "/contact", "/news",
+  "/", "/about", "/services", "/services/branding", "/services/logo-design", "/projects", "/showcase", "/pricing", "/contact", "/news",
   "/ru", "/ru/about", "/ru/services", "/ru/services/razrabotka-logotipa", "/ru/pricing", "/ru/contact",
   "/uz", "/uz/about", "/uz/services", "/uz/services/logotip-yaratish", "/uz/pricing", "/uz/contact",
 ];

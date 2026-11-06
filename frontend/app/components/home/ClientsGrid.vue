@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
       </ul>
       <canvas ref="confetti" class="clients__confetti" aria-hidden="true" />
     </div>
-    <button v-if="!expanded" type="button" class="clients__more ob-button" @click="expanded = true">{{ t("home.clients.showAll", { count: CLIENTS.length }) }}</button>
+    <button v-if="!expanded" v-rise data-pill type="button" class="clients__more ob-button" @click="expanded = true">{{ t("home.clients.showAll", { count: CLIENTS.length }) }}</button>
   </section>
 </template>
 

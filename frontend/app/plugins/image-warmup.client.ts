@@ -2,8 +2,13 @@
 // the page in the background, in page order and a few at a time, so they are
 // ready by the time the visitor scrolls to them (as on slidor.agency, which
 // loads its images up front) instead of starting to load as they come into
-// view. Switching an image from loading="lazy" to "eager" is what starts its
-// download; it keeps choosing its own copy from srcset/<picture>.
+// view. Each one is fetched through a detached copy of it (of its <picture>
+// when it has one) set to load eagerly: the copy picks the same file from
+// srcset/sizes/<source> as the image will, so the image finds it in the cache
+// when it loads. The page's own image is left as it was rendered: switching
+// it to loading="eager" made the sections hydrated later (as they come into
+// view) find an attribute the server did not render (Vue's hydration
+// mismatch warning).
 // Skipped on phones (mobile data: they keep loading as they scroll), when the
 // visitor asked to save data, or when the connection is slow.
 
@@ -11,6 +16,14 @@ const BATCH = 4;
 const BATCH_TIMEOUT = 8000;
 
 type NetworkInformation = { saveData?: boolean; effectiveType?: string };
+
+// A copy of the image, outside the page, that loads now.
+const eagerCopy = (img: HTMLImageElement) => {
+  const picture = img.parentElement instanceof HTMLPictureElement ? img.parentElement : null;
+  const copy = picture ? (picture.cloneNode(true) as HTMLPictureElement).querySelector("img")! : (img.cloneNode() as HTMLImageElement);
+  copy.loading = "eager";
+  return copy;
+};
 
 const settled = (img: HTMLImageElement) =>
   new Promise<void>((resolve) => {
@@ -41,8 +54,7 @@ async function warm() {
   for (let i = 0; i < queue.length; i += BATCH) {
     if (location.pathname !== path) return;
     await idle();
-    const batch = queue.slice(i, i + BATCH).filter((img) => img.isConnected && !img.complete);
-    batch.forEach((img) => { img.loading = "eager"; });
+    const batch = queue.slice(i, i + BATCH).filter((img) => img.isConnected && !img.complete).map(eagerCopy);
     await Promise.race([Promise.all(batch.map(settled)), new Promise((resolve) => setTimeout(resolve, BATCH_TIMEOUT))]);
   }
 }

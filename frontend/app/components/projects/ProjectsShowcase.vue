@@ -1,9 +1,9 @@
 <script setup lang="ts">
-// The grid view of /projects: a white page made of the case studies'
+// /showcase (pages/showcase.vue): a white page made of the case studies'
 // sections (CaseSections), written by the site: what OneBranding makes
 // ("ReBranding & Branding"), why a brandbook, a cover picture and the
 // statement block; then, on black, the clients' work on a 3D marquee
-// (ShowcaseMarquee), the packaging wall with the way back to the slider
+// (ShowcaseMarquee), the packaging wall with the way to the projects
 // (ShowcaseGallery), "The ONE approach" arc (ApproachArc), "Logo / Brand
 // identity" (IdentityCompare), the brandbook's 30 chapters (BrandbookIndex),
 // and the landing's "Fresh projects", questions and robot, with the site
@@ -21,10 +21,6 @@ import { buildCaseSections } from "~/utils/caseStudy";
 // mark is part of it.
 const COVER = { url: "/case-study/showcase-cover.webp", width: 804, height: 466 };
 
-// "Projects" under the packaging wall and "More" under "Fresh projects"
-// switch the page to the slider.
-const emit = defineEmits<{ slider: [] }>();
-
 const { t } = useI18n();
 const caseCopy = useCaseCopy();
 
@@ -32,7 +28,7 @@ const sections = computed(() =>
   buildCaseSections(
     {
       tags: [{ label: t("projectsPage.showcase.title") }, { label: t("projectsPage.showcase.accent") }],
-      section1: { projectTitle: t("seo.projects.h1"), text: t("projectsPage.showcase.intro"), images: [COVER] },
+      section1: { projectTitle: t("seo.showcase.h1"), text: t("projectsPage.showcase.intro"), images: [COVER] },
     },
     (url) => url || "",
     caseCopy.value
@@ -43,14 +39,6 @@ const sections = computed(() =>
   )
 );
 
-// "Fresh projects" links its "More" to /projects, which is this page: here
-// it opens the slider instead.
-const onDarkClick = (event: MouseEvent) => {
-  if (!(event.target as Element | null)?.closest(".fresh__more")) return;
-  event.preventDefault();
-  emit("slider");
-};
-
 const FOOTER_HYDRATION = { rootMargin: "600px 0px" };
 </script>
 
@@ -58,8 +46,8 @@ const FOOTER_HYDRATION = { rootMargin: "600px 0px" };
   <div class="projects-showcase">
     <CaseSections class="projects-showcase__column" :sections="sections" />
     <ShowcaseMarquee class="projects-showcase__marquee" />
-    <div class="projects-showcase__dark" @click.capture="onDarkClick">
-      <ShowcaseGallery @slider="emit('slider')" />
+    <div class="projects-showcase__dark">
+      <ShowcaseGallery />
       <ApproachArc />
       <IdentityCompare />
       <BrandbookIndex />

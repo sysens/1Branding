@@ -108,13 +108,14 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
     <div class="leading-copy-position relative">
       <div class="flex justify-center">
         <h1 class="hero-slogan">
-          <!-- What the page is about, in its language, above the slogan. The
+          <!-- What the page is about, in its language, kept for screen readers
+               and search engines only (it is not drawn above the slogan). The
                slogan is the brand's own English line on every language's page
                (marked lang="en" for screen readers and search engines). The
                interpolated trailing spaces keep the lines apart in the
                heading's text (the template compiler drops plain whitespace
                between tags); visually they collapse. -->
-          <span class="hero-slogan__eyebrow">{{ `${$t("seo.heroEyebrow")} ` }}</span>
+          <span class="sr-only">{{ `${$t("seo.heroEyebrow")} ` }}</span>
           <!-- The lead-in and the headline as words; the letters below are
                visual only. -->
           <span class="sr-only" lang="en">{{ `${heroCopy.leadText} ${heroCopy.mainText} ` }}</span>
@@ -193,9 +194,14 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
   bottom: calc(var(--hero-main-size) * -0.5);
   transform: translateX(-50%);
   /* Near-black under the text, tiles still faintly visible at the sides. The
-     ellipse ends inside the box so its top edge does not show as a line. */
+     ellipse ends inside the box so its top edge does not show as a line. Its
+     half-width is 42% of the screen (42vw: the box is 100vw wide; Chrome takes
+     no % inside min() for a gradient size), but no more than 4.8 slogan
+     sizes: the slogan is capped by the screen's height, so on a 32:9 screen
+     42% made the dark band 4.5 times as wide as the slogan (twice, as on 16:9,
+     now). */
   background:
-    radial-gradient(ellipse 42% 60% at 50% 62%, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.9) 65%, rgb(0 0 0 / 0) 100%),
+    radial-gradient(ellipse min(42vw, calc(var(--hero-main-size) * 4.8)) 60% at 50% 62%, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.9) 65%, rgb(0 0 0 / 0) 100%),
     linear-gradient(to bottom, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 0.55) 25%, rgb(0 0 0 / 0.65) 100%);
   pointer-events: none;
 }
@@ -257,18 +263,6 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
   /* The outline fades out where it meets the headline. */
   -webkit-mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
   mask-image: linear-gradient(to bottom, #000 56%, rgb(0 0 0 / 0.04) 90%);
-}
-
-/* The keyword line: small, muted, centred over the slogan (the label step). */
-.hero-slogan__eyebrow {
-  display: block;
-  margin-bottom: 0.9em;
-  color: #a3a6aa;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-label-size);
-  font-weight: 600;
-  line-height: var(--type-label-lh);
-  letter-spacing: var(--type-label-ls);
 }
 
 /* The design's dash is a wide outlined bar, heavier than a dash glyph. */
@@ -363,10 +357,6 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero-slogan__eyebrow {
-    animation: hero-part-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  }
-
   .hero-slogan__lead,
   .hero-slogan__main {
     animation: hero-line-rise 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) var(--letter-start) both;

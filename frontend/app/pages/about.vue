@@ -47,26 +47,29 @@ usePageSeo({
 
 <template>
   <div class="about">
-    <!-- The office, dimmed; the heading below rises over its foot. -->
-    <div class="about-hero" aria-hidden="true">
-      <OptImage
-        src="/about-page/office-lounge.webp"
-        alt=""
-        sizes="100vw"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
-    </div>
+    <!-- The first screen: the office, dimmed, with the heading and the intro
+         over its foot. -->
+    <div class="about-top">
+      <div class="about-hero" aria-hidden="true">
+        <OptImage
+          src="/about-page/office-lounge.webp"
+          alt=""
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
 
-    <header class="about-intro">
-      <h1 class="about-intro__title">
-        <span>{{ t("aboutPage.hero.line1") }}</span>
-        {{ " " }}
-        <span class="about-intro__accent">{{ t("aboutPage.hero.line2") }}</span>
-      </h1>
-      <p class="about-intro__text">{{ t("aboutPage.hero.intro") }}</p>
-    </header>
+      <header class="about-intro">
+        <h1 class="about-intro__title">
+          <span>{{ t("aboutPage.hero.line1") }}</span>
+          {{ " " }}
+          <span class="about-intro__accent">{{ t("aboutPage.hero.line2") }}</span>
+        </h1>
+        <p class="about-intro__text">{{ t("aboutPage.hero.intro") }}</p>
+      </header>
+    </div>
 
     <!-- The CEO. -->
     <section class="about-ceo" aria-labelledby="about-ceo-name">
@@ -148,10 +151,26 @@ usePageSeo({
   color: #fff;
 }
 
-.about-hero {
+/* The first screen: the photo fills it and the heading block sits at its
+   foot, all of it in view. (The block rose only 4.5-7rem over the foot of a
+   full-screen photo before, so the second line and the intro started below
+   the fold on every screen.) Taller than the screen only when the block
+   needs it; the top padding then clears the fixed header. */
+.about-top {
   position: relative;
-  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   min-height: 32rem;
+  min-height: max(32rem, 100vh);
+  min-height: max(32rem, 100svh);
+  padding-top: 7rem;
+  padding-bottom: clamp(2.5rem, 7svh, 5.5rem);
+}
+
+.about-hero {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -177,7 +196,6 @@ usePageSeo({
 .about-intro {
   position: relative;
   z-index: 1;
-  margin-top: calc(-1 * clamp(4.5rem, 7.5vw, 7rem));
   padding-inline: 1.25rem;
   text-align: center;
 }

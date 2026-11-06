@@ -11,6 +11,11 @@
 // - "rise" (everything else: text, buttons, cards, media; v-rise): measured on
 //   apple.com/iphone, no blur: fading in over 0.9s while rising 30px over
 //   0.7s, both ease-in-out.
+// - A pill button with v-rise and [data-pill] (the landing's buttons) opens the
+//   way apple.com/macbook-pro's "Compare MacBook Pro models" button does,
+//   about 1s: a small circle grows in, the arrow pops up in it, the circle
+//   stretches into the pill from its middle while the arrow slides to its
+//   place at the end, and the label fades in last.
 //
 // A section's items come in one after another, REVEAL_STEP_MS apart, in
 // document order (plugins/blur-reveal.ts), as Apple's do.
@@ -110,6 +115,45 @@ const track = (element: HTMLElement, animations: Animation[]) => {
   if (last) last.onfinish = () => running.delete(element);
 };
 
+// The pill's opening (see the header). Measured on Apple's: the circle in
+// ~0.35s, the stretch ~0.55s on an ease-in-out, the label fading in over
+// 0.38s after 0.6s. The circle is the button clipped to its height at its
+// middle; `scale` and `clip-path` leave the button's own transform (its
+// hover zoom) and translate alone.
+const PILL_STRETCH = "cubic-bezier(0.65, 0, 0.35, 1)";
+const pillIn = (element: HTMLElement, delay: number): Animation[] => {
+  const width = element.offsetWidth;
+  const height = element.offsetHeight;
+  if (!width || !height || width <= height) {
+    return [element.animate([{ offset: 0, opacity: 0 }], { ...RISE_FADE, delay, fill: "backwards" })];
+  }
+  const side = (width - height) / 2;
+  const style = getComputedStyle(element);
+  // Measured before the button is scaled down for the circle.
+  const icon = element.querySelector("svg");
+  const own = element.getBoundingClientRect();
+  const box = icon?.getBoundingClientRect();
+  const animations = [
+    element.animate([{ opacity: 0, scale: "0.2" }, { opacity: 1, scale: "1" }], { duration: 380, delay, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)", fill: "backwards" }),
+    element.animate([{ clipPath: `inset(0px ${side}px round ${height}px)` }, { clipPath: `inset(0px 0px round ${height}px)` }], { duration: 560, delay: delay + 350, easing: PILL_STRETCH, fill: "backwards" }),
+  ];
+  if (icon && box) {
+    // The arrow starts in the circle (the button's middle).
+    const shift = own.left + own.width / 2 - (box.left + box.width / 2);
+    animations.push(
+      icon.animate([{ scale: "0" }, { scale: "1.15", offset: 0.6 }, { scale: "1" }], { duration: 360, delay: delay + 150, easing: "ease-out", fill: "backwards" }),
+      icon.animate([{ translate: `${shift}px 0` }, { translate: "0 0" }], { duration: 560, delay: delay + 350, easing: PILL_STRETCH, fill: "backwards" }),
+      // Its colour held while the label's is still clear.
+      icon.animate([{ color: style.color }, { color: style.color }], { duration: 1000, delay, fill: "backwards" }),
+    );
+  }
+  animations.push(element.animate(
+    [{ color: "transparent", textShadow: "0 0 0 transparent" }, { color: style.color, textShadow: style.textShadow }],
+    { duration: 380, delay: delay + 620, easing: "cubic-bezier(0.42, 0, 0.58, 1)", fill: "backwards" },
+  ));
+  return animations;
+};
+
 /** Shows the element: from hidden (or from where it is) to its own style. */
 export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = lookOf(element), options: RevealOptions = {}): void {
   wanted.set(element, true);
@@ -117,6 +161,10 @@ export function revealIn(element: HTMLElement, delayMs = 0, look: RevealLook = l
   element.setAttribute("data-revealed", "");
   if (prefersReducedMotion() || typeof element.animate !== "function") return;
   const delay = from ? 0 : delayMs;
+  if (look === "rise" && !from && element.hasAttribute("data-pill")) {
+    track(element, pillIn(element, delay));
+    return;
+  }
   // Keyframes at offset 0 only: the end is the element's own style, whatever
   // its opacity or filter normally is.
   if (look === "rise" && !from) {

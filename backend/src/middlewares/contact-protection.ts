@@ -1,4 +1,4 @@
-import { open, rm } from 'node:fs/promises';
+import { open } from 'node:fs/promises';
 import { extname } from 'node:path';
 import {
   CONTACT_UPLOAD_CAPTION,
@@ -220,17 +220,6 @@ const recordUpload = async (ctx: any, strapi: any) => {
   }
 };
 
-// strapi::body only deletes formidable temp files when the downstream chain
-// succeeds; on a thrown error they would stay in the OS temp dir forever.
-const removeTempFiles = async (ctx: any) => {
-  const groups = Object.values(ctx.request?.files ?? {});
-  const paths = groups
-    .flatMap((group) => (Array.isArray(group) ? group : [group]))
-    .map((file: any) => file?.filepath)
-    .filter((filepath): filepath is string => typeof filepath === 'string');
-  await Promise.all(paths.map((filepath) => rm(filepath, { force: true }).catch(() => {})));
-};
-
 const hasBodyLength = (ctx: any): boolean =>
   /^\d+$/.test(ctx.get('Content-Length')) && !ctx.get('Transfer-Encoding');
 
@@ -263,13 +252,9 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
     }
 
     if (isUpload) {
-      try {
-        await validateUpload(ctx);
-        await next();
-      } catch (error) {
-        await removeTempFiles(ctx);
-        throw error;
-      }
+      // Temp files of a refused upload are deleted by global::temp-files.
+      await validateUpload(ctx);
+      await next();
       if (ctx.status < 300) await recordUpload(ctx, strapi);
       return;
     }

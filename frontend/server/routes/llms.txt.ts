@@ -54,6 +54,7 @@ export default defineEventHandler((event) => {
     `- [Pricing](${url("/pricing")}): packages and prices in US dollars`,
     `- [OneGuarantee](${url("/one-guarantee")}): design tested with a live audience before launch`,
     `- [Portfolio](${url("/projects")})`,
+    `- [Showcase: how we build brands](${url("/showcase")})`,
     `- [Blog](${url("/news")})`,
     `- [Contact](${url("/contact")})`,
     "",

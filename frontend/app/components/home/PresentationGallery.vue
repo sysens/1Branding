@@ -90,7 +90,7 @@ onBeforeUnmount(() => {
     </div>
     <!-- No presentations page yet: the button leads to the projects. -->
     <div class="pgallery__cta">
-      <NuxtLink v-rise :to="localePath('/projects')" class="ob-button">{{ t("home.presentations.cta") }}</NuxtLink>
+      <NuxtLink v-rise data-pill :to="localePath('/projects')" class="ob-button">{{ t("home.presentations.cta") }}</NuxtLink>
       <p v-rise class="pgallery__more">{{ t("home.presentations.more") }}</p>
     </div>
     <div class="pgallery__rule" aria-hidden="true" />
@@ -141,28 +141,29 @@ onBeforeUnmount(() => {
 }
 
 /* Running text (~400 characters): the intro step, as the landing's other
-   section texts, left-aligned in a column of its measure that stays centred
-   under the title. */
+   section texts, centred in a column of its measure that stays centred under
+   the title. */
 .pgallery__text {
   max-width: min(100%, var(--type-measure-intro));
   margin: 0;
   color: #b8b8b8;
   font-family: var(--type-intro-family);
-  font-size: var(--type-intro-size);
+  font-size: var(--type-description-size);
   font-weight: 400;
   line-height: var(--type-intro-lh);
   letter-spacing: var(--type-intro-ls);
-  text-align: left;
+  text-align: center;
   text-wrap: pretty;
 }
 
-/* A dark panel with the edges fading into the page, as in the design. */
+/* The rows' frame, its edges fading into the page. */
 .pgallery__frame {
   position: relative;
   margin-inline: calc(2.5 * var(--g));
   padding-block: calc(1.75 * var(--g));
   border-radius: calc(0.625 * var(--g));
-  background: #0b0b0b;
+  /* No panel of its own: the rows sit straight on the page's black. */
+  background: transparent;
 }
 
 .pgallery__frame::after {

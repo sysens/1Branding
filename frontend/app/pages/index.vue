@@ -7,11 +7,14 @@ import HeroClientsReveal from "~/components/home/HeroClientsReveal.vue";
 import InfoOnPicture from "~/components/home/InfoOnPicture.vue";
 import { selectCollageSource } from "~/utils/collageMedia";
 import { cmsSeoText } from "~/utils/seo";
+import { lazySection } from "~/utils/lazySections";
 import type { LandingMedia } from "~/types/landingPayload";
 
 // Sections below the first screen hydrate (and download their JS) only when
 // they come within 600px of the viewport; their server HTML is visible from the
 // start. Hydrating the whole page up front was one ~340ms main-thread task.
+// lazySection() lets a reload wait until the ones on screen have drawn
+// themselves (utils/lazySections.ts).
 const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 
 const cmsMedia = useCmsMedia();
@@ -91,14 +94,14 @@ usePageSeo({
         <!-- DigitalExperienceSection (MacBook), ProjectMarqueeSection (3D card
              marquee) and FirstGlanceSections (Vivea / Starbucks) were taken off
              the landing; their components stay for other pages. -->
-        <LazyHomeProjectSlideWall :hydrate-on-visible="LAZY_HYDRATION" />
-        <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" />
-        <LazyHomeOneSystemStats :hydrate-on-visible="LAZY_HYDRATION" />
+        <LazyHomeProjectSlideWall :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('slide-wall')" />
+        <LazyHomeWorldSection :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('world')" />
+        <LazyHomeOneSystemStats :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('stats')" />
         <div class="home-dark-sections">
           <div class="edge-gradient edge-gradient-left edge-gradient-soft" aria-hidden="true" />
           <div class="edge-gradient edge-gradient-right edge-gradient-soft" aria-hidden="true" />
           <LazyHomeAwardsSection
-            :hydrate-on-visible="LAZY_HYDRATION"
+            :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('awards')"
             :logos="partnerLogos"
             :alts="partnerAlts"
             :ratios="partnerRatios"
@@ -107,19 +110,19 @@ usePageSeo({
           />
           <!-- BrandStoriesSection (Apex / Perfect Candy / GreenGo) and the glow
                that led into it were taken off the landing; they stay for other pages. -->
-          <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomePresentationGallery :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeSocialIdentity :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeOnePartnerServices :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeAwardVision :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeBrandCompare :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" />
-          <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" />
+          <LazyHomeAirwaysSceneSection :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('airways')" />
+          <LazyHomePresentationGallery :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('presentations')" />
+          <LazyHomeSocialIdentity :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('social')" />
+          <LazyHomeOnePartnerServices :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('services')" />
+          <LazyHomeAwardVision :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('vision')" />
+          <LazyHomeBrandCompare :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('compare')" />
+          <LazyHomeAuditStrategy :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('audit')" />
+          <LazyHomeClientsGrid :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('clients')" />
+          <LazyHomeFreshProjects :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('fresh-projects')" />
           <!-- FAQ must hydrate immediately: lazy hydration can reset the open
                item while the visitor is interacting with an answer. -->
           <HomeFaqAccordion />
-          <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" :scene-url="landingPage?.splineRobot?.sceneUrl" />
+          <LazyHomeRobotShowcase :hydrate-on-visible="LAZY_HYDRATION" v-bind="lazySection('robot')" :scene-url="landingPage?.splineRobot?.sceneUrl" />
         </div>
       </div>
     </div>

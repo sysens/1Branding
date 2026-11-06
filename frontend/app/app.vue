@@ -65,7 +65,7 @@ if (import.meta.server) {
     script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
   });
 }
-const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !route.path.endsWith("/projects"));
+const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !/\/(?:projects|showcase)\/?$/.test(route.path));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/contact")
 );

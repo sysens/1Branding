@@ -5,16 +5,22 @@ import { useViewportActivity } from "~/composables/useViewportActivity";
 // The grid view's 3D marquee: a Vue port of Aceternity's "3D Marquee"
 // (ui.aceternity.com/components/3d-marquee): columns of cards on a tilted
 // plane, the even columns drifting down 100px over 10 s and the odd ones up
-// over 15 s, both reversing forever; dashed grid lines between the cards,
-// and a card lifts 10px on hover. The plane takes the design's picture
+// over 15 s, both reversing forever, and a card lifts 10px on hover (no
+// grid lines between the cards). The plane takes the design's picture
 // rather than the reference's isometric tilt: a flatter angle, seen in
-// perspective, with larger cards, and five columns instead of four so the
-// wider, flatter plane still reaches every corner. In the grid view it is a full-width
-// section on the design's dark ground, its edges fading into it. (The
-// landing's six-column variant on black is ui/ThreeDMarquee.vue.)
+// perspective, with small cards close together in ten columns, the cards
+// repeated so the wide, flat plane still reaches every corner. In the grid
+// view it is a full-width section on the design's dark ground, its edges
+// fading into it. (The landing's six-column variant on black is
+// ui/ThreeDMarquee.vue.)
 type MarqueeCard = { src: string; name: string };
 
-const COLUMNS = 5;
+// Ten columns: past 1920px the cards stop growing (see the style), and the
+// plane's outer columns then fill the width of a wide screen.
+const COLUMNS = 10;
+// Cards in each column: enough for the tilted plane to reach the section's
+// top and foot.
+const PER_COLUMN = 10;
 
 // The clients' cards (public/home/marquee/cards, 640x462): their logos, with
 // the packaging and campaign shots spread evenly between them.
@@ -46,10 +52,13 @@ const props = withDefaults(defineProps<{ cards?: MarqueeCard[] }>(), { cards: ()
 
 const shown = computed<readonly MarqueeCard[]>(() => (props.cards.length ? props.cards : DEFAULT_CARDS));
 
-// Split the cards into equal columns, as the reference does.
+// The cards in turn down each column, each column starting further along the
+// list (repeating it), so the same card is never next to itself.
 const columns = computed(() => {
-  const size = Math.ceil(shown.value.length / COLUMNS);
-  return Array.from({ length: COLUMNS }, (_, index) => shown.value.slice(index * size, index * size + size));
+  const cards = shown.value;
+  const step = Math.max(1, Math.round(cards.length / COLUMNS));
+  return Array.from({ length: COLUMNS }, (_, column) =>
+    Array.from({ length: PER_COLUMN }, (_, row) => cards[(column * step + row) % cards.length]!));
 });
 const names = computed(() => [...new Set(shown.value.map((card) => card.name))].join(", "));
 
@@ -68,9 +77,7 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
             class="showcase-marquee__column"
             :class="columnIndex % 2 === 0 ? 'showcase-marquee__column--down' : 'showcase-marquee__column--up'"
           >
-            <span class="showcase-marquee__line showcase-marquee__line--vertical" aria-hidden="true" />
             <div v-for="(card, cardIndex) in column" :key="`${cardIndex}-${card.src}`" class="showcase-marquee__card">
-              <span class="showcase-marquee__line showcase-marquee__line--horizontal" aria-hidden="true" />
               <img
                 class="showcase-marquee__image"
                 :src="card.src"
@@ -98,11 +105,12 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   --ground: 38 33 45;
   position: relative;
   /* Everything inside is in em: the design's 1440px proportions, growing
-     with the screen past 1440px so the plane still fills the corners. */
-  font-size: max(1rem, 100vw / 90);
+     with the screen up to 1920px, then holding (on a 5K ultrawide the cards
+     were 1200px wide and the section 2400px tall). */
+  font-size: clamp(1rem, 100vw / 90, 1.3333rem);
   display: block;
   width: 100%;
-  height: 47.5em;
+  height: 40em;
   margin: 0;
   overflow: hidden;
   background: rgb(var(--ground));
@@ -156,32 +164,30 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   }
 }
 
-/* The reference's gap-8 transform-3d plane, at the design's angle: its rows
-   rise about 19deg to the right and its columns fall about 55deg (the
-   reference's rotateX(55deg) rotateZ(-45deg) gives 30deg both ways), with
-   cards 480px wide, so about three fill a 1440px row; five columns keep the
-   top right corner covered. It is centred on the stage and turns about its
-   own centre. */
+/* A transform-3d plane at the design's angle: its rows rise about 19deg to
+   the right and its columns fall about 55deg (the reference's rotateX(55deg)
+   rotateZ(-45deg) gives 30deg both ways), with cards 304px wide at 1440px
+   (about five to a row) and 0.75em apart; ten columns keep the corners
+   covered, also on a wide screen. It is centred on the stage and turns about its own centre. */
 .showcase-marquee__plane {
   position: absolute;
   top: 50%;
   left: 50%;
   display: grid;
-  width: calc(5 * 30em + 4 * 2em);
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: calc(10 * 19em + 9 * 0.75em);
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   align-items: start;
-  gap: 2em;
+  gap: 0.75em;
   transform: translate(-50%, -50%) rotateX(48deg) rotateZ(-27deg);
   transform-style: preserve-3d;
 }
 
-/* flex flex-col items-start gap-8; it holds its own vertical line. */
 .showcase-marquee__column {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2em;
+  gap: 0.75em;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -236,39 +242,9 @@ const { targetRef, isActive } = useViewportActivity({ rootMargin: "300px 0px" })
   transform: translateY(-0.625em);
 }
 
-/* GridLineHorizontal / GridLineVertical: dashes 5px long (white at 20%, the
-   reference's dark-mode colour), fading out over the last 10% at each end. */
-.showcase-marquee__line {
-  position: absolute;
-  z-index: 30;
-  pointer-events: none;
-}
-
-/* -top-4, offset 20px. */
-.showcase-marquee__line--horizontal {
-  top: -1em;
-  left: -0.625em;
-  width: calc(100% + 1.25em);
-  height: 1px;
-  background: linear-gradient(to right, rgb(255 255 255 / 0.2) 50%, transparent 0) 0 0 / 0.3125em 1px;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-}
-
-/* -left-4, offset 80px. */
-.showcase-marquee__line--vertical {
-  top: -2.5em;
-  left: -1em;
-  width: 1px;
-  height: calc(100% + 5em);
-  background: linear-gradient(to bottom, rgb(255 255 255 / 0.2) 50%, transparent 0) 0 0 / 1px 0.3125em;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
-}
-
 @media (max-width: 1023px) {
   .showcase-marquee {
-    height: 37.5em;
+    height: 34em;
   }
 }
 
