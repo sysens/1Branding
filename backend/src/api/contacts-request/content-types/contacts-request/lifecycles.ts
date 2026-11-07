@@ -53,13 +53,16 @@ const notify = async (entry: ContactsRequestEntry): Promise<void> => {
     "",
     `<b>Topic:</b> ${escapeTelegramHtml(clip(entry.TopicInput, 200))}`,
     // The only multi-line field: quoted, so lines inside it cannot pass for
-    // the fields below (single-line fields refuse line breaks).
-    `<b>Message:</b><blockquote>${escapeTelegramHtml(clip(entry.requestedServicesMessageInput, 2500))}</blockquote>`,
+    // the fields below (single-line fields refuse line breaks). The quick
+    // request has no message, job title, company or email: those lines are left out.
+    ...(entry.requestedServicesMessageInput
+      ? [`<b>Message:</b><blockquote>${escapeTelegramHtml(clip(entry.requestedServicesMessageInput, 2500))}</blockquote>`]
+      : []),
     `<b>Full name:</b> ${escapeTelegramHtml(clip(entry.FullName, 150))}`,
-    `<b>Job title:</b> ${escapeTelegramHtml(clip(entry.JobTitle, 150))}`,
-    `<b>Company:</b> ${escapeTelegramHtml(clip(entry.Company, 150))}`,
+    ...(entry.JobTitle ? [`<b>Job title:</b> ${escapeTelegramHtml(clip(entry.JobTitle, 150))}`] : []),
+    ...(entry.Company ? [`<b>Company:</b> ${escapeTelegramHtml(clip(entry.Company, 150))}`] : []),
     `<b>Phone:</b> ${escapeTelegramHtml(clip(entry.PhoneNumber, 32))}`,
-    `<b>Email:</b> ${escapeTelegramHtml(clip(entry.email, 254))}`,
+    ...(entry.email ? [`<b>Email:</b> ${escapeTelegramHtml(clip(entry.email, 254))}`] : []),
     ...(entry.Source ? [`<b>Source:</b> ${escapeTelegramHtml(clip(entry.Source, 500))}`] : []),
   ].join("\n");
 

@@ -4,6 +4,7 @@ import { removeOrphanContactUploads } from "./utils/contact-uploads";
 import { ensureNewsTranslations } from "./utils/news-translations";
 import { ensureProjectCopy } from "./utils/project-copy";
 import { ensureBlogArticles, ensureUzbekLocale } from "./utils/blog-articles";
+import { assertDurableStorage } from "./utils/storage-guard";
 
 const isApiSingleType = (
   uid: string,
@@ -80,6 +81,8 @@ const reportWeakSecrets = (strapi: Core.Strapi): void => {
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
+    assertDurableStorage(strapi);
+
     const graphqlExtension = strapi.plugin('graphql')?.service('extension');
 
     // Do not generate GraphQL queries or mutations for private submissions.

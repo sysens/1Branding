@@ -71,7 +71,7 @@ const go = (step: 1 | -1) => {
       </button>
     </div>
 
-    <NuxtLink v-rise :to="localePath('/projects')" class="compare-section__button ob-button ob-button--dark">{{ t("home.compare.cta") }}</NuxtLink>
+    <NuxtLink v-rise data-pill :to="localePath('/projects')" class="compare-section__button ob-button ob-button--dark">{{ t("home.compare.cta") }}</NuxtLink>
   </section>
 </template>
 

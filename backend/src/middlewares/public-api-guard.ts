@@ -13,6 +13,12 @@
  * `Authorization` value is ignored by Strapi, which then treats the request as
  * Public, so it does not open these paths. Oversized GraphQL documents are
  * refused before body parsing (the site's largest query is ~2 KB).
+ *
+ * Multipart bodies are parsed, and written to disk, before any route or
+ * permission check runs. Anonymous visitors only ever upload through the
+ * contact form's `POST /api/upload` (capped at 10 MB by contact-protection);
+ * the admin panel and API tokens send a bearer token. Any other anonymous
+ * multipart request is refused before it is read.
  */
 import { routePath } from '../utils/route-path';
 
@@ -33,6 +39,11 @@ export default () => async (ctx: any, next: () => Promise<void>) => {
 
   if (!hasBearerToken(ctx) && isClosedToAnonymous(ctx.method, path)) {
     return ctx.throw(403, 'Forbidden');
+  }
+
+  if (!hasBearerToken(ctx) && ctx.is('multipart') &&
+      !(ctx.method === 'POST' && path === '/api/upload')) {
+    return ctx.throw(415, 'Unsupported Media Type');
   }
 
   if (ctx.method === 'POST' && path === '/graphql') {

@@ -201,17 +201,20 @@ onBeforeUnmount(() => {
   justify-content: center;
 }
 
-/* Running text (~500 characters): the intro step, left-aligned in a column
-   of its measure (1500 design px) that stays centred under the heading. */
+/* Running text (~500 characters): the intro step, centred in a column of its
+   measure (1500 design px) that stays centred under the heading. The words are
+   flex items (each rises into place on its own), so the lines are centred with
+   justify-content rather than text-align. */
 .identity__paragraph {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: center;
   width: min(100%, var(--type-measure-intro));
   margin: calc(55 * var(--u)) 0 0;
   color: #646464;
   font-family: var(--type-intro-family);
-  font-size: var(--type-intro-size);
+  font-size: var(--type-description-size);
   font-weight: 400;
   line-height: var(--type-intro-lh);
   letter-spacing: var(--type-intro-ls);

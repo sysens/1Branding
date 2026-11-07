@@ -107,8 +107,9 @@ const r2Endpoint = (env: StrapiEnv): string => {
 /**
  * The provider in use. `UPLOAD_PROVIDER=r2` stores media in Cloudflare R2 (the
  * container's disk is wiped on every deploy, so production must use it). If
- * the R2 settings are incomplete, uploads fall back to the local disk with an
- * error in the log rather than taking the whole CMS down at boot.
+ * the R2 settings are incomplete, this falls back to the local disk with an
+ * error in the log (`strapi build` loads this file too); in production the
+ * server then refuses to start (src/utils/storage-guard.ts).
  */
 export const getUploadProvider = (env: StrapiEnv): UploadProvider => {
   const wanted = env("UPLOAD_PROVIDER", "local").trim().toLowerCase();

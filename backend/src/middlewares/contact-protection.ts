@@ -1,4 +1,4 @@
-import { open, rm } from 'node:fs/promises';
+import { open } from 'node:fs/promises';
 import { extname } from 'node:path';
 import {
   CONTACT_UPLOAD_CAPTION,
@@ -86,14 +86,17 @@ const limitRequests = (ctx: any, kind: 'upload' | 'submission') => {
 // Single-line fields refuse every control character, line breaks included, so
 // a value cannot fake extra lines in the Telegram notification; the message
 // may keep its line breaks.
+// The website's quick request (a name, what the visitor wants, a phone number)
+// sends only TopicInput, FullName and PhoneNumber; the long form also sends the
+// rest, so those stay accepted but are optional.
 const fields: Record<string, { max: number; multiline?: boolean; optional?: boolean }> = {
   TopicInput: { max: 200 },
-  requestedServicesMessageInput: { max: 5000, multiline: true },
+  requestedServicesMessageInput: { max: 5000, multiline: true, optional: true },
   FullName: { max: 150 },
-  JobTitle: { max: 150 },
-  Company: { max: 150 },
+  JobTitle: { max: 150, optional: true },
+  Company: { max: 150, optional: true },
   PhoneNumber: { max: 32 },
-  email: { max: 254 },
+  email: { max: 254, optional: true },
   // Where the visitor came from (referrer, landing page, utm_* tags), filled
   // in by the website, not typed by the visitor. Older pages do not send it.
   Source: { max: 500, optional: true },
@@ -119,8 +122,8 @@ const checkBotTraps = (ctx: any, body: Record<string, unknown>) => {
   delete body.meta;
 };
 
-/** Validates a submission and returns the id of the upload it attaches. */
-const validateSubmission = async (ctx: any, strapi: any): Promise<number> => {
+/** Validates a submission and returns the id of the upload it attaches (null: it has none). */
+const validateSubmission = async (ctx: any, strapi: any): Promise<number | null> => {
   const body = ctx.request.body;
   const data = body?.data;
   if (!isRecord(body) || !('data' in body) || !('meta' in body) ||
@@ -130,7 +133,6 @@ const validateSubmission = async (ctx: any, strapi: any): Promise<number> => {
   checkBotTraps(ctx, body);
   // Own keys only: `in` would also accept inherited names such as "constructor".
   if (!isRecord(data) ||
-      !own(data, 'requestedServicesMessageFile') ||
       Object.keys(data).some((key) => key !== 'requestedServicesMessageFile' && !own(fields, key))) {
     reject(ctx, 'Invalid contact submission');
   }
@@ -147,12 +149,18 @@ const validateSubmission = async (ctx: any, strapi: any): Promise<number> => {
     }
     data[key] = value.trim();
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email as string) ||
+  if ((data.email !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email as string)) ||
       !/^\+?[0-9\s().-]{7,32}$/.test(data.PhoneNumber as string) ||
       (data.PhoneNumber as string).replace(/\D/g, '').length < 7) {
     reject(ctx, 'Invalid email or phone number');
   }
 
+  // The attachment is optional (the quick request has none); when the key is
+  // there it must be a valid upload of this client, exactly as before.
+  if (!own(data, 'requestedServicesMessageFile') || data.requestedServicesMessageFile === null) {
+    delete data.requestedServicesMessageFile;
+    return null;
+  }
   const id = data.requestedServicesMessageFile;
   if (!Number.isSafeInteger(id) || (id as number) <= 0) reject(ctx, 'Invalid contact file');
 
@@ -220,17 +228,6 @@ const recordUpload = async (ctx: any, strapi: any) => {
   }
 };
 
-// strapi::body only deletes formidable temp files when the downstream chain
-// succeeds; on a thrown error they would stay in the OS temp dir forever.
-const removeTempFiles = async (ctx: any) => {
-  const groups = Object.values(ctx.request?.files ?? {});
-  const paths = groups
-    .flatMap((group) => (Array.isArray(group) ? group : [group]))
-    .map((file: any) => file?.filepath)
-    .filter((filepath): filepath is string => typeof filepath === 'string');
-  await Promise.all(paths.map((filepath) => rm(filepath, { force: true }).catch(() => {})));
-};
-
 const hasBodyLength = (ctx: any): boolean =>
   /^\d+$/.test(ctx.get('Content-Length')) && !ctx.get('Transfer-Encoding');
 
@@ -263,13 +260,9 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
     }
 
     if (isUpload) {
-      try {
-        await validateUpload(ctx);
-        await next();
-      } catch (error) {
-        await removeTempFiles(ctx);
-        throw error;
-      }
+      // Temp files of a refused upload are deleted by global::temp-files.
+      await validateUpload(ctx);
+      await next();
       if (ctx.status < 300) await recordUpload(ctx, strapi);
       return;
     }
@@ -279,7 +272,7 @@ export default (config: { phase: 'pre' | 'validate' }, { strapi }: { strapi: any
       await next();
     } catch (error) {
       // Not saved: the same upload may be attached again on a retry.
-      rememberUpload(fileId, clientKey(ctx.ip));
+      if (fileId !== null) rememberUpload(fileId, clientKey(ctx.ip));
       throw error;
     }
   };

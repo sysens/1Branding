@@ -5,6 +5,7 @@
 // dummy R2_* variables) checks the R2 URL rules instead.
 const path = require('node:path');
 const fs = require('node:fs');
+const os = require('node:os');
 
 const appDir = path.resolve(process.argv[2] || path.join(__dirname, '..'));
 const dbFile = '.tmp/e2e-' + Date.now() + '.db';
@@ -35,10 +36,10 @@ const check = (name, ok, detail = '') => {
 
 let PNG;
 
-const multipart = (filename, mime, bytes) => {
+const multipart = (filename, mime, bytes, field = 'files') => {
   const boundary = '----e2eboundary' + Math.random().toString(16).slice(2);
   const head = Buffer.from(
-    `--${boundary}\r\nContent-Disposition: form-data; name="files"; filename="${filename}"\r\nContent-Type: ${mime}\r\n\r\n`
+    `--${boundary}\r\nContent-Disposition: form-data; name="${field}"; filename="${filename}"\r\nContent-Type: ${mime}\r\n\r\n`
   );
   const tail = Buffer.from(`\r\n--${boundary}--\r\n`);
   const body = Buffer.concat([head, bytes, tail]);
@@ -90,6 +91,16 @@ const submit = async (ip, payload) => {
     await strapi.db.query('plugin::users-permissions.permission').create({ data: { action, role: role.id } });
   }
   const uploadConfig = strapi.config.get('plugin::upload');
+
+  // Production refuses an implicit fallback to the container's disk; this run
+  // chose SQLite and its upload provider explicitly, so it started.
+  const { durableStorageProblems } = require(path.join(appDir, 'dist/src/utils/storage-guard.js'));
+  const prod = { NODE_ENV: 'production' };
+  check('storage guard: implicit SQLite refused in production', durableStorageProblems(prod, 'sqlite', undefined).length === 1);
+  check('storage guard: explicit SQLite and Postgres allowed', durableStorageProblems({ ...prod, DATABASE_CLIENT: 'sqlite' }, 'sqlite', undefined).length === 0 && durableStorageProblems(prod, 'postgres', undefined).length === 0);
+  check('storage guard: incomplete R2 refused in production', durableStorageProblems({ ...prod, UPLOAD_PROVIDER: 'r2' }, 'postgres', undefined).length === 1 && durableStorageProblems({ ...prod, UPLOAD_PROVIDER: 'r2' }, 'postgres', 'aws-s3').length === 0);
+  check('storage guard: development never refused', durableStorageProblems({ NODE_ENV: 'development', UPLOAD_PROVIDER: 'r2' }, 'sqlite', undefined).length === 0);
+
   if (process.env.E2E_PROVIDER === 'r2') {
     const { isUploadUrl, uploadLocation } = require(path.join(appDir, 'dist/src/utils/contact-uploads.js'));
     check('r2 provider active', uploadConfig.provider === 'aws-s3', uploadConfig.provider);
@@ -136,6 +147,23 @@ const submit = async (ip, payload) => {
   r = await submit('203.0.113.10', submission(fileId));
   check('same upload cannot be attached twice', r.status === 400, `status ${r.status}`);
 
+  // The website's quick request: a name, what the visitor wants and a phone
+  // number only; no message, job title, company, email or file.
+  const quick = (overrides = {}) => ({
+    data: { TopicInput: 'Logo design', FullName: 'Quick Person', PhoneNumber: '+998 90 123 45 67', ...overrides },
+    meta: { website: '', elapsedMs: 5000 },
+  });
+  r = await submit('203.0.113.20', quick());
+  check('quick request (name, topic, phone) accepted', r.status === 200 || r.status === 201, `status ${r.status} ${r.text}`);
+  r = await submit('203.0.113.21', quick({ PhoneNumber: 'abc' }));
+  check('quick request with a bad phone refused', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.22', quick({ FullName: '' }));
+  check('quick request without a name refused', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.23', quick({ email: 'not-an-email' }));
+  check('a given email must still be valid', r.status === 400, `status ${r.status}`);
+  r = await submit('203.0.113.24', quick({ requestedServicesMessageFile: 99999 }));
+  check('a given file must still be a valid upload', r.status === 400, `status ${r.status}`);
+
   // IPv6 clients share a /64 bucket for ownership.
   const up6 = await upload('2001:db8:1:2::abcd');
   r = await submit('2001:db8:1:2:ffff::1', submission(up6.json?.[0]?.id, { Source: 'google.com | landing /ru/services/brending | form /ru/contact' }));
@@ -148,6 +176,30 @@ const submit = async (ip, payload) => {
   check('file listing closed for case/slash variant', res.status === 403, `status ${res.status}`);
   res = await fetch(BASE + '/api/upload/files', { headers: { Authorization: 'Bearer not-a-token' } });
   check('invalid bearer token rejected by Strapi', res.status === 401, `status ${res.status}`);
+
+  // Multipart temp files: an anonymous body is only read on POST /api/upload,
+  // and a refused request leaves nothing in the OS temp dir, whatever the
+  // field name. The payload has an odd size so its temp file can be told apart.
+  const PAYLOAD_SIZE = 300_007;
+  const payload = Buffer.alloc(PAYLOAD_SIZE, 7);
+  const leftovers = () => fs.readdirSync(os.tmpdir()).filter((name) => {
+    try {
+      const stat = fs.statSync(path.join(os.tmpdir(), name));
+      return stat.isFile() && stat.size === PAYLOAD_SIZE;
+    } catch {
+      return false;
+    }
+  }).length;
+  const sendMultipart = (urlPath, field, extraHeaders = {}) => {
+    const { body, headers } = multipart('brief.png', 'image/png', payload, field);
+    return fetch(BASE + urlPath, { method: 'POST', body, headers: { ...headers, 'X-Forwarded-For': '203.0.113.30', ...extraHeaders } });
+  };
+  res = await sendMultipart('/api/news-pages', 'files');
+  check('anonymous multipart to another route refused before parsing', res.status === 415 && leftovers() === 0, `status ${res.status}, ${leftovers()} left`);
+  res = await sendMultipart('/upload', 'other', { Authorization: 'Bearer not-a-token' });
+  check('temp file of a refused bearer upload deleted (any field name)', res.status === 401 && leftovers() === 0, `status ${res.status}, ${leftovers()} left`);
+  res = await sendMultipart('/api/upload', 'files');
+  check('temp file of a refused contact upload deleted', res.status === 400 && leftovers() === 0, `status ${res.status}, ${leftovers()} left`);
 
   // GraphQL size checks.
   const query = JSON.stringify({ query: '{ __typename }' });

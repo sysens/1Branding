@@ -94,3 +94,13 @@ export const companyProfiles = (cms?: Partial<Record<`${SocialKind}Link`, string
     .map((kind) => ({ kind, url: socialProfileUrl(kind, cms?.[`${kind}Link`]) || KNOWN_PROFILES[kind] || "" }))
     .filter((profile) => !!profile.url);
 };
+
+/**
+ * The two profiles listed on the contact page (components/contacts/Locations.vue),
+ * in the order shown. A row without an address is shown as a name only, not a
+ * link: add the address here when the profile is ready.
+ */
+export const CONTACT_PAGE_LINKS: ReadonlyArray<{ key: "behance" | "awwwards"; label: string; url: string }> = [
+  { key: "behance", label: "Behance", url: "" },
+  { key: "awwwards", label: "Awwwards", url: "" },
+];

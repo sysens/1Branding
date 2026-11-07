@@ -56,6 +56,8 @@ export default ({ env }: { env: StrapiEnv }) => [
       },
     },
   },
+  // Deletes the parsed upload's temp files after every request, failed ones too.
+  "global::temp-files",
   { name: "global::contact-protection", config: { phase: "validate" } },
   "strapi::session",
   {

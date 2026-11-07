@@ -1,7 +1,10 @@
 <script setup lang="ts">
 // Ends with its own "Join the movement" block instead of the site footer.
-import { computed, onMounted, nextTick } from "vue";
-import Form from "~/components/contacts/Form.vue";
+import { computed, onMounted, nextTick, watch } from "vue";
+import ConnectMarquee from "~/components/contacts/ConnectMarquee.vue";
+import ContactHero from "~/components/contacts/ContactHero.vue";
+import ContactModal from "~/components/contacts/ContactModal.vue";
+import ScrollEnd from "~/components/contacts/ScrollEnd.vue";
 import Locations from "~/components/contacts/Locations.vue";
 import MovementFooter from "~/components/contacts/MovementFooter.vue";
 
@@ -66,9 +69,25 @@ const stabilizeAfterAssets = async () => {
   await refreshLenis();
 };
 
+// Links from other pages go to /contact#contact-request: that opens the quick
+// request modal (the form used to sit at that anchor).
+const route = useRoute();
+const { open: openContactModal } = useContactModal();
+const openFromHash = () => {
+  if (route.hash !== "#contact-request") return;
+  // On a first visit the loader (components/PageLoader.vue) is still playing: open after it.
+  if (import.meta.client && document.documentElement.classList.contains("ob-loading")) {
+    window.addEventListener("ob:loader-complete", openContactModal, { once: true });
+    return;
+  }
+  openContactModal();
+};
+watch(() => route.hash, openFromHash);
+
 // The title slide-in is the CSS .intro-slide-in class; only Lenis needs to
 // re-measure once fonts and images have settled.
 onMounted(async () => {
+  openFromHash();
   await nextTick();
   await raf2();
   await refreshLenis();
@@ -83,24 +102,24 @@ onMounted(async () => {
 
     <div class="bg-black relative">
       <div>
-        <div
-          class="md:pt-[3.75rem] pt-[1.875rem] page-glow"
-        >
+        <!-- The page's own title, for screen readers and search engines; the
+             call to action under the clock is what is seen at the top. -->
+        <h1 class="sr-only">{{ $t("contacts.title") }}</h1>
 
-          <h1
-            class="products intro-slide-in type-h2 text-[#FFFFFF] md:pt-[6.5625rem] pt-[7.375rem] md:pb-[5.1875rem] pb-[3.375rem] text-center"
-          >
-            {{ $t("contacts.title") }}
-          </h1>
-        </div>
+        <ContactHero />
 
-        <div class="md:px-30px px-[2.5rem] containerr">
+        <ConnectMarquee />
+
+        <div class="md:px-30px px-[1.25rem] containerr">
           <Locations />
-          <div id="contact-request" class="scroll-mt-32"><Form /></div>
         </div>
+
+        <ScrollEnd />
       </div>
 
       <MovementFooter />
     </div>
+
+    <ClientOnly><ContactModal /></ClientOnly>
   </div>
 </template>

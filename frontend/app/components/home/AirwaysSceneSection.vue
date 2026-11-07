@@ -77,7 +77,12 @@ const sceneVars = computed(() => {
 }
 
 .airways-scene__strong {
-  padding-bottom: 0.08em;
+  /* The gradient is clipped to the text and painted only inside the box, so
+     the box must reach down to the "g"'s tail (0.2em below the baseline); the
+     0.08em it had cut the tail off. The negative margin gives the extra
+     padding back, so the title's layout is the same as before. */
+  padding-bottom: 0.3em;
+  margin-bottom: -0.22em;
   background: linear-gradient(105deg, #1aff3c 8%, #00db32 40%, #00a02e 72%, #006b27 100%);
   -webkit-background-clip: text;
   background-clip: text;

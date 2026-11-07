@@ -4,7 +4,7 @@ import OptImage from "~/components/ui/OptImage.vue";
 
 // The grid view's packaging wall, after the marquee, on black: rows of a wide
 // picture beside a tall one, the sides swapping row to row, with a full-width
-// picture between them, as in the design; then the way back to the slider
+// picture between them, as in the design; then the way to the projects
 // ("Projects"). The pictures are the landing's identity shots (public/home/
 // identity, with build-time AVIF/WebP copies). Each card flies in from its
 // own side as it scrolls into view: the left card of a row from the left,
@@ -14,7 +14,6 @@ type From = "left" | "right" | "top" | "bottom" | "zoom";
 type Shot = { src: string; name: string };
 type Row = { kind: "pair"; wideFirst: boolean; shots: [Shot, Shot]; from: [From, From] } | { kind: "full"; shot: Shot; from: From };
 
-const emit = defineEmits<{ slider: [] }>();
 const { t } = useI18n();
 const localePath = useLocalePath();
 
@@ -96,7 +95,7 @@ onBeforeUnmount(() => observer?.disconnect());
     </div>
 
     <div class="showcase-gallery__foot">
-      <a :href="localePath('/projects')" class="ob-button showcase-gallery__cta" @click.prevent="emit('slider')">{{ t("projectsPage.gallery.cta") }}</a>
+      <NuxtLink :to="localePath('/projects')" class="ob-button showcase-gallery__cta">{{ t("projectsPage.gallery.cta") }}</NuxtLink>
       <p>{{ t("projectsPage.gallery.caption") }}</p>
     </div>
   </section>

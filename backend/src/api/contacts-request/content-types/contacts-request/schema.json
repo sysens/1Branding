@@ -17,12 +17,12 @@
     },
     "requestedServicesMessageInput": {
       "type": "text",
-      "required": true
+      "required": false
     },
     "requestedServicesMessageFile": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": [
         "files"
       ]
@@ -33,11 +33,11 @@
     },
     "JobTitle": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "Company": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "PhoneNumber": {
       "type": "string",
@@ -45,7 +45,7 @@
     },
     "email": {
       "type": "email",
-      "required": true
+      "required": false
     },
     "Source": {
       "type": "text"

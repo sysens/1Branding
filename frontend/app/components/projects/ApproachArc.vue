@@ -199,7 +199,7 @@ const onKeydown = (event: KeyboardEvent) => {
       >
         <span class="approach-card__body">
           <span class="approach-card__picture">
-            <OptImage :src="card.src" alt="" sizes="(max-width: 767px) 42vw, 19vw" loading="lazy" decoding="async" draggable="false" />
+            <OptImage :src="card.src" alt="" sizes="(max-width: 767px) 42vw, (min-aspect-ratio: 5/3) 30vh, 19vw" loading="lazy" decoding="async" draggable="false" />
           </span>
           <span class="approach-card__label" aria-hidden="true">{{ label(card) }}</span>
         </span>
@@ -251,9 +251,12 @@ const onKeydown = (event: KeyboardEvent) => {
 </template>
 
 <style scoped>
-/* The design at 1440px, in em (16px there, growing with the screen past it,
-   10px at the least): cards 16.1 x 20em, the focused one's top 6.2em down,
-   the circle's centre 41.5em below a card's centre. */
+/* The design at 1440px, in em (16px there, 10px at the least): cards
+   16.1 x 20em, the focused one's top 6.2em down, the circle's centre 41.5em
+   below a card's centre. The em grows with the screen's width, but no more
+   than the screen's height allows: the section (53em) always fits one
+   screen, arc, words, button and foot together (on a 1080p screen it was
+   1131px tall, on a 5K ultrawide 3200px). */
 .approach {
   --radius: 41.5em;
   --card-w: 16.1em;
@@ -264,7 +267,7 @@ const onKeydown = (event: KeyboardEvent) => {
   overflow: hidden;
   background: #000;
   color: #fff;
-  font-size: max(0.625rem, 100vw / 90);
+  font-size: max(0.625rem, min(100vw / 90, 100svh / 54));
 }
 
 /* Its own stacking context: the cards' z-index orders them among themselves,

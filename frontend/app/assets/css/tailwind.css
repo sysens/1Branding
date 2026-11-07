@@ -183,6 +183,12 @@
         --type-intro-lh: 1.3;
         --type-intro-ls: -0.005em;
         --type-intro-family: var(--app-font-display);
+        /* The landing sections' descriptions (the brand gallery, "The One in
+           OneBranding", presentations, social identity), all one size: a
+           little smaller than the intro step (0.84 of it) and capped by the
+           screen's height, so a wide, short screen (21:9, 32:9) does not spend
+           its height on them. Phones keep the full intro step for reading. */
+        --type-description-size: min(calc(var(--type-intro-size) * 0.84), 2.7svh);
         /* The measure of running text: 36em is 70-75 characters of SF Pro
            (its "0" is wide, so 65ch would be ~85). The narrow one is ~50.
            The intro's is wider (~80 characters at its size, as designed). */
@@ -205,6 +211,7 @@
             --type-intro-lh: var(--type-lead-lh);
             --type-intro-ls: var(--type-lead-ls);
             --type-intro-family: var(--app-font-sans);
+            --type-description-size: min(var(--type-intro-size), 3.2svh);
         }
     }
 

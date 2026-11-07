@@ -4,7 +4,7 @@ import RollText from "~/components/ui/RollText.vue";
 import { computed, onBeforeUnmount, reactive, ref } from "vue";
 import { optEntry } from "~/utils/optImage";
 import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
-import { servicePath, servicesHubPath } from "~/utils/servicePages";
+import { servicePath } from "~/utils/servicePages";
 import { toSiteLocale } from "~/utils/locales";
 
 // "ONE PARTNER. EVERY SOLUTION." — the twelve services as a list; picking one
@@ -13,8 +13,9 @@ import { toSiteLocale } from "~/utils/locales";
 // The list and its stand-in pictures come from utils/servicesCatalog.ts.
 
 const { t, locale } = useI18n();
-const localePath = useLocalePath();
 const siteLocale = computed(() => toSiteLocale(locale.value));
+// "Explore service" opens the showcase (once the projects page's grid view).
+const projectsGridPath = computed(() => servicePath("branding", toSiteLocale(locale.value)));
 
 // The pictures fill a 4:3 box (object-fit: cover), so a wider source is drawn
 // wider than the box by `zoom`: `sizes` asks for that width. The card's box is
@@ -89,15 +90,8 @@ onBeforeUnmount(() => clearTimeout(hoverTimer));
       </span>
     </h2>
     <p v-rise class="services__subtitle">{{ t("home.services.subtitle") }}</p>
-    <!-- What OneBranding is in one plain sentence, with the ways on. -->
-    <p v-rise class="services__intro">
-      {{ t("home.services.intro") }}
-      <span class="services__intro-links">
-        <NuxtLink :to="servicesHubPath(siteLocale)">{{ t("home.services.allLink") }}</NuxtLink>
-        <NuxtLink :to="localePath('/pricing')">{{ t("home.services.pricesLink") }}</NuxtLink>
-        <NuxtLink :to="`${localePath('/contact')}#contact-request`">{{ t("home.services.contactLink") }}</NuxtLink>
-      </span>
-    </p>
+    <!-- What OneBranding is in one plain sentence. -->
+    <p v-rise class="services__intro">{{ t("home.services.intro") }}</p>
 
     <div class="services__body">
       <ul class="services__list">
@@ -123,7 +117,7 @@ onBeforeUnmount(() => clearTimeout(hoverTimer));
           <div v-if="service.id === selectedId" class="services__inline">
             <OptImage :src="service.image" :sizes="service.inlineSizes" alt="" width="1040" height="780" loading="lazy" decoding="async" />
             <p>{{ service.tagline }}</p>
-            <NuxtLink :to="service.path" class="services__inline-link">{{ t("home.services.explore") }}</NuxtLink>
+            <NuxtLink :to="projectsGridPath" class="services__inline-link">{{ t("home.services.explore") }}</NuxtLink>
           </div>
         </li>
       </ul>
@@ -158,8 +152,8 @@ onBeforeUnmount(() => clearTimeout(hoverTimer));
               <p :key="selected.id" class="services__tagline">{{ selected.tagline }}</p>
             </Transition>
           </div>
-          <NuxtLink :to="selected.path" class="services__button ob-button">
-            {{ t("home.services.explore") }}<span class="sr-only">: {{ selected.name }}</span>
+          <NuxtLink v-rise data-pill :to="projectsGridPath" class="services__button ob-button">
+            {{ t("home.services.explore") }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M9 6h9v9" /></svg>
           </NuxtLink>
         </div>

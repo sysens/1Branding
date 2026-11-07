@@ -29,6 +29,11 @@
       "description": "OneBranding portfoliosi: Toshkentdagi brending jamoamiz yaratgan logotiplar, firma uslubi, qadoq dizayni, brendbuklar va reklama kampaniyalari.",
       "h1": "OneBranding portfoliosi: brending, qadoq va firma uslubi"
     },
+    "showcase": {
+      "title": "Ishlar vitrinasi: brendlarni qanday yaratamiz {'|'} OneBranding",
+      "description": "OneBranding brendlarni qanday yaratadi: brendbuklar, firma uslubi, qadoq va ONE yondashuvi — Toshkentdagi brending jamoamizning mijozlar uchun ishlari bilan.",
+      "h1": "OneBranding vitrinasi: brendlarni qanday yaratamiz"
+    },
     "price": {
       "title": "Toshkentda brending va logotip narxlari {'|'} OneBranding",
       "description": "Toshkentda brending narxlari: paketlar $1 900 dan, logotip $900 dan, qadoq $500 dan, taqdimot dizayni slayd uchun $35 dan. Har biriga nima kirishini koʻring.",
@@ -308,10 +313,7 @@
           "tagline": "Brendingiz — haqiqiy oʻlchamda."
         }
       },
-      "intro": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi va neyming, logotip yaratish, firma uslubi, qadoq dizayni, veb-saytlar va boshqa xizmatlar — barchasi bitta jamoadan.",
-      "allLink": "Barcha xizmatlar",
-      "pricesLink": "Narxlar",
-      "contactLink": "Biz bilan bogʻlaning"
+      "intro": "OneBranding — Toshkentdagi toʻliq siklli brending agentligi: brend strategiyasi va neyming, logotip yaratish, firma uslubi, qadoq dizayni, veb-saytlar va boshqa xizmatlar — barchasi bitta jamoadan."
     },
     "vision": {
       "brand": "OneBranding",
@@ -334,9 +336,8 @@
       "cta": "Loyihalarni koʻrish"
     },
     "audit": {
-      "eyebrow": "Biznes auditi va strategiya",
       "lineFirst": "Muammodan",
-      "lineSecond": "rivojlanishga.",
+      "lineSecond": "muvaffaqiyatga.",
       "asideFirst": "Biznesingiz haqida aniq tasavvur.",
       "asideSecond": "Keyingi qadamlar uchun aniq reja.",
       "current": "Hozirgi holat",
@@ -515,10 +516,6 @@
       }
     }
   },
-  "warning": {
-    "title": "Hurmatli mijozlar",
-    "text": "Vaqtingizni qadrlaymiz va shuni maʼlum qilmoqchimiz: xizmatlar narxi individual hisoblanadi hamda loyihaning murakkabligi, muddatlari va ish hajmiga bogʻliq. Ishni boshlashdan oldin eng maqbul yechim va shaffof rejani taklif qilish uchun maqsadlar, bosqichlar va byudjetni aniqlashtiramiz. Iltimos, dolzarb aloqa maʼlumotlarini qoldiring — bu kelishuv va tijorat taklifini tayyorlashni tezlashtiradi. Savollaringiz boʻlsa, bizga yozing — batafsil maslahat beramiz. Tushunganingiz va ishonchingiz uchun rahmat."
-  },
   "contacts": {
     "title": "Toshkentdagi OneBranding bilan bogʻlaning",
     "addressTitle": "MANZIL",
@@ -529,6 +526,41 @@
     "noteTitle": "ESLATMA",
     "noteText": "Agentlik asosan yuridik shaxslar va yirik loyihalar bilan ishlaydi. Murojaat qilganda amaldagi aloqa maʼlumotlaringizni koʻrsating.",
     "briefText": "Quyidagi shaklni toʻldiring yoki bizga qoʻngʻiroq qiling — sizga taklif tayyorlaymiz.",
+    "hero": {
+      "titleFirst": "Keyingi mijozingiz",
+      "titleSecond": "kutib turmaydi",
+      "text": "Keyingi bosqichingiz bitta suhbatdan boshlanadi",
+      "cta": "Katta ishni boshlang"
+    },
+    "scrollEnd": {
+      "first": "Sahifa tugaydi.",
+      "second": "Hikoya tugamaydi.",
+      "button": "boshidan boshlash"
+    },
+    "modal": {
+      "title": "Katta ishni boshlang",
+      "close": "Yopish",
+      "steps": { "name": "Ismingiz", "topic": "Nima kerak", "phone": "Telefon raqamingiz" },
+      "namePlaceholder": "Ismingiz",
+      "topicPlaceholder": "Sizga nima kerak?",
+      "other": "Boshqa",
+      "phonePlaceholder": "Telefon raqamingiz",
+      "nameRequired": "Iltimos, ismingizni kiriting.",
+      "topicRequired": "Iltimos, nima kerakligini tanlang.",
+      "phoneInvalid": "Iltimos, telefon raqamini toʻgʻri kiriting.",
+      "back": "Orqaga",
+      "next": "Davom etish",
+      "send": "Yuborish",
+      "doneTitle": "Rahmat!",
+      "doneText": "Arizangiz qabul qilindi, siz bilan bogʻlanamiz."
+    },
+    "marquee": "Bogʻlanish",
+    "linksTitle": "Internetda biz",
+    "welcomeTitle": "Ofisimizga xush kelibsiz",
+    "welcomeText": "Brending, dizayn va texnologiyalar bir joyda. Tashrif buyuring, qoʻngʻiroq qiling yoki yozing — sizga taklif tayyorlaymiz.",
+    "mapTitle": "Xarita: Toshkentdagi OneBranding ofisi",
+    "openMap": "Google Xaritada ochish",
+    "mapHint": "Xaritani siljitish va kattalashtirish uchun ustiga bosing",
     "form": {
       "title": "OneBranding bilan bogʻlaning",
       "description": "Loyiha ustida ishni boshlashdan oldin mijozlardan bir nechta savolga javob berishni soʻraymiz. Javoblaringiz vazifangizni hal qilish uchun eng mos vositalarni tanlashga yordam beradi. Loyihangiz haqida qanchalik batafsil yozsangiz, taklifimiz shunchalik aniq boʻladi. Shunda sizga qanday foyda keltira olishimizni tezroq tushunamiz. Agar maʼlumot toʻplab, uchrashuvga tayyorlansak, ilk suhbatimiz ancha aniq va mazmunli boʻladi. Agar vazifangiz bizning yoʻnalishimizga mos kelmasa, sizga munosib hamkorlarni tavsiya qilamiz.",
@@ -759,19 +791,11 @@
     ]
   },
   "projectsPage": {
-    "explore": "Batafsil",
-    "open": "Loyihani koʻrish",
     "category": "Loyiha toifasi",
-    "allCategories": "Barcha toifalar",
-    "displayMode": "Koʻrinish",
-    "slider": "Slayder",
-    "grid": "Toʻr",
-    "about": "Biz haqimizda",
-    "discover": "Koʻrish",
-    "list": "Barcha loyihalar",
-    "position": "{title}, {current} / {total}",
-    "back": "Bosh sahifaga qaytish",
-    "services": "Xizmatlarimiz",
+    "all": "Hammasi",
+    "showcaseName": "Ishlar vitrinasi",
+    "showcaseLink": "Vitrinani koʻrish",
+    "showcaseNote": "Brendlarni qanday yaratishimiz va boshqa ishlarimiz.",
     "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti.",
     "showcase": {
       "title": "Rebrending",
@@ -955,8 +979,7 @@
     }
   },
   "pricing": {
-    "serviceLink": "{name} xizmatiga nimalar kiradi",
-    "details": "Aniq ish hajmi, muddat va narx ishni boshlashdan oldin brifda kelishiladi.",
+    "order": "Buyurtma berish",
     "categories": {
       "branding": {
         "title": "Brending",
@@ -976,8 +999,6 @@
       }
     },
     "lead": "Narxlar AQSH dollarida koʻrsatilgan va boshlangʻich narx hisoblanadi: yakuniy narx brifdan keyin kelishilgan ish hajmiga bogʻliq.",
-    "tableTitle": "Narxlar roʻyxati",
-    "tableService": "Xizmat",
     "tablePackage": "Paket",
     "tablePrice": "Narx",
     "perSlide": "slayd uchun",

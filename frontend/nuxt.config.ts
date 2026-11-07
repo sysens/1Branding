@@ -45,7 +45,8 @@ const contentSecurityPolicy = (scriptExtra = "") => [
   "connect-src 'self' https://onebrandingbackend.up.railway.app https://*.r2.dev https://prod.spline.design https://cdn.spline.design https://cloudflareinsights.com https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com",
   "media-src 'self' data: blob: https://*.r2.dev",
   "worker-src 'self' blob:",
-  "frame-src 'self' https://mc.yandex.ru https://mc.yandex.com",
+  // Google Maps embed on the contact page (the office map).
+  "frame-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -77,6 +78,41 @@ const localePrefixes = ["", "/ru", "/uz"];
 const pageCache = {
   cache: { swr: true, maxAge: 300, varies: ["host", "x-forwarded-host", "x-forwarded-proto"] },
 };
+// A reloaded (or full-page back/forward) page stays where the visitor was, and
+// shows the sections there as they were. Without this the browser first paints
+// the top of the page (the hero), and the scroll-driven sections show their
+// server state (the first manifesto statement, the hero fully lit) until their
+// script runs: the section looked as if it had started over.
+// This inline script runs first thing in <head>: for a reload with a saved
+// position (written by plugins/lenis.client.ts: sessionStorage on every scroll,
+// taken first on a reload; history.state.scroll, taken first on a
+// back/forward, as the plugin does) it hides
+// the body (class ob-restoring, kept in layout, so it can still be scrolled)
+// and scrolls as soon as the server HTML is parsed (DOMContentLoaded, a few
+// frames of retry while it is still growing). The plugin shows the page once
+// the app has hydrated and the sections have drawn themselves for that
+// position. A 3 s timer here (rAF does not run in a background tab, and the
+// app may fail) makes sure the page is never left hidden. Any other visit (a
+// new navigation, no saved position) is left alone.
+const restoreScrollScript = [
+  "(function(){try{",
+  'var n=performance.getEntriesByType("navigation")[0];',
+  'if(!n||n.type!=="reload"&&n.type!=="back_forward")return;',
+  "var s=history.state&&history.state.scroll,h=s&&s.top,v=null;",
+  'try{v=sessionStorage.getItem("ob-scroll:"+location.pathname+location.search)}catch(e){}',
+  "var st=v!==null&&isFinite(v)?+v:undefined;",
+  'var top=n.type==="reload"?(st!==undefined?st:h):(h!=null?h:st);',
+  "if(!(top>0))return;",
+  "var r=document.documentElement,t0=Date.now();",
+  'r.classList.add("ob-restoring");',
+  "var go=function(){",
+  'try{window.scrollTo({top:top,left:0,behavior:"instant"})}catch(e){window.scrollTo(0,top)}',
+  "if(Math.abs(window.scrollY-top)>2&&Date.now()-t0<1500)requestAnimationFrame(go)};",
+  'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",go);else go();',
+  'setTimeout(function(){r.classList.remove("ob-restoring")},3000)',
+  "}catch(e){}})();",
+].join("");
+const restoreScrollStyle = "html.ob-restoring body{visibility:hidden}";
 
 export default defineNuxtConfig({
   // Keep the generated project references identical in dev, prepare and build.
@@ -96,7 +132,7 @@ export default defineNuxtConfig({
     "nuxt-keen-slider",
   ],
 
-  css: ["~/assets/css/tailwind.css"],
+  css: ["~/assets/css/tailwind.css", "~/assets/css/guarantee-pill.css"],
 
   app: {
     head: {
@@ -127,6 +163,9 @@ export default defineNuxtConfig({
         { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Text-Regular.woff2", crossorigin: "" },
         { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Display-Bold.woff2", crossorigin: "" },
       ],
+      // See restoreScrollScript above (inline: allowed by the CSP's 'unsafe-inline').
+      style: [{ innerHTML: restoreScrollStyle, tagPriority: "critical" }],
+      script: [{ innerHTML: restoreScrollScript, tagPriority: "critical" }],
     },
   },
 

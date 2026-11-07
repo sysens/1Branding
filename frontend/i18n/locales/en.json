@@ -29,6 +29,11 @@
       "description": "OneBranding portfolio: logos, visual identity, packaging, brand books and campaigns created by our branding team in Tashkent, Uzbekistan.",
       "h1": "OneBranding portfolio: branding, packaging and identity"
     },
+    "showcase": {
+      "title": "Branding Showcase: How We Build Brands {'|'} OneBranding",
+      "description": "How OneBranding builds brands: brand books, visual identity, packaging and the ONE approach, with client work by our branding team in Tashkent, Uzbekistan.",
+      "h1": "OneBranding showcase: how we build brands"
+    },
     "price": {
       "title": "Branding & Logo Design Prices in Tashkent {'|'} OneBranding",
       "description": "Branding prices in Tashkent: packages from $1,900, logo design from $900, packaging from $500, presentation design from $35 per slide. See what each includes.",
@@ -308,10 +313,7 @@
           "tagline": "Your brand, life-size."
         }
       },
-      "intro": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy and naming, logo design, brand identity, packaging, websites and more, from one team.",
-      "allLink": "All services",
-      "pricesLink": "Prices",
-      "contactLink": "Contact us"
+      "intro": "OneBranding is a full-cycle branding agency in Tashkent, Uzbekistan: brand strategy and naming, logo design, brand identity, packaging, websites and more, from one team."
     },
     "vision": {
       "brand": "OneBranding",
@@ -334,9 +336,8 @@
       "cta": "View projects"
     },
     "audit": {
-      "eyebrow": "Business audit & strategy",
       "lineFirst": "From problem",
-      "lineSecond": "to progress.",
+      "lineSecond": "to success.",
       "asideFirst": "A clear view of your business.",
       "asideSecond": "A precise plan for what comes next.",
       "current": "Current state",
@@ -515,10 +516,6 @@
       }
     }
   },
-  "warning": {
-    "title": "Dear customers",
-    "text": "We value your time and want to note that pricing is calculated individually and depends on project complexity, timelines, and scope of work. Before we start, we clarify goals, stages, and budget to propose the best solution and a transparent plan. Please leave up-to-date contact details — this will speed up coordination and preparation of a commercial proposal. If you have any questions, write to us and we will consult in detail. Thank you for your understanding and trust."
-  },
   "contacts": {
     "title": "Contact OneBranding in Tashkent",
     "addressTitle": "ADDRESS",
@@ -529,6 +526,41 @@
     "noteTitle": "NOTE",
     "noteText": "The agency works mainly with legal entities and large projects. Please provide working contact details when reaching out.",
     "briefText": "Fill in the form below or call us, and we will come back with a proposal.",
+    "hero": {
+      "titleFirst": "Your next client",
+      "titleSecond": "won’t wait",
+      "text": "Your next level starts with one conversation",
+      "cta": "Start something big"
+    },
+    "scrollEnd": {
+      "first": "The scroll ends.",
+      "second": "The story doesn’t.",
+      "button": "start from beginning"
+    },
+    "modal": {
+      "title": "Start something big",
+      "close": "Close",
+      "steps": { "name": "Your name", "topic": "What you need", "phone": "Your phone number" },
+      "namePlaceholder": "Your name",
+      "topicPlaceholder": "What do you need?",
+      "other": "Something else",
+      "phonePlaceholder": "Your phone number",
+      "nameRequired": "Please enter your name.",
+      "topicRequired": "Please choose what you need.",
+      "phoneInvalid": "Please enter a valid phone number.",
+      "back": "Back",
+      "next": "Continue",
+      "send": "Send",
+      "doneTitle": "Thank you!",
+      "doneText": "We received your request and will contact you."
+    },
+    "marquee": "Connect",
+    "linksTitle": "Find us online",
+    "welcomeTitle": "Welcome to our office",
+    "welcomeText": "Branding, design and technology under one roof. Visit us, call or send a message, and we will come back with a proposal.",
+    "mapTitle": "Map: the OneBranding office in Tashkent",
+    "openMap": "Open in Google Maps",
+    "mapHint": "Click the map to move and zoom it",
     "form": {
       "title": "Contact OneBranding",
       "description": "Before starting work on a project, we ask clients to answer a few questions. Your answers help us choose the most suitable tools to solve your task. The more details you provide about your project, the more accurate our proposal will be. This helps us understand how we can be useful. Our first conversation can be much more focused if we collect information and prepare for the meeting. And if we see that your task is not within our profile, we will recommend suitable partners.",
@@ -759,19 +791,11 @@
     ]
   },
   "projectsPage": {
-    "explore": "Explore",
-    "open": "View project",
     "category": "Project category",
-    "allCategories": "All categories",
-    "displayMode": "Display mode",
-    "slider": "Slider",
-    "grid": "Grid",
-    "about": "About",
-    "discover": "Discover",
-    "list": "All projects",
-    "position": "{title}, {current} of {total}",
-    "back": "Back to Home",
-    "services": "Our services",
+    "all": "All",
+    "showcaseName": "Showcase",
+    "showcaseLink": "View showcase",
+    "showcaseNote": "How we build brands, with more of our work.",
     "unavailable": "Projects are unavailable right now.",
     "showcase": {
       "title": "ReBranding",
@@ -955,8 +979,7 @@
     }
   },
   "pricing": {
-    "serviceLink": "What {name} includes",
-    "details": "The exact scope, timeline and price are agreed in the brief before we start.",
+    "order": "Order",
     "categories": {
       "branding": {
         "title": "Branding",
@@ -976,8 +999,6 @@
       }
     },
     "lead": "Our prices are in US dollars and are starting prices: the final price depends on the scope we agree after the brief.",
-    "tableTitle": "Price list",
-    "tableService": "Service",
     "tablePackage": "Package",
     "tablePrice": "Price",
     "perSlide": "per slide",

@@ -87,7 +87,7 @@ try {
   res = await fetch(`${BASE}/uz`, { headers });
   check("/uz renders", res.status === 200 && (await res.text()).includes('lang="uz'), String(res.status));
 
-  for (const page of ["/about", "/projects", "/contact", "/pricing", "/one-guarantee", "/news", "/services", "/privacy", "/uz/about", "/uz/contact"]) {
+  for (const page of ["/about", "/projects", "/services/branding", "/contact", "/pricing", "/one-guarantee", "/news", "/services", "/privacy", "/uz/about", "/uz/contact"]) {
     res = await fetch(BASE + page, { headers, redirect: "manual" });
     check(`${page} renders`, res.status === 200, String(res.status));
   }
@@ -151,8 +151,9 @@ try {
 
   res = await fetch(`${BASE}/contact`, { headers });
   const contact = await res.text();
-  check("/contact renders the form with its limits", contact.includes("form-send") && contact.includes('maxlength="200"'), "");
-  check("/contact asks for consent to the processing of personal data", /type="checkbox"[^>]*form="contact-request-form"[^>]*required/.test(contact), "");
+  // The request form is a modal opened from the top button (not in the server HTML).
+  check("/contact renders the button that opens the request modal", contact.includes("contact-hero__cta") && contact.includes('aria-haspopup="dialog"'), "");
+  check("/contact has no inline form any more", !contact.includes("contact-request-form"), "");
 
   // Private address down: pages still render through the public URL.
   await new Promise((r) => proxy.close(r));

@@ -4,12 +4,5 @@
 .home-page-frame { position: relative; width: 100%; min-height: 100vh; margin-inline: auto; overflow: clip; background: #000; }
 .home-dark-sections { position: relative; background: #000; }
 .home-info-picture { position: relative; z-index: 31; background: #fff; }
-/* The design keeps the logo wall bright and only fades the rows under the header;
-   the dark band behind the slogan is in leadingPage.vue. */
-.home-hero-shade {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(to bottom, rgb(0 0 0 / 0.7) 0, rgb(0 0 0 / 0.55) 22vh, rgb(0 0 0 / 0) 38vh);
-}
+/* The logo wall stays fully bright, with no shade at the top or bottom; the
+   only dark area is the one behind the slogan, in LeadingPage.vue. */

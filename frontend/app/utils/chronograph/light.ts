@@ -64,12 +64,14 @@ export class DialLight {
     ctx.save();
     disc(ctx, 373); ctx.clip();
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.58;
+    // The smooth wash of light over the dial (0.58 before) is kept lower, so the
+    // face stays blacker; the dotted grain over it is what carries the glow.
+    ctx.globalAlpha = 0.28;
     ctx.drawImage(this.field, 0, 0);
     light.globalCompositeOperation = "destination-in";
     light.drawImage(this.mask, 0, 0);
     light.globalCompositeOperation = "source-over";
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = 0.8;
     ctx.drawImage(this.field, 0, 0);
     ctx.restore();
   }

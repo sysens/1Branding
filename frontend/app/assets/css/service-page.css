@@ -596,3 +596,23 @@
     border-radius: 1.75rem;
   }
 }
+
+/* On the showcase template (components/services/ServiceTemplate.vue) this
+   page is the black run under the white column: no header room above it, and
+   the text of the timeline sits as a paragraph under its heading. */
+html.showcase-document,
+body.showcase-document {
+  background: #fff;
+}
+
+.service-page--template {
+  min-height: 0;
+}
+
+.service-page--template .service-page__frame {
+  padding-top: 2.5rem;
+}
+
+.service-page--template .service-timeline-block {
+  margin-top: 4rem;
+}

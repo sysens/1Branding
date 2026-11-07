@@ -27,12 +27,35 @@ const watchStickyTop = (element: HTMLElement) => {
   };
 };
 
+// GSAP is loaded on demand, a moment after mount. Until then the hero showed
+// its first state (fully lit) even on a page reloaded halfway through the
+// transition, as if the section had started over. This draws the timeline's
+// state for the current position at once (the same trigger and tweens as the
+// timeline below: 55% of the screen to the transition's bottom at the top; the
+// hero fades over the first 85%, the light moves 4% -> -6%), and on every
+// scroll until GSAP takes over.
+const paintCurrentState = () => {
+  if (!hero.value || !transition.value) return;
+  const box = transition.value.getBoundingClientRect();
+  const start = window.innerHeight * 0.55;
+  const distance = box.height + start;
+  const progress = distance > 0 ? Math.min(1, Math.max(0, (start - box.top) / distance)) : 0;
+  hero.value.style.opacity = String(1 - Math.min(1, progress / 0.85));
+  transition.value.style.setProperty("--light-shift", `${(4 - 10 * progress).toFixed(4)}%`);
+};
+
 onMounted(async () => {
   if (curtain.value) stopStickyTop = watchStickyTop(curtain.value);
+  const motion = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (motion) {
+    paintCurrentState();
+    window.addEventListener("scroll", paintCurrentState, { passive: true });
+  }
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
     import("gsap"),
     import("gsap/ScrollTrigger"),
   ]);
+  window.removeEventListener("scroll", paintCurrentState);
   if (disposed || !hero.value || !transition.value) return;
   gsap.registerPlugin(ScrollTrigger);
   const media = gsap.matchMedia();
@@ -66,6 +89,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   disposed = true;
+  window.removeEventListener("scroll", paintCurrentState);
   cleanup?.();
   stopStickyTop?.();
 });

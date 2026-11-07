@@ -9,6 +9,7 @@ import {
 } from "vue";
 import GradualBlur from "./components/GradualBlur.vue";
 import BrandCursor from "./components/ui/BrandCursor.vue";
+import PageLoader from "./components/PageLoader.vue";
 import { organizationGraph, withSiteName } from "~/utils/seo";
 import { COMPANY, companyProfiles } from "~/utils/company";
 import { LANGUAGE_TAGS, toSiteLocale } from "~/utils/locales";
@@ -65,7 +66,7 @@ if (import.meta.server) {
     script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
   });
 }
-const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !route.path.endsWith("/projects"));
+const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !/\/(?:projects|showcase)\/?$/.test(route.path));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/contact")
 );
@@ -107,6 +108,7 @@ watch(
 <template>
   <div class="app-shell min-h-screen overscroll-y-none">
     <a href="#main-content" class="skip-link">{{ $t("common.skipToContent") }}</a>
+    <PageLoader />
     <ClientOnly><BrandCursor /></ClientOnly>
     <NuxtLoadingIndicator color="#03cb00" :height="4" />
     <main id="main-content">

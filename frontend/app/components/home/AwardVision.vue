@@ -34,7 +34,7 @@ const localePath = useLocalePath();
           decoding="async"
         />
       </div>
-      <NuxtLink v-rise :to="localePath('/about')" class="vision__button ob-button ob-button--dark">{{ t("home.vision.cta") }}</NuxtLink>
+      <NuxtLink v-rise data-pill :to="localePath('/about')" class="vision__button ob-button ob-button--dark">{{ t("home.vision.cta") }}</NuxtLink>
     </div>
   </section>
 </template>

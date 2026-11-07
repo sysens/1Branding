@@ -16,8 +16,10 @@ export function createFace(): HTMLCanvasElement {
   if (!ctx) throw new Error("Canvas 2D is unavailable");
 
   const steel = ctx.createLinearGradient(0, 0, SIZE, SIZE);
-  [[0,"#17171a"],[0.15,"#36383f"],[0.32,"#15161a"],[0.58,"#121419"],
-    [0.83,"#353b4b"],[1,"#08090b"]].forEach(([stop, color]) => {
+  // The case ring: dark steel with only a faint sheen (the highlights were
+  // #36383f and #353b4b, a light grey).
+  [[0,"#0d0d0f"],[0.15,"#1c1d22"],[0.32,"#0c0d0f"],[0.58,"#0b0c0f"],
+    [0.83,"#1b1f28"],[1,"#040405"]].forEach(([stop, color]) => {
     steel.addColorStop(Number(stop), String(color));
   });
   disc(ctx, 401);
@@ -25,8 +27,8 @@ export function createFace(): HTMLCanvasElement {
   ctx.fill();
   const rim = ctx.createRadialGradient(CENTER, CENTER, 370, CENTER, CENTER, 404);
   rim.addColorStop(0, "#050607");
-  rim.addColorStop(0.25, "#17191ee6");
-  rim.addColorStop(0.75, "#25283300");
+  rim.addColorStop(0.25, "#0b0c0fe6");
+  rim.addColorStop(0.75, "#14161a00");
   rim.addColorStop(1, "#030405");
   ctx.fillStyle = rim;
   ctx.fill();

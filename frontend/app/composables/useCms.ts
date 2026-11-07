@@ -34,15 +34,20 @@ export const useCmsMedia = () => {
   return (url?: string | null): string => resolveStrapiMediaUrl(url, graphqlUrl);
 };
 
-type JsonPost = <R>(url: string, options: { method: "POST"; headers: Record<string, string>; body: unknown }) => Promise<R>;
+type JsonPost = <R>(url: string, options: { method: "POST"; headers: Record<string, string>; body: unknown; timeout: number }) => Promise<R>;
 
-/** One GraphQL request. HTTP failures throw; GraphQL errors come back in `errors`. */
+// A CMS that hangs must not hang the page: the server render gives up after
+// 8 s (the page then answers with a 5xx), a browser on a slow network after 15 s.
+const CMS_TIMEOUT_MS = import.meta.server ? 8_000 : 15_000;
+
+/** One GraphQL request. HTTP failures and timeouts throw; GraphQL errors come back in `errors`. */
 export const cmsRequest = <T>(graphqlUrl: string, query: string, variables: Record<string, unknown>) =>
   // $fetch typed against a runtime URL makes TypeScript expand every Nitro route.
   ($fetch as unknown as JsonPost)<CmsResponse<T>>(graphqlUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: { query, variables },
+    timeout: CMS_TIMEOUT_MS,
   });
 
 /**

@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
           <OptImage
             :src="card.src"
             :alt="card.alt"
-            :sizes="`(max-width: 767px) ${Math.ceil(70 * card.ratio)}vw, ${Math.ceil(34 * card.ratio)}vw`"
+            :sizes="`(max-width: 767px) ${Math.ceil(70 * card.ratio)}vw, ${Math.ceil(40 * card.ratio)}vw`"
             loading="lazy"
             decoding="async"
             draggable="false"
@@ -129,9 +129,11 @@ onBeforeUnmount(() => {
   /* The heading and the description follow the site's type, which grows with
      the width; here they are also capped by the screen's height (at 1920 x
      1080 and 1366 x 768 the caps change nothing), so a wide, short screen
-     (21:9, 32:9) does not spend its height on them. */
+     (21:9, 32:9) does not spend its height on them. The description is set a
+     little smaller than the intro step (0.84 of it), so the pictures get the
+     height. */
   --title-size: min(var(--section-title-size), 9.1svh);
-  --text-size: min(var(--type-intro-size), 3.2svh);
+  --text-size: var(--type-description-size);
   --track-gap: min(clamp(1.5rem, 3vw, 3.5rem), 5.5svh);
   --text-gap: clamp(1.25rem, min(4vw, 6svh), 5rem);
   --bar-gap: clamp(1rem, 2vw, 1.75rem);
@@ -139,10 +141,17 @@ onBeforeUnmount(() => {
      two heading lines, the gaps, four lines of description (plus a fifth's
      worth of slack) and the bar. It was 100svh - 36rem, but past 1920px the
      rem grows with the width, so on a 32:9 screen that left a sliver. Never
-     more than 36% of the height or 34% of the width, as before. */
+     more than 46% of the height or 40% of the width (36% and 34% before: the
+     pictures were made larger). */
   --room: calc(100svh - 6.5rem - 2.1 * var(--title-size) - var(--track-gap) - var(--text-gap) - 5.2 * var(--text-size) - var(--bar-gap) - 2.5rem);
-  --card-h: max(6rem, min(34vw, 36vh, var(--room)));
-  --start-padding: max(1.5rem, 27vw);
+  --card-h: max(6rem, min(40vw, 46vh, var(--room)));
+  /* Where the row starts: 27% of the content frame (--fvw is 1vw up to the
+     1920px frame, then grows with the root size) plus the space beside the
+     frame on wider screens. A plain 27vw put the first card up to 600px left of
+     the heading on a 32:9 screen, whose heading is centred in the frame; up to
+     1920px wide nothing changes. */
+  --frame-edge: max(0px, calc((100vw - var(--frame-max)) / 2));
+  --start-padding: max(1.5rem, calc(27 * var(--fvw) + var(--frame-edge)));
   /* The width of the description's text (also set on it below): the intro
      measure (--type-measure-intro, 40.5em), written in the step's size
      because it is used here, on other elements. The row's travel ends with
@@ -238,7 +247,7 @@ onBeforeUnmount(() => {
 }
 
 /* Running text (~360 characters) below the cards: the intro step, as the
-   identity text above, left-aligned in a column of its measure, centred on
+   identity text above, centred in a column of its measure, centred on
    the screen. */
 .gallery__description {
   box-sizing: content-box;
@@ -250,7 +259,7 @@ onBeforeUnmount(() => {
   font-size: var(--text-size);
   line-height: var(--type-intro-lh);
   letter-spacing: var(--type-intro-ls);
-  text-align: left;
+  text-align: center;
   text-wrap: pretty;
 }
 

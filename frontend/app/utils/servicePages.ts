@@ -31,6 +31,13 @@ export interface ServicePage {
   related: ServiceKey[];
   /** CMS case study tags shown as this service's work (none: no block). */
   caseTags?: string[];
+  /**
+   * Extra blocks of the showcase template (components/services/ServiceTemplate.vue)
+   * that fit this service: the packaging wall, "The ONE approach", the logo /
+   * brand identity comparison and the brand book's chapters. Every page has the
+   * template's base: its own picture and copy, client work, prices, work, questions.
+   */
+  showcase?: Array<"gallery" | "approach" | "identity" | "brandbook">;
   /** Last content change, for the sitemap's lastmod. */
   updated: string;
 }
@@ -42,6 +49,7 @@ const CASES_ADDED = "2026-10-25";
 export const SERVICE_PAGES: readonly ServicePage[] = [
   {
     key: "branding",
+    showcase: ["approach", "identity", "brandbook", "gallery"],
     caseTags: ["Branding"],
     slugs: { en: "branding", ru: "brending", uz: "brending" },
     image: "/home/threeLayerLocal/26.webp",
@@ -52,6 +60,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "logo",
+    showcase: ["identity"],
     caseTags: ["Logo"],
     slugs: { en: "logo-design", ru: "razrabotka-logotipa", uz: "logotip-yaratish" },
     image: "/home/threeLayerLocal/14.webp",
@@ -62,6 +71,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "identity",
+    showcase: ["identity"],
     caseTags: ["Identity"],
     slugs: { en: "brand-identity", ru: "firmennyj-stil", uz: "firma-uslubi" },
     image: "/home/threeLayerLocal/22.webp",
@@ -71,6 +81,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "brandbook",
+    showcase: ["brandbook"],
     caseTags: ["Identity"],
     slugs: { en: "brand-book", ru: "brendbuk", uz: "brendbuk" },
     image: "/home/threeLayerLocal/16.webp",
@@ -80,6 +91,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "strategy",
+    showcase: ["approach"],
     slugs: { en: "brand-strategy-naming", ru: "brend-strategiya-i-nejming", uz: "brend-strategiyasi-va-neyming" },
     image: "/home/threeLayerLocal/15.webp",
     related: ["branding", "logo", "identity", "social"],
@@ -87,6 +99,7 @@ export const SERVICE_PAGES: readonly ServicePage[] = [
   },
   {
     key: "packaging",
+    showcase: ["gallery"],
     caseTags: ["Packaging"],
     slugs: { en: "packaging-design", ru: "dizajn-upakovki", uz: "qadoq-dizayni" },
     image: "/home/threeLayerLocal/34.webp",
