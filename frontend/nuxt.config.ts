@@ -318,5 +318,11 @@ export default defineNuxtConfig({
     },
   },
 
+  // Page changes run as a view transition (document.startViewTransition, as
+  // Framer does on orionix.framer.website); the animation is in
+  // assets/css/tailwind.css. Browsers without it change pages at once.
+  experimental: {
+    viewTransition: true,
+  },
   compatibilityDate: "2024-04-03",
 })

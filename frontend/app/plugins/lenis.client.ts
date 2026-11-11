@@ -137,41 +137,78 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   requestAnimationFrame(raf)
 
-  const pageFinishHandler = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const route = nuxtApp.$router.currentRoute.value
-        const routeChanged = prevFullPath !== route.fullPath
-        let restoring = false
-
-        if (routeChanged && !route.hash) {
-          const saved = firstLoad
-            ? restoreOnLoad
-            : historyNavigation ? (window.history.state?.scroll as { top?: number } | undefined)?.top : undefined
-          userScrolled = false
-          if (typeof saved === "number" && saved > 0) {
-            restoring = true
-            restoreTo(saved)
-          } else if (!firstLoad || saved === 0) {
-            lenis.scrollTo(0, {
-              immediate: true,
-              force: true,
-            })
-          }
-          // The first page with nothing saved stays where the browser put it:
-          // the top for a new visit, the browser's own restore for a reload.
-          // (Forcing the top here sent a reload pressed mid-scroll to the top.)
-        }
-        // restoreTo shows the page itself once the position is final.
-        if (!restoring) reveal()
-        historyNavigation = false
-        firstLoad = false
-
-        prevFullPath = route.fullPath
-        lenis.resize()
-        scrollTrigger?.refresh()
-      })
+  // A page change runs as a view transition (nuxt.config.ts): the browser
+  // takes its picture of the new page as soon as page:finish lets it, so the
+  // scroll has to be in place right then, not two frames later, or the
+  // picture shows the new page at the old position and it jumps at the end.
+  let viewTransition = false
+  nuxtApp.hook("page:view-transition:start", (transition) => {
+    viewTransition = true
+    transition.finished.finally(() => {
+      viewTransition = false
+      lenis.resize()
+      scrollTrigger?.refresh()
     })
+  })
+
+  // Behind the two pages (assets/css/tailwind.css, ::view-transition) shows
+  // the new page's own colour at the top of the screen, where it is still
+  // rising into place: the background of the first full-width thing there
+  // (cards, pictures and the floating header are narrower and skipped).
+  const transparent = (color: string) => color === "transparent" || /rgba\(.*,\s*0\)$/.test(color)
+  const newPageTop = () => {
+    for (const x of [innerWidth / 2, 8]) {
+      for (const element of document.elementsFromPoint(x, 4)) {
+        if (element.getBoundingClientRect().width < innerWidth * 0.9) continue
+        const color = getComputedStyle(element).backgroundColor
+        if (!transparent(color)) return color
+      }
+    }
+    return ""
+  }
+
+  const pageFinishHandler = () => {
+    if (viewTransition) {
+      settlePage()
+      const color = newPageTop()
+      if (color) root.style.setProperty("--ob-page-behind", color)
+      else root.style.removeProperty("--ob-page-behind")
+      return
+    }
+    requestAnimationFrame(() => requestAnimationFrame(settlePage))
+  }
+
+  function settlePage() {
+    const route = nuxtApp.$router.currentRoute.value
+    const routeChanged = prevFullPath !== route.fullPath
+    let restoring = false
+
+    if (routeChanged && !route.hash) {
+      const saved = firstLoad
+        ? restoreOnLoad
+        : historyNavigation ? (window.history.state?.scroll as { top?: number } | undefined)?.top : undefined
+      userScrolled = false
+      if (typeof saved === "number" && saved > 0) {
+        restoring = true
+        restoreTo(saved)
+      } else if (!firstLoad || saved === 0) {
+        lenis.scrollTo(0, {
+          immediate: true,
+          force: true,
+        })
+      }
+      // The first page with nothing saved stays where the browser put it:
+      // the top for a new visit, the browser's own restore for a reload.
+      // (Forcing the top here sent a reload pressed mid-scroll to the top.)
+    }
+    // restoreTo shows the page itself once the position is final.
+    if (!restoring) reveal()
+    historyNavigation = false
+    firstLoad = false
+
+    prevFullPath = route.fullPath
+    lenis.resize()
+    scrollTrigger?.refresh()
   }
 
   nuxtApp.hook("page:finish", pageFinishHandler)

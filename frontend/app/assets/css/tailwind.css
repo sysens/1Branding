@@ -546,6 +546,63 @@
 /* The green glow at the top of the inner pages: an 8 KB AVIF where the
    browser takes it, else the 65 KB PNG (a WebP of this soft, transparent
    gradient came out larger). It is the largest paint of some pages (contact). */
+/* Moving between pages: orionix.framer.website's page transition, as its
+   Framer code defines it (read from the site): a view transition of the
+   whole screen (nuxt.config.ts, experimental.viewTransition). For 1 s, on
+   cubic-bezier(0.8, 0, 0.2, 1), the new page rises from 30% lower, fades in
+   and is wiped in from the bottom edge up (the mask follows --ob-page-wipe,
+   0 to 1) over the old one, which rises 10%.
+   On Orionix the old page also shrinks to 0.9 and fades out, into a screen
+   of its own cream, so that cannot be seen. Our pages are dark pictures:
+   fading and shrinking, the old page left a black strip above the new one
+   (and black sides) that lingered while the new page settled. So the old
+   page stays whole until the new one has covered it. Behind both, where the
+   old page has risen, is the new page's own top colour
+   (plugins/lenis.client.ts reads it), black if none is found.
+   Reduced motion: no animation (Nuxt skips the transition then too). */
+@property --ob-page-wipe {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+@keyframes ob-page-exit {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(0, -10%); }
+}
+
+@keyframes ob-page-enter {
+    0% { opacity: 0; transform: translate(0, 30%) scale(1); --ob-page-wipe: 0; }
+    100% { opacity: 1; transform: translate(0, 0) scale(1); --ob-page-wipe: 1; }
+}
+
+::view-transition {
+    background: var(--ob-page-behind, #000);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+    mix-blend-mode: normal;
+    backface-visibility: hidden;
+}
+
+::view-transition-old(root) {
+    animation: ob-page-exit 1s cubic-bezier(0.8, 0, 0.2, 1) 0s both;
+}
+
+::view-transition-new(root) {
+    animation: ob-page-enter 1s cubic-bezier(0.8, 0, 0.2, 1) 0.01s both;
+    mask-image: linear-gradient(360deg, black calc(100% * var(--ob-page-wipe)), transparent calc(100% * var(--ob-page-wipe)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
+
 .page-glow {
     background: url("/home/Ellipse.png") top center / contain no-repeat;
     background-image: image-set(url("/home/ellipse-glow.avif") type("image/avif"), url("/home/Ellipse.png") type("image/png"));

@@ -110,7 +110,6 @@ watch(
     <a href="#main-content" class="skip-link">{{ $t("common.skipToContent") }}</a>
     <PageLoader />
     <ClientOnly><BrandCursor /></ClientOnly>
-    <NuxtLoadingIndicator color="#03cb00" :height="4" />
     <main id="main-content">
       <NuxtLayout>
         <NuxtPage />
