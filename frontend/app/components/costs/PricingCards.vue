@@ -1,37 +1,45 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, useId } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useId } from "vue";
 import PriceCardLightning from "~/components/costs/PriceCardLightning.vue";
-import { priceAmount, type CmsPriceCategory } from "~/composables/usePriceCategories";
-import { SERVICE_PAGES, type ServiceKey } from "~/utils/servicePages";
+import { priceAmount } from "~/composables/usePriceCategories";
+import { SERVICE_PAGES } from "~/utils/servicePages";
 import { loadServiceCopy } from "~/utils/serviceCopy";
+import { loadPriceItems } from "~/utils/priceCopy";
+import { PRICE_LIST_LENGTH, coveredItems, isFixedPrice, planKey, planTone, priceUnitKey, warningItems, type PlanTone } from "~/utils/pricePlans";
 import { toSiteLocale } from "~/utils/locales";
 
 /**
- * /pricing: one card per service of the CMS price list, each with its own
- * colour (teal, blue, purple, orange). The card shows the lowest price and
- * the first items of the service page's "what it includes" list. The selected card (the first one, then the one clicked,
- * focused or, while the row scrolls, the one in the middle) is lit in its
- * colour: lightning round it (PriceCardLightning), a glow and the white button.
+ * /pricing: one block per service of the CMS price list, one under another.
+ * A block opens with the service's name, large and green, and its description.
+ * Under them, on the left the service's packages as tabs, cheapest first; on
+ * the right one card for the picked package: its price and the service's ten
+ * items, the ones the package does not cover dimmed (utils/pricePlans.ts).
+ *
+ * A package has a colour, on its tab and on the card: by its place the first
+ * is white, the second the site's green (the one we recommend: its tab says
+ * so), the third gold; a few packages have their own (planTone: packaging's
+ * One Pro is green, its Advanced gold). The picked tab's border has the beam
+ * of the contact page's button going round it. The card of the block at the
+ * middle of the screen (or the one clicked or focused) is lit: lightning round
+ * it (PriceCardLightning), a glow and the white button.
  */
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const siteLocale = computed(() => toSiteLocale(locale.value));
 
-const { categories, categoryTitle, categoryPage } = await usePriceCategories();
-const { uzs } = await useUzsPrice();
+const { categories, categoryTitle, categoryDescription, categoryPage } = await usePriceCategories();
 
-// The service each CMS category belongs to (Branding -> branding).
+// Each service's list: the price list's own ten items, else (a category added
+// in the CMS) the first items of its service page's "what it includes".
 const PRICED = SERVICE_PAGES.filter((page) => page.priceCategory);
-const serviceKey = (category: CmsPriceCategory): ServiceKey | null =>
-  PRICED.find((page) => page.priceCategory!.toLowerCase() === category.title?.trim().toLowerCase())?.key ?? null;
-
-// Only the first items of each list: the service page has all of them.
-const LIST_LENGTH = 5;
-const { data: includes } = await useAsyncData(
-  () => `pricing-includes:${siteLocale.value}`,
+const { data: lists } = await useAsyncData(
+  () => `pricing-lists:${siteLocale.value}`,
   async () => {
-    const copies = await Promise.all(PRICED.map((page) => loadServiceCopy(page.key, siteLocale.value)));
-    return Object.fromEntries(PRICED.map((page, index) => [page.key, (copies[index]?.includes.items ?? []).slice(0, LIST_LENGTH)]));
+    const found: Record<string, string[]> = { ...(await loadPriceItems(siteLocale.value)) };
+    await Promise.all(PRICED.filter((page) => !found[planKey(page.priceCategory!)]).map(async (page) => {
+      found[planKey(page.priceCategory!)] = (await loadServiceCopy(page.key, siteLocale.value))?.includes.items ?? [];
+    }));
+    return Object.fromEntries(Object.entries(found).map(([key, items]) => [key, items.slice(0, PRICE_LIST_LENGTH)]));
   },
 );
 
@@ -40,218 +48,546 @@ const formatPrice = (amount: number) => `$${amount.toLocaleString("en-US", { max
 // stay small and the number large in any language ("$900 dan", "slayd uchun $35").
 // The space next to the price stays in the text (screen readers, copying);
 // on screen the gap between the parts spaces them.
+const NO_UNIT = { before: "", after: "" };
 const splitTemplate = (key: string) => {
   const [before = "", after = ""] = t(key, { price: "%PRICE%" }).split("%PRICE%").map((part) => part.trim());
   return { before: before && `${before} `, after: after && ` ${after}` };
 };
 
-const TONES = ["teal", "blue", "purple", "orange"] as const;
-// The lightning's colours ("r g b"): the light, its white-hot core, the sparks,
-// and how many sparks a second (the orange one burns). Measured on Huly's
-// cards: the mean of the bright and of the mid pixels of their frames.
-const LIGHTNING: Record<(typeof TONES)[number], { tone: string; core: string; spark: string; sparks: number }> = {
-  teal: { tone: "70 235 210", core: "200 252 248", spark: "150 255 232", sparks: 8 },
-  blue: { tone: "84 106 245", core: "185 205 252", spark: "160 190 255", sparks: 8 },
-  purple: { tone: "195 100 245", core: "242 205 248", spark: "235 170 255", sparks: 10 },
-  orange: { tone: "245 128 75", core: "252 215 175", spark: "255 196 110", sparks: 34 },
+// A package's colour: by its place among its service's packages, or its own
+// (utils/pricePlans.ts: planTone). The lightning's colours ("r g b"): the light, its white-hot core, the sparks,
+// and how many sparks a second (the gold one burns). The green is the site's
+// (#03cb00, with the pale greens of the OneGuarantee pill's beam).
+const LIGHTNING: Record<PlanTone, { tone: string; core: string; spark: string; sparks: number }> = {
+  white: { tone: "214 226 240", core: "255 255 255", spark: "255 255 255", sparks: 8 },
+  green: { tone: "3 203 0", core: "201 255 191", spark: "125 255 107", sparks: 10 },
+  gold: { tone: "245 180 50", core: "255 242 200", spark: "255 212 105", sparks: 30 },
 };
 
-const cards = computed(() => categories.value.flatMap((category) => {
-  const plans = (category.pricing ?? [])
-    .map((plan) => ({ name: plan.title?.trim() || "", amount: priceAmount(plan.price) }))
+// ---------- the picked package of each service ----------
+// By the CMS category's title; a service starts on its cheapest package.
+const picked = ref<Record<string, number>>({});
+
+const groups = computed(() => categories.value.flatMap((category) => {
+  const key = planKey(category.title ?? "");
+  const priced = (category.pricing ?? [])
+    .map((plan) => ({ name: plan.title?.trim() || "", amount: priceAmount(plan.price), was: plan.was ?? null }))
     .filter((plan) => plan.name && Number.isFinite(plan.amount) && plan.amount > 0)
     .sort((a, b) => a.amount - b.amount);
-  if (!plans.length) return [];
-  const key = serviceKey(category);
-  const perSlide = Boolean(categoryPage(category)?.perSlide);
-  const lowest = plans[0]!.amount;
+  if (!priced.length) return [];
+  const items = lists.value?.[key] ?? [];
+  // "from $X" (or "$X per slide"); a fixed-price package shows the price alone.
+  const unit = splitTemplate(priceUnitKey(categoryPage(category)?.unit));
+  const plans = priced.map((plan, rank) => ({
+    name: plan.name,
+    price: formatPrice(plan.amount),
+    unit: isFixedPrice(key, plan.name) ? NO_UNIT : unit,
+    // A discounted package: its full price, shown crossed out above the price.
+    was: plan.was ? formatPrice(plan.was) : "",
+    covered: coveredItems(key, plan.name, rank, priced.length, items.length),
+    tone: planTone(key, plan.name, rank),
+    // The green package is the one we recommend.
+    recommended: planTone(key, plan.name, rank) === "green",
+  }));
+  const index = Math.min(picked.value[key] ?? 0, plans.length - 1);
   return [{
-    id: category.title,
+    key,
     title: categoryTitle(category),
-    price: formatPrice(lowest),
-    unit: splitTemplate(perSlide ? "servicesPage.pricePerSlide" : "servicesPage.priceFrom"),
-    uzs: uzs(lowest),
-    items: (key && includes.value?.[key]) || [],
+    description: categoryDescription(category),
+    items,
+    warnings: warningItems(key),
+    plans,
+    // One of the service's packages is discounted: every card of the service
+    // keeps the line above the price, so it does not jump between packages.
+    discounted: plans.some((plan) => plan.was),
+    index,
+    plan: plans[index]!,
   }];
-}).map((card, index) => ({ ...card, tone: TONES[index % TONES.length] ?? "teal" })));
+}));
 
 const contactPath = computed(() => `${localePath("/contact")}#contact-request`);
 
-// ---------- the selected card ----------
+// ---------- the lit block ----------
 const active = ref(0);
-const row = ref<HTMLElement | null>(null);
-const cardEls: HTMLElement[] = [];
-const setCard = (index: number) => (el: unknown) => { if (el instanceof HTMLElement) cardEls[index] = el; };
-const scrolls = () => Boolean(row.value && row.value.scrollWidth > row.value.clientWidth + 1);
-
-// While the row scrolls, a clicked card also comes to the middle (the cards
-// it passes on the way are not selected).
-let lockedUntil = 0;
-const select = (index: number) => {
-  active.value = index;
-  const card = cardEls[index];
-  if (!row.value || !card || !scrolls()) return;
-  const target = card.offsetLeft + card.offsetWidth / 2 - row.value.clientWidth / 2;
-  lockedUntil = performance.now() + 700;
-  row.value.scrollTo({ left: target, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-};
-
-// A swipe selects the card the row comes to rest on: the one whose snap
-// position (its middle at the row's middle, kept within the scroll range, so
-// the first card's is the start) is nearest to where the row is.
-let frame = 0;
-const onScroll = () => {
-  if (frame) return;
-  frame = requestAnimationFrame(() => {
-    frame = 0;
-    if (!row.value || !scrolls() || performance.now() < lockedUntil) return;
-    const { scrollLeft, clientWidth, scrollWidth } = row.value;
-    const max = scrollWidth - clientWidth;
-    let nearest = active.value;
-    let distance = Infinity;
-    cardEls.forEach((card, index) => {
-      const snap = Math.min(max, Math.max(0, card.offsetLeft + card.offsetWidth / 2 - clientWidth / 2));
-      const gap = Math.abs(snap - scrollLeft);
-      if (gap < distance) { distance = gap; nearest = index; }
-    });
-    active.value = nearest;
-  });
-};
+// The price comes in with a short rise once a visitor has picked a package:
+// never on the first paint (the page's largest text).
+const touched = ref(false);
 
 const uid = useId();
+const tabId = (group: number, plan: number) => `price-${uid}-${group}-tab-${plan}`;
+const panelId = (group: number) => `price-${uid}-${group}-panel`;
+const titleId = (group: number) => `price-${uid}-${group}-title`;
+
+const groupEls: HTMLElement[] = [];
+const tabEls: HTMLElement[][] = [];
+const setGroup = (index: number) => (el: unknown) => { if (el instanceof HTMLElement) groupEls[index] = el; };
+const setTab = (group: number, plan: number) => (el: unknown) => {
+  if (el instanceof HTMLElement) (tabEls[group] ??= [])[plan] = el;
+};
+
+const pick = (group: number, plan: number, focus = false) => {
+  const key = groups.value[group]?.key;
+  if (key === undefined) return;
+  picked.value = { ...picked.value, [key]: plan };
+  active.value = group;
+  touched.value = true;
+  if (focus) tabEls[group]?.[plan]?.focus();
+};
+
+// Tabs as a keyboard user expects them: the arrows move through a service's
+// packages (down and right forwards: the tabs are a column on wide screens
+// and a row on phones), Home and End go to the first and the last.
+const STEPS: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+const onTabKey = (event: KeyboardEvent, group: number, plan: number) => {
+  const count = groups.value[group]?.plans.length ?? 0;
+  if (count < 2) return;
+  let next: number;
+  if (event.key in STEPS) next = (plan + STEPS[event.key]! + count) % count;
+  else if (event.key === "Home") next = 0;
+  else if (event.key === "End") next = count - 1;
+  else return;
+  event.preventDefault();
+  pick(group, next, true);
+};
+
+// The block that crosses the middle of the screen is the lit one.
+let middle: IntersectionObserver | null = null;
+onMounted(() => {
+  middle = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const index = entry.isIntersecting ? groupEls.indexOf(entry.target as HTMLElement) : -1;
+      if (index >= 0) active.value = index;
+    }
+  }, { rootMargin: "-50% 0px -50% 0px" });
+  groupEls.forEach((el) => middle?.observe(el));
+});
 onBeforeUnmount(() => {
-  if (frame) cancelAnimationFrame(frame);
+  middle?.disconnect();
+  middle = null;
 });
 </script>
 
 <template>
-  <section v-if="cards.length" class="price-cards">
-    <div ref="row" class="price-cards__row" @scroll.passive="onScroll">
-      <article
-        v-for="(card, index) in cards"
-        :key="card.id"
-        :ref="setCard(index)"
-        class="price-card"
-        :class="[`price-card--${card.tone}`, { 'is-active': active === index }]"
-        :aria-labelledby="`price-card-${uid}-${index}`"
-        @click="select(index)"
-        @focusin="active = index"
-      >
-        <span class="price-card__halo" aria-hidden="true" />
-        <PriceCardLightning v-if="active === index" v-bind="LIGHTNING[card.tone]" />
+  <section v-if="groups.length" class="price-cards">
+    <div
+      v-for="(group, g) in groups"
+      :key="group.key"
+      :ref="setGroup(g)"
+      class="price-group"
+      :class="{ 'is-active': active === g }"
+    >
+      <header class="price-group__head">
+        <h2 :id="titleId(g)" class="price-group__title price-title">{{ group.title }}</h2>
+        <p v-if="group.description" class="price-group__text">{{ group.description }}</p>
+      </header>
 
-        <h2 :id="`price-card-${uid}-${index}`" class="price-card__title">{{ card.title }}</h2>
-        <p class="price-card__price">
-          <span v-if="card.unit.before" class="price-card__unit">{{ card.unit.before }}</span>
-          <span class="price-card__amount">{{ card.price }}</span>
-          <span v-if="card.unit.after" class="price-card__unit">{{ card.unit.after }}</span>
-        </p>
-        <p v-if="card.uzs" class="price-card__uzs">{{ card.uzs }}</p>
-        <span class="price-card__rule" aria-hidden="true" />
-
-        <ul v-if="card.items.length" class="price-card__items">
-          <li v-for="item in card.items" :key="item">
-            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m13.33 4-7.33 7.33L2.66 8" /></svg>
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-
-        <div class="price-card__foot">
-          <NuxtLink :to="contactPath" class="price-card__cta">{{ t("pricing.order") }}</NuxtLink>
+      <div class="price-group__body">
+        <div class="price-group__side">
+          <div class="price-tabs" role="tablist" aria-orientation="vertical" :aria-labelledby="titleId(g)">
+            <button
+              v-for="(plan, p) in group.plans"
+              :id="tabId(g, p)"
+              :key="plan.name"
+              :ref="setTab(g, p)"
+              type="button"
+              role="tab"
+              class="price-tab"
+              :class="[`price-tone--${plan.tone}`, { 'is-selected': group.index === p, 'is-recommended': plan.recommended }]"
+              :aria-selected="group.index === p"
+              :aria-controls="panelId(g)"
+              :tabindex="group.index === p ? 0 : -1"
+              @click="pick(g, p)"
+              @keydown="onTabKey($event, g, p)"
+            >
+              <span v-if="plan.recommended" class="price-tab__badge">{{ t("pricing.recommended") }}</span>
+              <span class="price-tab__name">{{ plan.name }}</span>
+              <span class="price-tab__arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 16" focusable="false"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+              </span>
+            </button>
+          </div>
         </div>
-      </article>
+
+        <div
+          :id="panelId(g)"
+          class="price-card"
+          :class="[`price-tone--${group.plan.tone}`, { 'is-active': active === g }]"
+          role="tabpanel"
+          :aria-labelledby="tabId(g, group.index)"
+          @click="active = g"
+          @focusin="active = g"
+        >
+          <span class="price-card__halo" aria-hidden="true" />
+          <PriceCardLightning v-if="active === g" v-bind="LIGHTNING[group.plan.tone]" />
+
+          <div :key="group.plan.name" class="price-card__head" :class="{ 'is-swapped': touched }">
+            <div class="price-card__top">
+              <h3 class="price-card__title">{{ group.plan.name }}</h3>
+              <span v-if="group.plan.recommended" class="price-card__badge">{{ t("pricing.recommended") }}</span>
+            </div>
+            <p class="price-card__price" :class="{ 'has-was': group.discounted }">
+              <span v-if="group.plan.unit.before" class="price-card__unit">{{ group.plan.unit.before }}</span>
+              <span class="price-card__figure">
+                <s v-if="group.plan.was" class="price-card__was"><span class="sr-only">{{ t("pricing.oldPrice") }} </span>{{ group.plan.was }}</s>
+                <span class="price-card__amount">{{ group.plan.price }}</span>
+              </span>
+              <span v-if="group.plan.unit.after" class="price-card__unit">{{ group.plan.unit.after }}</span>
+            </p>
+          </div>
+          <span class="price-card__rule" aria-hidden="true" />
+
+          <ul v-if="group.items.length" class="price-card__items">
+            <li v-for="(item, i) in group.items" :key="item" :class="{ 'is-off': i >= group.plan.covered, 'is-warning': group.warnings.includes(i) }">
+              <!-- A warning triangle instead of the check on the items marked in utils/pricePlans.ts. -->
+              <svg v-if="group.warnings.includes(i)" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.2 14.6 13.6H1.4L8 2.2Z" /><path d="M8 6.5v3.1M8 11.7v.01" /></svg>
+              <svg v-else viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m13.33 4-7.33 7.33L2.66 8" /></svg>
+              <span><span v-if="group.warnings.includes(i)" class="sr-only">{{ t("pricing.note") }}: </span>{{ item }}<span v-if="i >= group.plan.covered" class="sr-only"> ({{ t("pricing.notIncluded") }})</span></span>
+            </li>
+          </ul>
+
+          <div class="price-card__foot">
+            <NuxtLink :to="contactPath" class="price-card__cta">{{ t("pricing.startProject") }}</NuxtLink>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* Laid out as huly.io/pricing's plans, at every width: cards 390px wide and
-   56px apart; the first one at the left of a 896px content column centred on
-   the page, the others running on to the right, off the screen where it is
-   narrow. */
+/* A service's block: its name and description across the top, under them its
+   packages as a column of tabs on the left and the picked package's card
+   (390px wide, as huly.io/pricing's plans) on the right. The block is as wide
+   as the two and centred on the page; the blocks run one under another, with
+   room for the lit card's glow between them. */
 .price-cards {
   --card-w: 24.375rem;
-  --card-gap: 3.5rem;
   --card-r: 1.5rem;
-  --column: min(56rem, 100% - 2.5rem);
-  position: relative;
-  width: 100%;
-}
-
-/* The row scrolls sideways across the whole width; a picked card comes to the
-   middle (it snaps there). The start padding puts the first card at the
-   column's left; the end padding lets the last one reach the middle. Huly's
-   fade: clear at the left edge, full from 21% of the width to 70%, clear again
-   from 90% (cards further right sink into the dark). The vertical padding is
-   room for the glow (a scrolling box clips what sticks out of it); the
-   negative margins keep it from pushing the page apart (the title and the
-   rate line sit above it, pricing.vue). */
-.price-cards__row {
+  --side-w: 25rem;
+  --group-gap: 3.5rem;
   position: relative;
   display: flex;
-  gap: var(--card-gap);
-  align-items: stretch;
-  margin-block: -10rem;
-  padding: 10rem calc(50% - var(--card-w) / 2) 10rem calc((100% - var(--column)) / 2);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0.46%, #000 21.13%, #000 69.57%, transparent 90.18%);
-  mask-image: linear-gradient(90deg, transparent 0.46%, #000 21.13%, #000 69.57%, transparent 90.18%);
+  flex-direction: column;
+  gap: clamp(7rem, calc(11 * var(--fvw)), 12rem);
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 1.25rem;
+  font-family: var(--app-font-sans);
 }
 
-.price-cards__row::-webkit-scrollbar {
-  display: none;
+.price-group {
+  width: calc(var(--side-w) + var(--group-gap) + var(--card-w));
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.price-group__body {
+  display: grid;
+  grid-template-columns: var(--side-w) var(--card-w);
+  gap: var(--group-gap);
+  align-items: start;
 }
 
 @media (max-width: 1279px) {
   .price-cards {
     --card-w: 22.875rem;
-    --card-gap: 3rem;
   }
 }
 
-/* ---------- colours: the line, its glow, the inside of the lit card ---------- */
-.price-card--teal {
-  --tone: 70 235 210;
-  --tone-soft: 140 245 225;
-  --tone-core: 215 255 246;
-  --lit-top: rgb(26 52 47);
-  --lit-bottom: rgb(11 19 19);
+@media (max-width: 1023px) {
+  .price-cards {
+    --side-w: 17.5rem;
+    --group-gap: 2rem;
+  }
 }
 
-.price-card--blue {
-  --tone: 84 106 245;
-  --tone-soft: 140 165 255;
-  --tone-core: 220 222 255;
-  --lit-top: rgb(33 44 94);
-  --lit-bottom: rgb(13 16 33);
+/* ---------- a package's colour: on its tab and, when picked, on the card ----------
+   "r g b": the line, a paler one for borders, the white-hot core; then the
+   inside of the lit card, and how strong its glow is (white light looks
+   brighter than a colour at the same strength). */
+.price-tone--white {
+  --tone: 214 226 240;
+  --tone-soft: 240 245 250;
+  --tone-core: 255 255 255;
+  --lit-top: rgb(50 54 60);
+  --lit-bottom: rgb(15 16 18);
+  --glow: 0.55;
 }
 
-.price-card--purple {
-  --tone: 195 100 245;
-  --tone-soft: 205 160 255;
-  --tone-core: 242 222 255;
-  --lit-top: rgb(50 45 88);
-  --lit-bottom: rgb(19 17 32);
+.price-tone--green {
+  --tone: 3 203 0;
+  --tone-soft: 107 255 92;
+  --tone-core: 201 255 191;
+  --lit-top: rgb(13 52 19);
+  --lit-bottom: rgb(8 18 10);
+  --glow: 1;
 }
 
-.price-card--orange {
-  --tone: 245 128 75;
-  --tone-soft: 255 190 130;
-  --tone-core: 255 236 214;
-  --lit-top: rgb(70 42 33);
-  --lit-bottom: rgb(24 15 12);
+.price-tone--gold {
+  --tone: 245 180 50;
+  --tone-soft: 255 214 120;
+  --tone-core: 255 242 200;
+  --lit-top: rgb(68 49 16);
+  --lit-bottom: rgb(23 17 8);
+  --glow: 1;
+}
+
+/* ---------- the service's name and description ---------- */
+/* Above the glow of the card under it. */
+.price-group__head {
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(1.5rem, calc(2.2 * var(--fvw)), 2.5rem);
+}
+
+/* The service's name: lit like "won't wait" (assets/css/price-title.css,
+   .price-title); only its size is here. */
+.price-group__title {
+  font-size: clamp(2.75rem, calc(1.25rem + 4.6vw), 6.25rem);
+}
+
+.price-group__text {
+  margin: 0.875rem 0 0;
+  color: rgb(255 255 255 / 0.88);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-lh);
+  letter-spacing: var(--type-body-ls);
+}
+
+/* ---------- the packages ---------- */
+/* Above the glow of the card beside it. The card is the taller of the two:
+   the packages stay in view under the site header while it scrolls by. */
+.price-group__side {
+  position: sticky;
+  top: 6.5rem;
+  z-index: 1;
+  min-width: 0;
+}
+
+/* The tabs stand on the page itself, each in its own outline; the room
+   between them is also the recommended one's label's, which sits on its top
+   border. A tab that is not picked is quiet: a faint outline and dimmed text.
+   The picked one is lit in its package's colour (a fill, a glow, a beam going
+   round its outline, an arrow), so it is plain at a glance which it is. */
+.price-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.price-tab {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 5rem;
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 1rem;
+  background: transparent;
+  color: rgb(255 255 255 / 0.6);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.4s ease;
+}
+
+.price-tab:hover {
+  border-color: rgb(var(--tone) / 0.5);
+  background: rgb(var(--tone) / 0.06);
+  color: #fff;
+}
+
+/* The recommended package's outline is plain to see: its label sits on it. */
+.price-tab.is-recommended {
+  border-color: rgb(var(--tone) / 0.4);
+}
+
+/* The picked package: lit from the left in its colour, with a glow and a beam
+   running along its outline. */
+.price-tab.is-selected {
+  border-color: rgb(var(--tone-soft) / 0.7);
+  background: linear-gradient(100deg, rgb(var(--tone) / 0.34), rgb(var(--tone) / 0.08) 75%);
+  box-shadow: 0 0 1.25rem rgb(var(--tone) / 0.25);
+  color: #fff;
+  cursor: default;
+}
+
+/* "Recommended", on the green package's top border, by its left corner: the
+   line runs into the label from both sides (its ground is the page's black). */
+.price-tab__badge {
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  z-index: 1;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid rgb(var(--tone) / 0.55);
+  border-radius: 62.4375rem;
+  background: #000;
+  color: rgb(var(--tone-soft));
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+/* The beam of the contact page's button (.site-guarantee hovered,
+   assets/css/guarantee-pill.css): a conic gradient turned by that pill's own
+   --guarantee-angle and masked to a ring the width of the border, with a
+   blurred copy as its glow. It goes round the picked tab, in the package's
+   colour. */
+.price-tab::before,
+.price-tab::after {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  padding: 0.078rem;
+  border-radius: inherit;
+  background: conic-gradient(from var(--guarantee-angle), transparent 0deg 240deg, rgb(var(--tone) / 0.15) 280deg, rgb(var(--tone)) 335deg, rgb(var(--tone-core)) 354deg, transparent 360deg);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+.price-tab::after {
+  padding: 0.156rem;
+  filter: blur(0.1875rem);
+}
+
+.price-tab.is-selected::before {
+  opacity: 1;
+}
+
+.price-tab.is-selected::after {
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .price-tab.is-selected {
+    animation: guarantee-orbit 4.5s linear infinite;
+  }
+}
+
+.price-tab__name {
+  min-width: 0;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+/* The arrow marks the picked package, in its colour. */
+.price-tab__arrow {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgb(var(--tone));
+  color: rgb(11 13 16);
+  opacity: 0;
+  transform: translateX(-0.375rem);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.price-tab.is-selected .price-tab__arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.price-tab__arrow svg {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The gold package, picked, is lit the way the contact page's "Start
+   something big" button is (.site-guarantee at rest, assets/css/guarantee-pill.css),
+   in gold: liquid light that fills the tab and keeps flowing, dark text with a
+   sheen running across it, two beams going round the outline in opposite
+   directions, a glow that pulses. The light pours in from the left when the
+   tab is picked (the pill's --guarantee-fill). Only the gold package has it. */
+.price-tab.price-tone--gold {
+  --guarantee-fill: 0%;
+  background:
+    linear-gradient(90deg, transparent calc(var(--guarantee-fill) - 14%), #000 var(--guarantee-fill)) 0 0 / 100% 100% no-repeat,
+    linear-gradient(110deg, #e69b12 0%, #ffd870 22%, #a86a08 48%, #e69b12 70%, #ffd870 100%) 0% 50% / 300% 100% no-repeat,
+    #000;
+  /* The layers start at the border's outer edge, so the black shade covers the
+     border's 1px too: from the padding box the gold ran out past the right
+     edge and showed through the border as a yellow line. */
+  background-origin: border-box;
+  transition: --guarantee-fill 0.9s cubic-bezier(0.45, 0, 0.2, 1), border-color 0.6s ease, color 0.4s ease, box-shadow 0.6s ease;
+}
+
+.price-tab.price-tone--gold.is-selected {
+  --guarantee-fill: 114%;
+  border-color: rgb(var(--tone));
+  box-shadow: 0 0 0.875rem rgb(var(--tone) / 0.4);
+  color: #2b1a00;
+}
+
+.price-tab.price-tone--gold.is-selected::before,
+.price-tab.price-tone--gold.is-selected::after {
+  background:
+    conic-gradient(from var(--guarantee-angle), transparent 0deg 240deg, rgb(var(--tone) / 0.15) 280deg, rgb(var(--tone)) 335deg, rgb(var(--tone-core)) 354deg, transparent 360deg),
+    conic-gradient(from var(--guarantee-back), transparent 0deg, rgb(255 250 235) 4deg, rgb(var(--tone-soft)) 14deg, rgb(var(--tone) / 0.55) 42deg, transparent 110deg 360deg);
+}
+
+/* On the lit gold the arrow is dark, with the gold in it. */
+.price-tab.price-tone--gold.is-selected .price-tab__arrow {
+  background: #2b1a00;
+  color: rgb(var(--tone-soft));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .price-tab.price-tone--gold.is-selected {
+    animation:
+      guarantee-orbit 4.5s linear infinite,
+      guarantee-reverse 2.4s linear infinite,
+      price-tab-charge 1.6s ease-in-out 0.5s infinite,
+      guarantee-flow 3.2s ease-in-out infinite alternate;
+  }
+
+  .price-tab.price-tone--gold.is-selected .price-tab__name {
+    background: linear-gradient(100deg, #2b1a00 36%, #fff3cf 46%, #fff 50%, #fff3cf 54%, #2b1a00 64%) 0 0 / 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: guarantee-shine 1.6s linear 0.7s infinite;
+  }
+}
+
+/* Light from within: a white inner glow and the gold halo pulse together. */
+@keyframes price-tab-charge {
+  0%, 100% { box-shadow: 0 0 0.875rem rgb(245 180 50 / 0.4), inset 0 0 0.25rem rgb(255 255 255 / 0.25); }
+  50% { box-shadow: 0 0 1.75rem rgb(245 180 50 / 0.7), inset 0 0 0.625rem rgb(255 255 255 / 0.55); }
 }
 
 /* ---------- card ---------- */
 .price-card {
   position: relative;
-  flex: 0 0 var(--card-w);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  width: var(--card-w);
+  max-width: 100%;
   padding: 1.75rem 1.75rem 1.5625rem;
   border: 1px solid rgb(255 255 255 / 0.05);
   border-radius: var(--card-r);
@@ -259,7 +595,6 @@ onBeforeUnmount(() => {
   box-shadow: 0.25rem 0.375rem 1.5625rem rgb(0 0 0 / 0.56);
   color: #fff;
   font-family: var(--app-font-sans);
-  scroll-snap-align: center;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -278,9 +613,7 @@ onBeforeUnmount(() => {
 }
 
 /* The glow around the lit card: close and bright (shadows), then a wide
-   faint haze (a radial gradient). All of it fades out within 8rem of the card,
-   inside the row's 10rem of glow room: a wider shadow reached past it and was
-   cut off in a straight line above and below the cards. */
+   faint haze (a radial gradient). All of it fades out within 8rem of the card. */
 .price-card__halo {
   position: absolute;
   inset: -0.5rem;
@@ -303,16 +636,53 @@ onBeforeUnmount(() => {
 }
 
 .price-card.is-active .price-card__halo {
-  opacity: 1;
+  opacity: var(--glow, 1);
 }
 
 /* ---------- content ---------- */
+/* A newly picked package's name and price rise into place. */
+.price-card__head.is-swapped {
+  animation: price-swap 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes price-swap {
+  from {
+    opacity: 0;
+    transform: translateY(0.375rem);
+  }
+}
+
+/* The package's name on the left; on the recommended one its label on the right. */
+.price-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .price-card__title {
   margin: 0;
+  min-width: 0;
   font-size: 1.25rem;
   line-height: 1.375;
   letter-spacing: -0.04em;
   font-weight: 600;
+}
+
+/* The same label as on the package's tab, in the package's colour. */
+.price-card__badge {
+  flex: none;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid rgb(var(--tone) / 0.55);
+  border-radius: 62.4375rem;
+  background: rgb(var(--tone) / 0.1);
+  color: rgb(var(--tone-soft));
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .price-card__price {
@@ -330,19 +700,39 @@ onBeforeUnmount(() => {
   font-weight: 600;
 }
 
+/* A discounted package's full price: small and crossed out, like a
+   superscript at the upper right of the price. It hangs over the line (the
+   price's own line box has that much air above the digits), so "from" keeps
+   the price's baseline; the service's cards make room for it under the name. */
+.price-card__figure {
+  position: relative;
+  display: inline-block;
+}
+
+.price-card__was {
+  position: absolute;
+  bottom: calc(100% - 0.5rem);
+  left: 100%;
+  margin-left: 0.375rem;
+  color: rgb(201 203 207 / 0.6);
+  font-size: 1.25rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-decoration-thickness: 0.0625rem;
+}
+
+.price-card__price.has-was {
+  margin-top: 1.75rem;
+}
+
 .price-card__unit {
   color: rgb(201 203 207);
   font-size: 1.25rem;
   letter-spacing: -0.04em;
   font-weight: 500;
-}
-
-.price-card__uzs {
-  margin: 0.125rem 0 0;
-  color: rgb(201 203 207 / 0.7);
-  font-size: 0.875rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
 }
 
 .price-card__rule {
@@ -352,10 +742,13 @@ onBeforeUnmount(() => {
   background: rgb(255 255 255 / 0.1);
 }
 
+/* Ten short lines: each item is written to fit on one line of the card in
+   every language (app/content/pricing/<locale>.json): the longest, a Russian
+   one, leaves about 1rem to spare on the narrower card and on a 360px phone. */
 .price-card__items {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.875rem;
   margin: 1.5rem 0 0;
   padding: 0;
   list-style: none;
@@ -366,10 +759,11 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   gap: 0.5rem;
   color: rgb(255 255 255 / 0.9);
-  font-size: 1.125rem;
+  font-size: 1rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 500;
+  transition: color 0.25s ease;
 }
 
 .price-card__items svg {
@@ -382,6 +776,25 @@ onBeforeUnmount(() => {
   stroke-width: 1.83;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: stroke 0.25s ease;
+}
+
+/* What the picked package does not cover stays in the list, dimmed. */
+.price-card__items li.is-off {
+  color: rgb(255 255 255 / 0.34);
+}
+
+.price-card__items li.is-off svg {
+  stroke: rgb(255 255 255 / 0.34);
+}
+
+/* A warning mark instead of the check: amber, so it reads as a note. */
+.price-card__items li.is-warning svg {
+  stroke: rgb(255 196 87);
+}
+
+.price-card__items li.is-warning.is-off svg {
+  stroke: rgb(255 196 87 / 0.4);
 }
 
 /* The button sits at the bottom, with room above it however short the card. */
@@ -424,19 +837,79 @@ onBeforeUnmount(() => {
   background: rgb(228 230 233);
 }
 
+/* Phones: the packages become a row above the card (it scrolls sideways when
+   they do not fit), the card takes the column's width. */
 @media (max-width: 767px) {
   .price-cards {
-    --card-w: min(86vw, 22.875rem);
-    --card-gap: 1.25rem;
+    --card-w: 22.875rem;
+    gap: 5.5rem;
   }
 
-  /* Phones: no fade (as on Huly), the row runs edge to edge. */
-  .price-cards__row {
-    -webkit-mask-image: none;
-    mask-image: none;
+  .price-group {
+    width: 100%;
+    max-width: var(--card-w);
+  }
+
+  .price-group__body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .price-group__text {
+    margin-top: 0.75rem;
+    font-size: var(--type-small-size);
+    line-height: var(--type-small-lh);
+  }
+
+  .price-group__side {
+    position: relative;
+    top: auto;
+  }
+
+  /* A scrolling row cuts what sticks out of it: the padding is the room the
+     recommended label and the beam's glow need above and beside the tabs. */
+  .price-tabs {
+    flex-direction: row;
+    gap: 0.5rem;
+    margin: 0 -0.25rem;
+    padding: 0.75rem 0.25rem 0.25rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .price-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .price-tab {
+    flex: 1 0 auto;
+    justify-content: center;
+    width: auto;
+    min-width: 7.5rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
+    scroll-snap-align: start;
+  }
+
+  .price-tab__name {
+    font-size: 1rem;
+  }
+
+  .price-tab__badge {
+    left: 0.625rem;
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.625rem;
+  }
+
+  .price-tab__arrow {
+    display: none;
   }
 
   .price-card {
+    width: 100%;
     padding: 1.125rem;
   }
 
@@ -449,8 +922,23 @@ onBeforeUnmount(() => {
     font-size: 2.25rem;
   }
 
-  .price-card__items li {
+  .price-card__was {
+    bottom: calc(100% - 0.375rem);
+    margin-left: 0.25rem;
     font-size: 1rem;
+  }
+
+  .price-card__badge {
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.625rem;
+  }
+
+  .price-card__price.has-was {
+    margin-top: 1.375rem;
+  }
+
+  .price-card__items li {
+    font-size: 0.875rem;
   }
 
   .price-card__items {
@@ -469,10 +957,26 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .price-tab,
+  .price-tab::before,
+  .price-tab::after,
+  .price-tab__arrow,
   .price-card,
   .price-card__halo,
-  .price-card__cta {
+  .price-card__cta,
+  .price-card__items li,
+  .price-card__items svg {
     transition: none;
+  }
+
+  /* No beam going round: the picked tab keeps its quiet border. */
+  .price-tab::before,
+  .price-tab::after {
+    display: none;
+  }
+
+  .price-card__head.is-swapped {
+    animation: none;
   }
 }
 </style>

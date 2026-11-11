@@ -333,18 +333,6 @@
   font-weight: 600;
 }
 
-/* The same price in so'm, under the dollar one (the note under the table gives the rate). */
-.service-plans__uzs {
-  display: block;
-  margin-top: 0.375rem;
-  color: var(--service-grey);
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
-  font-weight: 400;
-}
-
 .service-plans__price span {
   color: var(--service-grey);
   font-family: var(--app-font-sans);
@@ -374,12 +362,6 @@
 .service-note a:hover,
 .service-note a:focus-visible {
   color: var(--service-green);
-}
-
-/* The exchange rate's credit: a quiet link in the note's own colour. */
-.service-note .service-note__credit {
-  color: inherit;
-  text-decoration-color: rgb(255 255 255 / 0.35);
 }
 
 .service-faq {

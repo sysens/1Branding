@@ -1,0 +1,57 @@
+/* The /pricing page's titles (a service's name, "Before we begin."): lit the
+   way the contact page's "won't wait" is (.contact-hero__line--accent): a
+   green ground with a dark patch and a bright patch drifting through it,
+   clipped to the letters. The patches' centres are two registered custom
+   properties, so the browser can animate them. The box is as wide as the
+   words, so the patches cross them and not the empty room beside them. The
+   size is the component's. */
+@property --title-dark-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 20%;
+}
+
+@property --title-light-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 70%;
+}
+
+.price-title {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 -0.16em;
+  /* Room under the line for the descenders (g, y, p): the clip ends with the box. */
+  padding-bottom: 0.16em;
+  background:
+    radial-gradient(ellipse 34% 120% at var(--title-dark-x) 62%, rgb(2 34 10 / 0.8), rgb(2 34 10 / 0) 100%),
+    radial-gradient(ellipse 30% 100% at var(--title-light-x) 36%, rgb(120 255 130 / 0.85), rgb(120 255 130 / 0) 100%),
+    linear-gradient(100deg, #0b9a2d 0%, #13b538 50%, #1fd048 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--app-font-display);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  animation:
+    price-title-dark 6s ease-in-out infinite alternate,
+    price-title-light 7.5s ease-in-out infinite alternate;
+}
+
+@keyframes price-title-dark {
+  from { --title-dark-x: -5%; }
+  to { --title-dark-x: 75%; }
+}
+
+@keyframes price-title-light {
+  from { --title-light-x: 105%; }
+  to { --title-light-x: 15%; }
+}
+
+/* One still lit state. */
+@media (prefers-reduced-motion: reduce) {
+  .price-title {
+    animation: none;
+  }
+}

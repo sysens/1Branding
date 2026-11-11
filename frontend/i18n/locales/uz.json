@@ -979,7 +979,45 @@
     }
   },
   "pricing": {
-    "order": "Buyurtma berish",
+    "startProject": "Loyihani boshlash",
+    "notIncluded": "bu paketga kirmaydi",
+    "recommended": "Tavsiya etamiz",
+    "oldPrice": "Eski narx",
+    "note": "Eslatma",
+    "terms": {
+      "title": "Boshlashdan oldin.",
+      "eyebrow": "Narxlar va loyiha shartlari.",
+      "items": [
+        {
+          "q": "Narx loyihangizga moslab.",
+          "a": "Koʻrsatilgan narxlar taxminiy. Yakuniy narx loyihangizning hajmi, murakkabligi va aniq talablariga bogʻliq. Biz uni brifingizni muhokama qilgandan keyin tasdiqlaymiz."
+        },
+        {
+          "q": "Boshlash uchun 70%.",
+          "a": "Ish boshlash uchun loyiha hajmi va shartnoma kelishilgach, 70% avans toʻlov talab qilinadi."
+        },
+        {
+          "q": "Muddatlar. Birgalikda kelishamiz.",
+          "a": "Loyiha muddatlari va topshirish sanalari alohida kelishiladi va shartnomada tasdiqlanadi."
+        },
+        {
+          "q": "FullSpeed-FullCreative — qoʻshimcha.",
+          "a": "Ustuvor topshirish va kengaytirilgan ijodiy ishlanma ixtiyoriy FullSpeed-FullCreative qoʻshimchasi orqali mavjud. Uning hajmi va qoʻshimcha haqi brifingda kelishiladi va yakuniy narxga kiradi."
+        },
+        {
+          "q": "Koʻproq xizmat. Umumiy foyda koʻproq.",
+          "a": "Bir nechta xizmat rejalashtiryapsizmi? Ularni bitta loyihada birlashtirish qulayroq narx taklif qilishi mumkin. Biz brifingda ehtiyojlaringizni koʻrib chiqamiz va moslashtirilgan paket taklifini tayyorlaymiz."
+        },
+        {
+          "q": "Soliqlar va bank komissiyalari.",
+          "a": "Barcha narxlar amaldagi soliqlar va bank komissiyalarisiz koʻrsatilgan."
+        },
+        {
+          "q": "Faqat maʼlumot uchun.",
+          "a": "Ushbu sahifadagi narx maʼlumotlari ommaviy oferta hisoblanmaydi. Yakuniy hajm, narx, toʻlov shartlari va topshirish jadvali imzolangan shartnomada belgilanadi."
+        }
+      ]
+    },
     "categories": {
       "branding": {
         "title": "Brending",
@@ -996,16 +1034,24 @@
       "presentation": {
         "title": "Taqdimot",
         "description": "Taqdimot dizayni gʻoyalaringizni auditoriya eʼtiborini ushlab turadigan aniq va puxta tuzilgan slaydlarga aylantiradi — savdo, loyiha himoyasi yoki ommaviy chiqish uchun boʻladimi, farqi yoʻq. Narx har bir slayd uchun hisoblanadi, shuning uchun hajm ehtiyojingizga mos keladi."
+      },
+      "naming": {
+        "title": "Neyming",
+        "description": "Neyming — talaffuz qilish va eslab qolish oson, auditoriyaga mos va brend gʻoyasini ifodalaydigan nom izlash. Biz brif va bozor tahlilidan boshlaymiz, har bir gʻoyasi bilan nom yoʻnalishlarini taklif qilamiz va qisqa roʻyxatni oʻxshash nomlar, domenlar va ijtimoiy tarmoq akkauntlari boʻyicha tekshiramiz."
+      },
+      "visualIdentity": {
+        "title": "Firma uslubi",
+        "description": "Firma uslubi — brendning vizual tili: ranglar, shriftlar, grafik elementlar, tasvirlar uslubi va sahifalash qoidalari; ular brendning har bir aloqa nuqtasini tanib olinadigan va yagona qiladi. Biz uni brend gʻoyasi va auditoriyasiga asoslab yaratamiz hamda jamoangiz amal qila oladigan qoidalarda bayon qilamiz."
+      },
+      "visualContent": {
+        "title": "Vizual kontent",
+        "description": "Vizual kontent — brend har kuni koʻrsatadigan tasvir va maketlar: postlar, stories, muqovalar va bannerlar. Brend uslubidagi, jamoangiz oʻzi tahrirlaydigan tayyor shablonlarni yoki siz uchun yaratilgan individual dizayn va kampaniya vizuallarini tanlang."
       }
     },
     "lead": "Narxlar AQSH dollarida koʻrsatilgan va boshlangʻich narx hisoblanadi: yakuniy narx brifdan keyin kelishilgan ish hajmiga bogʻliq.",
     "tablePackage": "Paket",
     "tablePrice": "Narx",
-    "perSlide": "slayd uchun",
-    "uzsMillion": "≈ {amount} mln soʻm",
-    "uzsThousand": "≈ {amount} ming soʻm",
-    "uzsNote": "Soʻmdagi summalar taxminiy, Oʻzbekiston Markaziy banki kursi boʻyicha, {date}: 1 USD = {rate} soʻm.",
-    "uzsNoteMarket": "Soʻmdagi summalar taxminiy, {date} kursi boʻyicha: 1 USD = {rate} soʻm."
+    "perSlide": "slayd uchun"
   },
   "project": {
     "palette": "Rang palitrasi",

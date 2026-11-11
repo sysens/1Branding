@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PricingCards from "~/components/costs/PricingCards.vue";
+import PricingTerms from "~/components/costs/PricingTerms.vue";
 import { computed } from "vue";
 import { priceAmount } from "~/composables/usePriceCategories";
 
@@ -11,7 +12,6 @@ const origin = useSiteOrigin();
 // The same request as the cards' (one key): the structured data repeats
 // their prices.
 const { categories, categoryTitle, categoryPage } = await usePriceCategories();
-const { uzsNote, uzsCredit } = await useUzsPrice();
 
 const rows = computed(() => categories.value.flatMap((category) => {
   const page = categoryPage(category);
@@ -35,12 +35,12 @@ usePageSeo({
       name: `${row.category}: ${row.plan}`,
       price: String(row.amount),
       priceCurrency: "USD",
-      ...(row.page?.perSlide ? {
+      ...(row.page?.unit ? {
         priceSpecification: {
           "@type": "UnitPriceSpecification",
           price: String(row.amount),
           priceCurrency: "USD",
-          referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: "slide" },
+          referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: row.page.unit },
         },
       } : {}),
       itemOffered: {
@@ -56,7 +56,7 @@ usePageSeo({
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-black overflow-hidden">
+  <div class="pricing-page relative min-h-screen bg-black">
 
     <div class="pricing-body relative z-10">
       <div class="vg md:pt-[3.75rem] pt-[1.875rem]">
@@ -72,17 +72,22 @@ usePageSeo({
       </div>
 
       <PricingCards class="pricing-cards" />
-      <p v-if="uzsNote" class="pricing-note">
-        {{ uzsNote }}
-        <a v-if="uzsCredit" href="https://www.exchangerate-api.com" lang="en">Rates By Exchange Rate API</a>
-      </p>
+      <PricingTerms />
 
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Above the cards' row, whose glow room reaches up under it. */
+/* The cards' glow is cut at the page's edges. `clip` where the browser has it:
+   unlike `hidden` it does not make the page a scroll box, so the packages'
+   tabs can stay in view (position: sticky) while a long card scrolls by. */
+.pricing-page {
+  overflow: hidden;
+  overflow: clip;
+}
+
+/* Above the cards, whose glow reaches up under it. */
 .pricing-intro {
   position: relative;
   z-index: 1;
@@ -114,42 +119,17 @@ usePageSeo({
   letter-spacing: var(--type-body-ls);
 }
 
-/* Room under the cards (and the rate line) before the footer. */
+/* Room under the terms before the footer. */
 .pricing-body {
-  /* At least the cards' glow (8rem under them, less the rate line) clear of
-     the footer. */
-  padding-bottom: clamp(6rem, calc(7 * var(--fvw)), 8rem);
+  padding-bottom: clamp(5rem, calc(7 * var(--fvw)), 8rem);
 }
 
 /* Below the title; the cards' glow reaches into the space around them. */
 .pricing-cards {
   margin: clamp(2.5rem, calc(3.5 * var(--fvw)), 4.5rem) 0 0;
 }
-
-/* The rate the so'm amounts use: one quiet line under the cards. */
-.pricing-note {
-  position: relative;
-  z-index: 1;
-  max-width: 68.75rem;
-  margin: 2.5rem auto 0;
-  padding: 0 1.25rem;
-  color: #8f9297;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: var(--type-caption-lh);
-  letter-spacing: var(--type-caption-ls);
-  text-align: center;
-}
-
-.pricing-note a {
-  color: #fff;
-  text-decoration: underline;
-  text-decoration-color: rgb(3 203 0 / 0.7);
-  text-underline-offset: 0.2em;
-}
-
-.pricing-note a:hover,
-.pricing-note a:focus-visible {
-  color: #03cb00;
-}
 </style>
+
+<!-- The titles' look (a service's name, "Before we begin."): not scoped, it is
+     used by two components. -->
+<style src="../assets/css/price-title.css" />

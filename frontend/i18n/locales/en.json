@@ -979,7 +979,45 @@
     }
   },
   "pricing": {
-    "order": "Order",
+    "startProject": "Start project",
+    "notIncluded": "not included in this package",
+    "recommended": "Recommended",
+    "oldPrice": "Old price",
+    "note": "Note",
+    "terms": {
+      "title": "Before we begin.",
+      "eyebrow": "Pricing & project terms.",
+      "items": [
+        {
+          "q": "Pricing built around your project.",
+          "a": "Prices shown are indicative. Your final quote depends on the scope, complexity and specific requirements of your project. We confirm the cost after discussing your brief."
+        },
+        {
+          "q": "70% to get started.",
+          "a": "A 70% advance payment is required to begin work, once the project scope and contract have been agreed."
+        },
+        {
+          "q": "Your timeline. Agreed together.",
+          "a": "Project timelines and delivery dates are agreed individually and confirmed in your contract."
+        },
+        {
+          "q": "FullSpeed-FullCreative — extra.",
+          "a": "Priority delivery and expanded creative development are available through our optional FullSpeed-FullCreative upgrade. Its scope and additional fee are agreed during the briefing and included in your final quote."
+        },
+        {
+          "q": "More services. Better overall value.",
+          "a": "Planning several services? Combining them into one project can offer more favourable pricing. We’ll review your needs during the briefing and prepare a tailored package proposal."
+        },
+        {
+          "q": "Taxes & bank fees.",
+          "a": "All prices exclude applicable taxes and bank fees."
+        },
+        {
+          "q": "For reference only.",
+          "a": "The pricing information on this page does not constitute a public offer. The final scope, price, payment terms and delivery schedule are set out in the signed contract."
+        }
+      ]
+    },
     "categories": {
       "branding": {
         "title": "Branding",
@@ -996,16 +1034,24 @@
       "presentation": {
         "title": "Presentation",
         "description": "Presentation design turns your ideas into clear, well-structured slides that hold the audience’s attention, whether for a sale, a project defence or a public talk. The price is calculated per slide, so the scope fits your needs."
+      },
+      "naming": {
+        "title": "Naming",
+        "description": "Naming is the search for a name that is easy to say and remember, fits your audience and carries the brand’s idea. We start from the brief and the market, offer name directions with the idea behind each and check the shortlist for clashes, domains and social handles."
+      },
+      "visualIdentity": {
+        "title": "Visual identity",
+        "description": "Visual identity is the visual language of a brand: colours, typefaces, graphic elements, imagery and layout rules that make every touchpoint recognisable and consistent. We build it on the brand’s idea and audience and describe it in guidelines your team can follow."
+      },
+      "visualContent": {
+        "title": "Visual content",
+        "description": "Visual content is the pictures and layouts a brand shows every day: posts, stories, covers and banners. Choose ready-made templates in your brand’s style that your team edits itself, or individual designs and campaign visuals made for you."
       }
     },
     "lead": "Our prices are in US dollars and are starting prices: the final price depends on the scope we agree after the brief.",
     "tablePackage": "Package",
     "tablePrice": "Price",
-    "perSlide": "per slide",
-    "uzsMillion": "≈ UZS {amount} million",
-    "uzsThousand": "≈ UZS {amount} thousand",
-    "uzsNote": "Amounts in UZS are approximate, at the Central Bank of Uzbekistan's rate for {date}: 1 USD = {rate} UZS.",
-    "uzsNoteMarket": "Amounts in UZS are approximate, at the exchange rate for {date}: 1 USD = {rate} UZS."
+    "perSlide": "per slide"
   },
   "project": {
     "palette": "Colour palette",

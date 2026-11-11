@@ -4,6 +4,7 @@ import ProjectsShowcase from "~/components/projects/ProjectsShowcase.vue";
 import ServiceTemplate from "~/components/services/ServiceTemplate.vue";
 import OptImage from "~/components/ui/OptImage.vue";
 import { SITE_LOCALES, toSiteLocale } from "~/utils/locales";
+import { priceNumber, priceUnitKey, withPriceChanges } from "~/utils/pricePlans";
 import { loadServiceCopy } from "~/utils/serviceCopy";
 import { serviceBySlug, servicePath, servicesHubPath, serviceByKey } from "~/utils/servicePages";
 import { toggleDetails } from "~/utils/smoothDetails";
@@ -60,14 +61,13 @@ const { data: prices } = await useCmsQuery<{ priceCategories?: PriceListCategory
 );
 
 const formatPrice = (value: number) => `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
-const { uzs, uzsNote, uzsCredit } = await useUzsPrice();
 const plans = computed(() => {
   if (!service.priceCategory) return [];
   const category = prices.value?.data?.priceCategories?.find(
     (item) => item?.title?.trim().toLowerCase() === service.priceCategory!.toLowerCase(),
   );
-  return (category?.pricing ?? [])
-    .map((plan) => ({ name: plan?.title?.trim() || "", amount: Number.parseFloat(String(plan?.price || "").replace(/[^0-9.]/g, "")) }))
+  return withPriceChanges(service.priceCategory, (category?.pricing ?? []).filter((plan): plan is NonNullable<typeof plan> => Boolean(plan)))
+    .map((plan) => ({ name: plan.title?.trim() || "", amount: priceNumber(plan.price) }))
     .filter((plan) => plan.name && Number.isFinite(plan.amount) && plan.amount > 0)
     .sort((a, b) => a.amount - b.amount)
     .map((plan) => ({ ...plan, price: formatPrice(plan.amount) }));
@@ -77,7 +77,7 @@ const plans = computed(() => {
 // and the price itself, in the order of the page's language.
 const priceParts = (price: string) => {
   const marker = "%PRICE%";
-  const template = t(service.priceUnit === "slide" ? "servicesPage.pricePerSlide" : "servicesPage.priceFrom", { price: marker });
+  const template = t(priceUnitKey(service.priceUnit), { price: marker });
   const [before = "", after = ""] = template.split(marker);
   return [
     ...(before.trim() ? [{ text: before.trim(), word: true }, { text: " ", word: false }] : []),
@@ -164,12 +164,12 @@ usePageSeo({
         price: String(plan.amount),
         priceCurrency: "USD",
         // Presentations are priced per slide.
-        ...(service.priceUnit === "slide" ? {
+        ...(service.priceUnit ? {
           priceSpecification: {
             "@type": "UnitPriceSpecification",
             price: String(plan.amount),
             priceCurrency: "USD",
-            referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: "slide" },
+            referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: service.priceUnit },
           },
         } : {}),
         url: `${origin}${localePath("/pricing")}`,
@@ -212,14 +212,12 @@ usePageSeo({
                   <template v-for="(part, index) in priceParts(plan.price)" :key="index">
                     <span v-if="part.word">{{ part.text }}</span><template v-else>{{ part.text }}</template>
                   </template>
-                  <small v-if="uzs(plan.amount)" class="service-plans__uzs">{{ uzs(plan.amount) }}</small>
                 </td>
               </tr>
             </tbody>
           </table>
           <p v-rise class="service-note">
-            {{ [t("servicesPage.pricesNote"), uzsNote].filter(Boolean).join(" ") }}
-            <a v-if="uzsCredit" href="https://www.exchangerate-api.com" class="service-note__credit" lang="en">Rates By Exchange Rate API</a>
+            {{ t("servicesPage.pricesNote") }}
             <NuxtLink :to="localePath('/pricing')">{{ t("servicesPage.allPrices") }}</NuxtLink>
           </p>
         </section>

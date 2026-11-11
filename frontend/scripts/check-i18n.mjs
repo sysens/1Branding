@@ -74,6 +74,18 @@ for (const file of files.filter((name) => name.endsWith(".en.json"))) {
   }
 }
 
+// The /pricing cards' lists (app/content/pricing/<locale>.json): the same
+// services and the same number of items in every language.
+const pricingDir = "app/content/pricing";
+for (const locale of LOCALES) {
+  const target = `${pricingDir}/${locale}.json`;
+  try {
+    compare(target, read(`${pricingDir}/en.json`), read(target), { escapes: false });
+  } catch {
+    problems.push(`${target}: missing`);
+  }
+}
+
 if (problems.length) {
   console.log(problems.join("\n"));
   console.log(`\n${problems.length} problem(s)`);
