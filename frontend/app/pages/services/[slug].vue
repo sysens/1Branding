@@ -19,6 +19,8 @@ import { toggleDetails } from "~/utils/smoothDetails";
 
 const route = useRoute();
 const { t, locale } = useI18n();
+
+const packLabPrototype = usePrototype("packLab");
 const localePath = useLocalePath();
 const origin = useSiteOrigin();
 const siteLocale = computed(() => toSiteLocale(locale.value));
@@ -188,6 +190,12 @@ usePageSeo({
       <div class="edge-gradient edge-gradient-right edge-gradient-soft" />
 
       <div v-if="copy" class="service-page__frame">
+        <!-- PROTOTYPE (utils/prototypes.ts): the 3D packaging lab. (The before/after
+             lens was made for the Branding page, which is ProjectsShowcase now:
+             it is not wired.) -->
+        <ClientOnly v-if="packLabPrototype && service.key === 'packaging'">
+          <LazyPrototypeOnePackLab />
+        </ClientOnly>
         <section v-if="copy.timeline" class="service-section service-timeline-block" aria-labelledby="service-timeline">
           <h2 id="service-timeline" v-blur-reveal class="service-heading">{{ copy.timeline.title }}</h2>
           <p v-rise class="service-timeline">{{ copy.timeline.text }}</p>
