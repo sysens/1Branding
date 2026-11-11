@@ -312,8 +312,12 @@
   gap: calc(14 * var(--u));
 }
 
+/* A hangs from the row's middle line (its at() y): the letter, whose line
+   box is trimmed to 0.82 of its size, is lifted by half that box, so its
+   centre sits on the line at whatever step the letter takes, level with
+   the step cards' centres and B's ring. */
 .audit__end--start {
-  translate: calc(92 * var(--u) - 50%) 0;
+  translate: calc(92 * var(--u) - 50%) calc(-0.41 * var(--letter-a-size));
 }
 
 .audit__end--target {

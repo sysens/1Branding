@@ -19,7 +19,7 @@ const STEPS: Step[] = [
 ];
 // Connectors: A → Audit → Analysis → Strategy → Action → B.
 const LINKS = [
-  "M408 982 C 468 982, 482 952, 545 952",
+  "M408 972 C 468 972, 482 952, 545 952",
   "M703 972 L 802 972",
   "M958 982 C 1012 982, 1004 952, 1057 952",
   "M1214 980 C 1268 980, 1262 952, 1314 952",
@@ -27,7 +27,7 @@ const LINKS = [
 ];
 const DOTS: Array<[number, number, number]> = [
   // [x, y, link index whose start (0) or end (1) it marks]
-  [408, 982, 0], [545, 952, 1], [802, 972, 2], [1057, 952, 3], [1314, 952, 4],
+  [408, 972, 0], [545, 952, 1], [802, 972, 2], [1057, 952, 3], [1314, 952, 4],
 ];
 const ROW_TOP = 870;
 const ROW_LEFT = 250;
@@ -183,7 +183,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
             </g>
           </svg>
 
-          <div class="audit__end audit__end--start" :class="{ 'is-lit': lit >= 1 }" :style="at(259, 925)">
+          <div class="audit__end audit__end--start" :class="{ 'is-lit': lit >= 1 }" :style="at(259, 972)">
             <span class="audit__letter" aria-hidden="true">A</span>
             <span class="audit__label">{{ t("home.audit.current") }}</span>
           </div>
