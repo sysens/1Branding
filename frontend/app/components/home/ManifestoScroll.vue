@@ -6,8 +6,14 @@ type Segment = { key: string; accent?: boolean };
 // Three statements, one screen of scroll each (jsoft.vercel.app pattern): the
 // section is three screens tall and its inner screen is sticky, so scrolling
 // through it swaps the statements in place while a bar at the bottom fills up.
+// The last one ("we build brands that…") settles in the middle. `hold` keeps
+// the screen pinned for that many more screens of scroll, over which it
+// slowly dissolves: the statement blurs and the whole screen, its white too,
+// turns transparent, showing what is pinned behind it
+// (SatisfiedClientsSection), between DISSOLVE's two points of that scroll.
 // Each line is one gradient box, so a green word takes the colour of its
 // position in the line, as in the design.
+const props = withDefaults(defineProps<{ hold?: number }>(), { hold: 0 });
 const MESSAGES: Segment[][][] = [
   [[{ key: "m1Line1" }], [{ key: "m1Line2" }, { key: "m1Line2Accent", accent: true }]],
   [[{ key: "m2Line1" }], [{ key: "m2Line2", accent: true }]],
@@ -23,8 +29,12 @@ const SHIFT_PERCENT = 14;
 // The bar fades out near the end of the scroll: it is gone before the tilted
 // collage below (whose raised corner shows a little early) comes into view.
 const BAR_FADE: [number, number] = [0.85, 0.95];
+// Shares of the held scroll over which the screen dissolves (eased); the
+// collage behind comes forward over the same stretch.
+const DISSOLVE: [number, number] = [0.05, 0.85];
 
 const root = ref<HTMLElement | null>(null);
+const screen = ref<HTMLElement | null>(null);
 const bar = ref<HTMLElement | null>(null);
 const track = ref<HTMLElement | null>(null);
 let messages: HTMLElement[] = [];
@@ -38,17 +48,31 @@ const render = () => {
   frame = 0;
   const section = root.value;
   if (!section) return;
-  const distance = section.offsetHeight - window.innerHeight;
-  const progress = distance > 0 ? clamp01(-section.getBoundingClientRect().top / distance) : 0;
+  // The statements play over the scroll before the held screens.
+  const distance = section.offsetHeight - window.innerHeight * (1 + props.hold);
+  const scrolled = -section.getBoundingClientRect().top;
+  const progress = distance > 0 ? clamp01(scrolled / distance) : 0;
+  const held = props.hold > 0 ? clamp01((scrolled - distance) / (window.innerHeight * props.hold)) : 0;
+  const t = ramp(held, ...DISSOLVE);
+  const gone = t * t * (3 - 2 * t);
   messages.forEach((message, index) => {
     const local = progress * MESSAGES.length - index;
-    const shown = Math.min(ramp(local, 0, FADE), 1 - ramp(local, 1 - FADE, 1));
+    const last = index === MESSAGES.length - 1;
+    // The last statement fades in and rises to the middle, then stays.
+    const shown = last ? ramp(local, 0, FADE) : Math.min(ramp(local, 0, FADE), 1 - ramp(local, 1 - FADE, 1));
+    const travel = last ? Math.min(clamp01(local), 0.5) : clamp01(local);
+    const blur = (1 - shown) * BLUR_PX + (last ? gone * BLUR_PX : 0);
     message.style.opacity = String(shown);
-    message.style.filter = shown >= 1 ? "none" : `blur(${((1 - shown) * BLUR_PX).toFixed(2)}px)`;
-    message.style.transform = `translate3d(0, ${(SHIFT_PERCENT - clamp01(local) * 2 * SHIFT_PERCENT).toFixed(2)}%, 0)`;
+    message.style.filter = blur > 0 ? `blur(${blur.toFixed(2)}px)` : "none";
+    message.style.transform = `translate3d(0, ${(SHIFT_PERCENT - travel * 2 * SHIFT_PERCENT).toFixed(2)}%, 0)`;
   });
   if (bar.value) bar.value.style.transform = `scaleX(${progress.toFixed(4)})`;
   if (track.value) track.value.style.opacity = (1 - ramp(progress, ...BAR_FADE)).toFixed(3);
+  if (screen.value) {
+    screen.value.style.opacity = gone > 0 ? (1 - gone).toFixed(3) : "";
+    // Dissolving, it lets clicks through to what it uncovers.
+    screen.value.style.pointerEvents = gone > 0 ? "none" : "";
+  }
 };
 
 const schedule = () => {
@@ -74,8 +98,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section ref="root" class="manifesto" aria-label="OneBranding">
-    <div class="manifesto__screen">
+  <section
+    ref="root"
+    class="manifesto"
+    :class="{ 'manifesto--hold': hold > 0 }"
+    aria-label="OneBranding"
+    :style="{ '--hold': hold }"
+  >
+    <div ref="screen" class="manifesto__screen">
       <p
         v-for="(lines, index) in MESSAGES"
         :key="index"
@@ -98,8 +128,14 @@ onBeforeUnmount(() => {
 <style scoped>
 .manifesto {
   position: relative;
-  height: 300vh;
+  height: calc((3 + var(--hold, 0)) * 100vh);
   background: #fff;
+}
+
+/* Held, the white is the screen's own, so it dissolves with the screen and
+   the section around it lets what lies behind show. */
+.manifesto--hold {
+  background: transparent;
 }
 
 .manifesto__screen {
@@ -108,6 +144,7 @@ onBeforeUnmount(() => {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
+  background: #fff;
 }
 
 /* Before the script runs only the first statement shows; the script then sets

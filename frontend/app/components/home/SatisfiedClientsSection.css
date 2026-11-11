@@ -8,24 +8,85 @@
   padding-bottom: clamp(3rem, 7vw, 8rem);
 }
 
-.clients-section__gallery {
-  position: relative;
-  z-index: 2;
-  display: flow-root;
-  isolation: isolate;
+/* The manifesto lies over the collage: its last screen dissolves to show
+   the collage behind it (ManifestoScroll.vue, hold). */
+.clients-section__manifesto {
+  z-index: 1;
 }
 
-/* Keep the edge fades upright while the collage underneath remains tilted. */
+/* The stage: it begins where the manifesto's last statement has settled,
+   i.e. two screens before the manifesto's end (its held screen plus its
+   sticky screen), under the manifesto, and adds one screen of scroll (the
+   spacer) during which the collage panel stays pinned behind the dissolving
+   statement and comes forward (SatisfiedClientsSection.vue); then both
+   scroll on together. */
+.clients-section__stage {
+  position: relative;
+  z-index: 0;
+  margin-top: -200vh;
+}
+
+.clients-section__stage-spacer {
+  height: 100vh;
+}
+
+/* The panel covers the whole screen (white, the collage in its middle) and
+   keeps the wide tilted collage within the screen's sides. */
+.clients-section__gallery {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: clip;
+  isolation: isolate;
+  background: #fff;
+}
+
+/* The collage grows from a little smaller to its size as it is uncovered,
+   as if coming forward from behind (the script sets its scale). */
+.clients-section__emerge {
+  will-change: scale;
+}
+
+/* No scroll-driven motion: the panel simply follows the statements. */
+@media (prefers-reduced-motion: reduce) {
+  .clients-section__stage {
+    margin-top: 0;
+  }
+
+  .clients-section__stage-spacer {
+    display: none;
+  }
+
+  .clients-section__gallery {
+    position: relative;
+    min-height: 0;
+  }
+
+  .clients-section__emerge {
+    will-change: auto;
+  }
+}
+
+/* Keep the edge fades upright while the collage underneath remains tilted.
+   They ease in and out (smoothstep), so neither end shows as a line. */
 .clients-section__gallery::after {
   --edge-fade-width: clamp(2.25rem, 10vw, 10rem);
+  --edge-fade: #fff, rgb(255 255 255 / .972) 10%, rgb(255 255 255 / .896) 20%,
+    rgb(255 255 255 / .784) 30%, rgb(255 255 255 / .648) 40%, rgb(255 255 255 / .5) 50%,
+    rgb(255 255 255 / .352) 60%, rgb(255 255 255 / .216) 70%, rgb(255 255 255 / .104) 80%,
+    rgb(255 255 255 / .028) 90%, rgb(255 255 255 / 0);
   content: "";
   position: absolute;
   inset: -4rem 0;
   z-index: 4;
   pointer-events: none;
   background:
-    linear-gradient(to right, #fff, rgb(255 255 255 / .8) 20%, rgb(255 255 255 / 0)) left / var(--edge-fade-width) 100% no-repeat,
-    linear-gradient(to left, #fff, rgb(255 255 255 / .8) 20%, rgb(255 255 255 / 0)) right / var(--edge-fade-width) 100% no-repeat;
+    linear-gradient(to right, var(--edge-fade)) left / var(--edge-fade-width) 100% no-repeat,
+    linear-gradient(to left, var(--edge-fade)) right / var(--edge-fade-width) 100% no-repeat;
 }
 
 .clients-section__collage {
