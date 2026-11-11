@@ -31,8 +31,8 @@
           </a>
 
           <!-- The language switcher: the trigger is a nav item showing the
-               current language; the list, a dark glass panel, shows each
-               language's code, its own name and a check on the current one.
+               current language's flag; the list, a dark glass panel, shows
+               each language's flag, its own name and a check on the current one.
                Escape or a click outside closes it. -->
           <div ref="langRoot" class="lang-switch" @keydown.esc="closeDeskLang(true)" @focusout="onLangFocusOut">
             <button
@@ -47,7 +47,7 @@
               @keydown.down.prevent="openDeskLang"
               @keydown.up.prevent="openDeskLang"
             >
-              <span>{{ lang.toUpperCase() }}</span>
+              <span class="lang-switch__flag"><LangFlag :code="lang" /></span>
               <svg class="lang-switch__chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
                 <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
               </svg>
@@ -68,7 +68,7 @@
                   :aria-current="code === lang ? 'true' : undefined"
                   @click="onLangLink($event, code)"
                 >
-                  <span class="lang-switch__code">{{ code }}</span>
+                  <span class="lang-switch__code"><LangFlag :code="code" /></span>
                   <span class="lang-switch__name">{{ LANGUAGE_NAMES[code] }}</span>
                   <svg class="lang-switch__check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
                     <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -232,7 +232,10 @@
                     class="type-h4 w-full px-[1.25rem] flex pb-[1.5625rem] items-center justify-between text-white align-middle"
                     @click="isLangOpen = !isLangOpen"
                   >
-                    <span>{{ lang }}</span>
+                    <span class="flex items-center gap-[0.75rem]">
+                      <span class="block w-[1.75rem] h-[1.1667rem] overflow-hidden rounded-[0.25rem]"><LangFlag :code="lang" /></span>
+                      {{ LANGUAGE_NAMES[lang] }}
+                    </span>
                     <svg
                       class="w-5 h-5 transition-transform duration-200"
                       :class="isLangOpen ? 'rotate-180' : 'rotate-0'"
@@ -266,10 +269,13 @@
                           :href="langHref(code)"
                           :hreflang="code"
                           :lang="code"
-                          class="type-h4 block w-full px-[1.25rem] py-[0.875rem] text-start text-white align-middle hover:bg-white/5"
+                          class="type-h4 flex w-full items-center gap-[0.75rem] px-[1.25rem] py-[0.875rem] text-start text-white align-middle hover:bg-white/5"
                           :aria-current="code === lang ? 'true' : undefined"
                           @click="onLangLink($event, code)"
-                        >{{ code }}</a>
+                        >
+                          <span class="block w-[1.75rem] h-[1.1667rem] overflow-hidden rounded-[0.25rem]"><LangFlag :code="code" /></span>
+                          {{ LANGUAGE_NAMES[code] }}
+                        </a>
                       </template>
                     </div>
                   </transition>
@@ -288,6 +294,7 @@
 import { watch, onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
 import { LANGUAGE_NAMES, SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
+import LangFlag from "~/components/ui/LangFlag.vue";
 import { serviceBySlug, servicePath } from "~/utils/servicePages";
 
 type AppLocale = SiteLocale;
@@ -567,10 +574,21 @@ onBeforeUnmount(() => {
 
 /* The language switcher: the trigger is a nav item (green with its chevron
    turned while open); the list is a dark glass panel under the header, each
-   option showing its code, its own name and a check on the current one. The
+   option showing its flag, its own name and a check on the current one. The
    options come in one after another as it opens. */
 .lang-switch {
   position: relative;
+}
+
+/* The current language's flag, about the height of the nav's capitals. */
+.lang-switch__flag {
+  display: block;
+  flex: none;
+  width: 1.3125rem;
+  height: 0.875rem;
+  overflow: hidden;
+  border-radius: 0.1875rem;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
 }
 
 .lang-switch__chevron {
@@ -640,26 +658,29 @@ onBeforeUnmount(() => {
   color: #fff;
 }
 
+/* Each language's flag, a little dimmed but on the current one (ringed in
+   green) and the one under the pointer. */
 .lang-switch__code {
-  display: grid;
+  display: block;
   flex: none;
-  place-items: center;
-  width: 1.75rem;
-  height: 1.25rem;
-  border-radius: 0.3125rem;
-  background: rgb(255 255 255 / 0.06);
+  width: 1.5rem;
+  height: 1rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
   color: #9aa19c;
-  font-size: var(--type-label-size);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+  opacity: 0.8;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lang-switch__item:hover .lang-switch__code,
+.lang-switch__item:focus-visible .lang-switch__code {
+  opacity: 1;
 }
 
 .lang-switch__item.is-active .lang-switch__code {
-  background: rgb(3 203 0 / 0.16);
-  color: #03cb00;
+  opacity: 1;
+  box-shadow: 0 0 0 1.5px #03cb00;
 }
 
 .lang-switch__name {
