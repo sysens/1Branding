@@ -1,5 +1,6 @@
 import Lenis from "lenis"
 import { pendingLazySectionsOnScreen } from "~/utils/lazySections"
+import { VIEW_TRANSITION_CLASS, VIEW_TRANSITION_END } from "~/utils/viewTransition"
 
 // ScrollTrigger is loaded on demand: a static import here pulled GSAP and
 // ScrollTrigger (~40 KB compressed) into the entry chunk, i.e. into the
@@ -141,13 +142,18 @@ export default defineNuxtPlugin((nuxtApp) => {
   // takes its picture of the new page as soon as page:finish lets it, so the
   // scroll has to be in place right then, not two frames later, or the
   // picture shows the new page at the old position and it jumps at the end.
+  // <html> is marked while it runs, and its end announced, for animations
+  // that should wait for it (utils/viewTransition.ts).
   let viewTransition = false
   nuxtApp.hook("page:view-transition:start", (transition) => {
     viewTransition = true
+    root.classList.add(VIEW_TRANSITION_CLASS)
     transition.finished.finally(() => {
       viewTransition = false
       lenis.resize()
       scrollTrigger?.refresh()
+      root.classList.remove(VIEW_TRANSITION_CLASS)
+      window.dispatchEvent(new Event(VIEW_TRANSITION_END))
     })
   })
 

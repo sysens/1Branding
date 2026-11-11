@@ -18,6 +18,10 @@ import { servicePath } from "~/utils/servicePages";
  * the edge of the screen nearest its place (see gridEntry). A click, a key or a scroll skips to the grid; it does not
  * play for visitors who ask for less motion, nor when the page is reopened
  * further down. The last tile leads to the showcase.
+ * Arriving from another page, it starts once the page transition is over (it
+ * played half hidden under it before), and input in its first second is not
+ * taken as a skip: the momentum of a scroll on the page before (a touchpad's)
+ * went on sending wheel events and skipped it the moment it began.
  */
 const props = defineProps<{ projects: ProjectWallItem[]; category: string }>();
 
@@ -209,14 +213,16 @@ useGsapContext(root, ({ gsap, el }) => {
   }
 
   // A click, a key or a scroll: straight to the grid coming in.
+  const SKIP_AFTER = 1;
   skip = () => {
-    // Not while the loader is still up: the film has not begun.
-    if (!started) return;
+    // Not while the loader is still up: the film has not begun; nor in its
+    // first second (the tail of a scroll on the page before).
+    if (!started || timeline.time() < SKIP_AFTER) return;
     if (timeline.time() < GRID_AT - 0.05) timeline.seek(GRID_AT - 0.05);
     stopListening();
   };
   SKIP_EVENTS.forEach((name) => window.addEventListener(name, skip!, { passive: true }));
-});
+}, { afterViewTransition: true });
 </script>
 
 <template>
