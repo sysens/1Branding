@@ -299,6 +299,76 @@ const submit = async (ip, payload) => {
   const postUz = posts[0] && await news.findOne({ documentId: posts[0].documentId, locale: 'uz' });
   check('blog: article published once in en, ru and uz with its picture', posts.length === 1 && posts[0].image?.id === fileId && postUz?.title === 'E2E maqola' && postUz?.slug === 'e2e-article', JSON.stringify({ n: posts.length, image: posts[0]?.image?.id, uz: postUz?.title }));
 
+  // Package prices: a package still at its old price gets the new one and the
+  // price it is crossed out from, once; an edited price and the other packages
+  // are left alone; the site reads oldPrice over GraphQL.
+  const { applyPriceChanges } = require(path.join(appDir, 'dist/src/utils/plan-prices.js'));
+  const priceList = strapi.documents('api::price-category.price-category');
+  const branding = await priceList.create({ locale: 'en', data: { title: 'Branding', pricing: [
+    { title: 'Launch Base', price: '$1900.00' },
+    { title: 'One Pro', price: '$2900.00', description: 'Kept.' },
+    { title: 'Global ultimate', price: '$7000.00' },
+  ] } });
+  const priceChanges = [
+    { category: 'branding', plan: 'one pro', from: 2900, price: '$5400.00', oldPrice: '$12750.00' },
+    { category: 'Branding', plan: 'Global ultimate', from: 5900, price: '$25000.00' },
+  ];
+  const changedFirst = await applyPriceChanges(strapi, priceChanges);
+  const changedAgain = await applyPriceChanges(strapi, priceChanges);
+  const priced = await priceList.findOne({ documentId: branding.documentId, locale: 'en', populate: ['pricing'] });
+  const packages = Object.fromEntries((priced?.pricing ?? []).map((item) => [item.title, item]));
+  check('prices: a package at its old price gets the new one and the crossed-out price, once', changedFirst === 1 && changedAgain === 0 && packages['One Pro']?.price === '$5400.00' && packages['One Pro']?.oldPrice === '$12750.00' && packages['One Pro']?.description === 'Kept.' && priced?.pricing?.length === 3, JSON.stringify({ changedFirst, changedAgain, pro: packages['One Pro'] }));
+  check('prices: an edited price and the other packages are left alone', packages['Global ultimate']?.price === '$7000.00' && !packages['Global ultimate']?.oldPrice && packages['Launch Base']?.price === '$1900.00', JSON.stringify({ top: packages['Global ultimate']?.price, base: packages['Launch Base']?.price }));
+  res = await fetch(BASE + '/graphql', { method: 'POST', body: JSON.stringify({ query: '{ priceCategories(locale: "en") { title pricing { title price oldPrice } } }' }), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token.accessKey } });
+  const priceGql = (await res.json().catch(() => ({}))).data?.priceCategories?.find((item) => item.title === 'Branding');
+  check('prices: oldPrice over GraphQL', priceGql?.pricing?.find((item) => item.title === 'One Pro')?.oldPrice === '$12750.00', JSON.stringify(priceGql).slice(0, 200));
+
+  // A renamed package with a companion: the logo's "Individual" becomes
+  // "Standard" and "One Pro" is added with its texts, once; a package an editor
+  // removed afterwards is not added back.
+  const logoList = await priceList.create({ locale: 'en', data: { title: 'Logo', pricing: [{ title: 'Individual', price: '$900.00', priceText: 'Logo text.', description: 'Logo description.' }] } });
+  const logoChanges = [{ category: 'Logo', plan: 'Individual', from: 900, price: '$560.00', title: 'Standard', add: [{ title: 'One Pro', price: '$1500.00' }] }];
+  const logoFirst = await applyPriceChanges(strapi, logoChanges);
+  const logoAgain = await applyPriceChanges(strapi, logoChanges);
+  let logoPriced = await priceList.findOne({ documentId: logoList.documentId, locale: 'en', populate: ['pricing'] });
+  const logoPlans = (logoPriced?.pricing ?? []).map((item) => `${item.title} ${item.price}`);
+  const logoPro = (logoPriced?.pricing ?? []).find((item) => item.title === 'One Pro');
+  check('prices: a package is renamed and its companion added with its texts, once', logoFirst === 2 && logoAgain === 0 && logoPlans.join() === 'Standard $560.00,One Pro $1500.00' && logoPro?.description === 'Logo description.' && logoPro?.priceText === 'Logo text.', JSON.stringify({ logoFirst, logoAgain, logoPlans }));
+  await priceList.update({ documentId: logoList.documentId, locale: 'en', data: { pricing: (logoPriced?.pricing ?? []).filter((item) => item.title !== 'One Pro').map((item) => ({ id: item.id, title: item.title, price: item.price })) } });
+  await applyPriceChanges(strapi, logoChanges);
+  logoPriced = await priceList.findOne({ documentId: logoList.documentId, locale: 'en', populate: ['pricing'] });
+  check('prices: a package removed by an editor is not added back', (logoPriced?.pricing ?? []).map((item) => item.title).join() === 'Standard', JSON.stringify((logoPriced?.pricing ?? []).map((item) => item.title)));
+
+  // The real list of changes, on a packaging entry as it was: "Advanced" becomes
+  // "Leader product" and "All in one" "One Pro", each with its new price.
+  const CHANGES = require(path.join(appDir, 'dist/src/utils/plan-prices.js')).CHANGES.filter((change) => change.category === 'Packaging');
+  const packagingList = await priceList.create({ locale: 'en', data: { title: 'Packaging', pricing: [{ title: 'Advanced', price: '$500.00', description: 'Pack.' }, { title: 'All in one', price: '$1900.00', description: 'Pack.' }] } });
+  const packagingFirst = await applyPriceChanges(strapi, CHANGES);
+  const packagingAgain = await applyPriceChanges(strapi, CHANGES);
+  const packagingPriced = await priceList.findOne({ documentId: packagingList.documentId, locale: 'en', populate: ['pricing'] });
+  const packagingPlans = (packagingPriced?.pricing ?? []).map((item) => `${item.title} ${item.price}`).join();
+  check('prices: packaging gets "Leader product" and "One Pro" at their new prices, once', packagingFirst === 2 && packagingAgain === 0 && packagingPlans === 'Leader product $17200.00,One Pro $1650.00', JSON.stringify({ packagingFirst, packagingAgain, packagingPlans }));
+
+  // A service new to the price list: created on boot, in English, with its
+  // packages, once; applying again changes nothing; one an editor removes is
+  // not created again.
+  const { applyCategoryAdditions, ADDED_CATEGORIES } = require(path.join(appDir, 'dist/src/utils/plan-prices.js'));
+  const addedAgain = await applyCategoryAdditions(strapi, ADDED_CATEGORIES);
+  const addedServices = [];
+  for (const added of ADDED_CATEGORIES) {
+    const found = await priceList.findMany({ locale: 'en', filters: { title: added.category }, populate: ['pricing'] });
+    addedServices.push(`${added.category}: ${found.length} / ${(found[0]?.pricing ?? []).map((item) => `${item.title} ${item.price}`).join()}`);
+  }
+  const expectedServices = ADDED_CATEGORIES.map((added) => `${added.category}: 1 / ${added.plans.map((plan) => `${plan.title} ${plan.price}`).join()}`);
+  check('prices: the new services are created on boot with their packages, once', addedAgain === 0 && ADDED_CATEGORIES.length === 3 && addedServices.join('|') === expectedServices.join('|'), JSON.stringify({ addedAgain, addedServices }));
+  const namingEntries = await priceList.findMany({ locale: 'en', filters: { title: 'Naming' }, populate: ['pricing'] });
+  res = await fetch(BASE + '/graphql', { method: 'POST', body: JSON.stringify({ query: '{ priceCategories(locale: "en") { title pricing { title price } } }' }), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token.accessKey } });
+  const namingGql = (await res.json().catch(() => ({}))).data?.priceCategories?.find((item) => item.title === 'Naming');
+  check('prices: the added service over GraphQL', namingGql?.pricing?.length === 3, JSON.stringify(namingGql));
+  await priceList.delete({ documentId: namingEntries[0].documentId });
+  const addedAfterRemoval = await applyCategoryAdditions(strapi, ADDED_CATEGORIES);
+  check('prices: a service an editor removed is not added back', addedAfterRemoval === 0 && (await priceList.findMany({ locale: 'en', filters: { title: 'Naming' } })).length === 0, String(addedAfterRemoval));
+
   await app.destroy();
   const failed = results.filter((x) => !x.ok).length;
   console.log(`\n${results.length - failed}/${results.length} passed`);

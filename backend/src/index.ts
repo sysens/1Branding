@@ -4,6 +4,7 @@ import { removeOrphanContactUploads } from "./utils/contact-uploads";
 import { ensureNewsTranslations } from "./utils/news-translations";
 import { ensureProjectCopy } from "./utils/project-copy";
 import { ensureBlogArticles, ensureUzbekLocale } from "./utils/blog-articles";
+import { ensurePlanPrices } from "./utils/plan-prices";
 import { assertDurableStorage } from "./utils/storage-guard";
 
 const isApiSingleType = (
@@ -138,6 +139,9 @@ export default {
       .catch((error) => {
         strapi.log.error(`Blog articles were not published: ${error instanceof Error ? error.message : String(error)}`);
       });
+    await ensurePlanPrices(strapi).catch((error) => {
+      strapi.log.error(`Package prices were not updated: ${error instanceof Error ? error.message : String(error)}`);
+    });
 
     // Contact-form uploads never attached to a submission are deleted hourly.
     strapi.cron.add({

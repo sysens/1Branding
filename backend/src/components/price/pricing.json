@@ -11,6 +11,9 @@
     "price": {
       "type": "string"
     },
+    "oldPrice": {
+      "type": "string"
+    },
     "priceText": {
       "type": "string"
     },

@@ -372,6 +372,7 @@ export interface PricePricing extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
+    oldPrice: Schema.Attribute.String;
     price: Schema.Attribute.String;
     priceText: Schema.Attribute.String;
     title: Schema.Attribute.String;
