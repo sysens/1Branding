@@ -33,8 +33,10 @@ const s10 = computed<SectionBlock | null>(() => {
 
 <template>
   <section class="brand-identity-feature">
-    <IdentityReveal />
-    <BrandGallery :title="s10?.title" :description="s10?.description" />
+    <!-- The statement lies over the gallery: its last screen scrolls up off
+         it, uncovering the gallery standing still beneath (like the footer). -->
+    <IdentityReveal class="brand-identity-feature__over" />
+    <BrandGallery :title="s10?.title" :description="s10?.description" under />
     <PartsAsOne />
   </section>
 </template>

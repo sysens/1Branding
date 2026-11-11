@@ -6,3 +6,8 @@
   isolation: isolate;
   background: #fff;
 }
+
+/* Above the gallery that waits under its last screen (BrandGallery, under). */
+.brand-identity-feature__over {
+  z-index: 1;
+}

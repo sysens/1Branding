@@ -9,8 +9,13 @@ const props = withDefaults(
   defineProps<{
     title?: string | null;
     description?: string | null;
+    /** The section waits under the last screen of the one before it, which
+     *  scrolls up off it (that one must lie above, see InfoOnPicture.css):
+     *  for that screen of scroll it stands still and is uncovered from the
+     *  bottom up, out of a dark veil, like the footer; then the row moves. */
+    under?: boolean;
   }>(),
-  { title: null, description: null },
+  { title: null, description: null, under: false },
 );
 
 const { t } = useI18n();
@@ -41,10 +46,14 @@ const trackUnits = computed(() =>
 
 // jsoft.vercel.app's "Selected work": the section is as tall as the horizontal
 // travel needs, its screen is sticky, and scrolling down slides the row to the
-// left while the bar fills.
+// left while the bar fills. Under the section before it (`under`), the first
+// screen of that scroll is the one in which it is uncovered: the row waits,
+// and the veil (VEIL at first) clears as the screen above lifts off.
+const VEIL = 0.5;
 const root = ref<HTMLElement | null>(null);
 const track = ref<HTMLElement | null>(null);
 const bar = ref<HTMLElement | null>(null);
+const veil = ref<HTMLElement | null>(null);
 let frame = 0;
 let stop: (() => void) | undefined;
 
@@ -56,10 +65,16 @@ const render = () => {
   // The row ends with a spacer as wide as the end padding.
   const end = row.lastElementChild as HTMLElement | null;
   const travel = end ? Math.max(0, end.offsetLeft + end.offsetWidth - row.clientWidth) : 0;
-  const distance = section.offsetHeight - window.innerHeight;
-  const progress = distance > 0 ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / distance)) : 0;
+  const uncover = props.under ? window.innerHeight : 0;
+  const scrolled = -section.getBoundingClientRect().top;
+  const distance = section.offsetHeight - window.innerHeight - uncover;
+  const progress = distance > 0 ? Math.min(1, Math.max(0, (scrolled - uncover) / distance)) : 0;
   row.style.transform = `translate3d(${(-travel * progress).toFixed(1)}px, 0, 0)`;
   if (bar.value) bar.value.style.transform = `scaleX(${progress.toFixed(4)})`;
+  if (veil.value && uncover) {
+    const lifted = Math.min(1, Math.max(0, scrolled / uncover));
+    veil.value.style.opacity = (VEIL * (1 - lifted) * (1 - lifted)).toFixed(3);
+  }
 };
 
 const schedule = () => {
@@ -84,7 +99,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section ref="root" class="gallery" :style="{ '--track-units': trackUnits.toFixed(3) }">
+  <section
+    ref="root"
+    class="gallery"
+    :class="{ 'gallery--under': under }"
+    :style="{ '--track-units': trackUnits.toFixed(3) }"
+  >
     <div class="gallery__screen">
       <h2 class="gallery__heading">
         <span v-blur-reveal class="gallery__heading-line">{{ heading.lead }}</span>
@@ -117,6 +137,8 @@ onBeforeUnmount(() => {
         <div class="gallery__progress-line"><div ref="bar" class="gallery__progress-fill" /></div>
         <span class="gallery__progress-hint">{{ $t("home.gallery.hint") }}</span>
       </div>
+
+      <div v-if="under" ref="veil" class="gallery__veil" aria-hidden="true" />
     </div>
   </section>
 </template>
@@ -163,6 +185,26 @@ onBeforeUnmount(() => {
   position: relative;
   height: calc(100vh + var(--travel) * 1.1);
   background: #fff;
+}
+
+/* Under the section before it: it starts a screen higher, behind that
+   section's last screen, and adds that screen to its own scroll (the one in
+   which it stands still and is uncovered). */
+.gallery--under {
+  z-index: 0;
+  height: calc(200vh + var(--travel) * 1.1);
+  margin-top: -100vh;
+}
+
+/* Darkens the screen while it is still under the section above; the script
+   clears it as that section lifts off (none without the script). */
+.gallery__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .gallery__screen {
@@ -309,9 +351,15 @@ onBeforeUnmount(() => {
 
 /* No scroll-driven motion: an ordinary section whose row scrolls sideways. */
 @media (prefers-reduced-motion: reduce) {
-  .gallery {
+  .gallery,
+  .gallery--under {
     height: auto;
+    margin-top: 0;
     padding-block: 5rem;
+  }
+
+  .gallery__veil {
+    display: none;
   }
 
   .gallery__screen {
