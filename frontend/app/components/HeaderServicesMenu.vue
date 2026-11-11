@@ -7,8 +7,9 @@ import { toSiteLocale } from "~/utils/locales";
 // The header's "Services" item and its giant menu (after slidor.agency's): a
 // wide panel under the header with a large picture on the left and the twelve
 // services in two columns on the right. Hovering (or focusing) a service shows
-// its picture; the panel opens on hover or click and closes a moment after the
-// pointer leaves both, on Escape, or on navigation.
+// its picture. The panel opens on a click (or Enter / Space) on "Services",
+// not on hover, and closes on another click on it, a click or focus anywhere
+// outside the item and its panel, Escape, or navigation.
 
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -26,35 +27,58 @@ const services = computed(() => SERVICE_CATALOG.map((service) => ({
 
 const open = ref(false);
 const active = ref(SERVICE_CATALOG[1]!.id);
-let closer: ReturnType<typeof setTimeout> | undefined;
+const root = ref<HTMLElement | null>(null);
+const trigger = ref<HTMLButtonElement | null>(null);
+const panel = ref<HTMLElement | null>(null);
 
-const show = () => {
-  clearTimeout(closer);
-  open.value = true;
-};
-const hideSoon = () => {
-  clearTimeout(closer);
-  closer = setTimeout(() => { open.value = false; }, 160);
-};
 const hide = () => {
-  clearTimeout(closer);
   open.value = false;
 };
 
+// The panel is in <body> (see the template), so "inside" is the item or the
+// panel.
+const isInside = (target: EventTarget | null) =>
+  target instanceof Node && Boolean(root.value?.contains(target) || panel.value?.contains(target));
+const onPointerDown = (event: PointerEvent) => {
+  if (!isInside(event.target)) hide();
+};
+const onFocusIn = (event: FocusEvent) => {
+  if (!isInside(event.target)) hide();
+};
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.key !== "Escape") return;
+  hide();
+  trigger.value?.focus();
+};
+
+// Listening only while open.
+const listen = (on: boolean) => {
+  if (on) {
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("keydown", onKeyDown);
+  } else {
+    document.removeEventListener("pointerdown", onPointerDown, true);
+    document.removeEventListener("focusin", onFocusIn);
+    document.removeEventListener("keydown", onKeyDown);
+  }
+};
+watch(open, listen);
+
 watch(() => route.fullPath, hide);
-onBeforeUnmount(() => clearTimeout(closer));
+onBeforeUnmount(() => listen(false));
 </script>
 
 <template>
-  <div class="svc" @mouseenter="show" @mouseleave="hideSoon" @keydown.esc="hide">
+  <div ref="root" class="svc">
     <button
+      ref="trigger"
       type="button"
       class="svc__trigger"
       :class="{ 'is-open': open }"
       :aria-expanded="open"
       aria-controls="services-menu"
-      @click="open ? hide() : show()"
-      @focus="show"
+      @click="open = !open"
     >
       <span class="svc__label">
         <span>{{ t("nav.services") }}</span>
@@ -70,7 +94,7 @@ onBeforeUnmount(() => clearTimeout(closer));
       <div v-show="open" class="svc__scrim" aria-hidden="true" />
     </Transition>
     <Transition name="svc-panel">
-      <div v-show="open" id="services-menu" class="svc__panel" @mouseenter="show" @mouseleave="hideSoon">
+      <div v-show="open" id="services-menu" ref="panel" class="svc__panel">
         <div class="svc__picture" aria-hidden="true">
           <img
             v-for="service in services"
@@ -171,16 +195,18 @@ onBeforeUnmount(() => clearTimeout(closer));
   transform: translateY(0);
 }
 
-/* The design's "Services" has no arrow; the label still rolls on hover. */
+/* The chevron says "Services" opens a menu (as the language switcher's
+   does, at its size); it turns while the menu is open. */
 .svc__chevron {
-  display: none;
-  width: 1rem;
-  height: 1rem;
+  flex: none;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-left: -0.15rem;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .svc__trigger.is-open .svc__chevron {
