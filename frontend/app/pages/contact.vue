@@ -9,7 +9,6 @@ import Locations from "~/components/contacts/Locations.vue";
 import MovementFooter from "~/components/contacts/MovementFooter.vue";
 
 definePageMeta({ footer: false });
-const mascotPrototype = usePrototype("mascot");
 
 
 const { t } = useI18n();
@@ -110,11 +109,6 @@ onMounted(async () => {
         <ContactHero />
 
         <ConnectMarquee />
-
-        <!-- PROTOTYPE (utils/prototypes.ts): the ONE mark as a 3D guide. -->
-        <ClientOnly v-if="mascotPrototype">
-          <LazyPrototypeOneMascot />
-        </ClientOnly>
 
         <div class="md:px-30px px-[1.25rem] containerr">
           <Locations />

@@ -17,10 +17,6 @@ import type { LandingMedia } from "~/types/landingPayload";
 // themselves (utils/lazySections.ts).
 const LAZY_HYDRATION = { rootMargin: "600px 0px" };
 
-// PROTOTYPE "2500 → ONE" hero (components/home/HeroOneAssembly.vue), switched
-// in utils/prototypes.ts; ?hero=classic shows the classic hero for comparison.
-const heroOnePrototype = usePrototype("hero");
-
 const cmsMedia = useCmsMedia();
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -28,9 +24,6 @@ const { landingPage, seo: landingSeo } = await useLandingPayload();
 useHomePageReady();
 const pageRoot = ref<HTMLElement | null>(null);
 useAmbientSurfaces(pageRoot);
-const heroOne = computed(() => heroOnePrototype.value && route.query.hero !== "classic");
-// The wall dims only once the mark has drawn its first frame (no WebGL: no dim).
-const heroOneReady = ref(false);
 
 const brandCollageRows = computed(() => {
   const collage = landingPage.value?.brandCollage;
@@ -82,13 +75,9 @@ usePageSeo({
       <div class="home-page-content relative">
         <HeroClientsReveal>
           <template #hero>
-            <div class="hero-wall pointer-events-none absolute inset-0 top-[-250px] z-0" :class="{ 'hero-wall--dim': heroOne && heroOneReady }">
+            <div class="pointer-events-none absolute inset-0 top-[-250px] z-0">
               <LogoMarquee direction="vertical" :rows="15" :duration-seconds="120" :as-background="true" />
             </div>
-            <div class="home-hero-shade" aria-hidden="true" />
-            <ClientOnly v-if="heroOne">
-              <LazyHomeHeroOneAssembly @ready="heroOneReady = true" />
-            </ClientOnly>
             <div class="relative">
               <div class="pt-[1.875rem] md:pt-10" />
               <section class="leading-target home-leading">
@@ -140,13 +129,3 @@ usePageSeo({
 </template>
 
 <style scoped src="../assets/css/home-page.css" />
-
-<style scoped>
-/* PROTOTYPE "2500 → ONE": the logo wall steps back behind the assembled mark. */
-.hero-wall {
-  transition: filter 1.2s ease;
-}
-.hero-wall--dim {
-  filter: brightness(0.3) saturate(0.7);
-}
-</style>
