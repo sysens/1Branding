@@ -1,12 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { ADDED_CATEGORIES, PLAN_COVERAGE, PRICE_CHANGES, PRICE_LIST_LENGTH, categoryKey, coveredItems, dollars, isFixedPrice, missingCategories, planKey, planTone, priceNumber, priceUnitKey, warningItems, wasPrice, withPriceChanges } from "../app/utils/pricePlans";
+import { ADDED_CATEGORIES, PLAN_COVERAGE, PRICE_CHANGES, PRICE_LIST_LENGTH, categoryKey, coveredItems, dollars, isFixedPrice, isSupersededDescription, missingCategories, planKey, planTone, priceNumber, priceUnitKey, warningItems, wasPrice, withPriceChanges } from "../app/utils/pricePlans";
 import { SERVICE_PAGES } from "../app/utils/servicePages";
 import { ADDED_CATEGORIES as BACKEND_ADDED, CHANGES as BACKEND_CHANGES } from "../../backend/src/utils/plan-prices";
 
 const lists = (locale: string): Record<string, string[]> =>
   JSON.parse(readFileSync(path.join(import.meta.dir, "..", "app/content/pricing", `${locale}.json`), "utf8"));
+
+type PlanTexts = Record<string, Record<string, { tagline: string; items: string[]; text: string }>>;
+const planTexts = (locale: string): PlanTexts =>
+  JSON.parse(readFileSync(path.join(import.meta.dir, "..", "app/content/pricing-plans", `${locale}.json`), "utf8"));
 
 describe("price packages", () => {
   test("every package has its place among its service's ten items", () => {
@@ -194,6 +198,43 @@ describe("price packages", () => {
         expect(categories[categoryKey(category)]?.description).toBeTruthy();
       }
     }
+  });
+
+  test("Branding's and Logo's packages have texts of their own in every language", () => {
+    const en = planTexts("en");
+    expect(Object.keys(en).sort()).toEqual(["branding", "logo"]);
+    for (const locale of ["en", "ru", "uz"]) {
+      const copy = planTexts(locale);
+      for (const [category, plans] of Object.entries(en)) {
+        // Every package of the service (the names the price changes leave in the CMS) has an entry.
+        const named = Object.keys(PLAN_COVERAGE[category]!);
+        expect(Object.keys(plans).sort()).toEqual([...named].sort());
+        for (const [plan, own] of Object.entries(plans)) {
+          const there = copy[category]?.[plan];
+          expect(there?.tagline?.trim()).toBeTruthy();
+          expect(there?.text?.trim()).toBeTruthy();
+          // The same list, item for item, in every language: none empty, none twice.
+          expect(there?.items).toHaveLength(own.items.length);
+          expect(there!.items.every((item) => item.trim().length > 0)).toBe(true);
+          expect(new Set(there!.items).size).toBe(own.items.length);
+          // A package's key is how the cards look it up.
+          expect(plan).toBe(planKey(plan));
+        }
+      }
+    }
+  });
+
+  test("the CMS's first descriptions of Branding and Logo give way to the site's, an editor's do not", () => {
+    // The CMS keeps a line break between the sentences and one at the end.
+    const branding = "Branding is a comprehensive development of your business as a strong and recognizable brand.\nIt includes strategy, positioning, logo, corporate identity, and the entire visual system that builds trust and sets you apart from competitors.\n";
+    expect(isSupersededDescription("Branding", branding)).toBe(true);
+    expect(isSupersededDescription(" branding ", `  ${branding.replace("\n", "  ")}`)).toBe(true);
+    // The same words under another service, or edited: shown as they are.
+    expect(isSupersededDescription("Logo", branding)).toBe(false);
+    expect(isSupersededDescription("Branding", `${branding} Ask us.`)).toBe(false);
+    expect(isSupersededDescription("Branding", "")).toBe(false);
+    expect(isSupersededDescription("Packaging", null)).toBe(false);
+    expect(isSupersededDescription("Logo", "Logo design is the creation of a brand’s key symbol, which forms the first impression and sets the visual direction for the entire identity. We create logos based on strategy and positioning so that they are not only aesthetically pleasing but also recognizable, relevant, and enduring.\n")).toBe(true);
   });
 
   test("the backend creates the same services in the CMS", () => {

@@ -1,6 +1,6 @@
 import { SERVICE_PAGES, servicePath } from "~/utils/servicePages";
 import { toSiteLocale } from "~/utils/locales";
-import { categoryKey, dollars, missingCategories, priceNumber, wasPrice, withPriceChanges } from "~/utils/pricePlans";
+import { categoryKey, dollars, isSupersededDescription, missingCategories, priceNumber, wasPrice, withPriceChanges } from "~/utils/pricePlans";
 
 /**
  * The CMS price list (priceCategories) for /pricing: the cards and the
@@ -120,11 +120,13 @@ export const usePriceCategories = async () => {
 
   const categoryTitle = (category: CmsPriceCategory) => localCopy(category, "title") || category.title;
   // A service's description: its own language's copy (i18n) where the CMS has
-  // no entry of that language, else the CMS's, else the i18n copy again (a
-  // service entered in the CMS without a text, or not there yet).
+  // no entry of that language, else the CMS's (unless it is one the site's copy
+  // has replaced, utils/pricePlans.ts: isSupersededDescription; an editor's
+  // own wording stays), else the i18n copy again (a service entered in the CMS
+  // without a text, or not there yet).
   const categoryDescription = (category: CmsPriceCategory) =>
     localCopy(category, "description") ||
-    category.pricing?.[0]?.description?.trim() ||
+    (isSupersededDescription(category.title ?? "", category.pricing?.[0]?.description) ? "" : category.pricing?.[0]?.description?.trim()) ||
     (te(`${key(category)}.description`) ? t(`${key(category)}.description`) : "") ||
     category.pricing?.[0]?.priceText?.trim() ||
     "";

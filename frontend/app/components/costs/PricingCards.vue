@@ -4,7 +4,7 @@ import PriceCardLightning from "~/components/costs/PriceCardLightning.vue";
 import { priceAmount } from "~/composables/usePriceCategories";
 import { SERVICE_PAGES } from "~/utils/servicePages";
 import { loadServiceCopy } from "~/utils/serviceCopy";
-import { loadPriceItems } from "~/utils/priceCopy";
+import { loadPlanCopies, loadPriceItems } from "~/utils/priceCopy";
 import { PRICE_LIST_LENGTH, coveredItems, isFixedPrice, planKey, planTone, priceUnitKey, warningItems, type PlanTone } from "~/utils/pricePlans";
 import { toSiteLocale } from "~/utils/locales";
 
@@ -12,8 +12,12 @@ import { toSiteLocale } from "~/utils/locales";
  * /pricing: one block per service of the CMS price list, one under another.
  * A block opens with the service's name, large and green, and its description.
  * Under them, on the left the service's packages as tabs, cheapest first; on
- * the right one card for the picked package: its price and the service's ten
- * items, the ones the package does not cover dimmed (utils/pricePlans.ts).
+ * the right one card for the picked package: its price and what it includes.
+ * A package with texts of its own (Branding's and Logo's,
+ * content/pricing-plans/<locale>.json) shows a line under its price and its own
+ * list, all of it included, and a paragraph about it fills the room under the
+ * tabs; any other shows the service's ten items, the ones the package does not
+ * cover dimmed (utils/pricePlans.ts).
  *
  * A package has a colour, on its tab and on the card: by its place the first
  * is white, the second the site's green (the one we recommend: its tab says
@@ -41,6 +45,12 @@ const { data: lists } = await useAsyncData(
     }));
     return Object.fromEntries(Object.entries(found).map(([key, items]) => [key, items.slice(0, PRICE_LIST_LENGTH)]));
   },
+);
+// The packages that have texts of their own (a line under the price, their own
+// list, a paragraph under the tabs): Branding's and Logo's.
+const { data: planCopies } = await useAsyncData(
+  () => `pricing-plan-copy:${siteLocale.value}`,
+  () => loadPlanCopies(siteLocale.value),
 );
 
 const formatPrice = (amount: number) => `$${amount.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
@@ -78,24 +88,31 @@ const groups = computed(() => categories.value.flatMap((category) => {
   const items = lists.value?.[key] ?? [];
   // "from $X" (or "$X per slide"); a fixed-price package shows the price alone.
   const unit = splitTemplate(priceUnitKey(categoryPage(category)?.unit));
-  const plans = priced.map((plan, rank) => ({
-    name: plan.name,
-    price: formatPrice(plan.amount),
-    unit: isFixedPrice(key, plan.name) ? NO_UNIT : unit,
-    // A discounted package: its full price, shown crossed out above the price.
-    was: plan.was ? formatPrice(plan.was) : "",
-    covered: coveredItems(key, plan.name, rank, priced.length, items.length),
-    tone: planTone(key, plan.name, rank),
-    // The green package is the one we recommend.
-    recommended: planTone(key, plan.name, rank) === "green",
-  }));
+  const plans = priced.map((plan, rank) => {
+    // A package with texts of its own shows them: its list, all of it covered
+    // (nothing dimmed, no warning marks); one without shows the service's list.
+    const copy = planCopies.value?.[key]?.[planKey(plan.name)] ?? null;
+    return {
+      name: plan.name,
+      price: formatPrice(plan.amount),
+      unit: isFixedPrice(key, plan.name) ? NO_UNIT : unit,
+      // A discounted package: its full price, shown crossed out above the price.
+      was: plan.was ? formatPrice(plan.was) : "",
+      tagline: copy?.tagline ?? "",
+      text: copy?.text ?? "",
+      items: copy?.items ?? items,
+      warnings: copy ? [] : warningItems(key),
+      covered: copy ? copy.items.length : coveredItems(key, plan.name, rank, priced.length, items.length),
+      tone: planTone(key, plan.name, rank),
+      // The green package is the one we recommend.
+      recommended: planTone(key, plan.name, rank) === "green",
+    };
+  });
   const index = Math.min(picked.value[key] ?? 0, plans.length - 1);
   return [{
     key,
     title: categoryTitle(category),
     description: categoryDescription(category),
-    items,
-    warnings: warningItems(key),
     plans,
     // One of the service's packages is discounted: every card of the service
     // keeps the line above the price, so it does not jump between packages.
@@ -206,6 +223,9 @@ onBeforeUnmount(() => {
               </span>
             </button>
           </div>
+
+          <!-- What the picked package is, under the tabs. -->
+          <p v-if="group.plan.text" :key="group.plan.name" class="price-group__plan-text" :class="{ 'is-swapped': touched }">{{ group.plan.text }}</p>
         </div>
 
         <div
@@ -233,15 +253,16 @@ onBeforeUnmount(() => {
               </span>
               <span v-if="group.plan.unit.after" class="price-card__unit">{{ group.plan.unit.after }}</span>
             </p>
+            <p v-if="group.plan.tagline" class="price-card__tagline">{{ group.plan.tagline }}</p>
           </div>
           <span class="price-card__rule" aria-hidden="true" />
 
-          <ul v-if="group.items.length" class="price-card__items">
-            <li v-for="(item, i) in group.items" :key="item" :class="{ 'is-off': i >= group.plan.covered, 'is-warning': group.warnings.includes(i) }">
+          <ul v-if="group.plan.items.length" class="price-card__items">
+            <li v-for="(item, i) in group.plan.items" :key="item" :class="{ 'is-off': i >= group.plan.covered, 'is-warning': group.plan.warnings.includes(i) }">
               <!-- A warning triangle instead of the check on the items marked in utils/pricePlans.ts. -->
-              <svg v-if="group.warnings.includes(i)" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.2 14.6 13.6H1.4L8 2.2Z" /><path d="M8 6.5v3.1M8 11.7v.01" /></svg>
+              <svg v-if="group.plan.warnings.includes(i)" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.2 14.6 13.6H1.4L8 2.2Z" /><path d="M8 6.5v3.1M8 11.7v.01" /></svg>
               <svg v-else viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m13.33 4-7.33 7.33L2.66 8" /></svg>
-              <span><span v-if="group.warnings.includes(i)" class="sr-only">{{ t("pricing.note") }}: </span>{{ item }}<span v-if="i >= group.plan.covered" class="sr-only"> ({{ t("pricing.notIncluded") }})</span></span>
+              <span><span v-if="group.plan.warnings.includes(i)" class="sr-only">{{ t("pricing.note") }}: </span>{{ item }}<span v-if="i >= group.plan.covered" class="sr-only"> ({{ t("pricing.notIncluded") }})</span></span>
             </li>
           </ul>
 
@@ -365,6 +386,23 @@ onBeforeUnmount(() => {
   top: 6.5rem;
   z-index: 1;
   min-width: 0;
+}
+
+/* Under the tabs: the picked package in a paragraph, in quiet text; it
+   rises into place when another package is picked, like the card's price. */
+.price-group__plan-text {
+  max-width: 25rem;
+  margin: 1.75rem 0 0;
+  padding-inline: 0.25rem;
+  color: rgb(255 255 255 / 0.64);
+  font-size: var(--type-small-size);
+  line-height: 1.6;
+  letter-spacing: var(--type-small-ls);
+  text-wrap: pretty;
+}
+
+.price-group__plan-text.is-swapped {
+  animation: price-swap 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* The tabs stand on the page itself, each in its own outline; the room
@@ -738,6 +776,17 @@ onBeforeUnmount(() => {
   font-weight: 500;
 }
 
+/* The line under the price (a package with texts of its own). */
+.price-card__tagline {
+  margin: 0.625rem 0 0;
+  color: rgb(201 203 207);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
 .price-card__rule {
   display: block;
   height: 1px;
@@ -745,9 +794,10 @@ onBeforeUnmount(() => {
   background: rgb(255 255 255 / 0.1);
 }
 
-/* Ten short lines: each item is written to fit on one line of the card in
-   every language (app/content/pricing/<locale>.json): the longest, a Russian
-   one, leaves about 1rem to spare on the narrower card and on a 360px phone. */
+/* The package's list: short lines, most of them one line of the card (the
+   shared lists, app/content/pricing/<locale>.json, are written to); a longer
+   one of a package's own (app/content/pricing-plans/<locale>.json) takes two,
+   its check beside the first. */
 .price-card__items {
   display: flex;
   flex-direction: column;
@@ -762,8 +812,8 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   gap: 0.5rem;
   color: rgb(255 255 255 / 0.9);
-  font-size: 1rem;
-  line-height: 1.2;
+  font-size: 0.9375rem;
+  line-height: 1.25;
   letter-spacing: -0.02em;
   font-weight: 500;
   transition: color 0.25s ease;
@@ -944,6 +994,20 @@ onBeforeUnmount(() => {
     font-size: 0.875rem;
   }
 
+  .price-card__tagline {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* Under the row of tabs, above the card. */
+  .price-group__plan-text {
+    max-width: none;
+    margin-top: 1.125rem;
+    padding-inline: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
   .price-card__items {
     gap: 0.75rem;
     margin-top: 1rem;
@@ -978,7 +1042,8 @@ onBeforeUnmount(() => {
     display: none;
   }
 
-  .price-card__head.is-swapped {
+  .price-card__head.is-swapped,
+  .price-group__plan-text.is-swapped {
     animation: none;
   }
 }

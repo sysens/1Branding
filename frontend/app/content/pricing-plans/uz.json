@@ -1,0 +1,87 @@
+{
+  "branding": {
+    "launch base": {
+      "tagline": "Kuchli boshlang. Tanib olinadigan boʻling.",
+      "items": [
+        "Bozor va raqobatchilar sharhi",
+        "Aniq brend pozitsiyasi va yoʻnalishi",
+        "2 ta oʻziga xos logotip konsepsiyasi",
+        "Logotipning toʻliq variantlari",
+        "Firma ranglari va shriftlari",
+        "Brend grafikasi va maket tamoyillari",
+        "3 ta asosiy brend qoʻllanilishi",
+        "Firma uslubi va foydalanish qoidalari",
+        "Bosma va raqamli tayyor fayllar",
+        "Tahrirlanadigan manba fayllar"
+      ],
+      "text": "Biznesingizga noyob firma uslubi va bozorda ishonchli mavjudlik bering. Biz brendingizning vizual yoʻnalishini belgilaymiz, esda qoladigan logotip yaratamiz va hammasini yaxlit tizimga jamlaymiz — biznesingizni aniqlik va xarakter bilan namoyon etishga tayyor."
+    },
+    "one pro": {
+      "tagline": "Kuchli xarakter. Aniq maqsad. Qudratli mavjudlik.",
+      "items": [
+        "Bozor va raqobatchilar tahlili",
+        "Pozitsiyalash, missiya va viziya",
+        "Brend xarakteri va muloqot ohangi",
+        "Brend hikoyasi, shior va asosiy xabarlar",
+        "Zarur boʻlsa, nom izlash (neyming)",
+        "2 ta strategik logotip va uslub konsepsiyasi",
+        "Toʻliq vizual firma uslubi tizimi",
+        "6 ta asosiy brend qoʻllanilishi",
+        "Strategik brendbuk va foydalanish qoidalari",
+        "Onlayn brendbuk va brend kutubxonasi",
+        "Bosma, raqamli va manba fayllar"
+      ],
+      "text": "Toʻliq ijodiy firma uslubiga ega, strategik jihatdan aniqlangan brend. Biz brendingiz nimani anglatishini, qanday gapirishini va oʻzini qanday namoyon etishini shakllantiramiz — qarashingizni noyob vizual til bilan bogʻlaymiz. Onlayn brendbuk muhim standartlar va materiallarni bir joyga jamlaydi — jamoangiz foydalanishga tayyor."
+    },
+    "global ultimate": {
+      "tagline": "Brendingiz doim esda birinchi turishi uchun yaratilgan.",
+      "items": [
+        "Tanlangan bozorlar va raqobatchilar tahlili",
+        "Brend strategiyasi, viziyasi va arxitekturasi",
+        "Neyming, brend hikoyasi va manifest",
+        "Muloqot ohangi va xabarlar tizimi",
+        "Mutlaq master vizual firma uslubi tizimi",
+        "Koʻp tilli moslashtirish qoidalari",
+        "12+ ta noyob Ultimate brend qoʻllanilishi",
+        "300+ betlik master brendbuk",
+        "Veb brend portali va standartlar markazi",
+        "Brendni topshirish va joriy etish qoʻllanmasi",
+        "Bosma, raqamli va manba fayllar kutubxonasi"
+      ],
+      "text": "Xalqaro intilishdagi bizneslar uchun toʻliq brend tizimi. Biz strategik yoʻnalish, noyob firma uslubi va aniq standartlarni 300+ betlik master brendbuk hamda toʻliq onlayn brend portalida birlashtiramiz — jamoalaringiz va hamkorlaringizga tasdiqlangan materiallarga kirish, brend standartlariga amal qilish va tanlangan bozorlarda izchillikni saqlash uchun yagona markaz beramiz."
+    }
+  },
+  "logo": {
+    "standard": {
+      "tagline": "Aniq belgi. Kuchli ilk taassurot.",
+      "items": [
+        "Brend brifi va raqobatchilar sharhi",
+        "1 ta original logotip konsepsiyasi",
+        "2 bosqich dizayn takomillashtirish",
+        "Asosiy va muqobil logotip joylashuvi",
+        "Rangli, bir rangli va teskari versiyalar",
+        "Logotip ranglari spetsifikatsiyasi",
+        "Kichik oʻlcham va oʻqilishni tekshirish",
+        "Logotipdan foydalanish boʻyicha qisqa varaq",
+        "Bosma, raqamli va manba fayllar"
+      ],
+      "text": "Oʻzini ishonch bilan namoyon etishga tayyor bizneslar uchun yoʻnaltirilgan logotip dizayni xizmati. Biz bitta original konsepsiyani ishlab chiqamiz, tafsilotlarini takomillashtiramiz va professional kundalik foydalanish uchun zarur versiyalar, qoidalar va fayllarni topshiramiz."
+    },
+    "one pro": {
+      "tagline": "Noyob xarakter. Har bir tafsilotda aniqlik.",
+      "items": [
+        "Brend va raqobatchilar tahlili",
+        "2 ta noyob logotip konsepsiyasi",
+        "Konsepsiya asoslari va taqdimoti",
+        "3 bosqich dizayn takomillashtirish",
+        "Yozuvni sayqallash va optik muvozanat",
+        "Rangli, bir rangli va teskari versiyalar",
+        "Moslashuvchan logotip, avatar va favikon",
+        "Real sharoitdagi 3 ta maket namunasi",
+        "Batafsil logotip qoidalari va foydalanish tartibi",
+        "Bosma, raqamli va manba fayllar"
+      ],
+      "text": "Noyob vizual imzo izlayotgan brendlar uchun chuqurroq ijodiy jarayon. Biz ikkita original yoʻnalishni oʻrganamiz, tanlangan konsepsiyani eng kichik tafsilotigacha takomillashtiramiz va koʻp qirrali logotip tizimini ishlab chiqamiz — izchil va ishonchli mavjudlik uchun amaliy qoidalar bilan."
+    }
+  }
+}

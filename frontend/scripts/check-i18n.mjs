@@ -86,6 +86,18 @@ for (const locale of LOCALES) {
   }
 }
 
+// The packages' own texts (app/content/pricing-plans/<locale>.json): the same
+// packages, lines and items in every language, each translated.
+const plansDir = "app/content/pricing-plans";
+for (const locale of LOCALES) {
+  const target = `${plansDir}/${locale}.json`;
+  try {
+    compare(target, read(`${plansDir}/en.json`), read(target), { escapes: false });
+  } catch {
+    problems.push(`${target}: missing`);
+  }
+}
+
 if (problems.length) {
   console.log(problems.join("\n"));
   console.log(`\n${problems.length} problem(s)`);

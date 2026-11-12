@@ -1,0 +1,87 @@
+{
+  "branding": {
+    "launch base": {
+      "tagline": "Start strong. Be unmistakable.",
+      "items": [
+        "Market & competitor review",
+        "Clear brand positioning & direction",
+        "2 distinctive logo concepts",
+        "Complete logo variations",
+        "Signature colours & typography",
+        "Brand graphics & layout principles",
+        "3 essential brand applications",
+        "Brand identity & usage guidelines",
+        "Print-ready & digital assets",
+        "Editable source files"
+      ],
+      "text": "Give your business a distinctive identity and a confident market presence. We define your brand’s visual direction, create a memorable logo and bring everything together in a cohesive system—ready to represent your business with clarity and character."
+    },
+    "one pro": {
+      "tagline": "Strong character. Clear purpose. Powerful presence.",
+      "items": [
+        "Market & competitor analysis",
+        "Brand positioning, mission & vision",
+        "Brand character & tone of voice",
+        "Brand story, slogan & key messages",
+        "Naming exploration, if needed",
+        "2 strategic logo & identity concepts",
+        "Complete visual identity system",
+        "6 essential brand applications",
+        "Strategic brandbook & usage rules",
+        "Online brandbook & brand asset library",
+        "Print, digital & editable source files"
+      ],
+      "text": "A strategically defined brand with a complete creative identity. We shape what your brand stands for, how it speaks and how it presents itself—connecting your vision with a distinctive visual language. Your online brandbook keeps essential standards and assets together, ready for your team to use."
+    },
+    "global ultimate": {
+      "tagline": "Designed to make your brand top of mind.",
+      "items": [
+        "Selected-market & competitor analysis",
+        "Brand strategy, vision & architecture",
+        "Naming, brand story & manifesto",
+        "Tone of voice & messaging system",
+        "Absolute master visual identity system",
+        "Multilingual adaptation guidelines",
+        "12+ signature ultimate brand applications",
+        "300+ page master brandbook",
+        "Complete web brand portal & identity standards hub",
+        "Brand handover & implementation guide",
+        "Print, digital & editable source library"
+      ],
+      "text": "A complete brand system for businesses with international ambition. We unite strategic direction, a distinctive identity and clear standards in a 300+ page master brandbook and a complete online brand portal—giving your teams and partners one central place to access approved assets, follow brand standards and maintain consistency across selected markets."
+    }
+  },
+  "logo": {
+    "standard": {
+      "tagline": "A clear mark. A strong first impression.",
+      "items": [
+        "Brand brief & competitor review",
+        "1 original logo concept",
+        "2 rounds of design refinement",
+        "Primary & alternative logo layouts",
+        "Colour, monochrome & reversed versions",
+        "Logo colour specifications",
+        "Small-size & legibility checks",
+        "Essential logo usage sheet",
+        "Print, digital & editable source files"
+      ],
+      "text": "A focused logo design service for businesses ready to present themselves with confidence. We develop one original concept, refine its details and deliver the essential versions, guidelines and files for professional everyday use."
+    },
+    "one pro": {
+      "tagline": "Distinctive character. Precision in every detail.",
+      "items": [
+        "Brand & competitor analysis",
+        "2 distinctive logo concepts",
+        "Concept rationale & presentation",
+        "3 rounds of design refinement",
+        "Refined lettering & optical balance",
+        "Colour, monochrome & reversed versions",
+        "Responsive logo, avatar & favicon",
+        "3 real-world mockup previews",
+        "Detailed logo guidelines & usage rules",
+        "Print, digital & editable source files"
+      ],
+      "text": "A deeper creative process for brands seeking a distinctive visual signature. We explore two original directions, refine the chosen concept with meticulous attention and develop a versatile logo system—supported by practical guidelines for a consistent, confident presence."
+    }
+  }
+}

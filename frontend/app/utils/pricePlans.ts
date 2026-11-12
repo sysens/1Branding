@@ -1,7 +1,10 @@
 /**
  * /pricing: what each package covers. A service's list has ten items, from
  * the basics up (app/content/pricing/<locale>.json), and a package covers the
- * first N of them: the card shows all ten and dims the rest.
+ * first N of them: the card shows all ten and dims the rest. A package with
+ * texts of its own (app/content/pricing-plans/<locale>.json: a line, its own
+ * list and a paragraph) shows those instead, every item of its list covered;
+ * the shared list and these numbers are for the packages that have none.
  *
  * Categories and packages are named as in the CMS price list (lower case).
  * Every number here is a claim about what OneBranding sells: change it only
@@ -71,6 +74,27 @@ export const planKey = (name: string) => name.trim().toLowerCase().replace(/\s+/
 
 /** "Visual identity" -> "visualIdentity": the name of a service's texts in i18n (pricing.categories.<key>). */
 export const categoryKey = (title: string) => planKey(title).replace(/ (\S)/g, (_, letter: string) => letter.toUpperCase());
+
+/**
+ * The descriptions the CMS price list was entered with, which the site's own
+ * copy (i18n pricing.categories.<key>.description) has replaced. A service
+ * whose CMS description is still one of these shows the site's copy; one an
+ * editor has since rewritten shows the editor's. Compared with the white space
+ * squeezed (the CMS keeps a line break between the sentences).
+ */
+const SUPERSEDED_DESCRIPTIONS: Record<string, readonly string[]> = {
+  branding: [
+    "Branding is a comprehensive development of your business as a strong and recognizable brand. It includes strategy, positioning, logo, corporate identity, and the entire visual system that builds trust and sets you apart from competitors.",
+  ],
+  logo: [
+    "Logo design is the creation of a brand’s key symbol, which forms the first impression and sets the visual direction for the entire identity. We create logos based on strategy and positioning so that they are not only aesthetically pleasing but also recognizable, relevant, and enduring.",
+  ],
+};
+
+const squeeze = (text: string) => text.replace(/\s+/g, " ").trim();
+
+export const isSupersededDescription = (category: string, text?: string | null) =>
+  SUPERSEDED_DESCRIPTIONS[planKey(category)]?.some((old) => squeeze(old) === squeeze(text ?? "")) ?? false;
 
 /**
  * How many of a list's items a package covers. `rank` is the package's place

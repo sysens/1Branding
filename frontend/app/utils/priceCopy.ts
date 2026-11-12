@@ -14,3 +14,21 @@ export const loadPriceItems = async (locale: SiteLocale): Promise<PriceItems | n
   const load = loaders[`../content/pricing/${locale}.json`];
   return load ? load() : null;
 };
+
+/**
+ * A package's own texts (app/content/pricing-plans/<locale>.json): the line
+ * under its price, what it includes (its own list, every item covered) and
+ * the paragraph that goes under the packages' tabs. By category and package
+ * (lower case, as in utils/pricePlans.ts: planKey). A package without an entry
+ * shows its service's shared list.
+ */
+export type PlanCopy = { tagline: string; items: string[]; text: string };
+export type PlanCopies = Record<string, Record<string, PlanCopy>>;
+
+const planLoaders = import.meta.glob<PlanCopies>("../content/pricing-plans/*.json", { import: "default" });
+
+/** The packages' texts of a language, or null when it has none. */
+export const loadPlanCopies = async (locale: SiteLocale): Promise<PlanCopies | null> => {
+  const load = planLoaders[`../content/pricing-plans/${locale}.json`];
+  return load ? load() : null;
+};
