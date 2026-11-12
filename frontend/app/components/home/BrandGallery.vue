@@ -2,6 +2,7 @@
 import OptImage from "~/components/ui/OptImage.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { splitIdentityTitle } from "~/utils/identityTitle";
+import { largeViewportHeight } from "~/utils/viewportUnits";
 
 type Card = { src: string; alt: string; ratio: number };
 
@@ -51,6 +52,7 @@ const trackUnits = computed(() =>
 // and the veil (VEIL at first) clears as the screen above lifts off.
 const VEIL = 0.5;
 const root = ref<HTMLElement | null>(null);
+const screen = ref<HTMLElement | null>(null);
 const track = ref<HTMLElement | null>(null);
 const bar = ref<HTMLElement | null>(null);
 const veil = ref<HTMLElement | null>(null);
@@ -65,9 +67,14 @@ const render = () => {
   // The row ends with a spacer as wide as the end padding.
   const end = row.lastElementChild as HTMLElement | null;
   const travel = end ? Math.max(0, end.offsetLeft + end.offsetWidth - row.clientWidth) : 0;
-  const uncover = props.under ? window.innerHeight : 0;
+  // The screen of scroll in which it is uncovered is the 100vh the CSS starts
+  // it early by, and it stays pinned for the section's height less its
+  // screen's (on a phone the screen is longer than the window: the description
+  // lies below the row). window.innerHeight is neither on a phone, where it
+  // changes as the browser's bars come and go.
+  const uncover = props.under ? largeViewportHeight() : 0;
   const scrolled = -section.getBoundingClientRect().top;
-  const distance = section.offsetHeight - window.innerHeight - uncover;
+  const distance = section.offsetHeight - (screen.value?.offsetHeight ?? window.innerHeight) - uncover;
   const progress = distance > 0 ? Math.min(1, Math.max(0, (scrolled - uncover) / distance)) : 0;
   row.style.transform = `translate3d(${(-travel * progress).toFixed(1)}px, 0, 0)`;
   if (bar.value) bar.value.style.transform = `scaleX(${progress.toFixed(4)})`;
@@ -105,38 +112,44 @@ onBeforeUnmount(() => {
     :class="{ 'gallery--under': under }"
     :style="{ '--track-units': trackUnits.toFixed(3) }"
   >
-    <div class="gallery__screen">
-      <h2 class="gallery__heading">
-        <span v-blur-reveal class="gallery__heading-line">{{ heading.lead }}</span>
-        <span v-if="heading.accent" v-blur-reveal class="gallery__heading-line gallery__heading-line--accent">{{ ` ${heading.accent}` }}</span>
-      </h2>
+    <div ref="screen" class="gallery__screen">
+      <!-- What stays on screen while the row moves. On a desktop this box
+           is not there (display: contents) and the bar comes after the
+           description; on a phone it fills the screen and the description
+           follows below it. -->
+      <div class="gallery__pinned">
+        <h2 class="gallery__heading">
+          <span v-blur-reveal class="gallery__heading-line">{{ heading.lead }}</span>
+          <span v-if="heading.accent" v-blur-reveal class="gallery__heading-line gallery__heading-line--accent">{{ ` ${heading.accent}` }}</span>
+        </h2>
 
-      <div ref="track" class="gallery__track">
-        <figure
-          v-for="card in cards"
-          :key="card.src"
-          v-rise
-          class="gallery__card"
-          :style="{ '--ratio': card.ratio }"
-        >
-          <OptImage
-            :src="card.src"
-            :alt="card.alt"
-            :sizes="`(max-width: 767px) ${Math.ceil(70 * card.ratio)}vw, ${Math.ceil(40 * card.ratio)}vw`"
-            loading="lazy"
-            decoding="async"
-            draggable="false"
-          />
-        </figure>
-        <div class="gallery__spacer" aria-hidden="true" />
+        <div ref="track" class="gallery__track">
+          <figure
+            v-for="card in cards"
+            :key="card.src"
+            v-rise
+            class="gallery__card"
+            :style="{ '--ratio': card.ratio }"
+          >
+            <OptImage
+              :src="card.src"
+              :alt="card.alt"
+              :sizes="`(max-width: 767px) ${Math.ceil(70 * card.ratio)}vw, ${Math.ceil(40 * card.ratio)}vw`"
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+          </figure>
+          <div class="gallery__spacer" aria-hidden="true" />
+        </div>
+
+        <div v-rise class="gallery__progress" aria-hidden="true">
+          <div class="gallery__progress-line"><div ref="bar" class="gallery__progress-fill" /></div>
+          <span class="gallery__progress-hint">{{ $t("home.gallery.hint") }}</span>
+        </div>
       </div>
 
       <p v-rise class="gallery__description">{{ description }}</p>
-
-      <div v-rise class="gallery__progress" aria-hidden="true">
-        <div class="gallery__progress-line"><div ref="bar" class="gallery__progress-fill" /></div>
-        <span class="gallery__progress-hint">{{ $t("home.gallery.hint") }}</span>
-      </div>
 
       <div v-if="under" ref="veil" class="gallery__veil" aria-hidden="true" />
     </div>
@@ -222,6 +235,12 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
+/* Not a box of its own on a desktop: the heading, the row and the bar are the
+   screen's own items there, the bar after the description. */
+.gallery__pinned {
+  display: contents;
+}
+
 /* The section heading: the h1 step (--section-title-size). */
 .gallery__heading {
   margin: 0 auto;
@@ -292,6 +311,7 @@ onBeforeUnmount(() => {
    identity text above, centred in a column of its measure, centred on
    the screen. */
 .gallery__description {
+  order: 1;
   box-sizing: content-box;
   max-width: var(--description-width);
   margin: var(--text-gap) auto 0;
@@ -306,6 +326,7 @@ onBeforeUnmount(() => {
 }
 
 .gallery__progress {
+  order: 2;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -337,15 +358,49 @@ onBeforeUnmount(() => {
   letter-spacing: var(--type-caption-ls);
 }
 
+/* Phones. A phone's browser leaves 550-750px of height, and the heading, the
+   row, ten lines of description and the bar do not fit that: the description
+   was cut off at the bottom of the pinned screen, its last lines never seen.
+   There the heading, the row and the bar are what is pinned (they fill the
+   screen, under the header), and the description lies below them: it comes
+   up, whole, when the row has run and the page scrolls on. The screen is
+   therefore longer than the window, and the section longer by the same. */
 @media (max-width: 767px) {
   .gallery {
-    --card-h: min(70vw, 42svh);
+    /* What the header (6.75rem), the heading's three lines, the gaps and the
+       bar leave above the line things are revealed at (90% of the screen,
+       plugins/blur-reveal.ts: a bar pinned below it would never come in),
+       never more than 70% of the width. */
+    --card-h: max(8rem, min(70vw, 42svh, 90svh - 10.75rem - 3.2 * var(--title-size)));
     --start-padding: 1.25rem;
     --end-padding: 1.25rem;
+    height: calc(100vh + var(--travel) * 1.1 + 20rem);
+  }
+
+  .gallery--under {
+    height: calc(200vh + var(--travel) * 1.1 + 20rem);
   }
 
   .gallery__screen {
-    padding-top: 5.75rem;
+    justify-content: flex-start;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 6.75rem;
+    padding-bottom: 3rem;
+  }
+
+  .gallery__pinned {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    min-height: calc(100svh - 6.75rem);
+    /* Keeps the bar above the reveal line (see --card-h). */
+    padding-bottom: calc(10svh + 0.25rem);
+  }
+
+  .gallery__description {
+    margin-top: 0.5rem;
   }
 }
 
@@ -365,7 +420,14 @@ onBeforeUnmount(() => {
   .gallery__screen {
     position: static;
     height: auto;
+    min-height: 0;
+    padding-bottom: 0;
     overflow: visible;
+  }
+
+  .gallery__pinned {
+    min-height: 0;
+    padding-bottom: 0;
   }
 
   .gallery__track {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import HeroLightTransition from "./HeroLightTransition.vue";
+import { largeViewportHeight } from "~/utils/viewportUnits";
 
 const curtain = ref<HTMLElement | null>(null);
 const hero = ref<HTMLElement | null>(null);
@@ -12,9 +13,13 @@ let disposed = false;
 // The hero is taller than the screen (the slogan starts near the bottom of the
 // first view), so a sticky top of 0 would pin it before the slogan is fully
 // visible. A negative top lets it scroll until its end is in view, then pins it.
+// The window's height here is the one with a phone browser's bars hidden
+// (they are, by the time the hero has scrolled that far): by
+// window.innerHeight the pinned hero dropped 55-110px each time the bars hid
+// or showed.
 const watchStickyTop = (element: HTMLElement) => {
   const update = () => {
-    const overflow = element.offsetHeight - window.innerHeight;
+    const overflow = element.offsetHeight - largeViewportHeight();
     element.style.setProperty("--hero-sticky-top", `${-Math.max(0, overflow)}px`);
   };
   update();
@@ -58,6 +63,8 @@ onMounted(async () => {
   window.removeEventListener("scroll", paintCurrentState);
   if (disposed || !hero.value || !transition.value) return;
   gsap.registerPlugin(ScrollTrigger);
+  // A phone browser's bars hiding and showing is not a resize to start over for.
+  ScrollTrigger.config({ ignoreMobileResize: true });
   const media = gsap.matchMedia();
   media.add("(prefers-reduced-motion: no-preference)", () => {
     const timeline = gsap.timeline({

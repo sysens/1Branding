@@ -48,11 +48,16 @@ const render = () => {
   frame = 0;
   const section = root.value;
   if (!section) return;
+  // One screen of scroll is the pinned screen's own height, not
+  // window.innerHeight: on a phone the window grows and shrinks as the
+  // browser's bars hide and show, which moved every statement a little each
+  // time; the screen's height is what the section actually stays pinned by.
+  const view = screen.value?.offsetHeight || window.innerHeight;
   // The statements play over the scroll before the held screens.
-  const distance = section.offsetHeight - window.innerHeight * (1 + props.hold);
+  const distance = section.offsetHeight - view * (1 + props.hold);
   const scrolled = -section.getBoundingClientRect().top;
   const progress = distance > 0 ? clamp01(scrolled / distance) : 0;
-  const held = props.hold > 0 ? clamp01((scrolled - distance) / (window.innerHeight * props.hold)) : 0;
+  const held = props.hold > 0 ? clamp01((scrolled - distance) / (view * props.hold)) : 0;
   const t = ramp(held, ...DISSOLVE);
   const gone = t * t * (3 - 2 * t);
   messages.forEach((message, index) => {
@@ -147,6 +152,26 @@ onBeforeUnmount(() => {
   background: #fff;
 }
 
+/* Held, the screen hides what is pinned behind it, so it is as high as the
+   window ever gets. On a phone 100svh (the browser's bars shown) is 55-110px
+   shorter than the window with the bars hidden (100lvh, the usual state
+   while scrolling down), and in that strip at the bottom the collage behind
+   came up early, under the statements still playing. The statements and the
+   bar keep to the part that is always in view; on a desktop the two heights
+   are the same and nothing changes. */
+.manifesto--hold .manifesto__screen {
+  height: 100vh;
+  height: 100lvh;
+}
+
+.manifesto--hold .manifesto__message {
+  bottom: calc(100lvh - 100svh);
+}
+
+.manifesto--hold .manifesto__progress {
+  bottom: calc(3rem + 100lvh - 100svh);
+}
+
 /* Before the script runs only the first statement shows; the script then sets
    every statement's opacity, blur and offset from the scroll position. The
    statements are the h1 step. */
@@ -221,7 +246,8 @@ onBeforeUnmount(() => {
     padding-block: 6rem;
   }
 
-  .manifesto__screen {
+  .manifesto__screen,
+  .manifesto--hold .manifesto__screen {
     position: static;
     height: auto;
     display: grid;

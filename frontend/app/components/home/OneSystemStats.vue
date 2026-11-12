@@ -75,6 +75,7 @@ const sliceAt = (progress: number, index: number) => {
 };
 
 const root = ref<HTMLElement | null>(null);
+const screen = ref<HTMLElement | null>(null);
 let frame = 0;
 let stop: (() => void) | undefined;
 
@@ -82,8 +83,12 @@ const render = () => {
   frame = 0;
   const section = root.value;
   if (!section) return;
-  const lead = window.innerHeight * LEAD;
-  const distance = section.offsetHeight - window.innerHeight + lead;
+  // The pinned screen's own height (100svh), not window.innerHeight: on a
+  // phone that one changes as the browser's bars come and go, and the wave
+  // jumped with it.
+  const view = screen.value?.offsetHeight ?? window.innerHeight;
+  const lead = view * LEAD;
+  const distance = section.offsetHeight - view + lead;
   const progress = Math.min(1, Math.max(0, (lead - section.getBoundingClientRect().top) / distance));
   section.querySelectorAll<HTMLElement>("[data-statement]").forEach((statement) => {
     const slice = sliceAt(progress, Number(statement.dataset.statement));
@@ -115,7 +120,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section ref="root" class="stats">
-    <div class="stats__screen">
+    <div ref="screen" class="stats__screen">
       <p
         v-for="(statement, index) in statements"
         :key="index"

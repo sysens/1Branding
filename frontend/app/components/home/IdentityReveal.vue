@@ -65,7 +65,10 @@ const render = () => {
   frame = 0;
   const section = root.value;
   if (!section || !words.length) return;
-  const distance = section.offsetHeight - window.innerHeight;
+  // Pinned for the section's height less the screen's own (100svh), not less
+  // window.innerHeight: on a phone that one changes as the browser's bars come
+  // and go, and the cues moved with it.
+  const distance = section.offsetHeight - (screen.value?.offsetHeight ?? window.innerHeight);
   const progress = distance > 0 ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / distance)) : 1;
   const last = Math.max(1, words.length - 1);
   // Words cued in the same frame (a fast scroll) still follow one another.
@@ -81,14 +84,59 @@ const schedule = () => {
   if (!frame) frame = requestAnimationFrame(render);
 };
 
+// A phone's browser leaves 550-750px of height, and the wordmark, the heading
+// and some eighty words do not always fit that under the header: the block was
+// centred up behind the header and its last lines were cut off at the bottom.
+// On a phone it is fitted to the screen instead: the wordmark, which is
+// decoration, gives way first (smaller by --logo-fit, then gone); then the
+// type steps down until the text fits (the CSS scales it by --fit). The
+// screen is 100svh, so the browser's bars coming and going do not change the
+// answer.
+const LOGO_STEPS = [0.85, 0.7];
+const FIT_STEPS = [1, 0.96, 0.92, 0.88, 0.84, 0.8, 0.76];
+let fitted = "";
+const fit = () => {
+  const element = screen.value;
+  if (!element) return;
+  const key = `${element.clientWidth}x${element.clientHeight}`;
+  if (key === fitted) return;
+  fitted = key;
+  element.classList.remove("identity__screen--bare");
+  element.style.removeProperty("--fit");
+  element.style.removeProperty("--logo-fit");
+  if (!window.matchMedia("(max-width: 767px)").matches) return;
+  const fits = () => element.scrollHeight <= element.clientHeight + 1;
+  if (fits()) return;
+  for (const step of LOGO_STEPS) {
+    element.style.setProperty("--logo-fit", String(step));
+    if (fits()) return;
+  }
+  element.style.removeProperty("--logo-fit");
+  element.classList.add("identity__screen--bare");
+  for (const step of FIT_STEPS) {
+    element.style.setProperty("--fit", String(step));
+    if (fits()) return;
+  }
+};
+const refit = () => {
+  fit();
+  schedule();
+};
+
 onMounted(() => {
   words = Array.from(screen.value?.querySelectorAll<HTMLElement>(".identity__word") ?? []);
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  fit();
+  // The web font's lines break differently from the fallback's.
+  void document.fonts?.ready.then(() => {
+    fitted = "";
+    fit();
+  });
   window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("resize", refit, { passive: true });
   stop = () => {
     window.removeEventListener("scroll", schedule);
-    window.removeEventListener("resize", schedule);
+    window.removeEventListener("resize", refit);
   };
   render();
 });
@@ -243,21 +291,35 @@ onBeforeUnmount(() => {
     height: 360vh;
   }
 
+  /* Under the header (6.75rem), never centred up behind it; the script fits
+     the block to what is left (see fit). */
   .identity__screen {
-    padding-inline: 1.25rem;
+    justify-content: safe center;
+    padding: 6.75rem 1.25rem 1.5rem;
   }
 
   .identity__logo {
-    width: min(78vw, 22rem);
+    width: calc(min(78vw, 22rem) * var(--logo-fit, 1));
   }
 
   .identity__heading {
     margin-top: -0.5rem;
+    font-size: calc(var(--section-title-size) * var(--fit, 1));
   }
 
   .identity__paragraph {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: calc(1.5rem * var(--fit, 1));
+    font-size: calc(var(--type-description-size) * var(--fit, 1));
+  }
+
+  /* Too short for the wordmark: the text takes the room. */
+  .identity__screen--bare .identity__logo {
+    display: none;
+  }
+
+  .identity__screen--bare .identity__heading {
+    margin-top: 0;
   }
 }
 

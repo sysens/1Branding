@@ -28,13 +28,19 @@ const START_SCALE = 0.92;
 
 const stage = ref<HTMLElement | null>(null);
 const emerge = ref<HTMLElement | null>(null);
+const spacer = ref<HTMLElement | null>(null);
 let frame = 0;
 let stop: (() => void) | undefined;
 
 const render = () => {
   frame = 0;
   if (!stage.value || !emerge.value) return;
-  const progress = -stage.value.getBoundingClientRect().top / window.innerHeight;
+  // The stretch the panel stays pinned for is the spacer's height (one screen
+  // with the browser's bars hidden), the same one the manifesto's held screen
+  // dissolves over; window.innerHeight changes on a phone as the bars come and
+  // go, which put the two out of step.
+  const span = spacer.value?.offsetHeight || window.innerHeight;
+  const progress = -stage.value.getBoundingClientRect().top / span;
   const t = Math.min(1, Math.max(0, (progress - FROM) / (TO - FROM)));
   const eased = t * t * (3 - 2 * t);
   emerge.value.style.scale = (START_SCALE + (1 - START_SCALE) * eased).toFixed(4);
@@ -83,7 +89,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-      <div class="clients-section__stage-spacer" aria-hidden="true" />
+      <div ref="spacer" class="clients-section__stage-spacer" aria-hidden="true" />
     </div>
   </section>
 </template>

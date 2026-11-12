@@ -8,7 +8,12 @@ import { VIEW_TRANSITION_CLASS, VIEW_TRANSITION_END } from "~/utils/viewTransiti
 // Until it has loaded there are no triggers to update or refresh.
 type ScrollTriggerApi = typeof import("gsap/ScrollTrigger").ScrollTrigger
 let scrollTrigger: ScrollTriggerApi | null = null
-const loadScrollTrigger = () => import("gsap/ScrollTrigger").then((module) => { scrollTrigger = module.ScrollTrigger })
+const loadScrollTrigger = () => import("gsap/ScrollTrigger").then((module) => {
+  scrollTrigger = module.ScrollTrigger
+  // On a phone the window's height changes every time the browser's bars hide
+  // or show; recalculating every trigger for that made scrubbed sections jump.
+  scrollTrigger.config({ ignoreMobileResize: true })
+})
 
 export default defineNuxtPlugin((nuxtApp) => {
   if (import.meta.server) return
