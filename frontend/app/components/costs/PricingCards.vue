@@ -338,16 +338,19 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 1;
   margin-bottom: clamp(1.5rem, calc(2.2 * var(--fvw)), 2.5rem);
+  text-align: center;
 }
 
 /* The service's name: lit like "won't wait" (assets/css/price-title.css,
-   .price-title); only its size is here. */
+   .price-title), centred over its block; only its size and place are here. */
 .price-group__title {
+  margin-inline: auto;
   font-size: clamp(2.75rem, calc(1.25rem + 4.6vw), 6.25rem);
 }
 
 .price-group__text {
-  margin: 0.875rem 0 0;
+  max-width: 46rem;
+  margin: 0.875rem auto 0;
   color: rgb(255 255 255 / 0.88);
   font-size: var(--type-body-size);
   line-height: var(--type-body-lh);

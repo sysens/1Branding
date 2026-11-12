@@ -9,7 +9,7 @@ import { toggleDetails } from "~/utils/smoothDetails";
  * accordion of seven short answers (i18n pricing.terms), in the look
  * of ReUI's single-expand accordion (reui.io/components/accordion: a chevron
  * before each title, the answer in muted text under it, hairlines between the
- * rows, the first open on load), dressed for the dark page. ReUI's is
+ * rows, all shut on load), dressed for the dark page. ReUI's is
  * React/shadcn; this is the site's own <details>, slid open and closed by
  * toggleDetails, so the answers are in the HTML for search engines and it
  * works without JavaScript.
@@ -67,7 +67,7 @@ const toggle = (event: MouseEvent) => {
 
     <div class="price-terms__inner">
       <div ref="list" class="price-terms__list">
-        <details v-for="index in items" :key="index" :open="index === 0" class="price-terms__item">
+        <details v-for="index in items" :key="index" class="price-terms__item">
           <summary @click="toggle">
             <svg class="price-terms__chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m4 6 4 4 4-4" /></svg>
             <h3>{{ t(`pricing.terms.items.${index}.q`) }}</h3>
@@ -125,17 +125,24 @@ const toggle = (event: MouseEvent) => {
 }
 
 /* The heading: centred over the lines, a little below the middle, the
-   horizon (at 78% of the height) under it. */
+   horizon (at 78% of the height) under it. The lines stay in a container
+   (90rem, growing with the root size on very wide screens) and do not run to
+   the edges of an ultrawide screen. */
 .price-terms__hero {
   position: relative;
   width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
   height: clamp(25rem, 48vw, 42rem);
 }
 
-/* The lines melt into the page at the top and the bottom. */
+/* The lines melt into the page at the top and the bottom, and at both sides of
+   the container. */
 .price-terms__lines {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
 }
 
 .price-terms__head {

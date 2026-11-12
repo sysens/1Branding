@@ -35,7 +35,9 @@
   --plan-size: var(--section-title-size);
   --plan-lh: var(--type-h1-lh);
   --plan-ls: var(--type-h1-ls);
-  --letter-a-size: var(--type-display-s-size);
+  /* A is a fifth smaller than the display step: it was heavier than B and the
+     step cards beside it. */
+  --letter-a-size: calc(var(--type-display-s-size) * 0.8);
   --letter-b-size: var(--type-h1-size);
   /* Lines of the plan and of the text, as they set in English. */
   --plan-lines: 1;
@@ -90,7 +92,7 @@
     --plan-lh: var(--type-h2-lh);
     --plan-ls: var(--type-h2-ls);
     --plan-lines: 1;
-    --letter-a-size: var(--type-h1-size);
+    --letter-a-size: calc(var(--type-h1-size) * 0.8);
     --letter-b-size: var(--type-h2-size);
   }
 }
@@ -101,7 +103,7 @@
     --plan-size: var(--type-h3-size);
     --plan-lh: var(--type-h3-lh);
     --plan-ls: var(--type-h3-ls);
-    --letter-a-size: var(--type-h2-size);
+    --letter-a-size: calc(var(--type-h2-size) * 0.8);
     --letter-b-size: var(--type-h3-size);
   }
 }

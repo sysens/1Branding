@@ -3,7 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 
 // The loader shown once, when the site is first opened (app.vue mounts once;
 // moving between pages never shows it again). White page, the brand mark drawn
-// in code (no image file): its outline is drawn, a 000 -> 100 counter runs,
+// in code (no image file): its outline is drawn,
 // the outline fills with green, then the mark zooms in until its "1" cut-out
 // is the whole screen and the page appears through it.
 //
@@ -33,7 +33,6 @@ const PLUS_FLY = 1100;
 const BORDER = [250, 2500] as const;
 const OUTLINE = [450, 2500] as const;
 const WORDS_AT = [1000, 1250, 1500] as const;
-const COUNT = [350, 2850] as const;
 const FILL = [2750, 3300] as const;
 const CHROME_OUT = [3300, 3650] as const;
 const ZOOM = [3500, 5300] as const;
@@ -54,9 +53,6 @@ const markLine = ref<SVGPathElement | null>(null);
 const border = ref<SVGRectElement | null>(null);
 const pluses = ref<HTMLElement[]>([]);
 const wordsShown = ref(0);
-const hundreds = ref<HTMLElement | null>(null);
-const tens = ref<HTMLElement | null>(null);
-const units = ref<HTMLElement | null>(null);
 
 if (import.meta.server) {
   useServerHead({ htmlAttrs: { class: "ob-loading" } });
@@ -158,7 +154,6 @@ onMounted(() => {
   const fillEl = markFill.value;
   const borderEl = border.value;
   markEl.style.transformOrigin = `${((ORIGIN.x - VIEW.x) / VIEW.size) * 100}% ${((ORIGIN.y - VIEW.y) / VIEW.size) * 100}%`;
-  const reels = [hundreds.value, tens.value, units.value];
   let revealStart = -1;
   const startedAt = performance.now();
 
@@ -179,12 +174,6 @@ onMounted(() => {
 
     const due = WORDS_AT.filter((at) => t >= at).length;
     if (due !== wordsShown.value) wordsShown.value = due;
-
-    // Slot-machine counter, 000 -> 100: every reel is a strip of digits moved continuously.
-    const value = easeInOutQuad(progress(t, COUNT)) * 100;
-    if (reels[0]) reels[0].style.transform = `translateY(${-(value / 100)}em)`;
-    if (reels[1]) reels[1].style.transform = `translateY(${-((value / 10) % 10)}em)`;
-    if (reels[2]) reels[2].style.transform = `translateY(${-(value % 10)}em)`;
 
     fillEl.style.opacity = String(easeOutCubic(progress(t, FILL)));
 
@@ -246,16 +235,6 @@ onBeforeUnmount(() => {
           <span v-if="i < TAGLINE.length - 1" class="ob-loader__dot" :class="{ 'is-in': wordsShown > i + 1 }">·</span>
         </template>
       </p>
-
-      <div class="ob-loader__counter">
-        <span class="ob-loader__reel"><span ref="hundreds" class="ob-loader__strip"><i>0</i><i>1</i></span></span>
-        <span class="ob-loader__reel">
-          <span ref="tens" class="ob-loader__strip"><i v-for="n in 11" :key="n">{{ (n - 1) % 10 }}</i></span>
-        </span>
-        <span class="ob-loader__reel">
-          <span ref="units" class="ob-loader__strip"><i v-for="n in 11" :key="n">{{ (n - 1) % 10 }}</i></span>
-        </span>
-      </div>
     </div>
 
     <!-- Same box as the frame; sits on top of it so the zoom is not clipped. -->
@@ -430,38 +409,6 @@ html.ob-restoring .ob-loader {
 
 .ob-loader__dot.is-in {
   opacity: 1;
-}
-
-.ob-loader__counter {
-  position: absolute;
-  left: 50%;
-  bottom: 4rem;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 1px;
-  font-size: 1rem;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: #434343;
-}
-
-.ob-loader__reel {
-  display: block;
-  width: 0.65em;
-  height: 1em;
-  overflow: hidden;
-}
-
-.ob-loader__strip {
-  display: block;
-  will-change: transform;
-}
-
-.ob-loader__strip i {
-  display: block;
-  height: 1em;
-  font-style: normal;
-  text-align: center;
 }
 
 @keyframes ob-loader-failsafe {
