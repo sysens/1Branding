@@ -390,8 +390,10 @@ onBeforeUnmount(() => {
 
 /* Under the tabs: the picked package in a paragraph, in quiet text; it
    rises into place when another package is picked, like the card's price. */
+/* pre-line: a package's paragraph can be two (a blank line between them). */
 .price-group__plan-text {
   max-width: 25rem;
+  white-space: pre-line;
   margin: 1.75rem 0 0;
   padding-inline: 0.25rem;
   color: rgb(255 255 255 / 0.64);

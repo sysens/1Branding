@@ -84,6 +84,42 @@
       "text": "A deeper creative process for brands seeking a distinctive visual signature. We explore two original directions, refine the chosen concept with meticulous attention and develop a versatile logo system—supported by practical guidelines for a consistent, confident presence."
     }
   },
+  "packaging": {
+    "one pro": {
+      "tagline": "One product. A powerful shelf presence.",
+      "items": [
+        "Focused category & competitor review",
+        "1 product · 1 SKU · 1 packaging format",
+        "2 original packaging concepts",
+        "Complete front, back & side artwork",
+        "Clear product benefits & information hierarchy",
+        "Brand colours, typography & graphics",
+        "Artwork on the supplied production dieline",
+        "Realistic packaging mockup",
+        "2 rounds of design refinement",
+        "Print-ready & editable source files"
+      ],
+      "text": "A complete packaging design for one product. We turn its strongest qualities into a distinctive visual concept, balancing impact, clarity and credibility—giving customers a clear understanding of what you offer and a compelling reason to choose it."
+    },
+    "product leader": {
+      "tagline": "The presence of a leader. The power to stand apart.",
+      "items": [
+        "In-depth market & category research",
+        "Leading competitor & shelf analysis",
+        "Shopper insights & concept testing",
+        "Product positioning & differentiation strategy",
+        "3 strategic packaging concepts",
+        "Master packaging design system",
+        "Product range & SKU architecture",
+        "Up to 6 coordinated SKU designs",
+        "Competitive shelf simulations & 3D mockups",
+        "Premium material & finish recommendations",
+        "Packaging guidelines & production handover",
+        "Print-ready & editable source library"
+      ],
+      "text": "For manufacturers and ambitious brands ready to challenge established category leaders. We combine in-depth research, sharp positioning and a distinctive master packaging system to communicate quality, strengthen credibility and create a commanding presence across your product range.\n\nEvery decision—from visual hierarchy to product differentiation—is shaped around your market, your customer and your competitive advantage."
+    }
+  },
   "naming": {
     "creative": {
       "tagline": "A strong name. A distinctive beginning.",

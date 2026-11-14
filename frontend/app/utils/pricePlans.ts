@@ -15,7 +15,7 @@ export const PRICE_LIST_LENGTH = 10;
 export const PLAN_COVERAGE: Record<string, Record<string, number>> = {
   branding: { "launch base": 5, "one pro": 8, "global ultimate": 10 },
   logo: { standard: 5, "one pro": 10 },
-  packaging: { "one pro": 6, "leader product": 10 },
+  packaging: { "one pro": 6, "product leader": 10 },
   presentation: { start: 4, product: 7, global: 10 },
   naming: { creative: 4, complex: 7, advanced: 10 },
   "visual identity": { creative: 10 },
@@ -53,7 +53,7 @@ export type PlanTone = "white" | "green" | "gold";
 const PLACE_TONES: readonly PlanTone[] = ["white", "green", "gold"];
 
 export const PLAN_TONE: Record<string, Record<string, PlanTone>> = {
-  packaging: { "one pro": "green", "leader product": "gold" },
+  packaging: { "one pro": "green", "product leader": "gold" },
 };
 
 export const planTone = (category: string, plan: string, place: number): PlanTone =>
@@ -88,6 +88,9 @@ const SUPERSEDED_DESCRIPTIONS: Record<string, readonly string[]> = {
   ],
   logo: [
     "Logo design is the creation of a brand’s key symbol, which forms the first impression and sets the visual direction for the entire identity. We create logos based on strategy and positioning so that they are not only aesthetically pleasing but also recognizable, relevant, and enduring.",
+  ],
+  packaging: [
+    "Packaging design is a key point of contact with the customer and one of the main factors influencing choice on the shelf. We create packaging that not only visually attracts attention but also accurately conveys the product's value, strengthens the brand, and makes it stand out among competitors.",
   ],
   presentation: [
     "Presentation design is the creation of visually compelling and well-structured materials that clearly convey ideas, enhance meaning, and hold the audience’s attention. We develop presentations with a focus on logic, visual hierarchy, and a clean modern style, so that each slide works toward the desired outcome—whether it’s a sale, project defense, or public speaking. Pricing is calculated per slide, allowing flexible project scope tailored to the client’s needs.",
@@ -148,13 +151,15 @@ export const PRICE_CHANGES: readonly PriceChange[] = [
   { category: "branding", plan: "one pro", from: 2900, price: 5400, was: 12750 },
   { category: "branding", plan: "global ultimate", from: 5900, price: 25000 },
   { category: "logo", plan: "individual", from: 900, price: 560, title: "Standard", add: [{ title: "One Pro", price: 1500 }] },
-  { category: "packaging", plan: "advanced", from: 500, price: 17200, title: "Leader product" },
+  { category: "packaging", plan: "advanced", from: 500, price: 17200, title: "Product Leader" },
   { category: "packaging", plan: "all in one", from: 1900, price: 1650, title: "One Pro" },
   { category: "presentation", plan: "start", from: 35, price: 25 },
   { category: "presentation", plan: "global", from: 99, price: 125 },
   // Set in the CMS by the first changes, raised since.
   { category: "presentation", plan: "start", from: 15, price: 25 },
   { category: "naming", plan: "advanced", from: 6000, price: 7500 },
+  // Named "Leader product" by the first changes; the team's copy calls it so.
+  { category: "packaging", plan: "leader product", from: 17200, price: 17200, title: "Product Leader" },
 ];
 
 /** 5400 -> "$5400.00": how the price list writes a price. */

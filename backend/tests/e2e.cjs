@@ -340,14 +340,14 @@ const submit = async (ip, payload) => {
   check('prices: a package removed by an editor is not added back', (logoPriced?.pricing ?? []).map((item) => item.title).join() === 'Standard', JSON.stringify((logoPriced?.pricing ?? []).map((item) => item.title)));
 
   // The real list of changes, on a packaging entry as it was: "Advanced" becomes
-  // "Leader product" and "All in one" "One Pro", each with its new price.
+  // "Product Leader" and "All in one" "One Pro", each with its new price.
   const CHANGES = require(path.join(appDir, 'dist/src/utils/plan-prices.js')).CHANGES.filter((change) => change.category === 'Packaging');
   const packagingList = await priceList.create({ locale: 'en', data: { title: 'Packaging', pricing: [{ title: 'Advanced', price: '$500.00', description: 'Pack.' }, { title: 'All in one', price: '$1900.00', description: 'Pack.' }] } });
   const packagingFirst = await applyPriceChanges(strapi, CHANGES);
   const packagingAgain = await applyPriceChanges(strapi, CHANGES);
   const packagingPriced = await priceList.findOne({ documentId: packagingList.documentId, locale: 'en', populate: ['pricing'] });
   const packagingPlans = (packagingPriced?.pricing ?? []).map((item) => `${item.title} ${item.price}`).join();
-  check('prices: packaging gets "Leader product" and "One Pro" at their new prices, once', packagingFirst === 2 && packagingAgain === 0 && packagingPlans === 'Leader product $17200.00,One Pro $1650.00', JSON.stringify({ packagingFirst, packagingAgain, packagingPlans }));
+  check('prices: packaging gets "Product Leader" and "One Pro" at their new prices, once', packagingFirst === 2 && packagingAgain === 0 && packagingPlans === 'Product Leader $17200.00,One Pro $1650.00', JSON.stringify({ packagingFirst, packagingAgain, packagingPlans }));
 
   // A service new to the price list: created on boot, in English, with its
   // packages, once; applying again changes nothing; one an editor removes is

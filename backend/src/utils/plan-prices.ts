@@ -32,13 +32,15 @@ export const CHANGES: PriceChange[] = [
   { category: "Branding", plan: "One Pro", from: 2900, price: "$5400.00", oldPrice: "$12750.00" },
   { category: "Branding", plan: "Global ultimate", from: 5900, price: "$25000.00" },
   { category: "Logo", plan: "Individual", from: 900, price: "$560.00", title: "Standard", add: [{ title: "One Pro", price: "$1500.00" }] },
-  { category: "Packaging", plan: "Advanced", from: 500, price: "$17200.00", title: "Leader product" },
+  { category: "Packaging", plan: "Advanced", from: 500, price: "$17200.00", title: "Product Leader" },
   { category: "Packaging", plan: "All in one", from: 1900, price: "$1650.00", title: "One Pro" },
   { category: "Presentation", plan: "Start", from: 35, price: "$25.00" },
   { category: "Presentation", plan: "Global", from: 99, price: "$125.00" },
   // Set by the first changes (or created with the service), raised since.
   { category: "Presentation", plan: "Start", from: 15, price: "$25.00" },
   { category: "Naming", plan: "Advanced", from: 6000, price: "$7500.00" },
+  // Named "Leader product" by the first changes; the team's copy calls it so.
+  { category: "Packaging", plan: "Leader product", from: 17200, price: "$17200.00", title: "Product Leader" },
 ];
 
 const PRICE_CATEGORY = "api::price-category.price-category";

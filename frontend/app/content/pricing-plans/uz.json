@@ -84,6 +84,42 @@
       "text": "Noyob vizual imzo izlayotgan brendlar uchun chuqurroq ijodiy jarayon. Biz ikkita original yoʻnalishni oʻrganamiz, tanlangan konsepsiyani eng kichik tafsilotigacha takomillashtiramiz va koʻp qirrali logotip tizimini ishlab chiqamiz — izchil va ishonchli mavjudlik uchun amaliy qoidalar bilan."
     }
   },
+  "packaging": {
+    "one pro": {
+      "tagline": "Bitta mahsulot. Javonda kuchli qiyofa.",
+      "items": [
+        "Kategoriya va raqobatchilar sharhi",
+        "1 mahsulot · 1 SKU · 1 qadoq formati",
+        "2 ta original qadoq konsepsiyasi",
+        "Old, orqa va yon tomonlar dizayni",
+        "Mahsulot afzalliklari va maʼlumot ierarxiyasi",
+        "Brend ranglari, shriftlari va grafikasi",
+        "Siz bergan ishlab chiqarish yoyilmasida dizayn",
+        "Qadoqning realistik mokapi",
+        "Dizaynni 2 bosqich takomillashtirish",
+        "Bosma va manba fayllar"
+      ],
+      "text": "Bitta mahsulot uchun toʻliq qadoq dizayni. Biz uning eng kuchli jihatlarini taʼsirchanlik, aniqlik va ishonchni muvozanatlagan oʻziga xos vizual konsepsiyaga aylantiramiz — xaridor nimani taklif qilayotganingizni aniq tushunishi va sizni tanlash uchun ishonarli sabab topishi uchun."
+    },
+    "product leader": {
+      "tagline": "Yetakchi qiyofasi. Ajralib turish kuchi.",
+      "items": [
+        "Bozor va kategoriyani chuqur oʻrganish",
+        "Yetakchi raqobatchilar va javon tahlili",
+        "Xaridor insaytlari va konsepsiyalarni sinash",
+        "Mahsulot pozitsiyasi va farqlash strategiyasi",
+        "3 ta strategik qadoq konsepsiyasi",
+        "Bosh qadoq dizayn tizimi",
+        "Mahsulot liniyasi va SKU arxitekturasi",
+        "6 tagacha uygʻun SKU dizayni",
+        "Javon simulyatsiyalari va 3D mokaplar",
+        "Material va ishlov berish tavsiyalari",
+        "Qadoq qoʻllanmasi va ishlab chiqarishga topshirish",
+        "Bosma va manba fayllar kutubxonasi"
+      ],
+      "text": "Kategoriyadagi yetakchilar bilan bellashishga tayyor ishlab chiqaruvchilar va ambitsiyali brendlar uchun. Biz chuqur tadqiqot, aniq pozitsiyalash va oʻziga xos bosh qadoq tizimini birlashtirib, sifatni yetkazamiz, ishonchni mustahkamlaymiz va butun mahsulot liniyangizga kuchli qiyofa beramiz.\n\nVizual ierarxiyadan tortib mahsulotlarni farqlashgacha har bir qaror bozoringiz, xaridoringiz va raqobat ustunligingiz atrofida shakllanadi."
+    }
+  },
   "naming": {
     "creative": {
       "tagline": "Kuchli nom. Oʻziga xos boshlanish.",

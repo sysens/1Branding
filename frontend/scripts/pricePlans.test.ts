@@ -95,14 +95,16 @@ describe("price packages", () => {
     expect(withPriceChanges("Logo", updated).map((plan) => plan.title)).toEqual(["Standard", "One Pro"]);
   });
 
-  test("packaging's packages are One Pro and Leader product, One Pro first", () => {
+  test("packaging's packages are One Pro and Product Leader, One Pro first", () => {
     const packaging = withPriceChanges("Packaging", [
       { title: "Advanced", price: "$500.00" },
       { title: "All in one", price: "$1900.00" },
     ]);
-    expect(packaging.map((plan) => [plan.title, plan.price])).toEqual([["Leader product", "$17200.00"], ["One Pro", "$1650.00"]]);
-    // The tabs run cheapest first: One Pro, then Leader product.
-    expect([...packaging].sort((a, b) => priceNumber(a.price) - priceNumber(b.price)).map((plan) => plan.title)).toEqual(["One Pro", "Leader product"]);
+    expect(packaging.map((plan) => [plan.title, plan.price])).toEqual([["Product Leader", "$17200.00"], ["One Pro", "$1650.00"]]);
+    // The tabs run cheapest first: One Pro, then Product Leader.
+    expect([...packaging].sort((a, b) => priceNumber(a.price) - priceNumber(b.price)).map((plan) => plan.title)).toEqual(["One Pro", "Product Leader"]);
+    // Where the CMS has it as "Leader product" (the first changes' name), it is renamed.
+    expect(withPriceChanges("Packaging", [{ title: "Leader product", price: "$17200.00" }])[0]?.title).toBe("Product Leader");
     // Both are "from" prices: only presentations are priced per slide.
     expect(SERVICE_PAGES.find((page) => page.priceCategory === "Packaging")?.priceUnit).toBeUndefined();
     expect(priceUnitKey("slide")).toBe("servicesPage.pricePerSlide");
@@ -128,7 +130,7 @@ describe("price packages", () => {
     expect(planTone("Logo", "Standard", 0)).toBe("white");
     expect(planTone("Logo", "One Pro", 1)).toBe("green");
     expect(planTone(" Packaging ", "One  Pro", 0)).toBe("green");
-    expect(planTone("Packaging", "Leader product", 1)).toBe("gold");
+    expect(planTone("Packaging", "Product Leader", 1)).toBe("gold");
   });
 
   test("Naming is a new service with Creative, Complex and Advanced", () => {
@@ -206,7 +208,7 @@ describe("price packages", () => {
 
   test("Branding's, Logo's, Naming's, Visual identity's and Presentation's packages have texts of their own in every language", () => {
     const en = planTexts("en");
-    expect(Object.keys(en).sort()).toEqual(["branding", "logo", "naming", "presentation", "visual identity"]);
+    expect(Object.keys(en).sort()).toEqual(["branding", "logo", "naming", "packaging", "presentation", "visual identity"]);
     for (const locale of ["en", "ru", "uz"]) {
       const copy = planTexts(locale);
       for (const [category, plans] of Object.entries(en)) {
