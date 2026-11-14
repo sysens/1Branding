@@ -358,13 +358,14 @@ onBeforeUnmount(() => {
   letter-spacing: var(--type-caption-ls);
 }
 
-/* Phones. A phone's browser leaves 550-750px of height, and the heading, the
-   row, ten lines of description and the bar do not fit that: the description
-   was cut off at the bottom of the pinned screen, its last lines never seen.
-   There the heading, the row and the bar are what is pinned (they fill the
-   screen, under the header), and the description lies below them: it comes
-   up, whole, when the row has run and the page scrolls on. The screen is
-   therefore longer than the window, and the section longer by the same. */
+/* Phones. A phone's browser leaves 550-750px of height. There the heading,
+   the row and the bar come first and the description right after them, the
+   whole block centred in the screen under the header while it fits. Where it
+   does not (the bars shown, a short phone), it starts under the header and
+   the screen runs on below the window: the description's last lines come up
+   when the row has run and the page scrolls on, never cut off. (The heading,
+   row and bar used to fill the screen on their own, which left a gap of a
+   third of the screen above the description and the same below it.) */
 @media (max-width: 767px) {
   .gallery {
     /* What the header (6.75rem), the heading's three lines, the gaps and the
@@ -374,33 +375,29 @@ onBeforeUnmount(() => {
     --card-h: max(8rem, min(70vw, 42svh, 90svh - 10.75rem - 3.2 * var(--title-size)));
     --start-padding: 1.25rem;
     --end-padding: 1.25rem;
-    height: calc(100vh + var(--travel) * 1.1 + 20rem);
+    height: calc(100vh + var(--travel) * 1.1);
   }
 
   .gallery--under {
-    height: calc(200vh + var(--travel) * 1.1 + 20rem);
+    height: calc(200vh + var(--travel) * 1.1);
   }
 
   .gallery__screen {
-    justify-content: flex-start;
+    justify-content: safe center;
     height: auto;
     min-height: 100vh;
     min-height: 100svh;
     padding-top: 6.75rem;
-    padding-bottom: 3rem;
+    padding-bottom: 1.5rem;
   }
 
   .gallery__pinned {
     display: flex;
     flex-direction: column;
-    justify-content: safe center;
-    min-height: calc(100svh - 6.75rem);
-    /* Keeps the bar above the reveal line (see --card-h). */
-    padding-bottom: calc(10svh + 0.25rem);
   }
 
   .gallery__description {
-    margin-top: 0.5rem;
+    margin-top: 1.25rem;
   }
 }
 
