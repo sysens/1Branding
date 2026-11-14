@@ -2,6 +2,8 @@ export const AWARDS_PREVIEW = "/home/awards/stage.v1.webp";
 // The same render without the numeral, for stages that leave it out.
 export const AWARDS_PREVIEW_CEILING = "/home/awards/stage-ceiling.v1.webp";
 export const STAGE_WIDTH = 1366;
+/** The share of the stage's width a phone's taller stage keeps in view (without the numeral). */
+export const PHONE_SHOWN = 0.5;
 export const STAGE_HEIGHT = 840;
 export const CAMERA_DISTANCE = 1800;
 // The rows are laid out this wide (not just the stage): on ultra-wide screens the

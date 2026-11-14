@@ -215,10 +215,14 @@ const localePath = useLocalePath();
     margin-top: 0.4rem;
   }
 
+  /* As tall as the screen leaves under the copy and over the button (about
+     31rem of it, with the card's padding), so the card fits one screen;
+     never wider than the column or 26rem. */
   .vision__numeral {
     align-self: center;
-    width: min(100%, 26rem);
-    height: auto;
+    width: auto;
+    max-width: 100%;
+    height: clamp(10rem, calc(100svh - 31rem), 31.2rem);
     aspect-ratio: 800 / 960;
     margin-top: 0.5rem;
   }

@@ -2,10 +2,11 @@
 import { ref, toRef } from "vue";
 import { useAwardsGallery } from "~/composables/useAwardsGallery";
 
-const props = defineProps<{ paused: boolean }>();
+// shown: the share of the stage's width kept in view (1: all of it).
+const props = withDefaults(defineProps<{ paused: boolean; shown?: number }>(), { shown: 1 });
 const root = ref<HTMLElement | null>(null);
 const surface = ref<HTMLElement | null>(null);
-const { ready } = useAwardsGallery(root, surface, toRef(props, "paused"));
+const { ready } = useAwardsGallery(root, surface, toRef(props, "paused"), { shown: props.shown });
 </script>
 
 <template>

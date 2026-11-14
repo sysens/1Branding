@@ -3,7 +3,7 @@ import OptImage from "~/components/ui/OptImage.vue";
 import { ref } from "vue";
 import { Pause, Play } from "lucide-vue-next";
 import { useAwardsStage } from "~/composables/useAwardsStage";
-import { AWARDS_PREVIEW, AWARDS_PREVIEW_CEILING } from "~/utils/awards/layout";
+import { AWARDS_PREVIEW, AWARDS_PREVIEW_CEILING, PHONE_SHOWN } from "~/utils/awards/layout";
 import AwardsGallery from "./AwardsGallery.vue";
 
 // `numeral` is the big green "1" in front of the gallery.
@@ -18,7 +18,7 @@ const { ready } = useAwardsStage(root, canvas, { numeral: props.numeral });
   <figure ref="root" class="awards-stage" :class="{ 'awards-stage--bare': !numeral }" :data-ready="ready" :aria-label="numeral ? 'OneBranding project gallery and number one' : 'OneBranding project gallery'">
     <OptImage v-show="!ready" :src="numeral ? AWARDS_PREVIEW : AWARDS_PREVIEW_CEILING" sizes="100vw" :preview="false" width="1366" height="840" loading="lazy" decoding="async" alt="" class="awards-stage__preview" />
     <canvas ref="canvas" class="awards-stage__canvas" :class="{ 'is-ready': ready }" aria-hidden="true" />
-    <AwardsGallery :paused="paused" />
+    <AwardsGallery :paused="paused" :shown="numeral ? 1 : PHONE_SHOWN" />
     <button class="awards-stage__pause" type="button" :aria-pressed="paused" :aria-label="paused ? 'Play gallery animation' : 'Pause gallery animation'" :title="paused ? 'Play gallery animation' : 'Pause gallery animation'" @click="paused = !paused">
       <Play v-if="paused" :size="18" />
       <Pause v-else :size="18" />
@@ -37,6 +37,13 @@ const { ready } = useAwardsStage(root, canvas, { numeral: props.numeral });
 /* Without the numeral the floor under the gallery is empty: cut its lower 28%
    (below the cards' reflections) and pull the next section up by as much. */
 .awards-stage--bare { clip-path: inset(0 0 28% 0); margin-bottom: calc(-.28 * min(100vw * 840 / 1366, 110svh)); }
+/* Phones, without the numeral: a taller stage (4:5) whose camera keeps the
+   middle half of it in view (PHONE_SHOWN), so the cards are about twice as
+   large; the preview is cropped the same way. */
+@media (max-width: 599px) {
+  .awards-stage--bare { aspect-ratio: 4 / 5; margin-bottom: calc(-.28 * min(125vw, 110svh)); }
+  .awards-stage--bare :deep(.awards-stage__preview) { object-fit: cover; }
+}
 /* Black fades on the sides, the bottom and the top: the ceiling's lines start at
    the canvas's top edge, so without the top fade their cut ends show. */
 .awards-stage::after { content: ''; position: absolute; z-index: 3; inset: 0; pointer-events: none; background: linear-gradient(90deg, #000, transparent 17%, transparent 83%, #000), linear-gradient(0deg, #000, transparent 12%), linear-gradient(180deg, #000, transparent 9%); }

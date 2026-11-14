@@ -21,12 +21,12 @@ const ROWS: Slide[][] = [
   [{ src: "33", ratio: 16 / 9 }, { src: "37", ratio: 16 / 9 }, { src: "23", ratio: 16 / 9 }, { src: "38", ratio: wide }, { src: "31", ratio: 16 / 9 }, { src: "12", ratio: 16 / 9 }],
 ].map((row) => row.map((slide) => ({ ...slide, src: slide.src.startsWith("/") ? slide.src : `/home/threeLayerLocal/${slide.src}.webp` })));
 
-// Slides are 15 "rem" tall (7rem on phones), so their width is that times the
+// Slides are 15 "rem" tall (7rem on tablets, 9rem on phones), so their width is that times the
 // ratio. No slide is narrower than its photo's shape, so object-fit: cover
 // draws the photo at the slide's width (cropping top and bottom of the banner
 // ones) and that width is what `sizes` gives.
 const slideSizes = ({ ratio }: Slide) =>
-  `(max-width: 991px) ${Math.round(112 * ratio)}px, (max-width: 1440px) ${Math.round(240 * ratio)}px, calc((150px + 6.25vw) * ${ratio.toFixed(3)})`;
+  `(max-width: 479px) ${Math.round(144 * ratio)}px, (max-width: 991px) ${Math.round(112 * ratio)}px, (max-width: 1440px) ${Math.round(240 * ratio)}px, calc((150px + 6.25vw) * ${ratio.toFixed(3)})`;
 
 const grid = ref<HTMLElement | null>(null);
 let frame = 0;
@@ -271,6 +271,10 @@ onBeforeUnmount(() => {
   .pgallery__frame {
     margin-inline: 0;
     border-radius: 0;
+  }
+
+  .pgallery__line {
+    height: 9rem;
   }
 }
 </style>

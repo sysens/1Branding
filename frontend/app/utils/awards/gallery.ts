@@ -31,7 +31,7 @@ function createCard(src: string, column: number): HTMLElement {
   return card;
 }
 
-export function createAwardsGallery(container: HTMLElement): AwardsGallery {
+export function createAwardsGallery(container: HTMLElement, { shown = 1 } = {}): AwardsGallery {
   const renderer = new CSS3DRenderer();
   renderer.domElement.className = "awards-gallery__projection";
   container.append(renderer.domElement);
@@ -60,7 +60,9 @@ export function createAwardsGallery(container: HTMLElement): AwardsGallery {
   return {
     resize(width, height) {
       if (width <= 0 || height <= 0) return;
-      const worldHeight = Math.max(STAGE_HEIGHT, STAGE_WIDTH * height / width);
+      // `shown`: the share of the stage's width kept in view (the canvas behind
+      // it, utils/awards/renderer.ts, frames the same).
+      const worldHeight = Math.max(STAGE_HEIGHT, (STAGE_WIDTH * shown * height) / width);
       camera.aspect = width / height;
       camera.fov = 2 * Math.atan(worldHeight / 2 / CAMERA_DISTANCE) * 180 / Math.PI;
       camera.updateProjectionMatrix();

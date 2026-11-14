@@ -5,16 +5,25 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 // A diagonal wall of project slides (after slidor.agency's home intro): five
 // rows of five 16:9 slides on black, the whole block tilted -5°. While the wall
 // crosses the screen, odd rows slide right and even rows left, 10vw each way.
+// On phones the wall fills the screen: two more rows (PHONE_ROWS, first and
+// last), the slides sized so the seven fill its height.
+const toSrc = (row: number[]) => row.map((id) => `/home/threeLayerLocal/${id}.webp`);
 const ROWS = [
   [22, 13, 23, 19, 34],
   [35, 21, 25, 38, 24],
   [12, 33, 26, 299, 28],
   [31, 29, 37, 32, 15],
   [36, 39, 17, 40, 199],
-].map((row) => row.map((id) => `/home/threeLayerLocal/${id}.webp`));
+].map(toSrc);
+const PHONE_ROWS = [[11, 14, 16, 18, 27], [26, 38, 13, 31, 17]].map(toSrc);
+const LINES = [
+  { slides: PHONE_ROWS[0]!, phone: true },
+  ...ROWS.map((slides) => ({ slides, phone: false })),
+  { slides: PHONE_ROWS[1]!, phone: true },
+];
 
-// A slide is 26vw wide (32vw on phones): the drawn width that picks its copy.
-const SLIDE_SIZES = "(max-width: 479px) 32vw, 26vw";
+// A slide is 26vw wide (about 52vw on phones): the drawn width that picks its copy.
+const SLIDE_SIZES = "(max-width: 479px) 52vw, 26vw";
 const portfolioAlt = usePortfolioAlt();
 
 const root = ref<HTMLElement | null>(null);
@@ -59,8 +68,14 @@ onBeforeUnmount(() => {
 <template>
   <section ref="root" class="slide-wall" aria-hidden="true">
     <div class="slide-wall__lines">
-      <div v-for="(row, rowIndex) in ROWS" :key="rowIndex" v-rise class="slide-wall__line">
-        <div v-for="src in row" :key="src" class="slide-wall__slide">
+      <div
+        v-for="(line, lineIndex) in LINES"
+        :key="lineIndex"
+        v-rise
+        class="slide-wall__line"
+        :class="{ 'slide-wall__line--phone': line.phone }"
+      >
+        <div v-for="src in line.slides" :key="src" class="slide-wall__slide">
           <OptImage
             :src="src"
             :sizes="SLIDE_SIZES"
@@ -134,13 +149,23 @@ onBeforeUnmount(() => {
   }
 }
 
+/* Phones: the wall is one screen tall, its seven rows (with PHONE_ROWS) a
+   little taller than it in all, each row five slides of that height. */
 @media (max-width: 479px) {
   .slide-wall {
-    height: 90vw;
+    --slide-h: calc((100svh + 3rem - 6 * var(--wall-gap)) / 7);
+    height: 100vh;
+    height: 100svh;
   }
 
   .slide-wall__lines {
-    width: 160vw;
+    width: calc(5 * var(--slide-h) * 16 / 9 + 4 * var(--wall-gap));
+  }
+}
+
+@media (min-width: 480px) {
+  .slide-wall__line--phone {
+    display: none;
   }
 }
 </style>

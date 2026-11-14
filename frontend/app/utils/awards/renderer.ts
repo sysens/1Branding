@@ -3,7 +3,7 @@ import {
   NoToneMapping, PerspectiveCamera, Scene, SRGBColorSpace, WebGLRenderer,
   type BufferGeometry, type Material,
 } from "three";
-import { CAMERA_DISTANCE, STAGE_HEIGHT, STAGE_WIDTH } from "./layout";
+import { CAMERA_DISTANCE, PHONE_SHOWN, STAGE_HEIGHT, STAGE_WIDTH } from "./layout";
 import { createAwardNumeral } from "./scenery";
 import { createStageLights } from "./ceiling";
 
@@ -32,8 +32,10 @@ export function createAwardsRenderer(canvas: HTMLCanvasElement, { numeral = true
     resize(width, height) {
       if (width <= 0 || height <= 0) return;
       const aspect = width / height;
-      // Keep the complete stage visible on phones rather than cropping the foreground numeral.
-      const worldHeight = Math.max(STAGE_HEIGHT, STAGE_WIDTH / aspect);
+      // With the numeral the complete stage stays in view on phones rather than
+      // cropping it; without it a taller (phone) box shows the middle half of
+      // the stage, its cards larger (the same as utils/awards/gallery.ts).
+      const worldHeight = Math.max(STAGE_HEIGHT, (STAGE_WIDTH * (numeral ? 1 : PHONE_SHOWN)) / aspect);
       camera.aspect = aspect;
       camera.fov = 2 * Math.atan(worldHeight / 2 / CAMERA_DISTANCE) * 180 / Math.PI;
       camera.updateProjectionMatrix();

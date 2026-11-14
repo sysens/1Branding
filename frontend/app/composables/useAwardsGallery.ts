@@ -1,7 +1,7 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref } from "vue";
 import type { AwardsGallery } from "~/utils/awards/gallery";
 
-export function useAwardsGallery(root: Ref<HTMLElement | null>, surface: Ref<HTMLElement | null>, paused: Ref<boolean>) {
+export function useAwardsGallery(root: Ref<HTMLElement | null>, surface: Ref<HTMLElement | null>, paused: Ref<boolean>, { shown = 1 } = {}) {
   const ready = ref(false);
   let renderer: AwardsGallery | null = null;
   let disposed = false;
@@ -35,7 +35,7 @@ export function useAwardsGallery(root: Ref<HTMLElement | null>, surface: Ref<HTM
     try {
       const { createAwardsGallery } = await import("~/utils/awards/gallery");
       if (disposed || !surface.value) return;
-      renderer = createAwardsGallery(surface.value);
+      renderer = createAwardsGallery(surface.value, { shown });
       resize();
       renderer.render(time);
       ready.value = true;
