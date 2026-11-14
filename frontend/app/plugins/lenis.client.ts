@@ -1,6 +1,6 @@
 import Lenis from "lenis"
 import { pendingLazySectionsOnScreen } from "~/utils/lazySections"
-import { VIEW_TRANSITION_CLASS, VIEW_TRANSITION_END } from "~/utils/viewTransition"
+import { markPageSettled, VIEW_TRANSITION_CLASS, VIEW_TRANSITION_END } from "~/utils/viewTransition"
 
 // ScrollTrigger is loaded on demand: a static import here pulled GSAP and
 // ScrollTrigger (~40 KB compressed) into the entry chunk, i.e. into the
@@ -214,6 +214,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
     // restoreTo shows the page itself once the position is final.
     if (!restoring) reveal()
+    // For opening animations (utils/viewTransition.ts): put back further
+    // down (saved, or the browser's own restore on a first load) or not.
+    markPageSettled(route.fullPath, restoring || (firstLoad && window.scrollY > 40))
     historyNavigation = false
     firstLoad = false
 

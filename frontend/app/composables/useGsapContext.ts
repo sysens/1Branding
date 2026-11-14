@@ -1,5 +1,5 @@
 import type { Ref } from "vue";
-import { afterViewTransition } from "~/utils/viewTransition";
+import { afterPageSettles } from "~/utils/viewTransition";
 
 type Gsap = typeof import("gsap").gsap;
 type ScrollTriggerPlugin = typeof import("gsap/ScrollTrigger").ScrollTrigger;
@@ -23,11 +23,12 @@ type GsapContextOptions = {
   /** Also animate for visitors who ask for reduced motion (default: skip). */
   allowReducedMotion?: boolean;
   /**
-   * Wait for the page transition to end before setting up (utils/viewTransition.ts):
-   * for a page's opening animation, which would otherwise play half hidden under
-   * it, and measure the page before its scroll is back at the top.
+   * Wait until the page's scroll is settled and the page transition is over
+   * before setting up (utils/viewTransition.ts): for a page's opening
+   * animation, which would otherwise play half hidden under the transition,
+   * and measure the page before its scroll is in place.
    */
-  afterViewTransition?: boolean;
+  afterPageSettles?: boolean;
 };
 
 /**
@@ -55,6 +56,7 @@ export function useGsapContext(
   setup: (tools: GsapTools & { ScrollTrigger: ScrollTriggerPlugin }) => void,
   options: GsapContextOptions = {}
 ) {
+  const route = options.afterPageSettles ? useRoute() : null;
   let ctx: { revert: () => void } | null = null;
   let observer: IntersectionObserver | null = null;
   let disposed = false;
@@ -68,7 +70,7 @@ export function useGsapContext(
     const [{ gsap }, scrollTriggerModule] = await Promise.all([
       import("gsap"),
       options.scrollTrigger ? import("gsap/ScrollTrigger") : Promise.resolve(null),
-      options.afterViewTransition ? afterViewTransition() : Promise.resolve(),
+      route ? afterPageSettles(route.fullPath) : Promise.resolve(),
     ]);
     starting = false;
     const el = scope.value;

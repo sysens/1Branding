@@ -5,6 +5,7 @@ import type { ProjectWallItem } from "~/composables/useProjectsWallData";
 import { toSiteLocale } from "~/utils/locales";
 import { createTrack, headAt, TRACK_PERSPECTIVE } from "~/utils/ribbonTrack";
 import { servicePath } from "~/utils/servicePages";
+import { pageWasRestored } from "~/utils/viewTransition";
 
 /**
  * /projects' first screen. It opens with a short film (about 4.7s): "WE MAKE"
@@ -19,11 +20,28 @@ import { servicePath } from "~/utils/servicePages";
  * play for visitors who ask for less motion, nor when the page is reopened
  * further down. The last tile leads to the showcase.
  * Arriving from another page, it starts once the page transition is over (it
- * played half hidden under it before), and input in its first second is not
- * taken as a skip: the momentum of a scroll on the page before (a touchpad's)
- * went on sending wheel events and skipped it the moment it began.
+ * played half hidden under it before). Whether the page was reopened further
+ * down is what the scroll's settling recorded, not where the page is by then:
+ * the momentum of a scroll on the page before (a touchpad's) went on moving
+ * the new page and the film took it for one reopened lower. The page is set
+ * at the top and its scroll held while the film plays (the momentum goes
+ * nowhere), and input in its first second is not taken as a skip.
  */
 const props = defineProps<{ projects: ProjectWallItem[]; category: string }>();
+
+// Taken now: the app context is gone by the time the film runs.
+const lenis = useNuxtApp().$lenis as { start?: () => void; stop?: () => void; scrollTo?: (target: number, options?: object) => void } | undefined;
+let holding = false;
+const holdScroll = () => {
+  lenis?.scrollTo?.(0, { immediate: true, force: true });
+  lenis?.stop?.();
+  holding = true;
+};
+const releaseScroll = () => {
+  if (!holding) return;
+  holding = false;
+  lenis?.start?.();
+};
 
 const { t, locale } = useI18n();
 
@@ -109,13 +127,17 @@ onMounted(() => {
     waiting.value = false;
   }
 });
-onBeforeUnmount(stopListening);
+onBeforeUnmount(() => {
+  stopListening();
+  releaseScroll();
+});
 
 useGsapContext(root, ({ gsap, el }) => {
   waiting.value = false;
   const cards = [...el.querySelectorAll<HTMLElement>(".work-card")];
-  // Reopened further down the page (a reload keeps the place): no film.
-  if (window.scrollY > 40) {
+  // Reopened further down the page (a reload or back/forward keeps the
+  // place): no film.
+  if (pageWasRestored()) {
     intro.value = false;
     return;
   }
@@ -129,6 +151,7 @@ useGsapContext(root, ({ gsap, el }) => {
 
   const finish = () => {
     stopListening();
+    releaseScroll();
     playing.value = false;
     intro.value = false;
   };
@@ -137,10 +160,13 @@ useGsapContext(root, ({ gsap, el }) => {
   // so it is seen and not played out behind the loader.
   const loading = document.documentElement.classList.contains("ob-loading");
   let started = !loading;
+  // The loader holds the scroll itself until it has gone.
+  if (!loading) holdScroll();
   const timeline = gsap.timeline({ onComplete: finish, paused: loading });
   if (loading) {
     window.addEventListener("ob:loader-complete", () => {
       started = true;
+      holdScroll();
       timeline.play();
     }, { once: true });
   }
@@ -220,9 +246,10 @@ useGsapContext(root, ({ gsap, el }) => {
     if (!started || timeline.time() < SKIP_AFTER) return;
     if (timeline.time() < GRID_AT - 0.05) timeline.seek(GRID_AT - 0.05);
     stopListening();
+    releaseScroll();
   };
   SKIP_EVENTS.forEach((name) => window.addEventListener(name, skip!, { passive: true }));
-}, { afterViewTransition: true });
+}, { afterPageSettles: true });
 </script>
 
 <template>
