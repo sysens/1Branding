@@ -115,7 +115,9 @@ describe("price packages", () => {
       { title: "Product", price: "$65.00" },
       { title: "Global", price: "$99.00" },
     ]);
-    expect(presentation.map((plan) => [plan.title, plan.price])).toEqual([["Start", "$15.00"], ["Product", "$65.00"], ["Global", "$125.00"]]);
+    expect(presentation.map((plan) => [plan.title, plan.price])).toEqual([["Start", "$25.00"], ["Product", "$65.00"], ["Global", "$125.00"]]);
+    // Where the CMS has Start at the first new price ($15), it is raised too.
+    expect(withPriceChanges("Presentation", [{ title: "Start", price: "$15.00" }])[0]?.price).toBe("$25.00");
     // Still cheapest first: Start, Product, Global; priced per slide.
     expect([...presentation].sort((a, b) => priceNumber(a.price) - priceNumber(b.price)).map((plan) => plan.title)).toEqual(["Start", "Product", "Global"]);
     expect(SERVICE_PAGES.find((page) => page.priceCategory === "Presentation")?.priceUnit).toBe("slide");
@@ -131,8 +133,10 @@ describe("price packages", () => {
 
   test("Naming is a new service with Creative, Complex and Advanced", () => {
     const naming = ADDED_CATEGORIES.find((added) => added.category === "Naming")!;
-    expect(naming.plans.map((plan) => [plan.title, plan.price])).toEqual([["Creative", 1500], ["Complex", 3000], ["Advanced", 6000]]);
-    expect(naming.plans.map((plan) => dollars(plan.price))).toEqual(["$1500.00", "$3000.00", "$6000.00"]);
+    expect(naming.plans.map((plan) => [plan.title, plan.price])).toEqual([["Creative", 1500], ["Complex", 3000], ["Advanced", 7500]]);
+    expect(naming.plans.map((plan) => dollars(plan.price))).toEqual(["$1500.00", "$3000.00", "$7500.00"]);
+    // Where the CMS made it with the first price, it is raised.
+    expect(withPriceChanges("Naming", [{ title: "Advanced", price: "$6000.00" }])[0]?.price).toBe("$7500.00");
     // A price list without it gets it; one that has it (any case) does not.
     expect(missingCategories(["Branding", "Logo"]).map((added) => added.category)).toContain("Naming");
     expect(missingCategories(["Branding", " NAMING "]).map((added) => added.category)).not.toContain("Naming");
@@ -200,9 +204,9 @@ describe("price packages", () => {
     }
   });
 
-  test("Branding's and Logo's packages have texts of their own in every language", () => {
+  test("Branding's, Logo's, Naming's, Visual identity's and Presentation's packages have texts of their own in every language", () => {
     const en = planTexts("en");
-    expect(Object.keys(en).sort()).toEqual(["branding", "logo"]);
+    expect(Object.keys(en).sort()).toEqual(["branding", "logo", "naming", "presentation", "visual identity"]);
     for (const locale of ["en", "ru", "uz"]) {
       const copy = planTexts(locale);
       for (const [category, plans] of Object.entries(en)) {
@@ -234,6 +238,8 @@ describe("price packages", () => {
     expect(isSupersededDescription("Branding", `${branding} Ask us.`)).toBe(false);
     expect(isSupersededDescription("Branding", "")).toBe(false);
     expect(isSupersededDescription("Packaging", null)).toBe(false);
+    // Presentation's, as the CMS has it (one package's with a line break at the end).
+    expect(isSupersededDescription("Presentation", "Presentation design is the creation of visually compelling and well-structured materials that clearly convey ideas, enhance meaning, and hold the audience’s attention. We develop presentations with a focus on logic, visual hierarchy, and a clean modern style, so that each slide works toward the desired outcome—whether it’s a sale, project defense, or public speaking. Pricing is calculated per slide, allowing flexible project scope tailored to the client’s needs.\n")).toBe(true);
     expect(isSupersededDescription("Logo", "Logo design is the creation of a brand’s key symbol, which forms the first impression and sets the visual direction for the entire identity. We create logos based on strategy and positioning so that they are not only aesthetically pleasing but also recognizable, relevant, and enduring.\n")).toBe(true);
   });
 

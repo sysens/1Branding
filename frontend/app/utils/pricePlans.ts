@@ -89,6 +89,11 @@ const SUPERSEDED_DESCRIPTIONS: Record<string, readonly string[]> = {
   logo: [
     "Logo design is the creation of a brand’s key symbol, which forms the first impression and sets the visual direction for the entire identity. We create logos based on strategy and positioning so that they are not only aesthetically pleasing but also recognizable, relevant, and enduring.",
   ],
+  presentation: [
+    "Presentation design is the creation of visually compelling and well-structured materials that clearly convey ideas, enhance meaning, and hold the audience’s attention. We develop presentations with a focus on logic, visual hierarchy, and a clean modern style, so that each slide works toward the desired outcome—whether it’s a sale, project defense, or public speaking. Pricing is calculated per slide, allowing flexible project scope tailored to the client’s needs.",
+  ],
+  // Naming and Visual identity were added to the CMS without a description
+  // (backend/src/utils/plan-prices.ts): theirs is the site's already.
 };
 
 const squeeze = (text: string) => text.replace(/\s+/g, " ").trim();
@@ -145,8 +150,11 @@ export const PRICE_CHANGES: readonly PriceChange[] = [
   { category: "logo", plan: "individual", from: 900, price: 560, title: "Standard", add: [{ title: "One Pro", price: 1500 }] },
   { category: "packaging", plan: "advanced", from: 500, price: 17200, title: "Leader product" },
   { category: "packaging", plan: "all in one", from: 1900, price: 1650, title: "One Pro" },
-  { category: "presentation", plan: "start", from: 35, price: 15 },
+  { category: "presentation", plan: "start", from: 35, price: 25 },
   { category: "presentation", plan: "global", from: 99, price: 125 },
+  // Set in the CMS by the first changes, raised since.
+  { category: "presentation", plan: "start", from: 15, price: 25 },
+  { category: "naming", plan: "advanced", from: 6000, price: 7500 },
 ];
 
 /** 5400 -> "$5400.00": how the price list writes a price. */
@@ -162,7 +170,7 @@ export const dollars = (amount: number) => `$${amount}.00`;
 export type AddedCategory = { category: string; plans: ReadonlyArray<{ title: string; price: number }> };
 
 export const ADDED_CATEGORIES: readonly AddedCategory[] = [
-  { category: "Naming", plans: [{ title: "Creative", price: 1500 }, { title: "Complex", price: 3000 }, { title: "Advanced", price: 6000 }] },
+  { category: "Naming", plans: [{ title: "Creative", price: 1500 }, { title: "Complex", price: 3000 }, { title: "Advanced", price: 7500 }] },
   { category: "Visual identity", plans: [{ title: "Creative", price: 1850 }] },
   { category: "Visual content", plans: [{ title: "Template", price: 620 }, { title: "Individual", price: 2000 }] },
 ];

@@ -83,5 +83,125 @@
       ],
       "text": "A deeper creative process for brands seeking a distinctive visual signature. We explore two original directions, refine the chosen concept with meticulous attention and develop a versatile logo system—supported by practical guidelines for a consistent, confident presence."
     }
+  },
+  "naming": {
+    "creative": {
+      "tagline": "A strong name. A distinctive beginning.",
+      "items": [
+        "Brand brief & naming criteria",
+        "Focused competitor name review",
+        "3 original name proposals",
+        "Meaning & rationale for each name",
+        "Pronunciation & spelling review",
+        "Preliminary online similarity checks",
+        "Domain & social handle checks",
+        "1 round of shortlist refinement",
+        "1 final name & spelling guidelines"
+      ],
+      "text": "A focused naming service for businesses ready to establish their identity. We explore original ideas and present a considered shortlist, with a clear explanation behind each proposal—helping you choose a name with meaning, clarity and character."
+    },
+    "complex": {
+      "tagline": "Built on meaning. Made to be remembered.",
+      "items": [
+        "Market & competitor naming analysis",
+        "Brand positioning & naming strategy",
+        "5 original name proposals",
+        "Strategic rationale for each proposal",
+        "Uzbek, Russian & English language review",
+        "Pronunciation, meaning & association checks",
+        "1 signature slogan for the chosen name",
+        "Preliminary name-conflict screening",
+        "Domain & social handle checks",
+        "2 rounds of shortlist refinement",
+        "1 final name & naming presentation"
+      ],
+      "text": "For brands that need a name grounded in strategy. We connect your positioning with a distinctive naming direction, develop a carefully selected shortlist and assess how each name sounds and communicates across Uzbek, Russian and English."
+    },
+    "advanced": {
+      "tagline": "A name with authority. A system built to grow.",
+      "items": [
+        "In-depth market & competitor naming research",
+        "Naming strategy & brand architecture",
+        "7 master-brand name proposals",
+        "Uzbek, Russian & English language review",
+        "Cultural meaning & association checks",
+        "Preliminary conflict, domain & handle checks",
+        "1 master name + up to 3 product names",
+        "Tagline & story for the chosen brand name",
+        "Product-naming rules & usage guidelines",
+        "3 rounds of shortlist refinement",
+        "Signature brand slogan",
+        "PR & campaign slogan development",
+        "Launch headlines & key brand messages",
+        "Complete naming presentation & rationale"
+      ],
+      "text": "A complete naming system for brands with expansion in mind. We develop your master brand name, establish a clear logic for product names and connect them through a distinctive story and tagline—creating consistency across your brand’s next chapter."
+    }
+  },
+  "visual identity": {
+    "creative": {
+      "tagline": "One visual language. A powerful brand presence.",
+      "items": [
+        "Brand brief & visual identity review",
+        "2 creative directions & moodboards",
+        "Signature colour palette",
+        "Typography system & text hierarchy",
+        "Distinctive graphics & brand patterns",
+        "Photography & illustration direction",
+        "Grid system & layout principles",
+        "5 custom brand & social templates",
+        "Visual identity guidelines",
+        "Print, digital & editable source files"
+      ],
+      "text": "A distinctive visual system built around your existing logo and brand direction. We bring colours, typography, graphics and layouts together, then apply them to practical templates—giving your team the tools to present your brand with consistency and confidence."
+    }
+  },
+  "presentation": {
+    "start": {
+      "tagline": "Clear slides. A confident impression.",
+      "items": [
+        "Design aligned with your existing brand",
+        "Layout of supplied text & images",
+        "Clear typography & visual hierarchy",
+        "Consistent colours, spacing & alignment",
+        "Cover, section & closing slide design",
+        "Simple icons & image placement",
+        "1 round of design refinement",
+        "Editable presentation & PDF export"
+      ],
+      "text": "Professional slide design for content that is ready to present. We bring your supplied text, images and brand elements into clean, consistent layouts—making your message easier to follow and your business look prepared."
+    },
+    "product": {
+      "tagline": "A stronger story. A sharper presentation.",
+      "items": [
+        "Audience & presentation goal review",
+        "Clear structure & storyline",
+        "Supplied content editing & refinement",
+        "Custom slide design in your brand style",
+        "Charts & tables from supplied data",
+        "Icons, diagrams & infographics",
+        "Key figures & benefits highlighted",
+        "Consistent cover, section & closing design",
+        "2 rounds of design refinement",
+        "Editable presentation & PDF export"
+      ],
+      "text": "For sales decks, company profiles and product presentations that need a clear narrative and a persuasive visual presence. We refine your content, strengthen the slide sequence and turn key messages and data into distinctive visuals that make your value easier to understand."
+    },
+    "global": {
+      "tagline": "Present with authority. Leave a lasting impression.",
+      "items": [
+        "Strategic narrative & key-message development",
+        "Content rewriting from supplied material",
+        "Bespoke art direction & slide design",
+        "Advanced charts & visual storytelling",
+        "Custom diagrams & illustration elements",
+        "Reusable master slides & layouts",
+        "Purposeful animation & transitions",
+        "Full-deck consistency & playback checks",
+        "3 rounds of design refinement",
+        "Editable master presentation & PDF"
+      ],
+      "text": "For investor pitches, executive presentations and major launches where every detail matters. We develop a focused narrative, distinctive art direction and a reusable presentation system—helping your team communicate complex ideas with clarity, authority and a powerful brand presence."
+    }
   }
 }

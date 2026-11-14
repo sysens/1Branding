@@ -34,8 +34,11 @@ export const CHANGES: PriceChange[] = [
   { category: "Logo", plan: "Individual", from: 900, price: "$560.00", title: "Standard", add: [{ title: "One Pro", price: "$1500.00" }] },
   { category: "Packaging", plan: "Advanced", from: 500, price: "$17200.00", title: "Leader product" },
   { category: "Packaging", plan: "All in one", from: 1900, price: "$1650.00", title: "One Pro" },
-  { category: "Presentation", plan: "Start", from: 35, price: "$15.00" },
+  { category: "Presentation", plan: "Start", from: 35, price: "$25.00" },
   { category: "Presentation", plan: "Global", from: 99, price: "$125.00" },
+  // Set by the first changes (or created with the service), raised since.
+  { category: "Presentation", plan: "Start", from: 15, price: "$25.00" },
+  { category: "Naming", plan: "Advanced", from: 6000, price: "$7500.00" },
 ];
 
 const PRICE_CATEGORY = "api::price-category.price-category";
@@ -68,9 +71,10 @@ export const applyPriceChanges = async (strapi: Core.Strapi, changes: PriceChang
       // its id and its own fields, the changed ones with the new values, the
       // added ones (no id) after the package they come with.
       const pricing = (entry.pricing ?? []).flatMap((item): Package[] => {
-        const change = changes.find((candidate) => same(candidate.category, entry.title) && same(candidate.plan, item.title));
+        // A package can have more than one change, each for a price it may still be at.
+        const change = changes.find((candidate) => same(candidate.category, entry.title) && same(candidate.plan, item.title) && amount(item.price) === candidate.from);
         const kept = { id: item.id, title: item.title, price: item.price, priceText: item.priceText, description: item.description, oldPrice: item.oldPrice };
-        if (!change || amount(item.price) !== change.from) return [kept];
+        if (!change) return [kept];
         touched += 1 + (change.add?.length ?? 0);
         return [
           { ...kept, title: change.title ?? item.title, price: change.price, oldPrice: change.oldPrice ?? null },
@@ -100,7 +104,7 @@ export const ADDED_CATEGORIES: AddedCategory[] = [
     plans: [
       { title: "Creative", price: "$1500.00" },
       { title: "Complex", price: "$3000.00" },
-      { title: "Advanced", price: "$6000.00" },
+      { title: "Advanced", price: "$7500.00" },
     ],
   },
   { category: "Visual identity", plans: [{ title: "Creative", price: "$1850.00" }] },

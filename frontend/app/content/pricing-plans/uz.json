@@ -83,5 +83,125 @@
       ],
       "text": "Noyob vizual imzo izlayotgan brendlar uchun chuqurroq ijodiy jarayon. Biz ikkita original yoʻnalishni oʻrganamiz, tanlangan konsepsiyani eng kichik tafsilotigacha takomillashtiramiz va koʻp qirrali logotip tizimini ishlab chiqamiz — izchil va ishonchli mavjudlik uchun amaliy qoidalar bilan."
     }
+  },
+  "naming": {
+    "creative": {
+      "tagline": "Kuchli nom. Oʻziga xos boshlanish.",
+      "items": [
+        "Brend brifi va nom mezonlari",
+        "Raqobatchilar nomlari sharhi",
+        "3 ta original nom taklifi",
+        "Har bir nomning maʼnosi va izohi",
+        "Talaffuz va yozilishni tekshirish",
+        "Oʻxshash nomlarni dastlabki tekshirish",
+        "Domen va ijtimoiy tarmoq nomlari tekshiruvi",
+        "Qisqa roʻyxatni 1 bosqich takomillashtirish",
+        "1 ta yakuniy nom va yozilish qoidalari"
+      ],
+      "text": "Oʻz qiyofasini shakllantirishga tayyor bizneslar uchun yoʻnaltirilgan neyming xizmati. Biz original gʻoyalarni izlaymiz va har bir taklifning aniq izohi bilan puxta tanlangan qisqa roʻyxatni taqdim etamiz — maʼnoli, aniq va xarakterli nom tanlashingiz uchun."
+    },
+    "complex": {
+      "tagline": "Maʼnoga asoslangan. Esda qolish uchun yaratilgan.",
+      "items": [
+        "Bozor va raqobatchilar nomlari tahlili",
+        "Brend pozitsiyasi va neyming strategiyasi",
+        "5 ta original nom taklifi",
+        "Har bir taklifning strategik izohi",
+        "Oʻzbek, rus va ingliz tillarida tekshiruv",
+        "Talaffuz, maʼno va assotsiatsiyalar tekshiruvi",
+        "Tanlangan nom uchun 1 ta brend shiori",
+        "Nomlar toʻqnashuvini dastlabki tekshirish",
+        "Domen va ijtimoiy tarmoq nomlari tekshiruvi",
+        "Qisqa roʻyxatni 2 bosqich takomillashtirish",
+        "1 ta yakuniy nom va neyming taqdimoti"
+      ],
+      "text": "Strategiyaga asoslangan nom kerak boʻlgan brendlar uchun. Biz pozitsiyangizni oʻziga xos neyming yoʻnalishi bilan bogʻlaymiz, puxta tanlangan qisqa roʻyxat tuzamiz va har bir nom oʻzbek, rus va ingliz tillarida qanday yangrashi va nimani anglatishini baholaymiz."
+    },
+    "advanced": {
+      "tagline": "Obroʻli nom. Oʻsish uchun qurilgan tizim.",
+      "items": [
+        "Bozor va raqobatchilar nomlarini chuqur oʻrganish",
+        "Neyming strategiyasi va brend arxitekturasi",
+        "7 ta bosh brend nomi taklifi",
+        "Oʻzbek, rus va ingliz tillarida tekshiruv",
+        "Madaniy maʼno va assotsiatsiyalar tekshiruvi",
+        "Toʻqnashuv, domen va akkauntlar tekshiruvi",
+        "1 ta bosh nom + 3 tagacha mahsulot nomi",
+        "Tanlangan nom uchun shior va hikoya",
+        "Mahsulot nomlash va foydalanish qoidalari",
+        "Qisqa roʻyxatni 3 bosqich takomillashtirish",
+        "Brendning asosiy shiori",
+        "PR va kampaniya shiorlarini ishlab chiqish",
+        "Ishga tushirish sarlavhalari va asosiy xabarlar",
+        "Toʻliq neyming taqdimoti va izohi"
+      ],
+      "text": "Kengayishni rejalashtirgan brendlar uchun toʻliq neyming tizimi. Biz bosh brend nomini ishlab chiqamiz, mahsulot nomlari uchun aniq mantiq belgilaymiz va ularni oʻziga xos hikoya va shior orqali bogʻlaymiz — brendingizning keyingi bosqichida izchillik uchun."
+    }
+  },
+  "visual identity": {
+    "creative": {
+      "tagline": "Yagona vizual til. Kuchli brend qiyofasi.",
+      "items": [
+        "Brend brifi va firma uslubi tahlili",
+        "2 ta ijodiy yoʻnalish va mudbordlar",
+        "Brendning rang palitrasi",
+        "Shriftlar tizimi va matn ierarxiyasi",
+        "Oʻziga xos grafika va brend patternlari",
+        "Foto va illyustratsiya yoʻnalishi",
+        "Modul toʻr va sahifalash tamoyillari",
+        "5 ta brend va ijtimoiy tarmoq shabloni",
+        "Firma uslubi qoʻllanmasi",
+        "Bosma, raqamli va manba fayllar"
+      ],
+      "text": "Mavjud logotipingiz va brend yoʻnalishingiz asosida yaratilgan oʻziga xos vizual tizim. Biz ranglar, tipografiya, grafika va maketlarni birlashtirib, ularni amaliy shablonlarda qoʻllaymiz — jamoangiz brendni izchil va ishonch bilan taqdim etishi uchun."
+    }
+  },
+  "presentation": {
+    "start": {
+      "tagline": "Aniq slaydlar. Ishonchli taassurot.",
+      "items": [
+        "Mavjud brendingizga mos dizayn",
+        "Siz bergan matn va tasvirlarni joylash",
+        "Aniq tipografiya va vizual ierarxiya",
+        "Bir xil ranglar, oraliqlar va tekislash",
+        "Muqova, boʻlim va yakuniy slayd dizayni",
+        "Oddiy ikonkalar va tasvirlarni joylash",
+        "Dizaynni 1 bosqich takomillashtirish",
+        "Tahrirlanadigan fayl va PDF eksport"
+      ],
+      "text": "Taqdimotga tayyor kontent uchun professional slayd dizayni. Biz siz bergan matnlar, tasvirlar va brend elementlarini toza va bir xil maketlarga joylaymiz — xabaringiz oson tushunilishi va biznesingiz puxta tayyorlangan koʻrinishi uchun."
+    },
+    "product": {
+      "tagline": "Kuchliroq hikoya. Aniqroq taqdimot.",
+      "items": [
+        "Auditoriya va taqdimot maqsadi tahlili",
+        "Aniq tuzilma va syujet",
+        "Kontentingizni tahrirlash va takomillashtirish",
+        "Brend uslubida individual slayd dizayni",
+        "Maʼlumotlaringiz asosida grafik va jadvallar",
+        "Ikonkalar, sxemalar va infografika",
+        "Asosiy raqamlar va afzalliklarga urgʻu",
+        "Yagona muqova, boʻlim va yakuniy dizayn",
+        "Dizaynni 2 bosqich takomillashtirish",
+        "Tahrirlanadigan fayl va PDF eksport"
+      ],
+      "text": "Aniq syujet va ishonarli vizual qiyofa kerak boʻlgan savdo taqdimotlari, kompaniya profillari va mahsulot taqdimotlari uchun. Biz kontentingizni takomillashtiramiz, slaydlar ketma-ketligini kuchaytiramiz hamda asosiy xabarlar va maʼlumotlarni qiymatingizni tushunishni osonlashtiradigan oʻziga xos vizuallarga aylantiramiz."
+    },
+    "global": {
+      "tagline": "Ishonch bilan taqdim eting. Unutilmas taassurot qoldiring.",
+      "items": [
+        "Strategik syujet va asosiy xabarlar",
+        "Materiallaringiz asosida kontentni qayta yozish",
+        "Individual art-direksiya va slayd dizayni",
+        "Murakkab grafiklar va vizual hikoya",
+        "Maxsus sxema va illyustratsiya elementlari",
+        "Qayta ishlatiladigan master-slayd va maketlar",
+        "Maqsadli animatsiya va oʻtishlar",
+        "Butun taqdimot izchilligi va namoyish tekshiruvi",
+        "Dizaynni 3 bosqich takomillashtirish",
+        "Tahrirlanadigan master-taqdimot va PDF"
+      ],
+      "text": "Har bir tafsilot muhim boʻlgan investor pitchlari, rahbariyat taqdimotlari va yirik ishga tushirishlar uchun. Biz aniq syujet, oʻziga xos art-direksiya va qayta ishlatiladigan taqdimot tizimini ishlab chiqamiz — jamoangiz murakkab gʻoyalarni aniq, ishonarli va kuchli brend qiyofasi bilan yetkazishi uchun."
+    }
   }
 }
