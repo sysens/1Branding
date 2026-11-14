@@ -82,14 +82,23 @@ const GLOW_GREEN = "12 204 60";
 const HEADLINE_CUE = 0.78;
 const TAGLINES_CUE = 0.8;
 
-// Screens narrower than the stage: where the camera looks (frame x), and at the
-// end it pulls back until the whole render fits.
-const ART_CENTER = frameX(ART_W / 2);
-const ZOOM_OUT = [0.86, 0.97] as const;
+// Screens narrower than the stage (phones). While ONE slides into its place
+// the camera follows it from the middle (frame x 1000) to `oneKey`, where
+// ONE's far end is at the screen's right edge. There ONE stays: the tubes and
+// the cards come out to its left and the camera pulls back (zooms out, ONE's
+// end held where it is) just enough to keep the newest of them in view, LOOK
+// render px ahead of the tubes' tip (a card ends up a quarter of its width
+// ahead of it), until the whole render is in view. CRM & ERP does not slide
+// out but fades in where it stands, so the view takes it in just before
+// (CRM_IN), from ONE alone to the card's left edge.
+// The camera follows on ONE's own ease (smoothstep over ONE_MOVE), so on the
+// screen ONE only ever moves right: on an ease-out the camera got ahead of it
+// and ONE went left first.
+const LOOK = 70;
+const CRM_IN = [ONE_MOVE[1], cardWindows[LAST]![0]] as const;
 const focusAt = (progress: number, oneKey: number) => {
-  if (progress <= 0.3) return lerpKeys([[ONE_MOVE[0], 1000], [0.22, oneKey], [0.3, frameX(FRONT[1]![1]) + 90]], progress);
-  if (progress <= ZOOM_OUT[0]) return frameX(frontAt(progress)) + 90;
-  return lerpKeys([[ZOOM_OUT[0], frameX(FRONT[2]![1]) + 90], [ZOOM_OUT[1], ART_CENTER]], progress);
+  const step = span(progress, ONE_MOVE);
+  return 1000 + (oneKey - 1000) * step * step * (3 - 2 * step);
 };
 
 const { t } = useI18n();
@@ -219,25 +228,37 @@ const render = () => {
   if (distance <= 0) return;
   const progress = clamp01(-section.getBoundingClientRect().top / distance);
 
-  // Stage placement: centred when the render fits, otherwise panned with the
-  // action and finally zoomed out to the whole render.
+  // Stage placement: centred when the render fits, otherwise following ONE to
+  // the right edge and then pulling back as the parts come out (focusAt).
   const u = stageBox.offsetWidth / 2000;
   const artWidth = ART_W * ART_SCALE * u;
   let zoom = 1;
   let left = (view.clientWidth - stageBox.offsetWidth) / 2;
   if (artWidth + 24 > view.clientWidth) {
-    const fit = Math.min(1, (view.clientWidth - 24) / artWidth);
-    zoom = 1 + (fit - 1) * ease(span(progress, ZOOM_OUT));
-    const scale = u * zoom;
-    // Keep ONE's far end in view while it lands on narrow screens.
-    const oneKey = Math.max(1330, frameX(ONE[0] + ONE[2]) - (view.clientWidth / 2 - 12) / scale);
-    // Never pan past the ends of the render (12px margin); once it fits, centre it.
-    const artLeft = frameX(CARDS[0]!.rect[0]) * scale;
-    const artRight = frameX(ONE[0] + ONE[2]) * scale;
-    const minLeft = view.clientWidth - 12 - artRight;
-    const maxLeft = 12 - artLeft;
-    const want = view.clientWidth / 2 - focusAt(progress, oneKey) * scale;
-    left = minLeft <= maxLeft ? Math.min(maxLeft, Math.max(minLeft, want)) : (minLeft + maxLeft) / 2;
+    const width = view.clientWidth;
+    const oneEnd = frameX(ONE[0] + ONE[2]);
+    const artStart = frameX(CARDS[0]!.rect[0]);
+    // Keep ONE's far end in view while it lands.
+    const oneKey = Math.max(1330, oneEnd - (width / 2 - 12) / u);
+    // Never pan past the ends of the render (12px margin).
+    const panned = (at: number) => {
+      const minLeft = width - 12 - oneEnd * u;
+      const maxLeft = 12 - artStart * u;
+      const want = width / 2 - focusAt(at, oneKey) * u;
+      return minLeft <= maxLeft ? Math.min(maxLeft, Math.max(minLeft, want)) : (minLeft + maxLeft) / 2;
+    };
+    if (progress <= ONE_MOVE[1]) {
+      left = panned(progress);
+    } else {
+      // Where ONE's far end landed on the screen stays put; the view reaches
+      // back to the newest part out, never past the render's start.
+      const anchor = panned(ONE_MOVE[1]) + oneEnd * u;
+      const crm = span(progress, CRM_IN);
+      const crmEdge = ONE[0] + (CARDS[LAST]!.rect[0] - ONE[0]) * crm * crm * (3 - 2 * crm);
+      const reach = frameX(Math.max(CARDS[0]!.rect[0], Math.min(frontAt(progress) - LOOK, crmEdge)));
+      zoom = Math.min(1, (anchor - 12) / ((oneEnd - reach) * u));
+      left = anchor - oneEnd * u * zoom;
+    }
   }
   stageBox.style.left = "0px";
   stageBox.style.transform = `translate3d(${left.toFixed(1)}px, -50%, 0) scale(${zoom.toFixed(4)})`;
