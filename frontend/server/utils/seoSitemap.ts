@@ -45,6 +45,7 @@ export const SITE_COPY_UPDATED = "2026-11-06";
 const staticPages: Array<{ path: string; source?: SingleType | Collection }> = [
   { path: "/", source: "landingPage" },
   { path: "/about", source: "aboutPage" },
+  { path: "/about/ceo", source: "aboutPage" },
   { path: "/services" },
   { path: "/projects", source: "projectsPages_connection" },
   { path: "/pricing", source: "price" },

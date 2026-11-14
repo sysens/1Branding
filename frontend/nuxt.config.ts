@@ -67,7 +67,7 @@ const securityHeaders = {
   // The site needs none of the device features; nothing on it (or embedded in it) may ask.
   "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
 };
-const cachedPages = ["/", "/about", "/contact", "/pricing", "/one-guarantee", "/projects", "/news", "/services", "/privacy"];
+const cachedPages = ["/", "/about", "/about/ceo", "/contact", "/pricing", "/one-guarantee", "/projects", "/news", "/services", "/privacy"];
 // Every language but the default one lives under its own prefix.
 const localePrefixes = ["", "/ru", "/uz"];
 // Rendered pages are kept in the server's memory for 5 minutes and refreshed in

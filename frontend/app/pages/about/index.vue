@@ -4,11 +4,10 @@ import OptImage from "~/components/ui/OptImage.vue";
 
 // About OneBranding, after the design: the office, dimmed, full screen, with
 // "Different minds. One shared vision." rising over its foot; the CEO, his
-// name over a green rule and the way to his story; the story itself beside a
-// photo of him at work, ending in "let's talk. one to one."; and the office
-// in four photos. The pictures have build-time AVIF/WebP copies
-// (public/about-page, scripts/optimize-images.mjs); the CEO's two are cut
-// from the design until their originals are in.
+// name over a green rule and the way to his story, which has a page of its
+// own (pages/about/ceo.vue); and the office in four photos. The pictures have
+// build-time AVIF/WebP copies (public/about-page, scripts/optimize-images.mjs);
+// the CEO's are cut from the design until their originals are in.
 
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -86,39 +85,9 @@ usePageSeo({
         <h2 id="about-ceo-name" v-rise class="about-ceo__name">{{ t("aboutPage.ceo.name") }}</h2>
         <p v-rise class="about-ceo__role">{{ t("aboutPage.ceo.role") }}</p>
         <p v-rise class="about-ceo__actions">
-          <a href="#about-story" class="ob-button about-button">{{ t("aboutPage.ceo.more") }}</a>
+          <NuxtLink :to="localePath('/about/ceo')" class="ob-button about-button">{{ t("aboutPage.ceo.more") }}</NuxtLink>
           <span class="about-ceo__meet">{{ t("aboutPage.ceo.meet") }}</span>
         </p>
-      </div>
-    </section>
-
-    <!-- His story and the way to a conversation. -->
-    <section id="about-story" class="about-story" :aria-label="t('aboutPage.ceo.storyLabel')">
-      <div v-rise class="about-story__photo">
-        <OptImage
-          src="/about-page/ceo-desk.webp"
-          :alt="t('aboutPage.ceo.deskAlt')"
-          sizes="(max-width: 767px) 90vw, 29vw"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div class="about-story__copy">
-        <p v-rise>{{ t("aboutPage.ceo.story1") }}</p>
-        <p v-rise class="about-story__questions">
-          <span>{{ t("aboutPage.ceo.questions1") }}</span>
-          {{ " " }}
-          <span>{{ t("aboutPage.ceo.questions2") }}</span>
-        </p>
-        <p v-rise>{{ t("aboutPage.ceo.story2") }}</p>
-        <div class="about-story__talk">
-          <p v-rise class="about-story__ask">
-            <span>{{ t("aboutPage.ceo.askLine1") }}</span>
-            {{ " " }}
-            <span>{{ t("aboutPage.ceo.askLine2") }} <span class="about-story__accent">{{ t("aboutPage.ceo.askAccent") }}</span></span>
-          </p>
-          <NuxtLink v-rise :to="localePath('/contact')" class="ob-button about-button">{{ t("aboutPage.ceo.contact") }}</NuxtLink>
-        </div>
       </div>
     </section>
 
@@ -139,9 +108,8 @@ usePageSeo({
 
 <style scoped>
 /* The design at 1440px: the heading in 86px type, the intro 21.6px; the CEO's
-   name 58px over his role (29px) and a 3px green rule; the story's text
-   19px beside a 409px photo; the office photos 3:2, 14px apart, in 84% of
-   the screen. */
+   name 58px over his role (29px) and a 3px green rule; the office photos
+   3:2, 14px apart, in 84% of the screen. */
 .about {
   --green: #20e848;
   position: relative;
@@ -315,74 +283,6 @@ usePageSeo({
   font-weight: 600;
 }
 
-/* The story: the photo, then the copy and the call to talk. */
-.about-story {
-  display: grid;
-  grid-template-columns: minmax(0, 36fr) minmax(0, 59.6fr);
-  gap: clamp(1.5rem, 4.4vw, 4rem);
-  align-items: start;
-  width: min(100% - 2.5rem, 79 * var(--fvw));
-  margin: clamp(5rem, 12vw, 11rem) auto 0;
-  scroll-margin-top: 7rem;
-}
-
-.about-story__photo :deep(img) {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-}
-
-.about-story__copy {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1rem, 1.6vw, 1.4rem);
-  padding-top: clamp(0rem, 1.4vw, 1.25rem);
-}
-
-.about-story__copy > p {
-  margin: 0;
-  color: rgb(255 255 255 / 0.86);
-  font-family: var(--app-font-sans);
-  font-size: clamp(1rem, 1.32vw, 1.2rem);
-  line-height: 1.22;
-}
-
-.about-story__questions {
-  color: var(--green) !important;
-}
-
-.about-story__questions > span {
-  display: block;
-}
-
-.about-story__talk {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.25rem 2rem;
-  margin-top: clamp(0.75rem, 2vw, 1.75rem);
-}
-
-.about-story__ask {
-  margin: 0;
-  font-family: var(--app-font-display);
-  font-size: clamp(1.6rem, 2.7vw, 2.45rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-
-.about-story__ask > span {
-  display: block;
-}
-
-.about-story__accent {
-  color: var(--green);
-}
-
 /* The office: four photos, two by two. */
 .about-office {
   display: grid;
@@ -402,8 +302,7 @@ usePageSeo({
 
 /* Phones: everything in one column. */
 @media (max-width: 767px) {
-  .about-ceo,
-  .about-story {
+  .about-ceo {
     grid-template-columns: 1fr;
   }
 
