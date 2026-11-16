@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-// The loader shown once, when the site is first opened (app.vue mounts once;
-// moving between pages never shows it again). White page, the brand mark drawn
-// in code (no image file): its outline is drawn,
-// the outline fills with green, then the mark zooms in until its "1" cut-out
-// is the whole screen and the page appears through it.
+// The loader shown once, when the site is first entered in a tab (app.vue
+// mounts once per full page load; moving between pages never shows it again,
+// and neither does a refresh or another page opened later in the same tab:
+// see INTRO_KEY below). White page, the brand mark drawn in code (no image
+// file): its outline is drawn, the outline fills with green, then the mark
+// zooms in until its "1" cut-out is the whole screen and the page appears
+// through it.
 //
-// It is in the server HTML, so the visitor never sees the page before it.
-// `html.ob-loading` (set on the server, removed here) also keeps the page from
-// scrolling and holds the hero's entrance animations until the loader is gone.
+// It is in the server HTML, so a first-time visitor never sees the page before
+// it. `html.ob-loading` (set on the server, removed here) also keeps the page
+// from scrolling and holds the hero's entrance animations until the loader is
+// gone. On every later full load of the tab the inline script in <head>
+// (nuxt.config.ts: introSeenScript) has already hidden this markup and taken
+// `ob-loading` off before the first paint.
 
 // The mark in a box exactly as big as the disc (so the square frame drawn
 // around it touches the disc on every side): a green disc with a slanted "1"
@@ -41,6 +46,11 @@ const ZOOM = [3500, 5300] as const;
 const REVEAL_MS = 1100;
 const REVEAL_BLUR = 28;
 const FAILSAFE_MS = 14000;
+
+// The tab's note that the loader has played (the same key and value as
+// nuxt.config.ts: introSeenScript). Written when the loader starts, so a
+// refresh while it plays does not show it again.
+const INTRO_KEY = "ob-intro";
 
 const active = ref(true);
 const root = ref<HTMLElement | null>(null);
@@ -95,6 +105,21 @@ const finish = () => {
 };
 
 onMounted(() => {
+  let seen = false;
+  try {
+    seen = sessionStorage.getItem(INTRO_KEY) === "seen";
+  } catch { /* storage blocked: the loader plays on every full load */ }
+  if (seen) {
+    // Not the first entry in this tab: no loader and nothing held back.
+    finished = true;
+    document.documentElement.classList.remove("ob-loading");
+    active.value = false;
+    return;
+  }
+  try {
+    sessionStorage.setItem(INTRO_KEY, "seen");
+  } catch { /* as above */ }
+
   lenis?.stop?.();
   document.documentElement.classList.add("ob-loading");
   failsafe = window.setTimeout(finish, FAILSAFE_MS);

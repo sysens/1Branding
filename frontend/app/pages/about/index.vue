@@ -83,10 +83,14 @@ usePageSeo({
       </div>
       <div class="about-ceo__copy">
         <h2 id="about-ceo-name" v-rise class="about-ceo__name">{{ t("aboutPage.ceo.name") }}</h2>
+        <!-- On a phone the line sits right under the name; from 768px it is
+             beside the button (display: none hides the one not in use, from
+             screen readers too). -->
+        <p v-rise class="about-ceo__meet about-ceo__meet--under">{{ t("aboutPage.ceo.meet") }}</p>
         <p v-rise class="about-ceo__role">{{ t("aboutPage.ceo.role") }}</p>
         <p v-rise class="about-ceo__actions">
           <NuxtLink :to="localePath('/about/ceo')" class="ob-button about-button">{{ t("aboutPage.ceo.more") }}</NuxtLink>
-          <span class="about-ceo__meet">{{ t("aboutPage.ceo.meet") }}</span>
+          <span class="about-ceo__meet about-ceo__meet--beside">{{ t("aboutPage.ceo.meet") }}</span>
         </p>
       </div>
     </section>
@@ -277,10 +281,16 @@ usePageSeo({
 }
 
 .about-ceo__meet {
+  margin: 0;
   color: rgb(255 255 255 / 0.42);
   font-family: var(--app-font-display);
   font-size: clamp(1.0625rem, 1.6vw, 1.45rem);
   font-weight: 600;
+}
+
+/* The copy beside the button on wide screens; the phone's line under the name is hidden there. */
+.about-ceo__meet--under {
+  display: none;
 }
 
 /* The office: four photos, two by two. */
@@ -316,8 +326,18 @@ usePageSeo({
     text-align: center;
   }
 
+  /* "Meet our CEO" right under the name; the button stands alone below. */
+  .about-ceo__meet--under {
+    display: block;
+    margin-top: 0.35rem;
+  }
+
+  .about-ceo__meet--beside {
+    display: none;
+  }
+
   .about-ceo__role {
-    margin-inline: auto;
+    margin: 0.75rem auto 0;
   }
 
   .about-ceo__actions {

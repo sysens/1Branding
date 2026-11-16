@@ -23,7 +23,11 @@ export const largeViewportHeight = (): number => {
     probe = document.createElement("div");
     probe.setAttribute("aria-hidden", "true");
     // 100vh for browsers without lvh (there the two are the same length).
-    probe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none";
+    // Absolute, above the page (bottom: 100%, so it is never scrollable
+    // overflow), not fixed: iOS 26 Safari had bugs with viewport-sized fixed
+    // containers (fixed elements shifted vertically), and this one lives on
+    // every page once the landing has run.
+    probe.style.cssText = "position:absolute;bottom:100%;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none";
     document.body.appendChild(probe);
     measure();
     // It changes with the window or the phone's orientation, not with the bars.

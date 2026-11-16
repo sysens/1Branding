@@ -113,6 +113,25 @@ const restoreScrollScript = [
   "}catch(e){}})();",
 ].join("");
 const restoreScrollStyle = "html.ob-restoring body{visibility:hidden}";
+// The loader (components/PageLoader.vue) is for the first entry to the site in
+// a tab: when it starts it writes "ob-intro" to sessionStorage. Every later
+// full page load in that tab (a refresh, another page opened by its address,
+// back/forward) is marked by this script, which runs first thing in <head>,
+// before anything is painted: <html> gets data-intro-seen, which hides the
+// loader's markup (it is in the server HTML of every page, and the pages are
+// cached, so the server cannot know who has seen it), and `ob-loading`, which
+// the server put on <html>, comes off, so the hero's and the projects film's
+// entrances do not wait for a loader that will not play. Without sessionStorage
+// (blocked) the loader plays on every load, as it did.
+const introSeenScript = [
+  "(function(){try{",
+  'if(sessionStorage.getItem("ob-intro")!=="seen")return;',
+  "var r=document.documentElement;",
+  'r.setAttribute("data-intro-seen","");',
+  'r.classList.remove("ob-loading")',
+  "}catch(e){}})();",
+].join("");
+const introSeenStyle = "html[data-intro-seen] .ob-loader{display:none!important}";
 
 export default defineNuxtConfig({
   // Keep the generated project references identical in dev, prepare and build.
@@ -163,9 +182,13 @@ export default defineNuxtConfig({
         { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Text-Regular.woff2", crossorigin: "" },
         { rel: "preload", as: "font", type: "font/woff2", href: "/fonts/v2/SF-Pro-Display-Bold.woff2", crossorigin: "" },
       ],
-      // See restoreScrollScript above (inline: allowed by the CSP's 'unsafe-inline').
-      style: [{ innerHTML: restoreScrollStyle, tagPriority: "critical" }],
-      script: [{ innerHTML: restoreScrollScript, tagPriority: "critical" }],
+      // See restoreScrollScript and introSeenScript above (inline: allowed by
+      // the CSP's 'unsafe-inline').
+      style: [{ innerHTML: restoreScrollStyle + introSeenStyle, tagPriority: "critical" }],
+      script: [
+        { innerHTML: restoreScrollScript, tagPriority: "critical" },
+        { innerHTML: introSeenScript, tagPriority: "critical" },
+      ],
     },
   },
 

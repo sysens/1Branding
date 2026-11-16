@@ -51,7 +51,7 @@ export default defineEventHandler((event) => {
     "## Company",
     "",
     `- [About](${url("/about")}): the team and how it works`,
-    `- [Our CEO](${url("/about/ceo")}): how Ulugʻbek Xodjaev approaches a brand`,
+    `- [Our CEO](${url("/about/ceo")}): how Ulugʻbek Mirzo approaches a brand`,
     `- [Pricing](${url("/pricing")}): packages and prices in US dollars`,
     `- [OneGuarantee](${url("/one-guarantee")}): design tested with a live audience before launch`,
     `- [Portfolio](${url("/projects")})`,

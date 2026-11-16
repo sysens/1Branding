@@ -199,7 +199,36 @@ useGsapContext(root, ({ gsap, el }) => {
     const scene = strip.parentElement;
     if (scene) scene.style.perspective = `${TRACK_PERSPECTIVE * track.unit}px`;
     tiles.forEach((tile) => { tile.style.width = `${w}px`; tile.style.height = `${h}px`; });
-    const clock = { time: 1.1 };
+    // Where the ribbon waits for the film to reach it: the last moment its head
+    // picture is wholly clear of the screen's left edge (8px to spare, its lean
+    // and the far side's perspective counted). At 1.1s, the video's frame with
+    // all of it off the screen, the head is still some px inside the edge on a
+    // screen not as wide as 16:9 of its height (or just wider), and, the ribbon
+    // standing still until then, a corner of a picture showed at the bottom
+    // left while the words came in. It runs on the same clock, so from 1.1s
+    // on it is where the video has it. (On a very wide screen the head is
+    // still in view at 0: the ribbon then starts at 0.)
+    const near = TRACK_PERSPECTIVE * track.unit;
+    const reach = Math.hypot(w, h) / 2;
+    const clear = (time: number) => {
+      const head = track.place(headAt(time, track.unit));
+      return vw / 2 + (head.x + reach) * (near / (near - head.z)) <= -8;
+    };
+    let from = 1.1;
+    if (!clear(from)) {
+      let early = 0;
+      let late = from;
+      // The last clear moment, by halving (the head only ever moves right).
+      if (clear(early)) {
+        for (let step = 0; step < 24; step++) {
+          const middle = (early + late) / 2;
+          if (clear(middle)) early = middle;
+          else late = middle;
+        }
+      }
+      from = early;
+    }
+    const clock = { time: from };
     const place = () => {
       const head = headAt(clock.time, track.unit);
       tiles.forEach((tile, index) => {
@@ -208,8 +237,8 @@ useGsapContext(root, ({ gsap, el }) => {
       });
     };
     place();
-    // From 1.1s (all of it off the screen at the left) to 4s (all of it gone at the right).
-    timeline.to(clock, { time: 4, duration: 2.9, ease: "none", onUpdate: place }, 1.1);
+    // From where it waits (all of it off the screen at the left) to 4s (all of it gone at the right).
+    timeline.to(clock, { time: 4, duration: 4 - from, ease: "none", onUpdate: place }, from);
   }
 
   // The grid: in reading order, each card sliding in a straight line from

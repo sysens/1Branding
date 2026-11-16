@@ -317,19 +317,6 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
   mask-image: linear-gradient(178deg, #000 18%, rgb(0 0 0 / 0.61) 82%);
 }
 
-/* A mask clips everything outside its box, and the letters come in out of a
-   glow that reaches past the text: the box gets 0.3em of room on every side
-   (taken back by negative margins, so nothing moves), and the shading's stops
-   sit where 18% and 82% fell on the text alone. */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-slogan__main {
-    padding: 0.3em;
-    margin: calc(-0.21em - 0.3em) -0.3em -0.3em;
-    -webkit-mask-image: linear-gradient(178deg, #000 29%, rgb(0 0 0 / 0.61) 71%);
-    mask-image: linear-gradient(178deg, #000 29%, rgb(0 0 0 / 0.61) 71%);
-  }
-}
-
 .hero-slogan__tagline {
   display: flex;
   flex-wrap: wrap;
@@ -353,10 +340,10 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
 }
 
 /* The hero comes in in CSS, at first paint, without waiting for the app: the
-   eyebrow rises in, then the lead-in and the headline letter by letter (the
-   dash first), each letter brightening out of its own soft glow while its
+   lead-in and the headline come in letter by letter (the dash first), each
+   letter brightening in place, sharp (no glow or blur round it) while its
    line rises a little, then the tagline's sentences one after another.
-   The letters change only paint (colour, outline colour, text-shadow), never
+   The letters change only paint (colour, outline colour), never
    opacity, filter, position or transform: any of those gives a letter a
    paint layer of its own, and then every letter is a separate Largest
    Contentful Paint candidate, too small to win, and a logo tile becomes the
@@ -404,26 +391,24 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
   from { translate: 0 0.3em; }
 }
 
-/* Headline letters: white out of a white glow. */
+/* Headline letters: white, brightening in place. Nothing round them: a glow
+   read as a blur while they came in. */
 @keyframes hero-letter-in {
   from {
     color: rgb(255 255 255 / 0.04);
-    text-shadow: 0 0 0.3em rgb(255 255 255 / 0.85);
   }
 }
 
-/* Lead-in letters are an outline: the outline brightens out of a green glow. */
+/* Lead-in letters are an outline: the outline brightens. */
 @keyframes hero-outline-in {
   from {
     -webkit-text-stroke-color: rgb(32 232 72 / 0.04);
-    text-shadow: 0 0 0.25em rgb(32 232 72 / 0.8);
   }
 }
 
 @keyframes hero-dash-in {
   from {
     border-color: rgb(32 232 72 / 0.04);
-    box-shadow: 0 0 0.3em rgb(32 232 72 / 0.8);
   }
 }
 
