@@ -476,48 +476,111 @@
     "otherNews": "Boshqa yangiliklar"
   },
   "oneGuarantee": {
-    "clientsTitle": "Mijozlarimiz fikri",
-    "clientsSubtitle": "Xizmatlarimizdan foydalangan insonlarning samimiy taassurotlari.",
-    "section2": {
-      "title": "ONEGUARANTEE",
-      "text1": "Brendning maqsadli auditoriyasiga yoqishi kafolatlangan* dizayn!",
-      "text2": "Yechimlarimizni yetakchi dizaynerlarning onlayn guruhi orqali sinovdan oʻtkazamiz (har bir guruhda yechimlarimizni baholashga tayyor 5 mingga yaqin real inson bor).",
-      "text3": "Samarali yechimlar oʻrniga kreativ yechimlar taklif qiladigan kompaniyalar koʻp. Bunday yechimlar eʼtiborni tortadi, qiziqarli, dadil va innovatsion koʻrinadi, biroq koʻpincha mijozning biznes maqsadlariga javob bermaydi.",
-      "text4": "Bunday yondashuvda kreativlik va goʻzallik samaradorlikka zid boradi. Natijaga mijozning biznes manfaatlari doirasidagi hamkorlik emas, balki agentlikning ijodiy qarashi taʼsir qiladi.",
-      "text5": "OneBranding agentlik va mijozni yaqinlashtiradi, munosabatlarni tushunarli hamkorlikka aylantiradi, ish natijasini esa samarali qiladi!",
-      "highlightToken": "kafolatlangan*"
+    "hero": {
+      "lead": "Brendning maqsadli auditoriyasiga yoqishi kafolatlangan dizayn!"
     },
-    "reasonsTitle": "NEGA BU SAMARALI ISHLAYDI?",
-    "cms": {
-      "section4": {
-        "title": "Butun dunyodagi brendlar bilan ishlaymiz.",
-        "cards": [
-          {
-            "title": "Global brending",
-            "description": "Xalqaro standartlarga javob beradigan va har qanday bozorda ajralib turadigan kuchli, tanib olinadigan brendlar yaratamiz."
-          },
-          {
-            "title": "Chegarasiz dizayn",
-            "description": "Dunyo boʻylab mijozlar bilan har qanday murakkablikdagi loyihalar ustida ishlaymiz — gʻoyadan toʻliq brend tizimigacha."
-          },
-          {
-            "title": "Jahon darajasidagi sifat",
-            "description": "Har bir yechim eng mayda detaligacha oʻylab chiqiladi — shunda brend global maydonda ishonchli, premium va raqobatbardosh koʻrinadi."
-          }
-        ]
-      },
-      "section5": {
-        "items": [
-          "Boshida maqsadli auditoriya brendni qanday qabul qilishini oʻlchaymiz",
-          "Butun loyiha ustidan strategik nazorat",
-          "Bitta vazifa ustida bir nechta jamoa parallel ishlaydi"
-        ]
-      },
-      "section6": {
-        "title": "Koʻproqni istagan brendlar bilan ishlaymiz.",
-        "text": "Agar sizga shunchaki dizayn emas, daromad keltiradigan natija kerak boʻlsa — toʻgʻri joydasiz.",
-        "buttonText": "Telegram orqali yozing"
-      }
+    "problem": {
+      "line1": "Koʻplab",
+      "line2": "",
+      "accent": "kompaniyalar",
+      "text": "samarali yechim oʻrniga kreativ yechim taklif qiladi. Bunday yechimlar eʼtiborni tortadi, qiziqarli, dadil va innovatsion koʻrinadi,",
+      "textAccent": "lekin koʻpincha mijozning biznes maqsadlariga xizmat qilmaydi."
+    },
+    "designers": {
+      "number": "500",
+      "word": "dizayner",
+      "text": "va haqiqiy auditoriya vakillari yechimlarimizni brendingizga yetib borishidan oldin baholaydi."
+    },
+    "reviews": {
+      "titleBefore": "",
+      "titleAccent": "Mijozlarimiz",
+      "titleAfter": "nima deydi",
+      "caption": "Xizmatlarimizdan foydalangan odamlarning samimiy taassurotlari."
+    },
+    "projects": {
+      "before": "",
+      "number": "2500+",
+      "after": "",
+      "text": "bajarilgan dizayn loyihasi tajribasi bilan har bir biznes yoʻnalishi uchun zamonaviy brend aydentikasini qanday yaratishni bilamiz — individual, strategik va brendni nima ajratib turishini aniq tushungan holda."
+    },
+    "award": {
+      "line1": "Standart belgilaydigan brendlar.",
+      "line2": "Brend gʻoyasidan Top of Mind’gacha.",
+      "title": "Yil brendi",
+      "year": "2023",
+      "note": "Mijozimiz brendining eʼtirofi.",
+      "alt": "Taglikdagi «Yil brendi 2023» mukofoti"
+    },
+    "speed": {
+      "title": "Biz ikkalasini ham beramiz.",
+      "sub": "Toʻliq tezlik. Toʻliq kreativ kuch.",
+      "alt": "Yoritilgan trassada toʻliq tezlikda ketayotgan yashil-qora poyga mashinasi"
+    },
+    "market": {
+      "line1": "Bozoringiz kutib turmaydi.",
+      "line2": "Biz ham kutmaymiz.",
+      "noteAccent": "*Toʻrt hafta. Uch oy.",
+      "note": "Ungacha imkoniyat boshqa birovga oʻtib ketishi mumkin.",
+      "boxTitle": "Biz isteʼdodlarni safarbar qilamiz, yoʻlni ochamiz va loyihangizni",
+      "boxTitleAccent": "hamma narsaning markaziga qoʻyamiz.",
+      "items": [
+        "Bor kuchimiz bilan ishlaymiz.",
+        "Alohida kreativ jamoa.",
+        "Saralangan mutaxassislar.",
+        "Kecha-yu kunduz ijro.",
+        "Toʻliq jamoa. Toʻliq diqqat. Toʻliq tezlik.",
+        "10 baravargacha tezroq.",
+        "Katta gʻoya",
+        "48 soatda konsepsiya",
+        "Bozoringizda yetakchilik uchun yaratilgan.",
+        "Sifatda hech qanday murosa yoʻq."
+      ],
+      "textMuted": "Nimani va qachon ishga tushirish kerakligini ayting. Biz ish hajmini kelishamiz, kerakli jamoani yigʻamiz va brifdan topshirishgacha eng tez real yoʻlni belgilaymiz.",
+      "text": "Nima yaratayotganimizni, uni qachon olishingizni va buning uchun nima kerakligini aniq bilib turasiz.",
+      "terms": "FullSpeed–FullCreative individual tarzda kelishiladi: resurslar va investitsiya darajasi loyihangizga moslab belgilanadi. Har bir tafsilot ish boshlanishidan oldin kelishib olinadi.",
+      "cta": "Dedlayningizga birga ulguraylik"
+    },
+    "promise": {
+      "line1": "Unda bizning nomimiz bor.",
+      "line2": "Masʼuliyatimiz ham.",
+      "text": "Aniq majburiyatlar. Shaffof xarajatlar. Birinchi brifdan yakuniy topshirishgacha javobgarlik.",
+      "shieldAlt": "OneBranding “1” belgisi tushirilgan shisha qalqon",
+      "cards": [
+        {
+          "title": "Brifingizga mos.",
+          "text": "Tasdiqlangan brifingiz standartni belgilaydi. Kelishilgan talabni oʻtkazib yuborsak, dastlabki ish hajmi doirasida qoʻshimcha toʻlovsiz tuzatamiz."
+        },
+        {
+          "title": "Brendingiz atrofida qurilgan.",
+          "text": "Bozoringiz, auditoriyangiz va maqsadlaringiz yondashuvimizni belgilaydi. Har bir muhim kreativ qarorning aniq maqsadi bor."
+        },
+        {
+          "title": "Kelishilmagan qoʻshimchalar yoʻq.",
+          "text": "Ish hajmi va narx oldindan kelishiladi. Qoʻshimcha xizmat yoki xarajatlar faqat sizning roziligingiz bilan amalga oshadi."
+        },
+        {
+          "title": "Aniq bosqichlar. Koʻrinib turgan natija.",
+          "text": "Loyihangiz qaysi bosqichda ekanini, keyin nima boʻlishini va qachon kutishni bilib turasiz. Muddatga oid xavflar haqida oldindan xabar beramiz."
+        },
+        {
+          "title": "Ishga tushirishga tayyor.",
+          "text": "Tartibli materiallar kelishilgan maqsadda foydalanishga tayyorlab beriladi. Formatlar, tahrirlanadigan manbalar va qoʻllanmalar oldindan belgilanadi."
+        },
+        {
+          "title": "Topshirgandan keyin ham masʼuliyat.",
+          "text": "Biz sababli yuzaga kelgan texnik xatolar qoʻshimcha toʻlovsiz tuzatiladi. Yangi soʻrovlar alohida kelishiladi."
+        }
+      ],
+      "mistake1": "Xato bizdan oʻtgan boʻlsa,",
+      "mistake2": "uni oʻzimiz tuzatamiz.",
+      "mistakeNote": "Har bir natija ortida aniq",
+      "mistakeNoteStrong": "majburiyat turadi."
+    },
+    "cta": {
+      "line1": "Biz koʻprogʻini istaydigan",
+      "line2": "brendlar bilan ishlaymiz.",
+      "text": "Agar sizga shunchaki dizayn emas, daromad keltiradigan natija kerak boʻlsa — toʻgʻri joyga keldingiz.",
+      "button": "Katta ishni boshlaymiz"
     }
   },
   "contacts": {

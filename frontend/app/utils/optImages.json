@@ -1521,5 +1521,57 @@
    400
   ],
   "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4WAoAAAAQAAAADwAABwAAQUxQSBEAAAABF9D/iAgIBAjO7TuI6H8IPQBWUDggXAAAABACAJ0BKhAACAADgFolqAAPi0+/+RNKFsAA/vlK+hc6h+VU6nd3jfH6PtN/KJrjt6RDTyfkJkX8SPZC4onsnhth5UhCVr5dFiquvZY//QH6H/LNI6MiFHwujnAA"
+ },
+ "/one-guarantee-page/award.webp": {
+  "w": 2400,
+  "h": 1351,
+  "v": "046e83f4",
+  "widths": [
+   640,
+   960,
+   1280,
+   1600,
+   2400
+  ],
+  "lqip": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADQAQCdASoQAAkAA4BaJQBdgCHfcOY8AAD++RPq9gmsIyLZD7Ruo9ILI8+limPLW+mE0ImCNQAAAA=="
+ },
+ "/one-guarantee-page/car.webp": {
+  "w": 1774,
+  "h": 887,
+  "v": "b285a34b",
+  "widths": [
+   640,
+   960,
+   1280,
+   1600,
+   1774
+  ],
+  "lqip": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoQAAgAA4BaJQBOgCKUWVp4wAD+8ur1C5ozWyKdm+nT1hc+H28AjozoGRRUH2EZb9NksBCuK+dbAjmDGcoAAA=="
+ },
+ "/one-guarantee-page/ribbon.webp": {
+  "w": 2400,
+  "h": 491,
+  "v": "d5013ce2",
+  "widths": [
+   640,
+   960,
+   1280,
+   1600,
+   2400
+  ],
+  "lqip": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAMAA4BaJZACdAED/NLOIAAA/viiCUXYrVdhOrSdsLsxJKegJDQLqGCZtbqdW9ebYAAA"
+ },
+ "/one-guarantee-page/shield.webp": {
+  "w": 2400,
+  "h": 1200,
+  "v": "0c26159a",
+  "widths": [
+   640,
+   960,
+   1280,
+   1600,
+   2400
+  ],
+  "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQAAgAA4BaJZgC7AELX9x5BmeAAP75EQuQMU1ON37ifewo5+o3780B/kJ7MOP4K58t914O6+tK6FAA"
  }
 }

@@ -1,44 +1,24 @@
 <script setup lang="ts">
-import EarthDives from "~/components/home/EarthDives.vue";
-import BigPhoto from "~/components/one-guarantee/BigPhoto.vue";
-import GuaranteeMarquee from "~/components/one-guarantee/GuaranteeMarquee.vue";
-import InfoSection from "~/components/one-guarantee/InfoSection.vue";
-import Reasons from "~/components/one-guarantee/Reasons.vue";
-import { computed, onMounted, nextTick, ref } from "vue";
-
-interface LenisController {
-  start?: () => void;
-  stop?: () => void;
-  resize?: () => void;
-  scrollTo?: (
-    to: number | string | HTMLElement,
-    options?: Record<string, boolean | number | string>
-  ) => void;
-}
-
-type LenisAwareNuxtApp = ReturnType<typeof useNuxtApp> & {
-  $lenis?: LenisController;
-};
+// OneGuarantee, after the design (oneguarantee.pdf): the wordmark under a beam
+// of light and the page's claim; "500+ Designers" on white, under a horizon
+// that bows as it is scrolled; the clients' reviews in two rows running
+// against each other; "With 2500+" over a ribbon of light; the Brand of the
+// Year award; the racing car on its running track; the offer in a neon box;
+// the six commitments under the shield; and the way to the contact page.
+// Each is a component of its own (components/one-guarantee); the page's copy
+// is in i18n (oneGuarantee.*), the reviews come from the CMS.
+import { computed } from "vue";
+import GuaranteeAward from "~/components/one-guarantee/GuaranteeAward.vue";
+import GuaranteeCta from "~/components/one-guarantee/GuaranteeCta.vue";
+import GuaranteeDeadline from "~/components/one-guarantee/GuaranteeDeadline.vue";
+import GuaranteeDesigners from "~/components/one-guarantee/GuaranteeDesigners.vue";
+import GuaranteeHero from "~/components/one-guarantee/GuaranteeHero.vue";
+import GuaranteeProjects from "~/components/one-guarantee/GuaranteeProjects.vue";
+import GuaranteePromise from "~/components/one-guarantee/GuaranteePromise.vue";
+import GuaranteeReviews from "~/components/one-guarantee/GuaranteeReviews.vue";
+import GuaranteeSpeed from "~/components/one-guarantee/GuaranteeSpeed.vue";
 
 const { t } = useI18n();
-
-// WebP copy of the 523 KB PNG poster (32 KB).
-const oneGuaranteeVideoPoster = "/OneGuarantee/image95.webp";
-const oneGuaranteeVideoSrc = "/OneGuarantee/img-5714.mp4";
-
-// The background video (13 MB) is attached in the browser, and not at all on a
-// data-saving or slow connection: those visitors keep the poster.
-const heroVideo = ref<HTMLVideoElement | null>(null);
-const heroVideoSrc = ref("");
-const attachHeroVideo = async () => {
-  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-  if (connection?.saveData || /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "")) return;
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  heroVideoSrc.value = oneGuaranteeVideoSrc;
-  await nextTick();
-  heroVideo.value?.load();
-  heroVideo.value?.play().catch(() => {});
-};
 
 const cmsSeo = await useCmsSeo("oneGuaranteePage");
 const localePath = useLocalePath();
@@ -47,132 +27,57 @@ usePageSeo({
   description: computed(() => cmsSeo.description.value || t("seo.oneGuarantee.description")),
   breadcrumbs: computed(() => [{ name: "OneGuarantee", path: localePath("/one-guarantee") }]),
 });
-
-const getLenis = () => {
-  const nuxtApp = useNuxtApp() as LenisAwareNuxtApp;
-  return nuxtApp.$lenis;
-};
-
-const raf2 = () =>
-  new Promise<void>((resolve) =>
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
-  );
-
-const refreshLenis = async () => {
-  if (!import.meta.client) return;
-  await nextTick();
-  await raf2();
-  const lenis = getLenis();
-  if (!lenis) return;
-  lenis.resize?.();
-};
-
-const stabilizeAfterAssets = async () => {
-  if (!import.meta.client) return;
-
-  const fontsReady =
-    "fonts" in document ? document.fonts.ready.catch(() => null) : Promise.resolve(null);
-
-  const imgs = Array.from(document.images || []);
-  const imagesReady = Promise.all(
-    imgs.map((img) => {
-      if (img.complete) return Promise.resolve(null);
-      return new Promise((res) => {
-        const done = () => res(null);
-        img.addEventListener("load", done, { once: true });
-        img.addEventListener("error", done, { once: true });
-      });
-    })
-  );
-
-  await Promise.race([
-    Promise.all([fontsReady, imagesReady]),
-    new Promise((r) => setTimeout(r, 1200)),
-  ]);
-  await refreshLenis();
-};
-
-onMounted(async () => {
-  void attachHeroVideo();
-  await nextTick();
-  await refreshLenis();
-  await stabilizeAfterAssets();
-});
 </script>
 
 <template>
-  <div class="bg-black relative overflow-x-hidden">
-    <div class="edge-gradient edge-gradient-left edge-gradient-strong"/>
-    <div class="edge-gradient edge-gradient-right edge-gradient-strong"/>
-
-    <div class="relative z-10">
-      <div>
-        <div>
-          <div>
-            <div class="videoBackground relative h-screen overflow-hidden">
-              <video
-                ref="heroVideo"
-                class="absolute inset-0 w-full h-full object-cover"
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="none"
-                aria-hidden="true"
-                :poster="oneGuaranteeVideoPoster"
-              >
-                <source v-if="heroVideoSrc" :src="heroVideoSrc" type="video/mp4" >
-              </video>
-
-              <div
-                class="vg page-glow relative z-10 md:pt-[3.75rem] pt-[1.875rem]"
-              >
-
-                <h1
-                  class="text-[#FFFFFF] md:pt-[7.9375rem] pt-[8.5625rem] md:pb-[3.75rem] pb-[1.875rem] text-center products"
-                ><span class="sr-only">{{ $t("seo.oneGuarantee.h1") }}</span></h1>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="relative bottom-10">
-          <InfoSection />
-        </div>
-
-        <!-- Rendered only when the CMS has real client reviews. -->
-        <GuaranteeMarquee :rows="2" :show-title="false" :show-button="false">
-          <template #header>
-            <div class="containerr">
-              <div class="md:px-0 px-[1.25rem]">
-                <h2
-                  class="type-h2 text-[#FFFFFF] md:px-0 md:mt-[8.125rem] text-center pb-[1.8125rem]"
-                >
-                  {{ $t("oneGuarantee.clientsTitle") }}
-                </h2>
-
-                <p
-                  class="type-body type-measure mx-auto text-[#FFFFFF] pb-[2.6875rem] text-center"
-                >
-                  {{ $t("oneGuarantee.clientsSubtitle") }}
-                </p>
-              </div>
-            </div>
-          </template>
-        </GuaranteeMarquee>
-
-        <div>
-          <EarthDives />
-        </div>
-
-        <div class="containerr">
-          <Reasons />
-        </div>
-
-        <div class="containerr">
-          <BigPhoto />
-        </div>
-      </div>
-    </div>
+  <div class="og-page">
+    <GuaranteeHero />
+    <GuaranteeDesigners />
+    <GuaranteeReviews />
+    <GuaranteeProjects />
+    <GuaranteeAward />
+    <GuaranteeSpeed />
+    <GuaranteeDeadline />
+    <GuaranteePromise />
+    <GuaranteeCta />
   </div>
 </template>
+
+<!-- Not scoped: the sections share the green text and the button. -->
+<style>
+/* overflow-x: clip, not hidden (hidden would make this the sections' scroller). */
+.og-page {
+  position: relative;
+  overflow-x: clip;
+  background: #000;
+  color: #fff;
+}
+
+/* The design's green type: bright at its upper left, deeper to the lower right. */
+.og-page .og-grad {
+  background: linear-gradient(112deg, #00ff0a 0%, #10d638 52%, #17a54a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The design's buttons: bright green, dark type (as on /about). Only the
+   colours are the page's: the size, the face and the weight are the site
+   button's own (.ob-button: the lead step at 600). */
+.og-page .og-button {
+  background: linear-gradient(100deg, #0fd33a 0%, #19e046 50%, #0ea83a 100%);
+  color: #04200b;
+  text-shadow: none;
+}
+
+/* The shared button's drifting dark light would sit under the dark type. */
+.og-page .og-button::before {
+  display: none;
+}
+
+.og-page .og-button--caps {
+  letter-spacing: var(--type-caps-ls);
+  text-transform: uppercase;
+}
+</style>

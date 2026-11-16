@@ -38,6 +38,9 @@ const SOURCES = [
   { dir: "home/w1280", widths: [480, 800], files: ["Quaker.webp"] },
   // The About page: the office photos (the hero is one of them) and the CEO.
   { dir: "about-page", widths: [480, 800, 1200] },
+  // The OneGuarantee page: the award, the car, the shield and the still ribbon
+  // (shown where WebGL is off), cut from the design.
+  { dir: "one-guarantee-page", widths: [640, 960, 1280, 1600] },
 ];
 
 const PHOTO = { avif: { quality: 55, effort: 6, chromaSubsampling: "4:2:0" }, webp: { quality: 80, effort: 6 } };

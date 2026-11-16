@@ -476,48 +476,111 @@
     "otherNews": "Other news"
   },
   "oneGuarantee": {
-    "clientsTitle": "What our clients say",
-    "clientsSubtitle": "Honest impressions from people who have already used our services.",
-    "section2": {
-      "title": "ONEGUARANTEE",
-      "text1": "Design that is guaranteed* to appeal to the brand’s target audience!",
-      "text2": "We validate our solutions through an online group of top designers (each group includes about 5 thousand real people who are ready to evaluate our solutions).",
-      "text3": "There are many companies that offer creative solutions instead of effective ones. Such solutions attract attention, look interesting, bold, and innovative, but often do not meet the client’s business goals.",
-      "text4": "In this approach, creativity and beauty go against effectiveness. The agency’s creative vision influences the result instead of joint work within the client’s business interests.",
-      "text5": "OneBranding brings the agency and client closer, makes the relationship partner-based and clear, and the result of the work effective!",
-      "highlightToken": "guaranteed*"
+    "hero": {
+      "lead": "A design that is guaranteed to appeal to the brand’s target audience!"
     },
-    "reasonsTitle": "WHY DOES THIS WORK EFFECTIVELY?",
-    "cms": {
-      "section4": {
-        "title": "We work with brands from all over the world.",
-        "cards": [
-          {
-            "title": "Global branding",
-            "description": "We create strong, recognisable brands that meet international standards and stand out in any market."
-          },
-          {
-            "title": "Design without boundaries",
-            "description": "We work with clients around the world on projects of any complexity, from an idea to a complete brand system."
-          },
-          {
-            "title": "World-class quality",
-            "description": "Every solution is thought through to the smallest detail, so the brand looks confident, premium and competitive on the global stage."
-          }
-        ]
-      },
-      "section5": {
-        "items": [
-          "We measure how the target audience perceives the brand at the start",
-          "Strategic oversight of the whole project",
-          "Several teams work on one task in parallel"
-        ]
-      },
-      "section6": {
-        "title": "We work with brands that want more.",
-        "text": "If you need more than design, results that bring in revenue, you are in the right place.",
-        "buttonText": "Write to us on Telegram"
-      }
+    "problem": {
+      "line1": "There are",
+      "line2": "many",
+      "accent": "companies",
+      "text": "offering creative solutions instead of effective ones. These solutions attract attention, appear interesting, bold, and innovative,",
+      "textAccent": "but often fail to meet the client’s business goals."
+    },
+    "designers": {
+      "number": "500",
+      "word": "Designers",
+      "text": "and real audience members evaluate our solutions before they reach your brand."
+    },
+    "reviews": {
+      "titleBefore": "What our",
+      "titleAccent": "clients",
+      "titleAfter": "say",
+      "caption": "Honest impressions from people who have already used our services."
+    },
+    "projects": {
+      "before": "With",
+      "number": "2500+",
+      "after": "",
+      "text": "completed design projects, we know how to build a modern brand identity for every business direction — individually, strategically, and with a clear understanding of what makes the brand stand out."
+    },
+    "award": {
+      "line1": "Brands that set the standard.",
+      "line2": "From Brand Vision to Top of Mind.",
+      "title": "Brand of the Year",
+      "year": "2023",
+      "note": "Recognition for our client’s brand.",
+      "alt": "The Brand of the Year 2023 award on its stand"
+    },
+    "speed": {
+      "title": "We bring both.",
+      "sub": "Full speed. Full creative power.",
+      "alt": "A green and black racing car at full speed on a lit track"
+    },
+    "market": {
+      "line1": "Your market won’t wait.",
+      "line2": "Neither will we.",
+      "noteAccent": "*Four weeks. Three months.",
+      "note": "By then, the opportunity could belong to someone else.",
+      "boxTitle": "We mobilize the talent, clear the runway and put your project at the",
+      "boxTitleAccent": "centre of everything.",
+      "items": [
+        "We go all in.",
+        "A dedicated creative team.",
+        "Handpicked specialists.",
+        "Round-the-clock execution.",
+        "Full team. Full focus. Full throttle.",
+        "Up to 10x faster.",
+        "Big vision",
+        "Concept in 48 hours",
+        "Built to lead your market.",
+        "Zero compromise on quality."
+      ],
+      "textMuted": "Tell us what needs to launch — and when. We’ll align the scope, assemble the right team and map the fastest realistic route from brief to delivery.",
+      "text": "You’ll know exactly what we’re building, when you’ll receive it and what it takes to get there.",
+      "terms": "FullSpeed–FullCreative is arranged individually, with a dedicated level of resources and investment tailored to your project. Every detail agreed before we begin.",
+      "cta": "Let’s make your deadline happen"
+    },
+    "promise": {
+      "line1": "Our name is on it.",
+      "line2": "So is our responsibility.",
+      "text": "Clear commitments. Transparent costs. Accountability from the first brief to the final handover.",
+      "shieldAlt": "A glass shield with the OneBranding “1” on it",
+      "cards": [
+        {
+          "title": "Aligned with your brief.",
+          "text": "Your approved brief sets the standard. If we miss an agreed requirement, we correct it at no additional cost within the original scope."
+        },
+        {
+          "title": "Built around your brand.",
+          "text": "Your market, audience and ambitions shape our approach. Every major creative decision has a clear purpose."
+        },
+        {
+          "title": "No unapproved extras.",
+          "text": "Scope and pricing are agreed upfront. Additional services or costs move forward only with your approval."
+        },
+        {
+          "title": "Clear milestones. Visible progress.",
+          "text": "Know where your project stands, what comes next and when to expect it. Schedule risks are communicated early."
+        },
+        {
+          "title": "Ready to put to work.",
+          "text": "Organised deliverables, prepared for their agreed use. Formats, editable sources and guidelines are defined upfront."
+        },
+        {
+          "title": "Responsibility after handover.",
+          "text": "Technical errors caused by us are corrected at no additional cost. New requests are agreed separately."
+        }
+      ],
+      "mistake1": "If it’s our mistake,",
+      "mistake2": "we make it right.",
+      "mistakeNote": "A clear commitment behind every",
+      "mistakeNoteStrong": "deliverable."
+    },
+    "cta": {
+      "line1": "We work with brands",
+      "line2": "that want more.",
+      "text": "If you need more than just design, but results that generate revenue — you’re in the right place.",
+      "button": "Start something big"
     }
   },
   "contacts": {

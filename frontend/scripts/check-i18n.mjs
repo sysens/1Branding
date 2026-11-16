@@ -20,7 +20,6 @@ const KEEP_ENGLISH = [
   /^home\.stats\.(closing\w+|\w+Value)$/,
   /^home\.awards\.(title|year)$/,
   /^footerNew\.tagline$/,
-  /^oneGuarantee\.section2\.title$/,
   /^privacy\.updated$/,
 ];
 
