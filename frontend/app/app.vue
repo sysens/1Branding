@@ -66,13 +66,15 @@ if (import.meta.server) {
     script: [{ type: "application/ld+json", key: "org-jsonld", innerHTML: organizationJsonLd }],
   });
 }
+// A page without the site header sets definePageMeta({ header: false }).
+const showHeader = computed(() => route.meta.header !== false);
 const showPageBlur = computed(() => !/^\/(?:en|ru|uz)?\/?$/.test(route.path) && !/\/(?:projects|showcase)\/?$/.test(route.path));
 const showBottomBlur = computed(() =>
   showPageBlur.value && !route.path.replace(/\/$/, "").endsWith("/contact")
 );
 
-// Each blur layer is a fixed backdrop-filter, which makes scrolling costly on
-// phones: touch screens get two layers instead of five.
+// Each blur layer is a backdrop-filter over the page, which makes scrolling
+// costly on phones: touch screens get two layers instead of five.
 const blurLayers = ref(5);
 
 // Bottom blur must not sit over the footer once the page is scrolled to its end
@@ -110,43 +112,74 @@ watch(
     <a href="#main-content" class="skip-link">{{ $t("common.skipToContent") }}</a>
     <PageLoader />
     <ClientOnly><BrandCursor /></ClientOnly>
+
+    <!-- What stays on screen while the page scrolls under it (the header and
+         the blur at the screen's top and bottom edges) hangs from zero-height
+         lines that stick to those edges, in the page's own flow: the top ones
+         before <main>, the bottom one after it. Sticky, not fixed: iOS 26
+         Safari lets fixed layers drift away as its toolbar collapses on
+         scroll (see Header.vue). -->
+    <Header v-if="showHeader" />
+    <div v-if="showPageBlur" class="screen-edge screen-edge--top" aria-hidden="true">
+      <GradualBlur
+        target="parent"
+        position="top"
+        height="6rem"
+        :strength="2"
+        :div-count="blurLayers"
+        curve="bezier"
+        :exponential="true"
+        :opacity="1"
+        :z-index="1"
+      />
+    </div>
+
     <main id="main-content">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
     </main>
 
-    <GradualBlur
-      v-if="showBottomBlur"
-      target="page"
-      position="bottom"
-      height="6rem"
-      :strength="2"
-      :div-count="blurLayers"
-      curve="bezier"
-      :exponential="true"
-      :opacity="1"
-      :z-index="700"
-      :style="{ opacity: isPageEnd ? 0 : 1 }"
-    />
-
-    <GradualBlur
-      v-if="showPageBlur"
-      target="page"
-      position="top"
-      height="6rem"
-      :strength="2"
-      :div-count="blurLayers"
-      curve="bezier"
-      :exponential="true"
-      :opacity="1"
-      :z-index="700"
-    />
+    <div v-if="showBottomBlur" class="screen-edge screen-edge--bottom" aria-hidden="true">
+      <GradualBlur
+        target="parent"
+        position="bottom"
+        height="6rem"
+        :strength="2"
+        :div-count="blurLayers"
+        curve="bezier"
+        :exponential="true"
+        :opacity="1"
+        :z-index="1"
+        :style="{ opacity: isPageEnd ? 0 : 1 }"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* overflow-x: clip, not hidden: hidden would make the shell a scroller, and
+   the sticky lines below (and every pinned section) would stick to it
+   instead of the screen. */
 .app-shell {
   overflow-x: clip;
+}
+
+/* A zero-height line stuck to the screen's top or bottom edge; the blur is
+   laid out from it (6rem down from the top one, 6rem up from the bottom
+   one). 800: over the page, under the header. */
+.screen-edge {
+  position: sticky;
+  z-index: 800;
+  height: 0;
+  pointer-events: none;
+}
+
+.screen-edge--top {
+  top: 0;
+}
+
+.screen-edge--bottom {
+  bottom: 0;
 }
 </style>

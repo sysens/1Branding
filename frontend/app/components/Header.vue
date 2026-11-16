@@ -1,9 +1,15 @@
 <template>
-  <Teleport to="body">
-    <div class="MainHeader headerMain relative px-[1.25rem] min-[950px]:px-0 z-[8888]">
+  <!-- The bar hangs from a zero-height line that sticks to the top of the
+       screen (.MainHeader: position: sticky, first in the page's own flow,
+       see app.vue), and the phone menu hangs from the same line. Not
+       position: fixed: iOS 26 Safari lets fixed layers drift down the screen
+       as its toolbar collapses on scroll, further with every scroll, until
+       the bar is off the screen. Sticky layers stay where they belong there
+       (the landing's pinned hero always did). -->
+  <div class="MainHeader headerMain z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[61.25rem] min-[950px]:max-w-[56.25rem] mt-[1.25rem] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[1.75rem] min-[950px]:pr-[0.6875rem] border h-[4.75rem] min-[950px]:h-[3.5rem] mx-[1.25rem] border-[#4fbd34] fixed min-[950px]:top-[1.875rem] top-[0.625rem] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[3.75rem] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[61.25rem] min-[950px]:max-w-[56.25rem] mt-[1.25rem] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[1.75rem] min-[950px]:pr-[0.6875rem] border h-[4.75rem] min-[950px]:h-[3.5rem] mx-[1.25rem] border-[#4fbd34] absolute min-[950px]:top-[1.875rem] top-[0.625rem] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[3.75rem] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
         <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
         <a
@@ -111,10 +117,8 @@
           </div>
         </div>
       </header>
-    </div>
-  </Teleport>
 
-  <Teleport to="body">
+    <!-- The phone menu: a screen-high sheet under the same sticky line. -->
     <transition
       enter-active-class="transition-transform duration-300 ease-out"
       enter-from-class="translate-x-full"
@@ -130,7 +134,7 @@
         role="dialog"
         aria-modal="true"
         :aria-label="$t('a11y.menu')"
-        class="fixed inset-0 z-[2147483647] min-[950px]:hidden bg-gradient-to-b from-black to-[#00EA00] h-[100dvh] overflow-hidden overscroll-none"
+        class="absolute inset-x-0 top-0 z-[2147483647] min-[950px]:hidden bg-gradient-to-b from-black to-[#00EA00] h-[100dvh] overflow-hidden overscroll-none"
         @keydown="onMenuKeydown"
       >
         <div class="absolute inset-0 bg-black/80" aria-hidden="true" @click="closeMobileMenu"/>
@@ -287,7 +291,7 @@
         </div>
       </div>
     </transition>
-  </Teleport>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -407,20 +411,29 @@ const onLangLink = (event: MouseEvent, code: AppLocale) => {
   void pickLang(code);
 };
 
-const lockBodyScroll = () => {
-  if (!import.meta.client) return;
+// The page stands still under the open menu. Only <html> is locked: with
+// overflow: hidden on <body> as well, <body> becomes a scroller of its own and
+// the sticky line the menu hangs from would let go of the screen (the menu
+// would open at the top of the page, off screen further down).
+const lenis = useNuxtApp().$lenis as { start?: () => void; stop?: () => void } | undefined;
+let scrollLocked = false;
 
+const lockBodyScroll = () => {
+  if (!import.meta.client || scrollLocked) return;
+
+  scrollLocked = true;
+  lenis?.stop?.();
   document.documentElement.style.overflow = "hidden";
-  document.body.style.overflow = "hidden";
   document.body.style.touchAction = "none";
 };
 
 const unlockBodyScroll = () => {
-  if (!import.meta.client) return;
+  if (!import.meta.client || !scrollLocked) return;
 
+  scrollLocked = false;
   document.documentElement.style.overflow = "";
-  document.body.style.overflow = "";
   document.body.style.touchAction = "";
+  lenis?.start?.();
 };
 
 const menuOpenButton = ref<HTMLButtonElement | null>(null);
@@ -774,8 +787,13 @@ onBeforeUnmount(() => {
   }
 }
 
+/* The line the bar and the phone menu hang from: no height of its own, stuck
+   to the top of the screen. */
 .MainHeader {
+  position: sticky;
+  top: 0;
   z-index: 1000;
+  height: 0;
 }
 
 .site-header {
