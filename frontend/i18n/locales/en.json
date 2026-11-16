@@ -801,6 +801,11 @@
     "showcaseLink": "View showcase",
     "showcaseNote": "How we build brands, with more of our work.",
     "unavailable": "Projects are unavailable right now.",
+    "notice": {
+      "status": "Update in progress",
+      "title": "We’re still filling this page",
+      "text": "Our projects are being added right now. We’ll update the page soon and present all our creatives. Maintenance work is under way, so thank you for your patience."
+    },
     "showcase": {
       "title": "ReBranding",
       "accent": "Branding",

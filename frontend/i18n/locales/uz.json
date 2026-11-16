@@ -801,6 +801,11 @@
     "showcaseLink": "Vitrinani koʻrish",
     "showcaseNote": "Brendlarni qanday yaratishimiz va boshqa ishlarimiz.",
     "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti.",
+    "notice": {
+      "status": "Yangilanish davom etmoqda",
+      "title": "Bu sahifani hali toʻldiryapmiz",
+      "text": "Hozircha loyihalarimizni jamlab chiqyapmiz. Tez orada sahifani yangilab, barcha kreativlarimizni sizga taqdim etamiz. Sahifa ustida profilaktika ishlari olib borilmoqda — sabringiz uchun rahmat."
+    },
     "showcase": {
       "title": "Rebrending",
       "accent": "Brending",

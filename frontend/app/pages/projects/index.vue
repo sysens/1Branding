@@ -4,6 +4,7 @@
 // readers and search engines only; nothing is written over the grid.
 // The showcase (the old ?view=grid) is the Branding & rebranding service page now.
 import { computed } from "vue";
+import ProjectsNotice from "~/components/projects/ProjectsNotice.vue";
 import ProjectsStage from "~/components/projects/ProjectsStage.vue";
 import { toSiteLocale } from "~/utils/locales";
 import { servicePath } from "~/utils/servicePages";
@@ -37,6 +38,7 @@ const { projects } = await useProjectsWallData();
   <div class="work">
     <h1 class="sr-only">{{ t("seo.projects.h1") }}</h1>
     <ProjectsStage :projects="projects" category="" />
+    <ProjectsNotice />
   </div>
 </template>
 
@@ -47,5 +49,8 @@ const { projects } = await useProjectsWallData();
   overflow-x: clip;
   background: #000;
   color: #ece9e2;
+  /* Room under the notice, before the footer. (Padding, not a margin on the
+     notice: that margin would collapse out through this block.) */
+  padding-bottom: clamp(3.5rem, 8vw, 7rem);
 }
 </style>
