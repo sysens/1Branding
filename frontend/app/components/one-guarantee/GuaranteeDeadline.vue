@@ -1,14 +1,15 @@
 <script setup lang="ts">
-// "Your market won't wait. Neither will we.": the offer in a box with a live
-// neon outline, the terms under it and the way to the contact page.
+// "Your market won't wait. Neither will we.": the offer in a lit box, the
+// terms under it and the way to the contact page.
 //
-// The outline is a lit ring (border + glow, breathing) with a second, fine
-// ring over it that an SVG turbulence filter keeps tearing into small arcs,
-// like current jumping along a tube. The fine ring is left out on phones and
-// with reduced motion (a full-width filter redrawn several times a second is
-// work a phone need not do).
+// The box is lit the way /pricing's green card is when picked
+// (costs/PricingCards.vue, .price-card.is-active in the green tone): a soft
+// green hairline, a dark green ground lit from within, a glow round it (close
+// and bright, then a wide faint haze), and that card's own lightning running
+// round the edge (PriceCardLightning, in the same green).
 import { Check } from "lucide-vue-next";
 import { computed } from "vue";
+import PriceCardLightning from "~/components/costs/PriceCardLightning.vue";
 
 const { t, tm, rt } = useI18n();
 const localePath = useLocalePath();
@@ -19,6 +20,10 @@ const columns = computed(() => {
   const half = Math.ceil(items.value.length / 2);
   return [items.value.slice(0, half), items.value.slice(half)];
 });
+
+// The lightning's colours, as on the green price card (PricingCards.vue,
+// LIGHTNING.green): the line, its pale core and the sparks, as "r g b".
+const LIGHTNING = { tone: "3 203 0", core: "201 255 191", spark: "125 255 107", sparks: 10 };
 </script>
 
 <template>
@@ -33,33 +38,26 @@ const columns = computed(() => {
       {{ t("oneGuarantee.market.note") }}
     </p>
 
-    <div v-rise class="og-neon">
-      <svg class="og-neon__defs" width="0" height="0" aria-hidden="true" focusable="false">
-        <filter id="og-neon-current" x="-5%" y="-15%" width="110%" height="130%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.02 0.07" numOctaves="2" seed="3" result="noise">
-            <animate attributeName="seed" values="1;9;4;12;7;2;10;5" dur="1.1s" calcMode="discrete" repeatCount="indefinite" />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
-      <span class="og-neon__ring" aria-hidden="true" />
-      <span class="og-neon__current" aria-hidden="true" />
+    <div v-rise class="og-offer">
+      <span class="og-offer__halo" aria-hidden="true" />
 
-      <div class="og-neon__body">
-        <div class="og-neon__top">
-          <h3 class="og-neon__title type-h4">
+      <div class="og-offer__panel">
+        <!-- Drawn round its parent, behind it: the panel. -->
+        <PriceCardLightning v-bind="LIGHTNING" />
+        <div class="og-offer__top">
+          <h3 class="og-offer__title type-h4">
             {{ t("oneGuarantee.market.boxTitle") }}
-            <span class="og-neon__title-accent">{{ t("oneGuarantee.market.boxTitleAccent") }}</span>
+            <span class="og-offer__title-accent">{{ t("oneGuarantee.market.boxTitleAccent") }}</span>
           </h3>
-          <ul v-for="(column, index) in columns" :key="index" class="og-neon__list type-small">
+          <ul v-for="(column, index) in columns" :key="index" class="og-offer__list type-small">
             <li v-for="item in column" :key="item">
-              <Check class="og-neon__check" aria-hidden="true" />
+              <Check class="og-offer__check" aria-hidden="true" />
               <span>{{ item }}</span>
             </li>
           </ul>
         </div>
-        <p class="og-neon__text type-lead">
-          <span class="og-neon__text-muted">{{ t("oneGuarantee.market.textMuted") }}</span>
+        <p class="og-offer__text type-lead">
+          <span class="og-offer__text-muted">{{ t("oneGuarantee.market.textMuted") }}</span>
           {{ t("oneGuarantee.market.text") }}
         </p>
       </div>
@@ -73,9 +71,9 @@ const columns = computed(() => {
 </template>
 
 <style scoped>
-/* The design at 1440px: the box 1077px wide with a 4px lit outline. Type is
-   the site's scale: the heading h1, its note and the terms h5, the box's
-   title h4, its list the small step (600), its text the lead step. */
+/* The design at 1440px: the box 1077px wide. Type is the site's scale: the
+   heading h1, its note and the terms h5, the box's title h4, its list the
+   small step (600), its text the lead step. */
 .og-deadline {
   position: relative;
   padding: clamp(4rem, 9 * var(--fvw), 11rem) 1.25rem clamp(5rem, 12 * var(--fvw), 14rem);
@@ -104,71 +102,73 @@ const columns = computed(() => {
 }
 
 /* ---------- the box ---------- */
-.og-neon {
-  --radius: clamp(1.25rem, 2 * var(--fvw), 2.2rem);
+/* The colours and the measures of the lit green price card
+   (costs/PricingCards.vue: .price-tone--green, .price-card.is-active,
+   .price-card__halo), so the two boxes are lit alike. isolation: the glow and
+   the lightning are behind the panel, and over the section's black. */
+.og-offer {
+  --tone: 3 203 0;
+  --tone-soft: 107 255 92;
+  --radius: 1.5rem;
   position: relative;
+  isolation: isolate;
   width: min(100%, 75 * var(--fvw));
   min-width: min(100%, 20rem);
   margin: clamp(2.5rem, 4.6 * var(--fvw), 5.5rem) auto 0;
-  border-radius: var(--radius);
   text-align: left;
 }
 
-.og-neon__defs {
+/* The glow round the box: close and bright (shadows), then a wide faint haze
+   (a radial gradient). */
+.og-offer__halo {
   position: absolute;
-}
-
-.og-neon__ring,
-.og-neon__current {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  inset: -0.5rem;
+  /* Under the lightning (-1). */
+  z-index: -2;
+  border-radius: calc(var(--radius) + 0.5rem);
+  box-shadow:
+    0 0 2.5rem 0.25rem rgb(var(--tone) / 0.5),
+    0 0 5rem 1rem rgb(var(--tone) / 0.28);
   pointer-events: none;
 }
 
-.og-neon__ring {
-  border: 0.2rem solid #45ff62;
-  box-shadow:
-    0 0 0.45rem #2bff4b,
-    0 0 1.5rem rgb(20 255 60 / 0.85),
-    0 0 4.25rem rgb(0 255 40 / 0.45),
-    inset 0 0 0.45rem #2bff4b,
-    inset 0 0 1.4rem rgb(20 255 60 / 0.55);
-  animation: og-neon-breathe 3.4s ease-in-out infinite;
+.og-offer__halo::after {
+  position: absolute;
+  inset: -7.5rem -9rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(var(--tone) / 0.16), rgb(var(--tone) / 0.07) 60%, rgb(var(--tone) / 0));
+  content: "";
 }
 
-.og-neon__current {
-  inset: -0.25rem;
-  border: 1px solid rgb(190 255 200 / 0.85);
-  filter: url("#og-neon-current");
-}
-
-/* The inner panel: dark green glass with a hairline of its own. */
-.og-neon__body {
+/* The panel: a soft green hairline, a dark green ground lit from its upper
+   left and its lower right corner, a glow inside the edge. */
+.og-offer__panel {
   position: relative;
-  margin: clamp(0.7rem, 1 * var(--fvw), 1.1rem);
-  padding: clamp(1.5rem, 3.6 * var(--fvw), 4.2rem) clamp(1.25rem, 4 * var(--fvw), 4.8rem) clamp(1.5rem, 3.4 * var(--fvw), 4rem);
-  border: 1px solid rgb(120 255 150 / 0.3);
-  border-radius: calc(var(--radius) - 0.5rem);
-  background: linear-gradient(135deg, rgb(15 56 26 / 0.92) 0%, rgb(5 20 9 / 0.95) 60%, rgb(9 34 16 / 0.92) 100%);
+  padding: clamp(1.75rem, 4 * var(--fvw), 4.75rem) clamp(1.5rem, 4.6 * var(--fvw), 5.5rem) clamp(1.75rem, 3.8 * var(--fvw), 4.5rem);
+  border: 1px solid rgb(var(--tone-soft) / 0.55);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(70% 45% at 100% 100%, rgb(var(--tone) / 0.14), rgb(var(--tone) / 0) 100%),
+    linear-gradient(160deg, rgb(13 52 19) 0%, rgb(8 18 10) 62%);
+  box-shadow: inset 0 0 1.25rem rgb(var(--tone) / 0.16);
 }
 
-.og-neon__top {
+.og-offer__top {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(1.25rem, 2.6 * var(--fvw), 3rem);
   align-items: start;
 }
 
-.og-neon__title {
+.og-offer__title {
   margin: 0;
 }
 
-.og-neon__title-accent {
+.og-offer__title-accent {
   color: #1fd13f;
 }
 
-.og-neon__list {
+.og-offer__list {
   display: grid;
   gap: 0.45em;
   margin: 0.2em 0 0;
@@ -177,13 +177,13 @@ const columns = computed(() => {
   list-style: none;
 }
 
-.og-neon__list li {
+.og-offer__list li {
   display: flex;
   gap: 0.6em;
   align-items: flex-start;
 }
 
-.og-neon__check {
+.og-offer__check {
   flex: none;
   width: 1.15em;
   height: 1.15em;
@@ -192,12 +192,12 @@ const columns = computed(() => {
   stroke-width: 4;
 }
 
-.og-neon__text {
+.og-offer__text {
   max-width: 46em;
   margin: clamp(1.25rem, 2.3 * var(--fvw), 2.75rem) 0 0;
 }
 
-.og-neon__text-muted {
+.og-offer__text-muted {
   color: rgb(255 255 255 / 0.52);
 }
 
@@ -213,52 +213,25 @@ const columns = computed(() => {
   margin: clamp(1.25rem, 2.2 * var(--fvw), 2.6rem) 0 0;
 }
 
-@keyframes og-neon-breathe {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.82;
-  }
-}
-
 /* Tablets and phones: the title over the two lists, then one list. */
 @media (max-width: 1023px) {
-  .og-neon__top {
+  .og-offer__top {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .og-neon__title {
+  .og-offer__title {
     grid-column: 1 / -1;
   }
 }
 
-@media (max-width: 767px) {
-  .og-neon__current {
-    display: none;
-  }
-}
-
 @media (max-width: 599px) {
-  .og-neon__top {
+  .og-offer__top {
     grid-template-columns: 1fr;
     gap: 0.5em;
   }
 
-  .og-neon__title {
+  .og-offer__title {
     margin-bottom: 0.75rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .og-neon__ring {
-    animation: none;
-  }
-
-  .og-neon__current {
-    display: none;
   }
 }
 </style>

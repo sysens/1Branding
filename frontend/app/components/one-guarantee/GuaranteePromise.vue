@@ -77,13 +77,17 @@ const cards = computed(() => {
    145px from its left; the cards three to a row in 1246px. Type is the
    site's scale: the outlined wordmark and the heading h2, the text the intro
    step; a card's title h4 and its text the body step; the closing lines h1. */
+/* Clipped across only: the closing lines' light runs on down past the
+   section's foot, into the next one (see .og-promise__closing::before). */
 .og-promise {
   position: relative;
   padding-bottom: clamp(3rem, 5 * var(--fvw), 6rem);
   background: #000;
-  overflow: hidden;
+  overflow-x: clip;
 }
 
+/* The content frame, as on the landing: as wide as the screen up to 1920px,
+   centred on wider ones (--frame-max). */
 .og-promise__lead {
   position: relative;
   display: flex;
@@ -91,11 +95,40 @@ const cards = computed(() => {
   aspect-ratio: 2 / 1;
   max-height: 60rem;
   width: 100%;
+  max-width: var(--frame-max);
+  margin-inline: auto;
 }
 
 .og-promise__picture {
   position: absolute;
   inset: 0;
+}
+
+/* The picture's own edges are a dark green, not black, so it ended on straight
+   lines against the black round it. Black is laid over them, fading in:
+   - over its top 9% (the fade stops short of the shield, whose tip is 9% down)
+     and its lowest 14%;
+   - over its left side, behind the copy: black to 22% across, clear by 45%
+     (the shield's light starts further right). That part of the picture is
+     all but black, with a faint upright band in it (there in the design's
+     own file) that showed as a rectangle. */
+.og-promise__picture::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.7) 3.2%, rgb(0 0 0 / 0.28) 6.3%, transparent 9%),
+    linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.7) 4.9%, rgb(0 0 0 / 0.28) 9.8%, transparent 14%),
+    linear-gradient(to right, #000 0%, #000 22%, transparent 45%);
+  content: "";
+  pointer-events: none;
+}
+
+/* Wider than the frame: the picture's sides fade into the black page. */
+@media (min-width: 1921px) {
+  .og-promise__picture {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
 }
 
 .og-promise__picture :deep(img) {
@@ -197,11 +230,19 @@ const cards = computed(() => {
   padding: clamp(1rem, 1.6 * var(--fvw), 2rem) 0 clamp(1.5rem, 2.4 * var(--fvw), 3rem) clamp(0rem, 1.4 * var(--fvw), 1.7rem);
 }
 
-/* A sweep of green light coming in from the lower right. */
+/* A sweep of green light coming in from the lower right: an ellipse of light
+   whose heart is by the block's lower right corner (8% to its right, 30% of
+   its height below it: on screens up to 1920px that is the screen's edge).
+   The box is big enough to hold the whole ellipse, which is clear well inside
+   it (at 72% of its radius), so the light fades out on every side and never
+   ends on the box's edge or on the section's foot: it runs on into the next
+   section. (It was drawn as a quarter of the ellipse, in a box that ended at
+   its heart, and the section cut it there: a straight line through the
+   brightest part.) */
 .og-promise__closing::before {
   position: absolute;
-  inset: -20% -8% -30% 45%;
-  background: radial-gradient(ellipse 70% 85% at 100% 100%, rgb(20 220 70 / 0.5) 0%, rgb(10 120 40 / 0.22) 45%, transparent 72%);
+  inset: -70% -41% -150% 45%;
+  background: radial-gradient(ellipse 46% 40% at 65.6% 62.5%, rgb(20 220 70 / 0.5) 0%, rgb(10 120 40 / 0.22) 45%, transparent 72%);
   content: "";
   pointer-events: none;
 }
@@ -256,12 +297,12 @@ const cards = computed(() => {
     object-position: 82% 50%;
   }
 
+  /* The square crop is the shield alone: no fade on its left. The copy stands
+     on the picture's foot: a deeper fade there. */
   .og-promise__picture::after {
-    position: absolute;
-    inset: auto 0 0;
-    height: 28%;
-    background: linear-gradient(to bottom, transparent, #000);
-    content: "";
+    background:
+      linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.7) 3.2%, rgb(0 0 0 / 0.28) 6.3%, transparent 9%),
+      linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.7) 10%, rgb(0 0 0 / 0.28) 20%, transparent 28%);
   }
 
   .og-promise__copy {

@@ -37,19 +37,52 @@ const { t } = useI18n();
 /* The design at 1440px: the section 940px tall, the copy 168px from the
    left. Type is the site's scale: the lines h4, "BRAND OF THE YEAR" h3 in
    capitals, "2023" display-l. */
+/* The section is the content frame, as on the landing: as wide as the screen
+   up to 1920px, centred on the black page on wider ones (--frame-max). */
 .og-award {
   position: relative;
   display: flex;
   align-items: center;
+  max-width: var(--frame-max);
   min-height: clamp(34rem, 65 * var(--fvw), 76rem);
+  margin-inline: auto;
   background: #000;
   overflow: hidden;
 }
 
-/* The picture's own edges fade into black; it is as wide as the screen. */
 .og-award__picture {
   position: absolute;
   inset: 0;
+}
+
+/* The picture is nearly black at its top and foot, not quite: both sink into
+   the black round it, so neither ends on a line. */
+.og-award__picture::before,
+.og-award__picture::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 9%;
+  content: "";
+  pointer-events: none;
+}
+
+.og-award__picture::before {
+  top: 0;
+  background: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.7) 35%, rgb(0 0 0 / 0.28) 70%, transparent 100%);
+}
+
+.og-award__picture::after {
+  bottom: 0;
+  background: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.7) 35%, rgb(0 0 0 / 0.28) 70%, transparent 100%);
+}
+
+/* Wider than the frame: its sides fade into the black page too. */
+@media (min-width: 1921px) {
+  .og-award__picture {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
 }
 
 .og-award__picture :deep(img) {
@@ -112,13 +145,9 @@ const { t } = useI18n();
     object-position: 76% 50%;
   }
 
-  /* The picture's foot sinks into the black the copy stands on. */
+  /* The copy stands on the picture's foot: a deeper fade there. */
   .og-award__picture::after {
-    position: absolute;
-    inset: auto 0 0;
     height: 30%;
-    background: linear-gradient(to bottom, transparent, #000);
-    content: "";
   }
 
   .og-award__copy {

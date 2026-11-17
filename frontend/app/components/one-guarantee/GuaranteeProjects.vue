@@ -57,10 +57,12 @@ const { t } = useI18n();
 .og-projects__ribbon {
   position: absolute;
   inset: 42% 0 0;
-  /* It fades in under the text, and out at the section's foot, instead of
-     starting and ending on a line. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 88%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 88%, transparent 100%);
+  /* It fades in under the text, and out towards the section's foot, instead
+     of starting and ending on a line. The fade out is long and eased (the
+     last 30%): the ribbon leaves through the lower left corner at full
+     brightness, and over a short fade that still read as a cut. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 70%, rgb(0 0 0 / 0.6) 85%, rgb(0 0 0 / 0.2) 95%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 70%, rgb(0 0 0 / 0.6) 85%, rgb(0 0 0 / 0.2) 95%, transparent 100%);
 }
 
 .og-projects__copy {

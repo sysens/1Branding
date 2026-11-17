@@ -13,33 +13,49 @@ import LaserFlow from "~/components/one-guarantee/LaserFlow.vue";
 
 const { t } = useI18n();
 
+const section = ref<HTMLElement | null>(null);
+const frame = ref<HTMLElement | null>(null);
 const panel = ref<HTMLElement | null>(null);
 const failed = ref(false);
 // On phones the beam comes down the middle, and fewer pixels are shaded.
 const narrow = ref(false);
+// Where the beam comes down, across the whole section (the beam's own frame):
+// 60% across the content frame (50% on phones), which is narrower than the
+// section on screens wider than the frame.
+const beamPosition = ref(0.6);
 
 let query: MediaQueryList | null = null;
+let sizes: ResizeObserver | null = null;
 const place = () => {
   narrow.value = Boolean(query?.matches);
+  const across = narrow.value ? 0.5 : 0.6;
+  const whole = section.value?.getBoundingClientRect();
+  const inner = frame.value?.getBoundingClientRect();
+  beamPosition.value = whole && inner && whole.width > 0 ? (inner.left - whole.left + across * inner.width) / whole.width : across;
 };
 
 onMounted(() => {
   query = matchMedia("(max-width: 767px)");
   place();
   query.addEventListener("change", place);
+  if (section.value) {
+    sizes = new ResizeObserver(place);
+    sizes.observe(section.value);
+  }
 });
 
 onBeforeUnmount(() => {
   query?.removeEventListener("change", place);
+  sizes?.disconnect();
 });
 </script>
 
 <template>
-  <section class="og-hero">
+  <section ref="section" class="og-hero">
     <div class="og-hero__laser" aria-hidden="true">
       <LaserFlow
         :surface="panel"
-        :beam-position="narrow ? 0.5 : 0.6"
+        :beam-position="beamPosition"
         color="#3fff38"
         :intensity="1.8"
         :flare="1.5"
@@ -61,7 +77,7 @@ onBeforeUnmount(() => {
       <span v-if="failed" class="og-hero__beam-still" />
     </div>
 
-    <div class="og-hero__top">
+    <div ref="frame" class="og-hero__top">
       <div class="og-hero__copy">
         <h1 class="og-hero__title type-display-s">
           <span class="sr-only">{{ t("seo.oneGuarantee.h1") }}</span>
@@ -94,7 +110,8 @@ onBeforeUnmount(() => {
    display-s, their texts the intro step. */
 .og-hero {
   --top-h: clamp(27rem, 47 * var(--fvw), 80svh);
-  --beam-x: 60%;
+  /* 60% across the content frame (which is centred in the section). */
+  --beam-x: calc(50% + 0.1 * min(100%, var(--frame-max)));
   --panel-radius: clamp(1rem, 1.6vw, 1.6rem);
   position: relative;
   background: radial-gradient(ellipse 80% 50% at 50% 0, #0b0d0b 0%, #000 100%);
@@ -124,9 +141,14 @@ onBeforeUnmount(() => {
     radial-gradient(ellipse 42% 34% at var(--beam-x) 100%, rgb(60 230 110 / 0.22), transparent);
 }
 
+/* The content frame, as on the landing: as wide as the screen up to 1920px,
+   centred on wider ones (--frame-max). The beam's light runs on past it to the
+   screen's edges. */
 .og-hero__top {
   position: relative;
+  max-width: var(--frame-max);
   height: var(--top-h);
+  margin-inline: auto;
 }
 
 .og-hero__copy {

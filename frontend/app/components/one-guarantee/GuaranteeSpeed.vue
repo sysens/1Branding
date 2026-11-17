@@ -11,6 +11,11 @@
 // picture itself and brightens its green, bright pixels, so the tarmac, the
 // tyres and the dark stay dark, and the car (an ellipse round it) is left
 // alone.
+//
+// The heading stands in the picture's dark sky, over the car, so the two are
+// on screen together. On a short, wide window the picture is one screen tall
+// at most and cropped (object-fit: cover, held 20% down); the shader is told
+// the crop (uCrop), so its lights stay on the picture's lanes.
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import OptImage from "~/components/ui/OptImage.vue";
 import { optSources } from "~/utils/optImage";
@@ -22,6 +27,11 @@ const CAR = "/one-guarantee-page/car.webp";
 // Where the lanes meet, in the picture (x right, y up; just off its left edge).
 const VANISH: [number, number] = [-0.06, 0.59];
 const FLOW = 1;
+// The picture is twice as wide as it is tall, and held 20% down when its box
+// is wider than that (the same in the CSS below): the crop takes the track at
+// its foot, not the sky the heading stands in.
+const PICTURE_RATIO = 2;
+const PICTURE_HOLD = 0.2;
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -29,6 +39,7 @@ const FRAGMENT = `
 uniform sampler2D uImage;
 uniform vec2 uVanish;
 uniform float uFlow;
+uniform vec2 uCrop;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -44,7 +55,9 @@ float noise(vec2 p) {
 }
 
 void main() {
+  // The picture's own coordinates: the box shows uCrop.x of its height, from uCrop.y up.
   vec2 uv = gl_FragCoord.xy / uRes;
+  uv.y = uCrop.y + uv.y * uCrop.x;
   vec3 img = texture2D(uImage, uv).rgb;
 
   // The track's light: green, or burnt white at a trail's heart.
@@ -93,7 +106,11 @@ onMounted(() => {
     fragment: FRAGMENT,
     maxDpr: 1.5,
     textures: { uImage: texture },
-    uniforms: () => ({ uVanish: VANISH, uFlow: FLOW }),
+    uniforms: () => {
+      // A box wider than the picture shows only part of its height.
+      const shown = Math.min(1, PICTURE_RATIO / (element.clientWidth / Math.max(1, element.clientHeight)));
+      return { uVanish: VANISH, uFlow: FLOW, uCrop: [shown, (1 - PICTURE_HOLD) * (1 - shown)] };
+    },
   });
 });
 
@@ -105,13 +122,13 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="og-speed">
-    <div class="og-speed__copy">
-      <h2 v-blur-reveal class="og-speed__title type-display-s">{{ t("oneGuarantee.speed.title") }}</h2>
-      <p v-rise class="og-speed__sub type-h3">{{ t("oneGuarantee.speed.sub") }}</p>
-    </div>
+    <div class="og-speed__frame">
+      <div class="og-speed__copy">
+        <h2 v-blur-reveal class="og-speed__title type-display-s">{{ t("oneGuarantee.speed.title") }}</h2>
+        <p v-rise class="og-speed__sub type-h3">{{ t("oneGuarantee.speed.sub") }}</p>
+      </div>
 
-    <div class="og-speed__stage">
-      <div class="og-speed__frame">
+      <div class="og-speed__picture">
         <OptImage :src="CAR" :alt="t('oneGuarantee.speed.alt')" sizes="(max-width: 767px) 170vw, 100vw" loading="lazy" decoding="async" :preview="false" />
         <canvas ref="canvas" class="og-speed__lights" aria-hidden="true" />
       </div>
@@ -120,18 +137,33 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* The design at 1440px: the picture (2:1) as wide as the screen, its dark top
-   behind the heading. Type is the site's scale: "We bring both." display-s,
-   the line under it h3. */
+/* The design at 1440px: the picture (2:1) as wide as the screen, with the
+   heading in its dark sky, over the car. Type is the site's scale: "We bring
+   both." display-s, the line under it h3. */
 .og-speed {
   position: relative;
-  padding-top: clamp(3.5rem, 7 * var(--fvw), 8.5rem);
+  padding-top: clamp(2.5rem, 4 * var(--fvw), 5rem);
   background: #000;
   overflow: hidden;
 }
 
-.og-speed__copy {
+/* The content frame, as on the landing: as wide as the screen up to 1920px,
+   centred on wider ones (--frame-max). A band of black over the picture
+   (--band) gives the heading room above the car; the heading starts under
+   where the site header lies when the section fills the screen (--copy-top),
+   so the header never covers it while the car is in view. */
+.og-speed__frame {
+  --band: calc(4 * var(--fvw));
+  --copy-top: clamp(5rem, 7.2 * var(--fvw), 6.5rem);
   position: relative;
+  max-width: var(--frame-max);
+  margin-inline: auto;
+  padding-top: var(--band);
+}
+
+.og-speed__copy {
+  position: absolute;
+  inset: var(--copy-top) 0 auto;
   z-index: 1;
   padding-inline: 1.25rem;
   text-align: center;
@@ -148,22 +180,24 @@ onBeforeUnmount(() => {
   text-wrap: balance;
 }
 
-.og-speed__stage {
+/* The picture and the lights over it share one box, so they stay registered.
+   One screen tall at most (less the band over it): a short, wide window crops
+   it instead of pushing the car below the fold. */
+.og-speed__picture {
   position: relative;
-  margin-top: calc(-3.2 * var(--fvw));
-}
-
-/* The picture and the lights over it share one box, so they stay registered. */
-.og-speed__frame {
-  position: relative;
+  /* Stated, so that the height limit shortens the box instead of narrowing it
+     (with an automatic width the limit is carried over through the ratio). */
+  width: 100%;
   aspect-ratio: 2 / 1;
+  max-height: calc(100svh - var(--band));
 }
 
-.og-speed__frame :deep(img) {
+.og-speed__picture :deep(img) {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 20%;
 }
 
 .og-speed__lights {
@@ -176,7 +210,7 @@ onBeforeUnmount(() => {
 }
 
 /* The track sinks into the black below. */
-.og-speed__stage::after {
+.og-speed__picture::after {
   position: absolute;
   inset: auto 0 0;
   height: 22%;
@@ -185,15 +219,34 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-/* Phones: the picture wider than the screen, the car in the middle. */
+/* Wider than the frame: the picture's sides fade into the black page. */
+@media (min-width: 1921px) {
+  .og-speed__picture {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+/* Phones: the heading over the picture, which is wider than the screen with
+   the car in the middle. */
 @media (max-width: 767px) {
-  .og-speed__stage {
-    margin-top: 0.5rem;
+  .og-speed {
+    padding-top: 3.5rem;
   }
 
   .og-speed__frame {
+    padding-top: 0;
+  }
+
+  .og-speed__copy {
+    position: relative;
+    inset: auto;
+  }
+
+  .og-speed__picture {
     width: 170vw;
-    margin-left: -40.6vw;
+    max-height: none;
+    margin: 0.5rem 0 0 -40.6vw;
   }
 }
 </style>
