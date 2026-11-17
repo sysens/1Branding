@@ -9,16 +9,17 @@
   <div class="MainHeader headerMain z-[8888]">
       <header
         ref="headerEl"
-        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[61.25rem] min-[950px]:max-w-[56.25rem] mt-[1.25rem] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[1.75rem] min-[950px]:pr-[0.6875rem] border h-[4.75rem] min-[950px]:h-[3.5rem] mx-[1.25rem] border-[#4fbd34] absolute min-[950px]:top-[1.875rem] top-[0.625rem] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[3.75rem] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
+        class="site-header header intro-drop-in isolate backdrop-blur-md z-20 bg-[#00000080]/50 max-w-[61.25rem] min-[950px]:max-w-[50rem] mt-[1.25rem] min-[950px]:mt-[0px] flex items-center min-[950px]:mx-auto px-3 min-[950px]:pl-[0.5rem] min-[950px]:pr-[0.6875rem] border h-[4.75rem] min-[950px]:h-[3.5rem] mx-[1.25rem] border-[#4fbd34] absolute min-[950px]:top-[1.875rem] top-[0.625rem] left-0 right-0 shadow-[0_0_25px_#03CB00] rounded-[3.75rem] min-[950px]:shadow-[0_0_10px_rgb(3_203_0/0.25)]"
       >
-        <!-- The wordmark, as in the design: "One" in green, "Branding" in white. -->
+        <!-- The mark: the white "1" on green, cut to a circle. The link is named
+             by its label, so the picture itself is left unannounced. -->
         <a
           :href="localePath('/')"
           class="site-logo"
           aria-label="OneBranding"
           @click="onNav($event, localePath('/'))"
         >
-          <span class="site-logo__one">{{ $t("brand.one") }}</span>Branding
+          <img class="site-logo__mark" src="/header/logo-mark.v1.webp" alt="" width="192" height="192" decoding="async" >
         </a>
 
         <nav class="menuLink site-nav hidden min-[950px]:flex flex-1 items-center justify-center">
@@ -536,24 +537,34 @@ onBeforeUnmount(() => {
 
 <style>
 /* Header type, on the site's type scale: the links, the language select
-   and the OneGuarantee pill are the small step (15px) in semibold, the
-   wordmark the h5 step, in a 56px bar. The steps keep one size on every
-   desktop, so the bar keeps one size too. */
+   and the OneGuarantee pill are the small step (15px) in semibold, in a 56px
+   bar. The steps keep one size on every desktop, so the bar keeps one size
+   too. */
+
+/* The mark: the brand's "1" picture, cut to a circle. 40px in the 56px bar,
+   with the same 8px on its left as above and below it. */
 .site-logo {
+  display: block;
   flex-shrink: 0;
-  color: #fff;
-  font-family: var(--app-font-display);
-  font-size: var(--type-h5-size);
-  font-weight: 600;
-  line-height: var(--type-h5-lh);
-  letter-spacing: var(--type-h5-ls);
-  white-space: nowrap;
-  text-decoration: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
-.site-logo__one {
-  color: #17c93b;
+.site-logo__mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+/* The links are centred in the room between the mark and the OneGuarantee
+   pill (the bar is a flex row and the links take what is left), so the gap
+   from the mark to the first link is the gap from the language switch to the
+   pill. The bar is 800px wide: with the 40px mark in place of the wordmark
+   that keeps those gaps what the pill's was in the 900px bar (about 67px in
+   English, 53px with the longest labels, Uzbek). */
 
 .site-nav {
   gap: 1.375rem;
@@ -753,14 +764,12 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Phones and tablets: the 76px bar takes the wordmark a step up (h3, 26px on
-   a phone, as before). */
+/* Phones and tablets: in the 76px bar the mark is 52px, the height of the
+   menu button at the other end, 12px from the bar's edge like it. */
 @media (max-width: 949px) {
   .site-logo {
-    margin-left: 0.875rem;
-    font-size: var(--type-h3-size);
-    line-height: var(--type-h3-lh);
-    letter-spacing: var(--type-h3-ls);
+    width: 3.25rem;
+    height: 3.25rem;
   }
 }
 
@@ -810,7 +819,7 @@ onBeforeUnmount(() => {
   }
 }
 
-/* No 1920px+ block: the type steps stop growing at 1920px, so the 900px bar
+/* No 1920px+ block: the type steps stop growing at 1920px, so the 800px bar
    (sized for the longest labels, Uzbek) stays as it is on wider monitors
    instead of spreading its items apart. */
 </style>

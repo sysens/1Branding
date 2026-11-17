@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { SERVICE_CATALOG } from "~/utils/servicesCatalog";
-import { servicePath, servicesHubPath } from "~/utils/servicePages";
+import { servicePath, servicesHubPath, type ServiceKey } from "~/utils/servicePages";
 import { toSiteLocale } from "~/utils/locales";
 
 // The header's "Services" item and its giant menu (after slidor.agency's): a
-// wide panel under the header with a large picture on the left and the twelve
+// wide panel under the header with a large picture on the left and the
 // services in two columns on the right. Hovering (or focusing) a service shows
 // its picture. The panel opens on a click (or Enter / Space) on "Services",
 // not on hover, and closes on another click on it, a click or focus anywhere
@@ -17,7 +17,13 @@ const localePath = useLocalePath();
 const siteLocale = computed(() => toSiteLocale(locale.value));
 const img = useImage();
 
-const services = computed(() => SERVICE_CATALOG.map((service) => ({
+// Ten of the catalogue's twelve services: "Website Design & Development" and
+// "CRM, ERP & Odoo Solutions" are left out of the menu. Only the menu: their
+// own pages, and their rows in the landing's "One partner" list, stay.
+const NOT_IN_MENU: ReadonlySet<ServiceKey> = new Set<ServiceKey>(["web", "crm"]);
+const MENU = SERVICE_CATALOG.filter((service) => !NOT_IN_MENU.has(service.page));
+
+const services = computed(() => MENU.map((service) => ({
   ...service,
   name: t(`home.services.items.${service.id}.name`),
   description: t(`home.services.items.${service.id}.description`),
@@ -26,7 +32,7 @@ const services = computed(() => SERVICE_CATALOG.map((service) => ({
 })));
 
 const open = ref(false);
-const active = ref(SERVICE_CATALOG[1]!.id);
+const active = ref(MENU[1]!.id);
 const root = ref<HTMLElement | null>(null);
 const trigger = ref<HTMLButtonElement | null>(null);
 const panel = ref<HTMLElement | null>(null);
@@ -240,7 +246,7 @@ onBeforeUnmount(() => listen(false));
 
 /* The panel is the full width of the screen, flush under the header. As on
    slidor, its sizes are rem, not screen units: the list sets its height
-   (six rows of two) and the picture stretches to it, so a wide or tall
+   (five rows of two) and the picture stretches to it, so a wide or tall
    screen gets the same compact panel instead of a taller one. Past the
    1920px frame the content stays in the frame. */
 .svc__panel {
