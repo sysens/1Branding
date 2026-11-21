@@ -443,6 +443,27 @@ export interface ProjectsPageSection2 extends Struct.ComponentSchema {
   };
 }
 
+export interface ProjectsPageStory extends Struct.ComponentSchema {
+  collectionName: 'components_projects_page_stories';
+  info: {
+    description: "The rest of a project page laid out as the Art-Anor page, top to bottom: the old logo and the new one with a paragraph, pictures, the brand's mark beside a few large lines (one per line), more pictures, a large heading over its paragraph, the brand-guideline pages, the closing line. The heading logo is projectLogo; the first pictures are the hero section's. Empty parts are left out. Pictures are the same in every language: fill them in English.";
+    displayName: 'Project: Art-Anor template';
+  };
+  attributes: {
+    closing: Schema.Attribute.Text;
+    detailsText: Schema.Attribute.Text;
+    detailsTitle: Schema.Attribute.String;
+    gallery: Schema.Attribute.Media<'images', true>;
+    guidePages: Schema.Attribute.Media<'images', true>;
+    logoAfter: Schema.Attribute.Media<'images'>;
+    logoBefore: Schema.Attribute.Media<'images'>;
+    logoText: Schema.Attribute.Text;
+    mark: Schema.Attribute.Media<'images'>;
+    moreGallery: Schema.Attribute.Media<'images', true>;
+    statement: Schema.Attribute.Text;
+  };
+}
+
 export interface ProjectsPageTag extends Struct.ComponentSchema {
   collectionName: 'components_projects_page_tags';
   info: {
@@ -502,6 +523,7 @@ declare module '@strapi/strapi' {
       'projects-page.color-palette': ProjectsPageColorPalette;
       'projects-page.hero-section': ProjectsPageHeroSection;
       'projects-page.section2': ProjectsPageSection2;
+      'projects-page.story': ProjectsPageStory;
       'projects-page.tag': ProjectsPageTag;
       'shared.seo': SharedSeo;
     }

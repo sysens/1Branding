@@ -284,6 +284,12 @@ const submit = async (ip, payload) => {
   res = await fetch(BASE + '/graphql', { method: 'POST', body: JSON.stringify({ query: `{ projectsPage(documentId: "${study.documentId}", locale: "en") { section1 { projectTitle } brandSystem { statement title text image { url } } } }` }), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token.accessKey } });
   const studyGql = (await res.json().catch(() => ({}))).data?.projectsPage;
   check('case study: brand system block over GraphQL, other sections kept', studyGql?.brandSystem?.statement === '**One** brand.\nOne standard.' && studyGql?.brandSystem?.title === 'The system' && Boolean(studyGql?.brandSystem?.image?.url) && studyGql?.section1?.projectTitle === 'Owner title', JSON.stringify(studyGql).slice(0, 200));
+  // The Art-Anor template's parts (story): logos, pictures, lines, guideline pages, as the site reads them.
+  await projects.update({ documentId: study.documentId, locale: 'en', data: { story: { logoBefore: fileId, logoAfter: fileId, logoText: 'Before and after.', gallery: [fileId, fileId], mark: fileId, statement: 'One line.\nAnother.', detailsTitle: 'Details', detailsText: 'Rules.', guidePages: [fileId], closing: 'The end.' } } });
+  res = await fetch(BASE + '/graphql', { method: 'POST', body: JSON.stringify({ query: `{ projectsPage(documentId: "${study.documentId}", locale: "en") { section1 { projectTitle } brandSystem { title } story { logoBefore { url } logoAfter { url } logoText gallery(pagination: { limit: 60 }) { url width } mark { url } statement moreGallery(pagination: { limit: 60 }) { url } detailsTitle detailsText guidePages(pagination: { limit: 60 }) { url } closing } } }` }), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token.accessKey } });
+  const storyGql = (await res.json().catch(() => ({}))).data?.projectsPage;
+  const story = storyGql?.story;
+  check('case study: Art-Anor template parts over GraphQL, other sections kept', Boolean(story?.logoBefore?.url && story?.logoAfter?.url && story?.mark?.url) && story?.gallery?.length >= 1 && story?.guidePages?.length === 1 && story?.moreGallery?.length === 0 && story?.statement === 'One line.\nAnother.' && story?.closing === 'The end.' && storyGql?.brandSystem?.title === 'The system' && storyGql?.section1?.projectTitle === 'Owner title', JSON.stringify(storyGql).slice(0, 240));
 
   // Blog articles: the uz locale exists, an article is published once in en, ru
   // and uz with its pictures, and is not created again on the next boot.

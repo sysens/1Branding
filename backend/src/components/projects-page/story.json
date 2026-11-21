@@ -1,0 +1,68 @@
+{
+  "collectionName": "components_projects_page_stories",
+  "info": {
+    "displayName": "Project: Art-Anor template",
+    "description": "The rest of a project page laid out as the Art-Anor page, top to bottom: the old logo and the new one with a paragraph, pictures, the brand's mark beside a few large lines (one per line), more pictures, a large heading over its paragraph, the brand-guideline pages, the closing line. The heading logo is projectLogo; the first pictures are the hero section's. Empty parts are left out. Pictures are the same in every language: fill them in English."
+  },
+  "options": {},
+  "attributes": {
+    "logoBefore": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "logoAfter": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "logoText": {
+      "type": "text"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "mark": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "statement": {
+      "type": "text"
+    },
+    "moreGallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "detailsTitle": {
+      "type": "string"
+    },
+    "detailsText": {
+      "type": "text"
+    },
+    "guidePages": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "closing": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

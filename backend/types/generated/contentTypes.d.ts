@@ -1029,6 +1029,12 @@ export interface ApiProjectsPageProjectsPage
           localized: true;
         };
       }>;
+    story: Schema.Attribute.Component<'projects-page.story', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     tags: Schema.Attribute.Component<'projects-page.tag', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

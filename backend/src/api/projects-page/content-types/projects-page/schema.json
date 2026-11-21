@@ -63,6 +63,16 @@
       "component": "projects-page.brand-system",
       "repeatable": false
     },
+    "story": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "projects-page.story",
+      "repeatable": false
+    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",
