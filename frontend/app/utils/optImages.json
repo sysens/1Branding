@@ -67,6 +67,275 @@
   ],
   "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABQAgCdASoQAAsAA4BaJQBOgMXSwPPPUcCWIIAA/uzRdTBRzFahZIr62EBwOiyzYkwtop4vQVHdSEU/OYAzhjO3xVTCcNDVY2/TfirdWWUYWiHG1YwAAA=="
  },
+ "/case-study/art-anor/billboard.webp": {
+  "w": 1551,
+  "h": 1096,
+  "v": "cef6ba5b",
+  "widths": [
+   480,
+   800,
+   1200,
+   1551
+  ],
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQAAsAA4BaJbACdAEN6VAAYvUAAP6bHayxR7g/6O+lKcfYkfdGb8D3PViGwamj0vf8Ei1I97MkZxkA8w1yvA+efa9VcSPkM5aP2t373LEEPyNoW1x2BRRVwAA="
+ },
+ "/case-study/art-anor/bracelet-bag.webp": {
+  "w": 1169,
+  "h": 1463,
+  "v": "67b8835a",
+  "widths": [
+   480,
+   800,
+   1169
+  ],
+  "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACQBACdASoQABQAPu1iqU2ppaOiMAgBMB2JaACdMoAlrxONOw5mQYdZajRHyQAA/uv+qJMFMhvNTaOPAg4A7M7dcvYewvEvJwcofi9nE4MoIVo2u7bwpnAUNgTjUfjGMvUO5fxdCGMXgf2fQoX8YKn7eOwEuWDsw3AduiVKqiRkSLfQ1jokD6smHli5eCWtJHg4AA=="
+ },
+ "/case-study/art-anor/calla-pendant.webp": {
+  "w": 1164,
+  "h": 1455,
+  "v": "a561bd2b",
+  "widths": [
+   480,
+   800,
+   1164
+  ],
+  "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAwCdASoQABQAPu1iqU2ppaOiMAgBMB2JagCdMoRwABDEhaszYIAA/ujsKrELIVU9OG2dgEzuPMd4r0P9rHROwdJL9Zo0mLE8k2fgTTert0EWga5g7id659KH7ecox+3LPbFN57V87jIkhAxlz/kkO+XZyXQLQAA="
+ },
+ "/case-study/art-anor/calla-wide.webp": {
+  "w": 1551,
+  "h": 1097,
+  "v": "b04fa89e",
+  "widths": [
+   480,
+   800,
+   1200,
+   1551
+  ],
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAA4BaJbACdAEDYrSJd5WgAAD+8rQ3VJLQ4/9unUb/ksXUMsMju3s7K0/y2OXkr6wrjzVB1mQfMgn59MRTWeNNdPVcjwsx7Dk1DEfx5iFVtCHye37AAAA="
+ },
+ "/case-study/art-anor/gift-box.webp": {
+  "w": 1551,
+  "h": 1096,
+  "v": "4af6aa94",
+  "widths": [
+   480,
+   800,
+   1200,
+   1551
+  ],
+  "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAsAA4BaJbACdAEQAnnkYu6oAP38ca6B4+hL1aeaJyKjYVdfyrlshBYW34yxW16un7FYX4ScNcT5FfGxPqlRvM3uwCKNkkLE57960xWvzGcdsvDtvEnJyAAAAA=="
+ },
+ "/case-study/art-anor/gloves-necklace.webp": {
+  "w": 1551,
+  "h": 1096,
+  "v": "a43a4fc4",
+  "widths": [
+   480,
+   800,
+   1200,
+   1551
+  ],
+  "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAgCdASoQAAsAA4BaJbACdAYtBWb+euVA7AAA/udj9bWBHHIQUxBWNfpru8cAV/t2UvjP4UGeItexAr7fe7nyUc/sHj18RLWZ3Nw8g+MrvaWZfvs14U+KOMplpAAA"
+ },
+ "/case-study/art-anor/guide-1.webp": {
+  "w": 1269,
+  "h": 897,
+  "v": "a22f6f60",
+  "widths": [
+   480,
+   800,
+   1200,
+   1269
+  ],
+  "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAQCdASoQAAsAA4BaJQBOgCIjsXDbxAAA/u1vNrdxRPVigG33D3BV74SYJnz2josqyHEAAAA="
+ },
+ "/case-study/art-anor/guide-2.webp": {
+  "w": 1270,
+  "h": 897,
+  "v": "e38eb069",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACQAQCdASoQAAsAA4BaJaGM+RgA4QAA/f//+1oxreo5WeCh20b1WQr7VYKeKX/5KWl/ztgAAAA="
+ },
+ "/case-study/art-anor/guide-3.webp": {
+  "w": 1270,
+  "h": 897,
+  "v": "11418e4c",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAwAgCdASoQAAsAA4BaJZgCdAERHs1Ed2A1AAD+7W82txxrM1zdLutXOYJm/YA4q9UTkMoDpi0yGEfPUR6mCxbsQkxmpgAA"
+ },
+ "/case-study/art-anor/guide-4.webp": {
+  "w": 1269,
+  "h": 896,
+  "v": "5e967e3c",
+  "widths": [
+   480,
+   800,
+   1200,
+   1269
+  ],
+  "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQAAsAA4BaJbACdAEO/Jox8OwA/u1vNsGj6VMNUxeJuQtMN35EbFIJNPJ0/qjkJyhuB8268n6XXnx1cHRHYGAA"
+ },
+ "/case-study/art-anor/guide-5.webp": {
+  "w": 1270,
+  "h": 896,
+  "v": "847870d1",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsAA4BaJQBOgCIj47FyoAAA/u1vNroD4IHdiXUI9On7o/AtOQDBnW+4IwyGqyHEAAAA"
+ },
+ "/case-study/art-anor/guide-6.webp": {
+  "w": 1270,
+  "h": 896,
+  "v": "2b4bed9e",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoQAAsAA4BaJbACdAERHplp4sAA/ukGwlVDZa0KzIM3vBwZ3wf/velrhr/+SoAkn/Zb/st16AA="
+ },
+ "/case-study/art-anor/guide-7.webp": {
+  "w": 1269,
+  "h": 896,
+  "v": "390468ab",
+  "widths": [
+   480,
+   800,
+   1200,
+   1269
+  ],
+  "lqip": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAABQAQCdASoQAAsAA4BaJQBOgCgAAP7wFv7/y/4f/U0jlw149fa9+zKKe8gAAA=="
+ },
+ "/case-study/art-anor/guide-8.webp": {
+  "w": 1270,
+  "h": 896,
+  "v": "2a1ff9ad",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQAgCdASoQAAsAA4BaJbACdAYvDwm3bhiCJ4AA/u1uaIqa1FNFv1RoYxyum3ee0dC2H6Dyvvyxo2+dUz0l4/T7BgTGcvP6Y7y0gVl9Vhtw9ciDyw+Ycjjpi4w2PKWMGKneAAAA"
+ },
+ "/case-study/art-anor/guide-9.webp": {
+  "w": 1270,
+  "h": 896,
+  "v": "ea525ea9",
+  "widths": [
+   480,
+   800,
+   1200,
+   1270
+  ],
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQAAsAA4BaJbACdAEPBLirtVLgAP7tbzcEeY0dPyv54PjHI/umIRWddm8WjtmB4f0lcz3hnB9za3CLJ3REmypRKxRjveTre2uLBv3nq12UseABwDMZxMAAAAA="
+ },
+ "/case-study/art-anor/hero.webp": {
+  "w": 2603,
+  "h": 1083,
+  "v": "91b10a6e",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2603
+  ],
+  "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoQAAcAA4BaJbACdAEPhofSLAD+8XRDFhPPDV1c8+ambsUY1lBV4J77usysZiEn8Wjfe0GXTQyQRho1/FJ4d/ZeCuQAAA=="
+ },
+ "/case-study/art-anor/lotus-pendant.webp": {
+  "w": 1169,
+  "h": 1462,
+  "v": "01f4fe0f",
+  "widths": [
+   480,
+   800,
+   1169
+  ],
+  "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwAwCdASoQABQAPu1iqU2ppaOiMAgBMB2JaF2ATK3wAbdXMXh3AAD+7zXP4S1zdm6Uyb6Tg1mgKY34b/oKVYH925IRho1+Pj6Lb8qTwLcNcmmygeuXrcF+MpCQIB6DIH4LRethXiPc0AAA"
+ },
+ "/case-study/art-anor/necklace-bust.webp": {
+  "w": 1073,
+  "h": 1342,
+  "v": "db3c9774",
+  "widths": [
+   480,
+   800,
+   1073
+  ],
+  "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAwCdASoQABQAPu1iqU2ppaOiMAgBMB2JZgCdAB7HbkGrbif3puWQAP7uoY8zclw1vGRiZ20+C3nORo4bhcSvJnb6efTUUzrPqs7diIeVKuQjqX+lBAwAnMGOYxybyQ1AZihJvuPBQCSBQUma4AAA"
+ },
+ "/case-study/art-anor/packaging.webp": {
+  "w": 1551,
+  "h": 1095,
+  "v": "6ce80831",
+  "widths": [
+   480,
+   800,
+   1200,
+   1551
+  ],
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQAgCdASoQAAsAA4BaJbACdAEUSgCwTv2xhgAA/OTPhBxYViYaLEZBmipcJbDL6KdRwZrBvIbBQoHjQ8qZtwCzGYKM2vo6svGwh5L3aIBLwel3uWikV8jULVrLsMWSwAA="
+ },
+ "/case-study/art-anor/pendant-card.webp": {
+  "w": 1073,
+  "h": 1342,
+  "v": "aab37baa",
+  "widths": [
+   480,
+   800,
+   1073
+  ],
+  "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABQBACdASoQABQAPu1iqU2ppaOiMAgBMB2JZgC7LwAB0gEWyjpPrk7nd1wAAP7i5JCLxpxZJIwAqD4yotXGpW6eFP04Ou+d3AU1RCsVvBf6z/+1HF2h3cxqDuBUMKP8wux2Q3IeESsEiRGKAAA="
+ },
+ "/case-study/art-anor/stationery.webp": {
+  "w": 1073,
+  "h": 1342,
+  "v": "3067b1d2",
+  "widths": [
+   480,
+   800,
+   1073
+  ],
+  "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoQABQAPu1kqU2ppaOiMAgBMB2JaAC7ACIftc92mqjyFJVh2B0AAPfcjUCpuvvo3UeRUvLf0ibSjNT07GRU8/vq87R8riCqgrd8Dvj4ydSeCUJG9+0WvFre3RlyQ6eOcSVScIenSPyGPj+2tVMBAKWJ/FxmtsnztaALtzYDYz5v/JXC0LW9yIfDLxqOO0+bDHgAAA=="
+ },
+ "/case-study/art-anor/storefront.webp": {
+  "w": 1169,
+  "h": 1462,
+  "v": "3ebba034",
+  "widths": [
+   480,
+   800,
+   1169
+  ],
+  "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwBACdASoQABQAPu1iqU2ppaOiMAgBMB2JaACdMoBOAhAA9gmKf+LTG1y8cm/33JAA/lX7CumFQIVHzKYgIYGwIgTTJsM+6o67ilzttpVTBz8O4fbQEvxrHd+ApQVivtFN62SQdLUDXYhHliLkknDF8Pc0nUge1iwRhgrkbQ/+G4G5AAA="
+ },
+ "/case-study/art-anor/watch-box.webp": {
+  "w": 1170,
+  "h": 1462,
+  "v": "3406f73e",
+  "widths": [
+   480,
+   800,
+   1170
+  ],
+  "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADQBACdASoQABQAPu1iqU2ppaOiMAgBMB2JaACdMoC2AGx4NYrBah3o6MUjuv5XIAD+5QRsRRLRGKmdcTTeHSyo/0Z1IZileCKFsNyOSAd/EWNzlM/Q3HCmFhgg8QTFdLZJB+XxH98Bivj84PiJ8NInKRPAGLhUXclb2gKwFyZe+B2X48Rgw/jcCH4AmUaKhAAAAA=="
+ },
  "/globe/preview-green.v1.webp": {
   "w": 1160,
   "h": 760,

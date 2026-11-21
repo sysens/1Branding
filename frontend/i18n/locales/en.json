@@ -857,13 +857,62 @@
       }
     ]
   },
+  "caseStories": {
+    "artAnor": {
+      "name": "Art-Anor",
+      "title": "Art-Anor: brand identity for a handmade jewelry brand",
+      "category": "Branding",
+      "description": "OneBranding case study: the identity of Art-Anor, a handmade jewelry brand from Uzbekistan — a new mark of twelve pomegranate seeds, palette, packaging and brand guidelines.",
+      "intro": "ArtAnor is a handmade jewelry brand rooted in Uzbek artistry, bringing traditional patterns into contemporary pieces. We translated that heritage into a distinctive visual identity. A pomegranate-inspired symbol, deep red and milk-cream tones, and carefully considered typography define the brand’s presence across packaging, advertising and retail spaces. Every application follows one clear direction: making the craftsmanship recognizable before the jewelry is even worn.",
+      "compare": {
+        "old": "Old logo",
+        "new": "New logo",
+        "text": "We transformed the original pomegranate illustration into a balanced mark built from twelve seed forms. The signature red and recognizable crown preserve the brand’s origins, while refined curves, symmetry and open space bring the precision and elegance of jewelry into its identity."
+      },
+      "statement": "Twelve seeds – one unmistakable signature.\nWe transformed the pomegranate into a bold, balanced mark—bringing cultural heritage into contemporary jewelry.",
+      "details": {
+        "title": "Recognition is built into the details.",
+        "text": "We developed a clear system for how ArtAnor appears across every format. Three logo configurations provide flexibility. Pomegranate red and warm cream establish its signature palette. SF Pro typography, measured spacing and a structured grid give each composition clarity and balance. The pomegranate symbol extends into a repeatable pattern, connecting packaging, labels and digital communication. Defined rules for scale, contrast and placement help future applications preserve the same character and attention to detail."
+      },
+      "closing": "An identity shaped with the same care as the pieces it represents.",
+      "alt": {
+        "logo": "The Art-Anor logo: a pomegranate mark of twelve seeds beside the wordmark",
+        "hero": "A bracelet on a glass of pomegranate seeds beside the cream Art-Anor mark, with the words “A single seed. An entire identity.”",
+        "stationery": "Cream stationery with the Art-Anor mark and red branded ribbons",
+        "necklaceBust": "A red and gold necklace on a velvet bust under the Art-Anor logo",
+        "pendantCard": "A gold pomegranate pendant on a red card embossed with the Art-Anor name",
+        "logoOld": "Art-Anor’s old logo: a hand-drawn pomegranate with three seeds",
+        "logoNew": "Art-Anor’s new logo: twelve seeds in a ring under a crown",
+        "packaging": "A red Art-Anor shopping bag, pouch and gift boxes on a stone plinth",
+        "watchBox": "A doorman in a red uniform holding an Art-Anor watch box and a sealed envelope",
+        "braceletBag": "A hand lowering a bracelet into a cream Art-Anor gift bag",
+        "glovesNecklace": "Red satin gloves holding an Art-Anor necklace under the logo",
+        "giftBox": "White-gloved hands opening a red Art-Anor box with a bracelet inside",
+        "callaPendant": "A red and white pendant resting in a calla lily",
+        "markOutline": "The Art-Anor mark drawn as a fine outline",
+        "billboard": "An Art-Anor poster with a red and gold watch on a stone wall",
+        "storefront": "An Art-Anor boutique with a red arched entrance",
+        "lotusPendant": "A gold lotus pendant on red silk",
+        "callaWide": "A red and white pendant in a calla lily on a red background",
+        "guide1": "Brand guidelines: the three versions of the logo",
+        "guide2": "Brand guidelines: the two brand colours",
+        "guide3": "Brand guidelines: layout and margins on an A4 page",
+        "guide4": "Brand guidelines: the logo on light and on red",
+        "guide5": "Brand guidelines: clear space around the logo",
+        "guide6": "Brand guidelines: SF Pro typography",
+        "guide7": "Brand guidelines: the smallest sizes of the logo",
+        "guide8": "Brand guidelines: the bag, the tag and the digital layout",
+        "guide9": "Brand guidelines: the pattern built from the mark"
+      }
+    }
+  },
   "projectsPage": {
     "category": "Project category",
     "all": "All",
-    "showcaseName": "Showcase",
-    "showcaseLink": "View showcase",
-    "showcaseNote": "How we build brands, with more of our work.",
     "unavailable": "Projects are unavailable right now.",
+    "categoryNames": {
+      "branding": "Branding"
+    },
     "notice": {
       "status": "Update in progress",
       "title": "We’re still filling this page",
@@ -1131,6 +1180,14 @@
     "services": "Our services",
     "contact": "Discuss your project",
     "untitled": "OneBranding project",
+    "logoBefore": "Old logo",
+    "logoAfter": "New logo",
+    "gallery": {
+      "label": "Project pictures",
+      "close": "Close",
+      "previous": "Previous picture",
+      "next": "Next picture"
+    },
     "statement": {
       "statement": "One brand.\nOne standard.\nZero guesswork.",
       "title": "The system behind a consistent brand",

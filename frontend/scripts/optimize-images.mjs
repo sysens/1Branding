@@ -41,6 +41,10 @@ const SOURCES = [
   // The OneGuarantee page: the award, the car, the shield and the still ribbon
   // (shown where WebGL is off), cut from the design.
   { dir: "one-guarantee-page", widths: [640, 960, 1280, 1600] },
+  // The Art-Anor case study (/projects/art-anor): its photographs and the
+  // brand-guideline pages, cut from the design. (Its logos, in marks/, are
+  // served as they are: flat colour, lossless.)
+  { dir: "case-study/art-anor", widths: [480, 800, 1200, 1600] },
 ];
 
 const PHOTO = { avif: { quality: 55, effort: 6, chromaSubsampling: "4:2:0" }, webp: { quality: 80, effort: 6 } };

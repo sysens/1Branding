@@ -2,9 +2,9 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import OptImage from "~/components/ui/OptImage.vue";
 import type { ProjectWallItem } from "~/composables/useProjectsWallData";
-import { toSiteLocale } from "~/utils/locales";
+import { useProjectOpen } from "~/composables/useProjectOpen";
+import { darkenTo } from "~/utils/cmsStory";
 import { createTrack, headAt, TRACK_PERSPECTIVE } from "~/utils/ribbonTrack";
-import { servicePath } from "~/utils/servicePages";
 import { pageWasRestored } from "~/utils/viewTransition";
 
 /**
@@ -14,11 +14,20 @@ import { pageWasRestored } from "~/utils/viewTransition";
  * ribbon of the studio's work runs one turn of a rising spiral (in at the
  * bottom left on the far side, round towards the camera and back along the
  * near side, round again and out at the top right; utils/ribbonTrack.ts);
- * then the projects
- * slide into the grid, three to a row, close together, each from
- * the edge of the screen nearest its place (see gridEntry). A click, a key or a scroll skips to the grid; it does not
- * play for visitors who ask for less motion, nor when the page is reopened
- * further down. The last tile leads to the showcase.
+ * then the projects on the first screen slide into their places, each from
+ * the edge of the screen nearest its place (see gridEntry). A click, a key or
+ * a scroll skips to the grid; it does not play for visitors who ask for less
+ * motion, nor when the page is reopened further down.
+ * The grid is worldbranddesign.com's, with cards at the covers' own 16:9:
+ * four to a row (fewer on smaller screens), 20px apart; at a card's foot a
+ * white plate with the project's logo, and, while the pointer is on it, a
+ * second picture over the first and a white bar rising beside the plate with
+ * the project's title and its category in the project's colour. A click opens
+ * the project inside a disc that springs up in the middle of the card and
+ * grows over the screen, as askphill.com opens its cases
+ * (composables/useProjectOpen.ts).
+ * Every tile is a project. (A last tile, "Showcase", led to the Branding &
+ * rebranding service page: a service, not a project.)
  * Arriving from another page, it starts once the page transition is over (it
  * played half hidden under it before). Whether the page was reopened further
  * down is what the scroll's settling recorded, not where the page is by then:
@@ -43,7 +52,7 @@ const releaseScroll = () => {
   lenis?.start?.();
 };
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 // The landing's line ("WE MAKE BRANDS"), in English in every language, as there.
 const WORDS = ["WE MAKE", "BRANDS"] as const;
@@ -104,7 +113,18 @@ const gridEntry = (cards: HTMLElement[], vw: number, vh: number) => {
   });
 };
 
-const shown = computed(() => (props.category ? props.projects.filter((project) => project.category === props.category) : props.projects));
+// A tile's category line is in the project's colour, dark enough to read on
+// the white bar.
+const shown = computed(() =>
+  (props.category ? props.projects.filter((project) => project.category === props.category) : props.projects).map((project) => ({
+    ...project,
+    ink: darkenTo(project.color, 4.5),
+  }))
+);
+
+// A click on a tile: the project opens with the disc (useProjectOpen). It is
+// caught on the way down (capture), before the link navigates by itself.
+const openProject = useProjectOpen();
 
 const root = ref<HTMLElement | null>(null);
 // SSR: the grid's cards are hidden until the film takes them (or 4s pass
@@ -175,12 +195,13 @@ useGsapContext(root, ({ gsap, el }) => {
   const GRID_END = 4.363;
   const GRID_AT = 3.64;
 
-  // The words: in fast, slow through the middle, out fast.
+  // The words: in fast, to a stop in the middle of the screen (one over the
+  // other, the small line between them), out fast.
   if (first && second) {
     timeline
-      .fromTo(first, { x: -0.78 * vw }, { x: -0.07 * vw, duration: 1.6, ease: "power3.out" }, 0)
+      .fromTo(first, { x: -0.78 * vw }, { x: 0, duration: 1.6, ease: "power3.out" }, 0)
       .to(first, { x: 0.82 * vw, duration: 2.02, ease: "power3.in" }, 1.6)
-      .fromTo(second, { x: 0.78 * vw }, { x: 0.07 * vw, duration: 1.6, ease: "power3.out" }, 0)
+      .fromTo(second, { x: 0.78 * vw }, { x: 0, duration: 1.6, ease: "power3.out" }, 0)
       .to(second, { x: -0.82 * vw, duration: 2.02, ease: "power3.in" }, 1.6);
   }
   if (tagline) {
@@ -241,12 +262,13 @@ useGsapContext(root, ({ gsap, el }) => {
     timeline.to(clock, { time: 4, duration: 4 - from, ease: "none", onUpdate: place }, from);
   }
 
-  // The grid: in reading order, each card sliding in a straight line from
-  // off the screen into its place (gridEntry) on one cubic ease-out (GSAP's
-  // power2.out; its power3 is a quartic), the slides
-  // ending 0.0616s apart. Its lean eases out with it; the slight 3D turn of a
-  // card coming from the side is gone in its first 0.3s. Cards below the
-  // first screen are simply in place.
+  // The grid: in reading order, each card on the first screen sliding in a
+  // straight line from off the screen into its place (gridEntry) on one cubic
+  // ease-out (GSAP's power2.out; its power3 is a quartic), the slides ending
+  // 0.0616s apart. Its lean eases out with it; the slight 3D turn of a card
+  // coming from the side is gone in its first 0.3s. Cards below the first
+  // screen are simply in place. (A card's place is set with top, not with a
+  // transform: the slide owns its transform and clears it at the end.)
   if (cards.length) {
     gridEntry(cards, vw, vh).forEach((entry, index) => {
       const card = cards[index]!;
@@ -301,27 +323,43 @@ useGsapContext(root, ({ gsap, el }) => {
     <Transition name="work-swap" mode="out-in">
       <div :key="category" class="work-grid-wrap">
       <ul class="work-grid">
-        <li v-for="(project, index) in shown" :key="project.id" class="work-card">
-          <NuxtLink :to="project.to" class="work-card__link">
-            <img
+        <li
+          v-for="(project, index) in shown"
+          :key="project.id"
+          class="work-card"
+          @click.capture="openProject($event, project.to)"
+        >
+          <NuxtLink :to="project.to" class="work-card__link" :aria-label="project.title">
+            <OptImage
               class="work-card__image"
               :src="project.image"
               :alt="project.title"
-              :loading="index < 6 ? 'eager' : 'lazy'"
+              sizes="(max-width: 559px) 94vw, (max-width: 899px) 48vw, (max-width: 1279px) 32vw, 24vw"
+              :loading="index < 8 ? 'eager' : 'lazy'"
               decoding="async"
               draggable="false"
-            >
-            <span class="work-card__caption">
-              <span class="work-card__title">{{ project.title }}</span>
-              <span v-if="project.category" class="work-card__category">{{ project.category }}</span>
+            />
+            <OptImage
+              v-if="project.hoverImage"
+              class="work-card__image work-card__image--hover"
+              :src="project.hoverImage"
+              alt=""
+              sizes="(max-width: 559px) 94vw, (max-width: 899px) 48vw, (max-width: 1279px) 32vw, 24vw"
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+              :preview="false"
+            />
+            <span class="work-card__foot" aria-hidden="true">
+              <span class="work-card__badge">
+                <img v-if="project.logo" :src="project.logo.src" alt="" :width="project.logo.width" :height="project.logo.height" decoding="async" >
+                <span v-else class="work-card__initial" :style="{ color: project.ink }">{{ project.title.trim().charAt(0) }}</span>
+              </span>
+              <span class="work-card__bar">
+                <span class="work-card__title">{{ project.title }}</span>
+                <span v-if="project.category" class="work-card__category" :style="{ color: project.ink }">{{ project.category }}</span>
+              </span>
             </span>
-          </NuxtLink>
-        </li>
-        <li class="work-card work-card--more">
-          <NuxtLink :to="servicePath('branding', toSiteLocale(locale))" class="work-card__link work-more">
-            <span class="work-more__name">{{ t("projectsPage.showcaseName") }}</span>
-            <span class="work-more__note">{{ t("projectsPage.showcaseNote") }}</span>
-            <svg class="work-more__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8" /></svg>
           </NuxtLink>
         </li>
       </ul>
@@ -332,22 +370,14 @@ useGsapContext(root, ({ gsap, el }) => {
 </template>
 
 <style scoped>
-/* The first screen: the grid centred between the site header and the bar at
-   the foot (pages/projects/index.vue). Cards 16:10, three to a row, as wide
-   as 76% of the screen allows and short enough for two rows to fit its
-   height. */
+/* Under the site header: the grid, 20px from the screen's sides (12px on
+   phones), up to the content frame. */
 .work-stage {
-  /* The space between the cards, across and down (it was 2x as much down, with
-     a rule in it). */
-  --gap: clamp(0.375rem, 0.55vw, 0.6875rem);
-  --cols: 3;
-  --card-w: min(calc((76vw - 2 * var(--gap)) / 3), calc((100svh - 15rem - var(--gap)) / 1.25));
+  --side: 20px;
+  --gap: 20px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   min-height: 100svh;
-  padding: 7rem 0 6rem;
+  padding: clamp(7.25rem, 8vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem);
 }
 
 /* ---------- the film ---------- */
@@ -374,9 +404,17 @@ useGsapContext(root, ({ gsap, el }) => {
   pointer-events: none;
 }
 
+/* A word is a row as wide as the screen with its letters in the middle; the
+   script moves the row sideways (x), so x = 0 is the middle of the screen.
+   (Not left: 50% with translate: -50%: GSAP folds a CSS translate into its own
+   transform in pixels, and the half-width was lost for words whose width is an
+   odd number of pixels — they stopped off the middle.) */
 .work-word {
   position: absolute;
-  left: 50%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
   margin: 0;
   color: #ece9e2;
   font-family: var(--app-font-display);
@@ -385,16 +423,20 @@ useGsapContext(root, ({ gsap, el }) => {
   line-height: 1;
   letter-spacing: -0.03em;
   white-space: nowrap;
-  translate: -50% -50%;
   will-change: transform;
 }
 
+/* The words stop one over the other with the small line (.work-tagline)
+   between them, clear of it: a capital reaches 0.37em from the word's middle
+   (the row is 1em tall, its middle 0.5em under its top), the line is up to
+   three rows tall in the longer languages (1.5rem from its middle), and 1rem
+   stays between them. */
 .work-word--first {
-  top: 44.5%;
+  top: calc(50% - 0.87em - 2.5rem);
 }
 
 .work-word--second {
-  top: 56%;
+  top: calc(50% - 0.13em + 2.5rem);
 }
 
 .work-tagline {
@@ -459,11 +501,13 @@ useGsapContext(root, ({ gsap, el }) => {
 /* ---------- the grid ---------- */
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(var(--cols), var(--card-w));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--gap);
-  justify-content: center;
-  margin: 0;
-  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--frame-max);
+  margin: 0 auto;
+  padding: 0 var(--side);
   list-style: none;
 }
 
@@ -488,65 +532,125 @@ useGsapContext(root, ({ gsap, el }) => {
   position: relative;
 }
 
+/* The card: the covers' own 16:9, square-cornered, the pictures filling it.
+   (While it opens it gives a little under the press.) */
 .work-card__link {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 0.2rem;
-  background: #141414;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14);
-  color: #fff;
+  background: #161616;
+  color: #000;
   text-decoration: none;
+  transition: scale 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.work-card__image {
+.work-card.is-opening .work-card__link {
+  scale: 0.97;
+}
+
+/* :deep: the <img> sits inside OptImage, past this component's scope. */
+.work-card__link :deep(.work-card__image) {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
 }
 
-/* The project's name and category, coming up from the foot on hover. */
-.work-card__caption {
-  position: absolute;
-  inset: auto 0 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 2.5rem 1rem 0.85rem;
-  background: linear-gradient(to top, rgb(0 0 0 / 0.78), rgb(0 0 0 / 0));
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: 1.3;
+.work-card__link :deep(.work-card__image--hover) {
   opacity: 0;
-  translate: 0 0.5rem;
-  transition: opacity 0.35s ease, translate 0.35s ease;
 }
 
-.work-card__title {
-  font-weight: 600;
+/* The foot: the white plate with the logo (30px tall, 10px around it, as
+   wide as the logo is, up to 60% of the card), and beside it the bar, below
+   the card until the pointer comes. */
+.work-card__foot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  height: 50px;
 }
 
-.work-card__category {
+.work-card__badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
   flex: none;
-  color: rgb(255 255 255 / 0.7);
-  letter-spacing: 0.12em;
+  align-items: center;
+  max-width: 60%;
+  height: 50px;
+  padding: 10px;
+  background: #fff;
+}
+
+.work-card__badge img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.work-card__initial {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-family: var(--app-font-display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
   text-transform: uppercase;
 }
 
-.work-card__link:hover .work-card__image,
-.work-card__link:focus-visible .work-card__image {
-  transform: scale(1.04);
+.work-card__bar {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  margin-left: -1px;
+  padding: 0 12px;
+  background: #fff;
+  translate: 0 100%;
+  transition: translate 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.work-card__link:hover .work-card__caption,
-.work-card__link:focus-visible .work-card__caption {
-  opacity: 1;
-  translate: 0 0;
+.work-card__title,
+.work-card__category {
+  overflow: hidden;
+  font-family: var(--app-font-sans);
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.work-card__title {
+  margin-bottom: 3px;
+  color: #000;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.work-card__category {
+  font-size: 11px;
+}
+
+@media (hover: hover) {
+  .work-card__link:hover :deep(.work-card__image--hover) {
+    opacity: 1;
+  }
+
+  .work-card__link:hover .work-card__bar {
+    translate: 0 0;
+  }
 }
 
 .work-card__link:focus-visible {
@@ -554,52 +658,8 @@ useGsapContext(root, ({ gsap, el }) => {
   outline-offset: 3px;
 }
 
-/* The last tile: the way to the showcase. */
-.work-more {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.4rem;
-  padding: clamp(1rem, 1.6vw, 1.75rem);
-  background: #121212;
-  transition: background-color 0.3s ease;
-}
-
-.work-more:hover,
-.work-more:focus-visible {
-  background: #181818;
-}
-
-.work-more__name {
-  font-family: var(--app-font-display);
-  font-size: clamp(1.25rem, 2vw, 2.25rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-
-.work-more__note {
-  max-width: 22em;
-  color: #9a9a9a;
-  font-family: var(--app-font-sans);
-  font-size: var(--type-caption-size);
-  line-height: 1.4;
-}
-
-.work-more__arrow {
-  position: absolute;
-  top: clamp(1rem, 1.6vw, 1.75rem);
-  right: clamp(1rem, 1.6vw, 1.75rem);
-  width: 1.4rem;
-  height: 1.4rem;
-  fill: none;
-  stroke: #03cb00;
-  stroke-width: 1.8;
-  transition: translate 0.3s ease;
-}
-
-.work-more:hover .work-more__arrow {
-  translate: 0.15rem -0.15rem;
+.work-card__link:focus-visible .work-card__bar {
+  translate: 0 0;
 }
 
 .work-empty {
@@ -620,32 +680,36 @@ useGsapContext(root, ({ gsap, el }) => {
   opacity: 0;
 }
 
-/* Tablets: two to a row; phones: one, the name always shown. */
-@media (max-width: 1023px) {
-  .work-stage {
-    --cols: 2;
-    --card-w: calc((92vw - var(--gap)) / 2);
+/* Smaller screens: three to a row, then two, then one; 12px apart on phones. */
+@media (max-width: 1279px) {
+  .work-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 599px) {
-  .work-stage {
-    --cols: 1;
-    --card-w: calc(100vw - 2.5rem);
-    padding: 7.75rem 0 2.5rem;
+@media (max-width: 899px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (hover: none) {
-  .work-card__caption {
-    opacity: 1;
-    translate: 0 0;
+@media (max-width: 559px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .work-stage {
+    --side: 12px;
+    --gap: 12px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-card__image,
-  .work-card__caption,
+  .work-card__link,
+  .work-card__link :deep(.work-card__image),
+  .work-card__bar,
   .work-swap-enter-active,
   .work-swap-leave-active {
     transition: none;

@@ -1,15 +1,19 @@
 <!-- app/pages/projects/[id].vue -->
 <script setup lang="ts">
-// A case study: a white page with one centred column of sections (the
-// heading, the project's text, its pictures in rounded cards, the statement
-// beside its illustration, the palette),
-// built from the CMS entry by buildCaseSections() (utils/caseStudy.ts) and
-// rendered by CaseSections. The slider and the grid on /projects open it.
+// A case study from the CMS, laid out as the Art-Anor page (its blocks and
+// their order: utils/caseStories.ts): the logo or the name, the project's text,
+// its pictures edge to edge, the old logo and the new one, the mark beside a few
+// large lines, a large heading, the palette, the guideline pages, the closing
+// line. buildCmsStory() (utils/cmsStory.ts) makes the blocks from the entry's
+// fields ("Project: Art-Anor template" in the CMS holds most of them) and
+// leaves out what is empty; CaseStory draws them; a click on a picture opens
+// it large. The grid on /projects opens the page.
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import CaseNext from "~/components/case-study/CaseNext.vue";
-import CaseSections from "~/components/case-study/CaseSections.vue";
-import { buildCaseSections, casePlainText, type CaseStudyEntry } from "~/utils/caseStudy";
+import CaseStory from "~/components/case-study/CaseStory.vue";
+import { casePlainText, type CaseStudyEntry } from "~/utils/caseStudy";
+import { buildCmsStory, type CmsStoryEntry } from "~/utils/cmsStory";
 import { isPlaceholderCopy, toMetaDescription } from "~/utils/seo";
 import { isSiteLocale } from "~/utils/locales";
 
@@ -104,13 +108,16 @@ const query = `
   }
 `;
 
-// The block under the cover (CaseStatement) is asked for on its own: while
-// the CMS has no such fields yet (Railway deploys the site and the CMS side
-// by side) this request alone fails and the block shows the site's own copy.
-// Once the CMS has them, the fields can join the query above.
-const statementQuery = `
-  query ProjectStatement($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+// What the page can do without is asked for on its own: the project's colour
+// and logo (the heading's) and the statement block. Railway deploys the site
+// and the CMS side by side, so a field may not be in the CMS yet: then this
+// request alone fails, and the page takes the colour from the palette, sets
+// the heading in type and shows the site's own statement.
+const extrasQuery = `
+  query ProjectExtras($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
     projectsPage(documentId: $documentId, locale: $locale) {
+      projectColor
+      projectLogo { url width height }
       brandSystem {
         statement
         title
@@ -119,6 +126,8 @@ const statementQuery = `
       }
     }
     fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
+      projectColor
+      projectLogo { url width height }
       brandSystem {
         statement
         title
@@ -129,20 +138,65 @@ const statementQuery = `
   }
 `;
 
-type StatementRes = {
-  projectsPage?: Pick<CaseStudyEntry, "brandSystem"> | null;
-  fallbackProjectsPage?: Pick<CaseStudyEntry, "brandSystem"> | null;
+type Extras = Pick<CmsStoryEntry, "brandSystem" | "projectColor" | "projectLogo">;
+type ExtrasRes = {
+  projectsPage?: Extras | null;
+  fallbackProjectsPage?: Extras | null;
 };
 
-const [{ data, error }, { data: statementData }] = await Promise.all([
+// The Art-Anor template's parts ("Project: Art-Anor template"), asked for on
+// their own like the extras above, for the same reason: a CMS without them
+// yet fails this request alone and the page shows what it has.
+const storyQuery = `
+  query ProjectStory($documentId: ID!, $locale: I18NLocaleCode, $fallbackLocale: I18NLocaleCode) {
+    projectsPage(documentId: $documentId, locale: $locale) {
+      story {
+        logoBefore { url width height alternativeText }
+        logoAfter { url width height alternativeText }
+        logoText
+        gallery(pagination: { limit: 60 }) { url width height alternativeText }
+        mark { url width height alternativeText }
+        statement
+        moreGallery(pagination: { limit: 60 }) { url width height alternativeText }
+        detailsTitle
+        detailsText
+        guidePages(pagination: { limit: 60 }) { url width height alternativeText }
+        closing
+      }
+    }
+    fallbackProjectsPage: projectsPage(documentId: $documentId, locale: $fallbackLocale) {
+      story {
+        logoBefore { url width height alternativeText }
+        logoAfter { url width height alternativeText }
+        gallery(pagination: { limit: 60 }) { url width height alternativeText }
+        mark { url width height alternativeText }
+        moreGallery(pagination: { limit: 60 }) { url width height alternativeText }
+        guidePages(pagination: { limit: 60 }) { url width height alternativeText }
+      }
+    }
+  }
+`;
+
+type Story = NonNullable<CmsStoryEntry["story"]>;
+type StoryRes = {
+  projectsPage?: { story?: Story | null } | null;
+  fallbackProjectsPage?: { story?: Story | null } | null;
+};
+
+const [{ data, error }, { data: extrasData }, { data: storyData }] = await Promise.all([
   useCmsQuery<NonNullable<GqlRes["data"]>>(
     () => `project-${documentId.value}`,
     query,
     { variables: () => ({ documentId: documentId.value }) }
   ),
-  useCmsQuery<StatementRes>(
-    () => `project-statement-${documentId.value}`,
-    statementQuery,
+  useCmsQuery<ExtrasRes>(
+    () => `project-extras-${documentId.value}`,
+    extrasQuery,
+    { variables: () => ({ documentId: documentId.value }) }
+  ),
+  useCmsQuery<StoryRes>(
+    () => `project-story-${documentId.value}`,
+    storyQuery,
     { variables: () => ({ documentId: documentId.value }) }
   ),
 ]);
@@ -170,24 +224,46 @@ if (slug.value && routeKey.value !== slug.value) {
 const section1 = computed(() => page.value?.section1 ?? null);
 const images = computed(() => section1.value?.images_connection?.nodes ?? []);
 
-// The statement block of the same entry as the rest of the page; its picture
-// is the same in every language, so the English one fills in.
-const brandSystem = computed(() => {
-  const own = statementData.value?.data?.projectsPage;
-  const fallback = statementData.value?.data?.fallbackProjectsPage?.brandSystem;
-  const system = own ? own.brandSystem : fallback;
-  return system?.image?.url || !fallback?.image?.url ? system : { ...system, image: fallback.image };
+// The extras of the same entry as the rest of the page. Pictures and the
+// colour are the same in every language, so the English entry fills in what
+// this one lacks.
+const extras = computed<Extras>(() => {
+  const own = extrasData.value?.data?.projectsPage;
+  const fallback = extrasData.value?.data?.fallbackProjectsPage;
+  const system = own ? own.brandSystem : fallback?.brandSystem;
+  const picture = fallback?.brandSystem?.image;
+  return {
+    projectColor: own?.projectColor || fallback?.projectColor,
+    projectLogo: own?.projectLogo?.url ? own.projectLogo : fallback?.projectLogo,
+    brandSystem: system?.image?.url || !picture?.url ? system : { ...system, image: picture },
+  };
 });
 
-const caseCopy = useCaseCopy();
-const sections = computed(() =>
-  page.value
-    ? buildCaseSections(
-        { ...page.value, section1: section1.value && { ...section1.value, images: images.value }, brandSystem: brandSystem.value },
-        cmsMedia,
-        caseCopy.value
-      )
-    : []
+// The template's parts: the words of this language's entry; its pictures,
+// the same in every language, from the English one where this one has none.
+const storyParts = computed<Story | null>(() => {
+  const own = storyData.value?.data?.projectsPage?.story ?? null;
+  const fallback = storyData.value?.data?.fallbackProjectsPage?.story ?? null;
+  if (!fallback) return own;
+  const one = (key: "logoBefore" | "logoAfter" | "mark") => (own?.[key]?.url ? own[key] : fallback[key]);
+  const many = (key: "gallery" | "moreGallery" | "guidePages") => (own?.[key]?.length ? own[key] : fallback[key]);
+  return {
+    ...own,
+    logoBefore: one("logoBefore"),
+    logoAfter: one("logoAfter"),
+    mark: one("mark"),
+    gallery: many("gallery"),
+    moreGallery: many("moreGallery"),
+    guidePages: many("guidePages"),
+  };
+});
+
+const story = computed(() =>
+  buildCmsStory(
+    { ...page.value, section1: section1.value && { ...section1.value, images: images.value }, ...extras.value, story: storyParts.value },
+    cmsMedia,
+    { untitled: t("project.untitled"), palette: t("project.palette"), before: t("project.logoBefore"), after: t("project.logoAfter") }
+  )
 );
 
 const projectName = computed(() => section1.value?.projectTitle?.trim() || "");
@@ -247,30 +323,21 @@ useHead({ bodyAttrs: { class: "case-study-document" } });
 
 <template>
   <div class="case-study">
-    <CaseSections class="case-study__column" :sections="sections" />
-    <CaseNext class="case-study__column" />
+    <CaseStory :story="story" />
+    <CaseNext class="case-study__next" />
   </div>
 </template>
 
 <style scoped>
-/* Below the site's floating header; the column is 80% of the screen (the
-   design's 1152px at 1440), the screen less 20px margins on phones. */
 .case-study {
   min-height: 100vh;
-  padding-top: clamp(8.5rem, 9vw, 9.5rem);
   background: #fff;
   color: #111;
 }
 
-.case-study__column {
+.case-study__next {
   width: min(100% - 2.5rem, 80 * var(--fvw));
   margin-inline: auto;
-}
-
-@media (max-width: 767px) {
-  .case-study__column {
-    width: calc(100% - 2.5rem);
-  }
 }
 
 :global(body.case-study-document) {

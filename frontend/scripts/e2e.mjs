@@ -95,6 +95,37 @@ try {
   res = await fetch(`${BASE}/projects/does-not-exist-xyz`, { headers });
   check("missing project is a 404", res.status === 404, String(res.status));
 
+  // A case story written in the site (utils/caseStories.ts): its own page in
+  // every language, and a card on /projects that opens it.
+  for (const page of ["/projects/art-anor", "/ru/projects/art-anor", "/uz/projects/art-anor"]) {
+    res = await fetch(BASE + page, { headers, redirect: "manual" });
+    const html = await res.text();
+    check(`${page} renders the case story`, res.status === 200 && html.includes("story__logo") && html.includes('"@type":"CreativeWork"') && html.includes("<h1"), String(res.status));
+  }
+  res = await fetch(`${BASE}/projects`, { headers });
+  check("/projects links to the case story", (await res.text()).includes('href="/projects/art-anor"'), "");
+
+  // The grid's line over a project's name: its category in the page's language,
+  // also for a CMS project whose Russian entry has none (the English one's, named by the site).
+  res = await fetch(`${BASE}/ru/projects`, { headers });
+  {
+    const html = await res.text();
+    const lines = [...html.matchAll(/class="work-card__category"[^>]*>([\s\S]*?)<\/span>/g)].map((match) => match[1].replace(/<[^>]+>/g, ""));
+    check("/ru/projects names every project's category in Russian", lines.length > 1 && lines.every((line) => line.startsWith("Брендинг")), lines.slice(0, 3).join(" | "));
+  }
+
+  // A CMS case study is laid out the same way (utils/cmsStory.ts): its name as
+  // the heading, its pictures as buttons that open them large, its palette.
+  for (const page of ["/projects/raviosta-restaurant-identity", "/uz/projects/raviosta-restaurant-identity"]) {
+    res = await fetch(BASE + page, { headers, redirect: "manual" });
+    const html = await res.text();
+    check(
+      `${page} renders as a case story`,
+      res.status === 200 && html.includes("story__title-name") && html.includes("story__zoom") && html.includes("story__swatches") && html.includes("<dialog") && html.includes('"@type":"CreativeWork"'),
+      String(res.status)
+    );
+  }
+
   // Old addresses and other casings redirect to the canonical page; assets do not.
   for (const [from, to] of [
     ["/About", "/about"],
@@ -138,6 +169,7 @@ try {
   res = await fetch(`${BASE}/sitemap.xml`, { headers });
   const sitemap = await res.text();
   check("sitemap lists the service pages in every language", res.status === 200 && sitemap.includes("/uz/services/logotip-yaratish") && sitemap.includes("/ru/services/razrabotka-logotipa"), String(res.status));
+  check("sitemap lists the case story in every language", sitemap.includes("/projects/art-anor</loc>") && sitemap.includes("/ru/projects/art-anor</loc>") && sitemap.includes("/uz/projects/art-anor</loc>"), "");
 
   res = await fetch(`${BASE}/OneGuarantee/image95.webp`, { redirect: "manual" });
   check("asset folder not redirected", res.status === 200, String(res.status));

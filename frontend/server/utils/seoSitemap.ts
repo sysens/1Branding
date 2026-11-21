@@ -1,6 +1,7 @@
 import { isPlaceholderCopy, toMetaDescription } from "../../app/utils/seo";
 import { SITE_LOCALES, localizedPath, type SiteLocale } from "../../app/utils/locales";
 import { SERVICE_PAGES } from "../../app/utils/servicePages";
+import { CASE_STORIES } from "../../app/utils/caseStories";
 
 type CmsLocale = "ru" | "en" | "uz";
 type Collection = "newsPages_connection" | "projectsPages_connection";
@@ -168,6 +169,14 @@ export async function buildSitemap(siteUrl: string, graphqlUrl: string, fetchCms
     const updated = dateOrEmpty(service.updated);
     groups.set(`service:${service.key}`, {
       paths: Object.fromEntries(SITE_LOCALES.map((locale) => [locale, localizedPath(`/services/${service.slugs[locale]}`, locale)])),
+      updatedAt: Object.fromEntries(SITE_LOCALES.map((locale) => [locale, updated])),
+    });
+  }
+  // The case stories written in the site itself, in every language.
+  for (const story of CASE_STORIES) {
+    const updated = dateOrEmpty(story.updated);
+    groups.set(`story:${story.slug}`, {
+      paths: Object.fromEntries(SITE_LOCALES.map((locale) => [locale, localizedPath(`/projects/${story.slug}`, locale)])),
       updatedAt: Object.fromEntries(SITE_LOCALES.map((locale) => [locale, updated])),
     });
   }

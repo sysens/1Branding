@@ -1,10 +1,11 @@
-// A case study (/projects/<slug>) is one light column of sections, each a
-// small component in components/case-study/: the heading, a paragraph, a
-// picture in a rounded card, a statement beside an illustration, the
-// palette. The CMS entry (ProjectsPage) is
-// turned into that list here, so a new kind of section is one more type
-// below and one more component in CaseSections.vue; the page only renders
-// the list.
+// The showcase on a service page (ServiceTemplate, ProjectsShowcase) is one
+// light column of sections, each a small component in components/case-study/:
+// the heading, a paragraph, a picture in a rounded card, a statement beside an
+// illustration, the palette. A CMS entry (ProjectsPage) is turned into that
+// list here, so a new kind of section is one more type below and one more
+// component in CaseSections.vue. (A project's own page, /projects/<slug>, is
+// drawn as a case story instead: utils/cmsStory.ts.) The helpers for an
+// entry's words and colours are shared with it.
 
 export type CaseTextPart = { text: string; strong?: boolean };
 
@@ -141,14 +142,14 @@ export const casePlainText = (text?: string | null) => clean(text).replace(/\*\*
 /** "Raviosta: logo and identity…" -> "Raviosta". */
 export const caseProjectName = (title?: string | null) => clean(title).split(/:\s/)[0]!.trim();
 
-/**
- * What was made, for the heading: the project's tags and category, each once
- * ("Branding", "Logo"). Two make the grey line and the green "& …" line; one
- * is the green line alone; with none the project's name is.
- */
-export const caseHeading = (entry: CaseStudyEntry) => {
+/** What a title says after the name ("Raviosta: logo and identity…" -> "logo and identity…"); "" for a name alone. */
+export const caseProjectMade = (title?: string | null) =>
+  clean(title).slice(caseProjectName(title).length).replace(/^[\s:—–-]+/, "");
+
+/** What was made: the project's tags and category, each once ("Branding", "Logo"). */
+export const caseServices = (entry: CaseStudyEntry) => {
   const seen = new Set<string>();
-  const services = [...(entry.tags ?? []).map((tag) => tag?.label), entry.category?.categoryName]
+  return [...(entry.tags ?? []).map((tag) => tag?.label), entry.category?.categoryName]
     .map(clean)
     .filter((label) => {
       const key = label.toLowerCase();
@@ -156,6 +157,14 @@ export const caseHeading = (entry: CaseStudyEntry) => {
       seen.add(key);
       return true;
     });
+};
+
+/**
+ * What was made, for the heading. Two services make the grey line and the
+ * green "& …" line; one is the green line alone; with none the project's name is.
+ */
+export const caseHeading = (entry: CaseStudyEntry) => {
+  const services = caseServices(entry);
   if (services.length > 1) return { title: services[0]!, accent: services[1]! };
   return { title: "", accent: services[0] || caseProjectName(entry.section1?.projectTitle) };
 };

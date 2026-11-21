@@ -857,13 +857,62 @@
       }
     ]
   },
+  "caseStories": {
+    "artAnor": {
+      "name": "Art-Anor",
+      "title": "Art-Anor: qoʻlda yasalgan taqinchoqlar brendi uchun firma uslubi",
+      "category": "Brending",
+      "description": "OneBranding keysi: Oʻzbekistonning qoʻlda yasalgan taqinchoqlar brendi Art-Anor aydentikasi — oʻn ikki anor donasidan yigʻilgan yangi belgi, ranglar, qadoq va brendbuk.",
+      "intro": "ArtAnor — oʻzbek hunarmandchiligidan oʻsib chiqqan, qoʻlda yasalgan taqinchoqlar brendi: anʼanaviy naqshlar unda zamonaviy buyumlarga aylanadi. Biz bu merosni oʻziga xos vizual aydentikaga koʻchirdik. Anordan ilhomlangan belgi, toʻq qizil va sutrang-krem tuslar hamda puxta tanlangan tipografika brendning qadoq, reklama va savdo makonlaridagi qiyofasini belgilaydi. Har bir tashuvchi bitta aniq yoʻnalishga boʻysunadi: taqinchoq hali taqilmasidan oldin hunar tanilsin.",
+      "compare": {
+        "old": "Eski logotip",
+        "new": "Yangi logotip",
+        "text": "Biz anorning dastlabki rasmini oʻn ikki dona shaklidan yigʻilgan muvozanatli belgiga aylantirdik. Oʻziga xos qizil rang va tanish toj brendning ildizlarini saqlaydi, sayqallangan chiziqlar, simmetriya va ochiq boʻshliq esa aydentikaga zargarlik buyumlariga xos aniqlik va nafosat olib kiradi."
+      },
+      "statement": "Oʻn ikki dona – bitta takrorlanmas imzo.\nBiz anorni dadil va muvozanatli belgiga aylantirdik: u madaniy merosni zamonaviy taqinchoqlarga olib kiradi.",
+      "details": {
+        "title": "Taniluvchanlik tafsilotlarga singdirilgan.",
+        "text": "Biz ArtAnor har qanday formatda qanday koʻrinishini belgilaydigan aniq tizim ishlab chiqdik. Logotipning uch koʻrinishi moslashuvchanlik beradi. Anor qizili va iliq krem rang firma palitrasini tashkil etadi. SF Pro tipografikasi, oʻlchangan oraliqlar va tartibli setka har bir kompozitsiyaga aniqlik va muvozanat beradi. Anor belgisi takrorlanuvchi naqshga aylanib, qadoq, yorliqlar va raqamli kommunikatsiyani bir-biriga bogʻlaydi. Masshtab, kontrast va joylashuv boʻyicha belgilangan qoidalar kelgusi tashuvchilarda ham oʻsha xarakter va tafsilotlarga eʼtiborni saqlashga yordam beradi."
+      },
+      "closing": "U ifodalaydigan buyumlar kabi mehr bilan yaratilgan aydentika.",
+      "alt": {
+        "logo": "Art-Anor logotipi: oʻn ikki donali anor belgisi va uning yonidagi yozuv",
+        "hero": "Anor donalari solingan qadah ustidagi bilaguzuk, yonida krem rangli Art-Anor belgisi va «A single seed. An entire identity.» soʻzlari",
+        "stationery": "Art-Anor belgisi tushirilgan krem rang qogʻoz va qizil firma lentalari",
+        "necklaceBust": "Art-Anor logotipi ostidagi baxmal byustda qizil-tilla marjon",
+        "pendantCard": "Art-Anor nomi boʻrtma bosilgan qizil kartochkadagi tilla anor kulon",
+        "logoOld": "Art-Anorning eski logotipi: qoʻlda chizilgan uch donali anor",
+        "logoNew": "Art-Anorning yangi logotipi: toj ostida halqa boʻlib turgan oʻn ikki dona",
+        "packaging": "Tosh supadagi qizil Art-Anor sumkasi, xaltacha va sovgʻa qutilari",
+        "watchBox": "Qizil kiyimdagi xizmatchi Art-Anor soat qutisi va muhrlangan konvertni ushlab turibdi",
+        "braceletBag": "Qoʻl bilaguzukni krem rangli Art-Anor sovgʻa sumkasiga tushirmoqda",
+        "glovesNecklace": "Qizil atlas qoʻlqoplar logotip ostida Art-Anor marjonini ushlab turibdi",
+        "giftBox": "Oq qoʻlqopli qoʻllar ichida bilaguzuk bor qizil Art-Anor qutisini ochmoqda",
+        "callaPendant": "Kalla guli ichidagi qizil-oq kulon",
+        "markOutline": "Ingichka kontur bilan chizilgan Art-Anor belgisi",
+        "billboard": "Tosh devordagi qizil-tilla soatli Art-Anor posteri",
+        "storefront": "Qizil ravoqli kirish eshigi bor Art-Anor butigi",
+        "lotusPendant": "Qizil ipak ustidagi tilla nilufar kulon",
+        "callaWide": "Qizil fonda, kalla guli ichidagi qizil-oq kulon",
+        "guide1": "Brendbuk: logotipning uch koʻrinishi",
+        "guide2": "Brendbuk: ikki firma rangi",
+        "guide3": "Brendbuk: A4 varaqdagi kompozitsiya va hoshiyalar",
+        "guide4": "Brendbuk: logotip och va qizil fonda",
+        "guide5": "Brendbuk: logotip atrofidagi boʻsh maydon",
+        "guide6": "Brendbuk: SF Pro tipografikasi",
+        "guide7": "Brendbuk: logotipning eng kichik oʻlchamlari",
+        "guide8": "Brendbuk: sumka, yorliq va raqamli maket",
+        "guide9": "Brendbuk: belgidan tuzilgan naqsh"
+      }
+    }
+  },
   "projectsPage": {
     "category": "Loyiha toifasi",
     "all": "Hammasi",
-    "showcaseName": "Ishlar vitrinasi",
-    "showcaseLink": "Vitrinani koʻrish",
-    "showcaseNote": "Brendlarni qanday yaratishimiz va boshqa ishlarimiz.",
     "unavailable": "Loyihalarni hozir koʻrsatib boʻlmayapti.",
+    "categoryNames": {
+      "branding": "Brending"
+    },
     "notice": {
       "status": "Yangilanish davom etmoqda",
       "title": "Bu sahifani hali toʻldiryapmiz",
@@ -1131,6 +1180,14 @@
     "services": "Xizmatlarimiz",
     "contact": "Loyihani muhokama qilish",
     "untitled": "OneBranding loyihasi",
+    "logoBefore": "Eski logotip",
+    "logoAfter": "Yangi logotip",
+    "gallery": {
+      "label": "Loyiha rasmlari",
+      "close": "Yopish",
+      "previous": "Oldingi rasm",
+      "next": "Keyingi rasm"
+    },
     "statement": {
       "statement": "Bitta brend.\nBitta standart.\nNol taxmin.",
       "title": "Izchil brend ortidagi tizim",

@@ -595,6 +595,55 @@
     mask-image: linear-gradient(360deg, black calc(100% * var(--ob-page-wipe)), transparent calc(100% * var(--ob-page-wipe)));
 }
 
+/* Opening a project from the /projects grid (composables/useProjectOpen.ts,
+   after askphill.com): over the old page the new one shows only through a
+   disc with an arrow cut out of it, in the middle of the clicked card
+   (--ob-open-x, --ob-open-y). While the disc springs up there (0.52 s, from
+   a quarter of its size, turned half round and clear; the page turns with
+   it) the new page is moved by the card's offset from the screen's middle
+   (--ob-open-dx, --ob-open-dy), so its own middle (--ob-open-mx, --ob-open-my)
+   is what the disc shows. Then the disc grows until it covers the screen
+   (--ob-open-end, 0.5 s, speeding up), a plain disc growing inside it closing
+   the arrow, and the page slides back into its place: the mask moves with it,
+   so the disc stays on the card. The old page fades in the last 0.2 s.
+   Behind both, as in any page change, the new page's top colour
+   (plugins/lenis.client.ts). */
+@keyframes ob-open-pop {
+    from { opacity: 0; rotate: -180deg; scale: 0.25; }
+    to { opacity: 1; rotate: 0deg; scale: 1; }
+}
+
+@keyframes ob-open-grow {
+    from {
+        translate: var(--ob-open-dx) var(--ob-open-dy);
+        mask-size: 10vmax 10vmax, 0px 0px;
+        mask-position: calc(var(--ob-open-mx) - 5vmax) calc(var(--ob-open-my) - 5vmax), var(--ob-open-mx) var(--ob-open-my);
+    }
+    to {
+        translate: 0px 0px;
+        mask-size: var(--ob-open-end) var(--ob-open-end), var(--ob-open-end) var(--ob-open-end);
+        mask-position: calc(var(--ob-open-x) - var(--ob-open-end) / 2) calc(var(--ob-open-y) - var(--ob-open-end) / 2), calc(var(--ob-open-x) - var(--ob-open-end) / 2) calc(var(--ob-open-y) - var(--ob-open-end) / 2);
+    }
+}
+
+@keyframes ob-open-old {
+    0%, 82% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+html.ob-project-open::view-transition-old(root) {
+    animation: ob-open-old 1.12s linear both;
+}
+
+html.ob-project-open::view-transition-new(root) {
+    transform-origin: var(--ob-open-mx) var(--ob-open-my);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Cmask id='a'%3E%3Crect width='1' height='1' fill='white'/%3E%3Cpath d='M.31 .69L.67 .33M.41 .33H.67V.59' fill='none' stroke='black' stroke-width='.085'/%3E%3C/mask%3E%3Ccircle cx='.5' cy='.5' r='.5' mask='url(%23a)'/%3E%3C/svg%3E"), radial-gradient(closest-side, #000 98%, transparent 100%);
+    mask-repeat: no-repeat;
+    animation:
+        ob-open-pop 0.52s var(--ob-open-spring, cubic-bezier(0.34, 1.45, 0.64, 1)) both,
+        ob-open-grow 0.5s cubic-bezier(0.66, 0, 0.86, 0) 0.62s both;
+}
+
 @media (prefers-reduced-motion: reduce) {
     ::view-transition-group(*),
     ::view-transition-old(*),

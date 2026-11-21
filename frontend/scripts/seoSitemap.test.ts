@@ -52,7 +52,13 @@ describe("CMS sitemap", () => {
     // Only an article with an Uzbek version has an Uzbek URL.
     expect(urls).toContain("https://example.test/uz/news/shared%20%26%20one");
     expect(urls).not.toContain("https://example.test/uz/news/en-only");
-    expect(urls.some((url) => url.startsWith("https://example.test/uz/projects/"))).toBe(false);
+    // No CMS case study has an Uzbek version here; the case stories written in
+    // the site itself (utils/caseStories.ts) are pages in every language.
+    expect(urls).not.toContain("https://example.test/uz/projects/project");
+    expect(urls).toContain("https://example.test/projects/art-anor");
+    expect(urls).toContain("https://example.test/ru/projects/art-anor");
+    expect(urls).toContain("https://example.test/uz/projects/art-anor");
+    expect(urls.filter((url) => url.startsWith("https://example.test/uz/projects/"))).toEqual(["https://example.test/uz/projects/art-anor"]);
     // x-default points at the English (default) page.
     expect(xml).toContain('hreflang="x-default" href="https://example.test/"');
     expect(urls.length).toBe(new Set(urls).size);
