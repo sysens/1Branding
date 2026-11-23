@@ -1,0 +1,31 @@
+/* What Tailwind classes cannot say once for the whole site: the font face,
+   the keyboard focus ring and the reduced-motion switch. Everything else is
+   in the components. */
+
+@font-face {
+  font-family: Inter;
+  src: url("./assets/fonts/inter.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.ertex-site :is(a, button, summary):focus-visible {
+  outline: 3px solid #287cfa;
+  outline-offset: 4px;
+}
+
+/* The CRM mock-up is a dark app screen: a thinner, lighter ring. */
+.ertex-site .ertex-crm :is(a, button, select):focus-visible {
+  outline: 2px solid #90b5ff;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ertex-site *,
+  .ertex-site *::before,
+  .ertex-site *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

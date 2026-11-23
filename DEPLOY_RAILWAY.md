@@ -6,6 +6,8 @@ Bu repo isolated monorepo:
 
 - `/backend` — Strapi 5 (CMS, GraphQL, kontakt formasi)
 - `/frontend` — Nuxt 4 (SSR sayt)
+- `/microsites` — Nuxt 4 + Tailwind: mijoz loyihalarining subdomen saytlari
+  (`ertex.onebrandingworld.com`, ...). Batafsil: [`microsites/README.md`](./microsites/README.md)
 
 Railway'dagi `dazzling-bravery` project'ida 3 ta service bor:
 
@@ -70,6 +72,24 @@ NUXT_GRAPHQL_URL_INTERNAL=http://1branding.railway.internal:1337/graphql
 NUXT_PUBLIC_SITE_URL=https://onebrandingworld.com
 ```
 
+## Microsites (loyiha subdomenlari)
+
+`/microsites` alohida Railway servisi sifatida ishlaydi; env o'zgaruvchilari kerak emas
+(saytlar ro'yxati va hostlari kodda: `microsites/shared/sites.ts`).
+
+Servisni bir marta sozlash:
+
+1. Railway → shu project → **New service → GitHub repo**, Root Directory: `/microsites`,
+   Watch Paths: `/microsites/**`, Healthcheck Path: `/healthz`. Build `microsites/Dockerfile` orqali.
+2. Settings → Networking → **Custom Domain**: `ertex.onebrandingworld.com`
+   (har bir yangi sayt uchun o'z subdomeni yoki bir marta `*.onebrandingworld.com`).
+3. Cloudflare DNS: Railway bergan qiymatga `CNAME ertex → <...>.up.railway.app` (proxied).
+   Wildcard ishlatilsa: `CNAME * → <...>.up.railway.app` — `www` va boshqa aniq yozuvlar
+   o'zgarmaydi.
+
+Servisning `*.up.railway.app` domenida `/` saytlar ro'yxatini, `/ertex` esa preview'ni
+ko'rsatadi; ular `noindex`. Yangi sayt qo'shish: [`microsites/README.md`](./microsites/README.md).
+
 ## Kesh
 
 - Sahifalar serverda 5 daqiqa keshlanadi (stale-while-revalidate): CMS'dagi o'zgarish
@@ -84,7 +104,8 @@ NUXT_PUBLIC_SITE_URL=https://onebrandingworld.com
 ## CI
 
 GitHub Actions (`.github/workflows/ci.yml`) har push'da frontend testlari va build'ini,
-backend typecheck va build'ini tekshiradi. Railway deployi CI'ga bog'liq emas.
+backend typecheck va build'ini, microsites lint, typecheck va build'ini tekshiradi.
+Railway deployi CI'ga bog'liq emas.
 
 ## Muhim izohlar
 
