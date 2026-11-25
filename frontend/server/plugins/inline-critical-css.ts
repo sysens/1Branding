@@ -34,7 +34,7 @@ const loadCss = (href: string) => {
 };
 
 export default defineNitroPlugin((nitroApp) => {
-  if (import.meta.dev) return;
+  if (import.meta.dev || !useRuntimeConfig().inlineCriticalCss) return;
 
   nitroApp.hooks.hook("render:html", async (html) => {
     const hrefs = new Set<string>();

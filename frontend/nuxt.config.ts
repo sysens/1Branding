@@ -210,6 +210,11 @@ export default defineNuxtConfig({
     // See server/routes/api/ob/[...path].ts.
     dashboardInternalUrl: "",
     dashboardProxySecret: "",
+    // Server-only: inline each page's stylesheets (server/plugins/inline-critical-css.ts).
+    // The plugin reads them from this same server, so it is off on Netlify, where
+    // the CDN serves /_nuxt/ and the server function would only render 404 pages
+    // for them (and wait on itself). Netlify sets NETLIFY=true in its builds.
+    inlineCriticalCss: !process.env.NETLIFY && !process.env.NITRO_PRESET?.startsWith("netlify"),
     public: {
       graphqlUrl: process.env.NUXT_PUBLIC_GRAPHQL_URL,
       // Production origin for canonical/hreflang/sitemap, e.g. https://onebranding.uz
@@ -371,5 +376,8 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
   },
-  compatibilityDate: "2024-04-03",
+  // Netlify (the stand-in host, see /netlify.toml) gets a later date: before
+  // 2024-05-07 Nitro picks its legacy Netlify preset, whose server needs
+  // @netlify/functions and Netlify's retired On-demand Builders.
+  compatibilityDate: { default: "2024-04-03", netlify: "2024-05-07" },
 })

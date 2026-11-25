@@ -26,3 +26,6 @@ logs
 pnpm-lock.yaml
 # Large binaries
 public/home/*.exe
+
+# Netlify build output and CLI state
+.netlify

@@ -1,0 +1,24 @@
+# Netlify: a stand-in host for the main site (frontend/) while Railway is
+# unavailable. Railway stays the real host (DEPLOY_RAILWAY.md); the CMS
+# (backend/) and the dashboard are not deployed here.
+#
+# Netlify reads this file from the repository root. Paths below are relative to
+# `base`. Nitro picks its "netlify" preset by itself on Netlify's build machine:
+# static files go to dist/, the server to .netlify/functions-internal/.
+# Bun is used because frontend/bun.lock is there.
+#
+# Set these in Netlify (Site configuration → Environment variables), not here:
+# variables in this file reach the build only, not the server at runtime.
+#   NUXT_PUBLIC_GRAPHQL_URL, NUXT_PUBLIC_SITE_URL, NUXT_PUBLIC_GA4_ID,
+#   NUXT_PUBLIC_YANDEX_METRIKA_ID, NUXT_PUBLIC_BING_SITE_VERIFICATION
+
+[build]
+  base = "frontend"
+  command = "bun run build"
+  publish = "dist"
+  # Build only when something under frontend/ changed.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- ."
+
+[build.environment]
+  NODE_VERSION = "22"
+  BUN_VERSION = "1.4.4"
