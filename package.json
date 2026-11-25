@@ -1,22 +1,26 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "bun --cwd=frontend install && bun --cwd=backend install && bun --cwd=microsites install",
+    "postinstall": "bun --cwd=frontend install && bun --cwd=backend install && bun --cwd=microsites install && bun --cwd=dashboard install",
     "dev": "bun run --cwd=frontend dev",
     "dev:backend": "bun run --cwd=backend develop",
     "dev:sites": "bun run --cwd=microsites dev",
+    "dev:dashboard": "bun run --cwd=dashboard dev",
     "dev:all": "bun run --parallel dev dev:backend",
     "build": "bun run --cwd=frontend build",
     "build:backend": "bun run --cwd=backend build",
     "build:sites": "bun run --cwd=microsites build",
-    "build:all": "bun run build && bun run build:backend && bun run build:sites",
+    "build:dashboard": "bun run --cwd=dashboard build",
+    "build:all": "bun run build && bun run build:backend && bun run build:sites && bun run build:dashboard",
     "start": "bun run --cwd=frontend start",
     "start:backend": "bun run --cwd=backend start",
     "start:sites": "bun run --cwd=microsites start",
+    "start:dashboard": "bun run --cwd=dashboard start",
     "generate": "bun run --cwd=frontend generate",
     "lint": "bun run --cwd=frontend lint",
     "lint:sites": "bun run --cwd=microsites lint",
-    "typecheck": "bun run --cwd=frontend typecheck && bun run --cwd=backend typecheck && bun run --cwd=microsites typecheck"
+    "lint:dashboard": "bun run --cwd=dashboard lint",
+    "typecheck": "bun run --cwd=frontend typecheck && bun run --cwd=backend typecheck && bun run --cwd=microsites typecheck && bun run --cwd=dashboard typecheck"
   },
   "dependencies": {
     "mathjs": "^15.2.0",

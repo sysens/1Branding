@@ -77,6 +77,31 @@ jobs:
           R2_ROOT_PATH: uploads
           R2_ACCOUNT_ID: dummy
 
+  # The dashboard (admin.onebrandingworld.com): CRM, analytics, money.
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Prepare
+        run: ./node_modules/.bin/nuxi prepare
+      - name: Lint
+        run: bun run lint
+      - name: Typecheck
+        run: bun run typecheck
+      # Metrics on a fixed data set (spec 12), working hours, UTM rules, TOTP; PGlite in memory.
+      - name: Unit tests
+        run: bun run test
+      - name: Build
+        run: bun run build
+
   # Project sites on their own subdomains (ertex.onebrandingworld.com, ...).
   microsites:
     runs-on: ubuntu-latest

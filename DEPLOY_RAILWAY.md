@@ -8,6 +8,8 @@ Bu repo isolated monorepo:
 - `/frontend` — Nuxt 4 (SSR sayt)
 - `/microsites` — Nuxt 4 + Tailwind: mijoz loyihalarining subdomen saytlari
   (`ertex.onebrandingworld.com`, ...). Batafsil: [`microsites/README.md`](./microsites/README.md)
+- `/dashboard` — Nuxt 4 + shadcn-vue + o‘z PostgreSQL bazasi: trafik, arizalar, CRM-voronka va
+  pul (`admin.onebrandingworld.com`). Batafsil: [`dashboard/README.md`](./dashboard/README.md)
 
 Railway'dagi `dazzling-bravery` project'ida 3 ta service bor:
 
@@ -72,6 +74,35 @@ NUXT_GRAPHQL_URL_INTERNAL=http://1branding.railway.internal:1337/graphql
 NUXT_PUBLIC_SITE_URL=https://onebrandingworld.com
 ```
 
+Dashbord ulanganda (sayt trekeri va arizalar formasi `/api/ob/*` orqali dashbordga boradi;
+dashbord bo‘lmasa forma eski Strapi yo‘lidan ketadi):
+
+```env
+NUXT_DASHBOARD_INTERNAL_URL=http://<dashboard servis nomi>.railway.internal:3000
+NUXT_DASHBOARD_PROXY_SECRET=...      # dashboard'dagi NUXT_PROXY_SECRET bilan bir xil
+# Teglar (ixtiyoriy, bo'sh bo'lsa yuklanmaydi):
+NUXT_PUBLIC_GA4_ID=G-...
+NUXT_PUBLIC_YANDEX_METRIKA_ID=...
+NUXT_PUBLIC_GTM_ID=GTM-...
+NUXT_PUBLIC_META_PIXEL_ID=...
+NUXT_PUBLIC_GOOGLE_ADS_ID=AW-...
+NUXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL=...
+NUXT_PUBLIC_TURNSTILE_SITE_KEY=...
+```
+
+## Dashboard (admin.onebrandingworld.com)
+
+Alohida servis va alohida Postgres. Qadamlar, env va ulanishlar:
+[`dashboard/README.md`](./dashboard/README.md#railwayga-joylash). Qisqasi:
+
+1. New service → Postgres (`DashboardPostgres`).
+2. New service → GitHub repo, Root Directory `/dashboard`, Watch Paths `/dashboard/**`,
+   Healthcheck Path `/healthz` (build `dashboard/Dockerfile`).
+3. Env: `DATABASE_URL=${{DashboardPostgres.DATABASE_URL}}`, `ENCRYPTION_KEY`, `NUXT_PROXY_SECRET`,
+   `NUXT_SETUP_TOKEN`, `NUXT_PUBLIC_APP_URL=https://admin.onebrandingworld.com`.
+4. Custom Domain `admin.onebrandingworld.com` + Cloudflare CNAME.
+5. Frontend servisiga yuqoridagi `NUXT_DASHBOARD_*` qiymatlari.
+
 ## Microsites (loyiha subdomenlari)
 
 `/microsites` alohida Railway servisi sifatida ishlaydi; env o'zgaruvchilari kerak emas
@@ -104,7 +135,7 @@ ko'rsatadi; ular `noindex`. Yangi sayt qo'shish: [`microsites/README.md`](./micr
 ## CI
 
 GitHub Actions (`.github/workflows/ci.yml`) har push'da frontend testlari va build'ini,
-backend typecheck va build'ini, microsites lint, typecheck va build'ini tekshiradi.
+backend typecheck va build'ini, microsites va dashboard lint, typecheck, test va build'ini tekshiradi.
 Railway deployi CI'ga bog'liq emas.
 
 ## Muhim izohlar
