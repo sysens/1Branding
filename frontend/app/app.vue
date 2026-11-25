@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   computed,
+  defineAsyncComponent,
   nextTick,
   onMounted,
   onUnmounted,
@@ -14,6 +15,10 @@ import { organizationGraph, withSiteName } from "~/utils/seo";
 import { COMPANY, companyProfiles } from "~/utils/company";
 import { LANGUAGE_TAGS, toSiteLocale } from "~/utils/locales";
 import { SERVICE_PAGES, servicePath } from "~/utils/servicePages";
+
+// The request form's modal, for the whole site: loaded and mounted the first
+// time it opens, so its WebGL aura costs nothing until then.
+const ContactModal = defineAsyncComponent(() => import("~/components/contacts/ContactModal.vue"));
 
 const route = useRoute();
 const { locale, t } = useI18n();
@@ -86,7 +91,28 @@ const updateIsPageEnd = () => {
   isPageEnd.value = maxScroll <= 8 || window.scrollY >= maxScroll - 8;
 };
 
+// Every link to /contact#contact-request (the calls to action, the price
+// cards) opens the request modal where the visitor is, instead of going to
+// the contact page. A link opened in a new tab still goes there, and the
+// contact page opens the modal from that address itself.
+const { isOpen: contactModalOpen, open: openContactModal } = useContactModal();
+const contactModalWanted = ref(false);
+watch(contactModalOpen, (open) => {
+  if (open) contactModalWanted.value = true;
+}, { immediate: true });
+const REQUEST_LINK = /^\/(?:(?:en|ru|uz)\/)?contact\/?$/;
+const onRequestLink = (event: MouseEvent) => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = (event.target as Element | null)?.closest?.("a[href]");
+  if (!(link instanceof HTMLAnchorElement) || link.target === "_blank") return;
+  if (link.hash !== "#contact-request" || link.origin !== location.origin || !REQUEST_LINK.test(link.pathname)) return;
+  // Before the link's own handler (capture): the router does not navigate.
+  event.preventDefault();
+  openContactModal();
+};
+
 onMounted(() => {
+  document.addEventListener("click", onRequestLink, { capture: true });
   if (matchMedia("(pointer: coarse)").matches) blurLayers.value = 2;
   window.addEventListener("scroll", updateIsPageEnd, { passive: true });
   window.addEventListener("resize", updateIsPageEnd, { passive: true });
@@ -94,6 +120,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.removeEventListener("click", onRequestLink, { capture: true });
   window.removeEventListener("scroll", updateIsPageEnd);
   window.removeEventListener("resize", updateIsPageEnd);
 });
@@ -154,6 +181,8 @@ watch(
         :style="{ opacity: isPageEnd ? 0 : 1 }"
       />
     </div>
+
+    <ClientOnly><ContactModal v-if="contactModalWanted" /></ClientOnly>
   </div>
 </template>
 

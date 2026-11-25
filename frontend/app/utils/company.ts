@@ -15,6 +15,9 @@ export const COMPANY = {
   localName: "OneBranding Tashkent",
   website: "onebrandingworld.com",
   phone: { display: "+998 93 560 80 00", e164: "+998935608000" },
+  // The WhatsApp number of the request form's buttons (wa.me links). For now
+  // the office phone: to be confirmed by the owners before it is advertised.
+  whatsapp: { display: "+998 93 560 80 00", e164: "+998935608000" },
   postalCode: "100047",
   country: "UZ",
   hours: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "10:00", closes: "19:00" },
@@ -62,10 +65,14 @@ export const COMPANY_MAP_URL = `https://www.google.com/maps/search/?api=1&query=
 
 export type SocialKind = "instagram" | "telegram" | "behance" | "linkedin";
 
+/** The chat a visitor writes to (the tracker adds their contact code to it). */
+export const TELEGRAM_CONTACT_URL = "https://t.me/Onebranding_contact";
+export const WHATSAPP_CONTACT_URL = `https://wa.me/${COMPANY.whatsapp.e164.replace(/\D/g, "")}`;
+
 /** Profiles known to be the company's own (the Telegram one is the CMS's OneGuarantee call to action). */
 const KNOWN_PROFILES: Partial<Record<SocialKind, string>> = {
   instagram: "https://www.instagram.com/onebranding.uz/",
-  telegram: "https://t.me/Onebranding_contact",
+  telegram: TELEGRAM_CONTACT_URL,
 };
 
 // A link counts as a profile only with a handle after the host: the CMS holds

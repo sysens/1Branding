@@ -607,19 +607,9 @@
     "modal": {
       "title": "Start something big",
       "close": "Close",
-      "steps": { "name": "Your name", "topic": "What you need", "phone": "Your phone number" },
-      "namePlaceholder": "Your name",
-      "topicPlaceholder": "What do you need?",
-      "other": "Something else",
-      "phonePlaceholder": "Your phone number",
-      "nameRequired": "Please enter your name.",
-      "topicRequired": "Please choose what you need.",
-      "phoneInvalid": "Please enter a valid phone number.",
       "back": "Back",
       "next": "Continue",
-      "send": "Send",
-      "doneTitle": "Thank you!",
-      "doneText": "We received your request and will contact you."
+      "send": "Send"
     },
     "marquee": "Connect",
     "linksTitle": "Find us online",
@@ -1231,5 +1221,61 @@
     "p39": "All Over Spray body spray collection",
     "p40": "Lafarella Italian sweets: a layered cake",
     "pfrenk": "Mr Franky’s burger restaurant identity on cups and signage"
+  },
+  "leadForm": {
+    "title": "Tell us about your project",
+    "text": "Three short steps. We reply within 15 minutes during working hours.",
+    "steps": {
+      "about": "About you",
+      "project": "Your project",
+      "contact": "How to reach you"
+    },
+    "name": "Your name",
+    "company": "Company name",
+    "industry": "Your industry",
+    "industryOther": "Which industry?",
+    "industries": {
+      "retail": "Retail",
+      "horeca": "HoReCa: hotels, restaurants, cafés",
+      "food": "FMCG & food production",
+      "construction": "Construction & real estate",
+      "it": "IT & technology",
+      "education": "Education",
+      "health": "Medicine & beauty",
+      "finance": "Finance & insurance",
+      "manufacturing": "Manufacturing",
+      "logistics": "Logistics & transport",
+      "services": "Services",
+      "other": "Other"
+    },
+    "services": "Services you need (optional)",
+    "servicePackage": "Branding package",
+    "serviceUnsure": "Not sure yet",
+    "method": "How should we contact you?",
+    "methods": {
+      "phone": "Phone",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "country": "Country code",
+    "phone": "Phone number",
+    "whatsapp": "WhatsApp number",
+    "telegram": "{'@'}username",
+    "errors": {
+      "name": "Please enter your name.",
+      "company": "Please enter your company name.",
+      "industry": "Please choose your industry.",
+      "industryOther": "Please name your industry.",
+      "phone": "Please enter a valid phone number.",
+      "telegram": "Please enter your Telegram username: 5 to 32 letters, digits or underscores.",
+      "consent": "Please agree to the processing of your personal data."
+    },
+    "doneTitle": "Thank you!",
+    "doneText": "We'll contact you within 15 minutes during working hours.",
+    "writeTelegram": "Write in Telegram now",
+    "orWrite": "Or write to us:"
+  },
+  "messenger": {
+    "text": "Hello! I'd like to discuss a project ({code})"
   }
 }

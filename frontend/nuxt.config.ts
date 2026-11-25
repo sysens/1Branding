@@ -36,17 +36,25 @@ const publicAssetCacheHeaders = {
 // nothing beyond what is listed here. It lists the hosts the site uses: the
 // CMS and its R2 media, Spline scenes (scene files and the runtime's wasm),
 // Cloudflare's analytics beacon, GA4 and Yandex Metrika (its tag frame too).
+// Added for the tags of plugins/analytics.client.ts and the request form:
+// Meta Pixel (its script from connect.facebook.net, its hits to
+// www.facebook.com), Google Ads conversions (www.googleadservices.com,
+// googleads.g.doubleclick.net, www.google.com and td.doubleclick.net's frame)
+// and Cloudflare Turnstile (challenges.cloudflare.com, a script and a frame).
+// GTM loads from www.googletagmanager.com, already listed; the tags set up in
+// it may need hosts of their own. The visitor tracker posts to the site
+// itself (/api/ob, 'self').
 const contentSecurityPolicy = (scriptExtra = "") => [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${scriptExtra} https://static.cloudflareinsights.com https://www.googletagmanager.com https://mc.yandex.ru https://prod.spline.design`,
+  `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${scriptExtra} https://static.cloudflareinsights.com https://www.googletagmanager.com https://mc.yandex.ru https://prod.spline.design https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://challenges.cloudflare.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://onebrandingbackend.up.railway.app https://*.r2.dev https://prod.spline.design https://cdn.spline.design https://cloudflareinsights.com https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com",
+  "connect-src 'self' https://onebrandingbackend.up.railway.app https://*.r2.dev https://prod.spline.design https://cdn.spline.design https://cloudflareinsights.com https://*.google-analytics.com https://www.googletagmanager.com https://mc.yandex.ru https://mc.yandex.com https://www.facebook.com https://www.google.com https://www.googleadservices.com https://*.doubleclick.net",
   "media-src 'self' data: blob: https://*.r2.dev",
   "worker-src 'self' blob:",
   // Google Maps embed on the contact page (the office map).
-  "frame-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google.com",
+  "frame-src 'self' https://mc.yandex.ru https://mc.yandex.com https://www.google.com https://td.doubleclick.net https://challenges.cloudflare.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -196,6 +204,12 @@ export default defineNuxtConfig({
     // Server-only: the backend's GraphQL URL on Railway's private network
     // (NUXT_GRAPHQL_URL_INTERNAL). See server/plugins/internal-graphql.ts.
     graphqlUrlInternal: "",
+    // Server-only: the CRM/analytics dashboard on Railway's private network
+    // (NUXT_DASHBOARD_INTERNAL_URL, e.g. http://dashboard.railway.internal:3000)
+    // and the secret the /api/ob proxy sends it (NUXT_DASHBOARD_PROXY_SECRET).
+    // See server/routes/api/ob/[...path].ts.
+    dashboardInternalUrl: "",
+    dashboardProxySecret: "",
     public: {
       graphqlUrl: process.env.NUXT_PUBLIC_GRAPHQL_URL,
       // Production origin for canonical/hreflang/sitemap, e.g. https://onebranding.uz
@@ -211,6 +225,16 @@ export default defineNuxtConfig({
       // NUXT_PUBLIC_YANDEX_METRIKA_ID (digits). See plugins/analytics.client.ts.
       ga4Id: "",
       yandexMetrikaId: "",
+      // More tags, off until set: NUXT_PUBLIC_GTM_ID ("GTM-..."),
+      // NUXT_PUBLIC_META_PIXEL_ID (digits), NUXT_PUBLIC_GOOGLE_ADS_ID ("AW-...")
+      // with NUXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL (the lead conversion's label).
+      gtmId: "",
+      metaPixelId: "",
+      googleAdsId: "",
+      googleAdsLeadLabel: "",
+      // Cloudflare Turnstile on the request form, off until set
+      // (NUXT_PUBLIC_TURNSTILE_SITE_KEY); the dashboard checks the token.
+      turnstileSiteKey: "",
       // Ownership checks: NUXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
       // NUXT_PUBLIC_YANDEX_VERIFICATION, NUXT_PUBLIC_BING_SITE_VERIFICATION.
       googleSiteVerification: "",

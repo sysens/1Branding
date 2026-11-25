@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import LeadForm from "~/components/contacts/LeadForm.vue";
 import ProjectsShowcase from "~/components/projects/ProjectsShowcase.vue";
 import ServiceTemplate from "~/components/services/ServiceTemplate.vue";
 import OptImage from "~/components/ui/OptImage.vue";
@@ -13,7 +14,8 @@ import { toggleDetails } from "~/utils/smoothDetails";
 // shared showcase template (components/services/ServiceTemplate.vue; Branding
 // & rebranding is the showcase page itself, ProjectsShowcase): what it
 // is, how the work goes and what it includes (its own words and picture), then
-// what it costs, our work, questions, related services and a way to start. The
+// what it costs, our work, questions, related services and a way to start (the
+// request form itself, with this service ticked). The
 // copy is in app/content/services; prices come live from the CMS price list
 // shown on /pricing. The page ends with the site footer itself (the template).
 
@@ -181,7 +183,18 @@ usePageSeo({
 </script>
 
 <template>
-  <ProjectsShowcase v-if="service.key === 'branding'" />
+  <ProjectsShowcase v-if="service.key === 'branding'">
+    <!-- The showcase page has no call to action of its own: the form ends it. -->
+    <div class="service-page service-page--template">
+      <div class="service-page__frame">
+        <section class="service-cta" aria-labelledby="service-cta">
+          <h2 id="service-cta" v-blur-reveal>{{ copy!.cta.title }}</h2>
+          <p v-rise>{{ copy!.cta.text }}</p>
+          <LeadForm inline :service="service.key" />
+        </section>
+      </div>
+    </div>
+  </ProjectsShowcase>
   <ServiceTemplate v-else :service="service" :copy="copy!" :name="name" :illustration="related[0]?.image || service.image">
     <div class="service-page service-page--template">
       <div class="edge-gradient edge-gradient-left edge-gradient-soft" />
@@ -197,7 +210,7 @@ usePageSeo({
           <h2 id="service-prices" v-blur-reveal class="service-heading">{{ t("servicesPage.pricesTitle", { name }) }}</h2>
           <!-- A table (package, price) drawn as the design's cards: the head is
                for screen readers and search engines, each row is a card. -->
-          <table class="service-plans" data-reveal-row>
+          <table class="service-plans" data-reveal-row :data-ob-pricing="service.key">
             <thead class="sr-only">
               <tr>
                 <th scope="col">{{ t("pricing.tablePackage") }}</th>
@@ -266,7 +279,7 @@ usePageSeo({
         <section class="service-cta" aria-labelledby="service-cta">
           <h2 id="service-cta" v-blur-reveal>{{ copy.cta.title }}</h2>
           <p v-rise>{{ copy.cta.text }}</p>
-          <NuxtLink v-rise :to="`${localePath('/contact')}#contact-request`" class="ob-button">{{ copy.cta.button }}</NuxtLink>
+          <LeadForm inline :service="service.key" />
         </section>
       </div>
     </div>

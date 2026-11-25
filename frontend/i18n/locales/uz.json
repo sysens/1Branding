@@ -607,19 +607,9 @@
     "modal": {
       "title": "Katta ishni boshlang",
       "close": "Yopish",
-      "steps": { "name": "Ismingiz", "topic": "Nima kerak", "phone": "Telefon raqamingiz" },
-      "namePlaceholder": "Ismingiz",
-      "topicPlaceholder": "Sizga nima kerak?",
-      "other": "Boshqa",
-      "phonePlaceholder": "Telefon raqamingiz",
-      "nameRequired": "Iltimos, ismingizni kiriting.",
-      "topicRequired": "Iltimos, nima kerakligini tanlang.",
-      "phoneInvalid": "Iltimos, telefon raqamini toʻgʻri kiriting.",
       "back": "Orqaga",
       "next": "Davom etish",
-      "send": "Yuborish",
-      "doneTitle": "Rahmat!",
-      "doneText": "Arizangiz qabul qilindi, siz bilan bogʻlanamiz."
+      "send": "Yuborish"
     },
     "marquee": "Bogʻlanish",
     "linksTitle": "Internetda biz",
@@ -1231,5 +1221,61 @@
     "p39": "All Over Spray tana spreylari toʻplami",
     "p40": "Lafarella italyan shirinliklari: qatlamli tort",
     "pfrenk": "Mr Franky’s burger restorani firma uslubi: stakanlar va peshlavha"
+  },
+  "leadForm": {
+    "title": "Loyihangiz haqida aytib bering",
+    "text": "Uchta qisqa qadam. Ish vaqtida 15 daqiqa ichida javob beramiz.",
+    "steps": {
+      "about": "Siz haqingizda",
+      "project": "Loyihangiz",
+      "contact": "Siz bilan qanday bogʻlanamiz"
+    },
+    "name": "Ismingiz",
+    "company": "Kompaniya nomi",
+    "industry": "Faoliyat sohasi",
+    "industryOther": "Qaysi soha?",
+    "industries": {
+      "retail": "Chakana savdo",
+      "horeca": "HoReCa: mehmonxona, restoran, kafe",
+      "food": "FMCG va oziq-ovqat ishlab chiqarish",
+      "construction": "Qurilish va koʻchmas mulk",
+      "it": "IT va texnologiyalar",
+      "education": "Taʼlim",
+      "health": "Tibbiyot va goʻzallik",
+      "finance": "Moliya va sugʻurta",
+      "manufacturing": "Ishlab chiqarish",
+      "logistics": "Logistika va transport",
+      "services": "Xizmatlar",
+      "other": "Boshqa"
+    },
+    "services": "Qaysi xizmatlar kerak (ixtiyoriy)",
+    "servicePackage": "Brending paketi",
+    "serviceUnsure": "Hali bilmayman",
+    "method": "Siz bilan qanday bogʻlanaylik?",
+    "methods": {
+      "phone": "Telefon",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp"
+    },
+    "country": "Mamlakat kodi",
+    "phone": "Telefon raqami",
+    "whatsapp": "WhatsApp raqami",
+    "telegram": "{'@'}username",
+    "errors": {
+      "name": "Iltimos, ismingizni kiriting.",
+      "company": "Iltimos, kompaniya nomini kiriting.",
+      "industry": "Iltimos, faoliyat sohangizni tanlang.",
+      "industryOther": "Iltimos, sohangizni yozing.",
+      "phone": "Iltimos, telefon raqamini toʻgʻri kiriting.",
+      "telegram": "Iltimos, Telegram foydalanuvchi nomini kiriting: 5 tadan 32 tagacha lotin harfi, raqam yoki pastki chiziq.",
+      "consent": "Iltimos, shaxsiy maʼlumotlarni qayta ishlashga rozilik bering."
+    },
+    "doneTitle": "Rahmat!",
+    "doneText": "Ish vaqtida 15 daqiqa ichida siz bilan bogʻlanamiz.",
+    "writeTelegram": "Hozir Telegramda yozish",
+    "orWrite": "Yoki bizga yozing:"
+  },
+  "messenger": {
+    "text": "Assalomu alaykum! Loyihani muhokama qilmoqchiman ({code})"
   }
 }

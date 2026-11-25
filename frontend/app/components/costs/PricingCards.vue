@@ -234,6 +234,7 @@ onBeforeUnmount(() => {
           :class="[`price-tone--${group.plan.tone}`, { 'is-active': active === g }]"
           role="tabpanel"
           :aria-labelledby="tabId(g, group.index)"
+          :data-ob-pricing="group.key"
           @click="active = g"
           @focusin="active = g"
         >

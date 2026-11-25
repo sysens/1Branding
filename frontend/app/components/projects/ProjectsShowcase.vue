@@ -66,6 +66,8 @@ const FOOTER_HYDRATION = { rootMargin: "600px 0px" };
       <LazyHomeFreshProjects />
       <HomeFaqAccordion />
       <LazyHomeRobotShowcase />
+      <!-- The branding service page, which is this page, ends with its request form. -->
+      <slot />
     </div>
     <LazyFooter :hydrate-on-visible="FOOTER_HYDRATION" />
   </div>

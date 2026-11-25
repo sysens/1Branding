@@ -183,9 +183,10 @@ try {
 
   res = await fetch(`${BASE}/contact`, { headers });
   const contact = await res.text();
-  // The request form is a modal opened from the top button (not in the server HTML).
+  // The top button opens the request form as a modal; the same form also sits on the page.
   check("/contact renders the button that opens the request modal", contact.includes("contact-hero__cta") && contact.includes('aria-haspopup="dialog"'), "");
-  check("/contact has no inline form any more", !contact.includes("contact-request-form"), "");
+  check("/contact has the inline request form", contact.includes("lead-form--inline"), "");
+  check("/contact has no old long form", !contact.includes("contact-request-form"), "");
 
   // Private address down: pages still render through the public URL.
   await new Promise((r) => proxy.close(r));
