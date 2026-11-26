@@ -1,13 +1,18 @@
 <script setup lang="ts">
 // The first screen of /one-guarantee, after the design: the wordmark and its
-// line on the left, a beam of light coming down onto the lit edge of a panel,
-// and in the panel the page's claim ("There are many companies ...").
+// line on the left, the brand's "1" as a tall upright stroke of light
+// standing on the lit edge of a panel, and in the panel the page's claim
+// ("There are many companies ...").
 //
-// The beam is React Bits' Laser Flow (LaserFlow.vue), in the brand's green,
-// with the panel as its surface: it lands on the panel's top edge, runs out
-// along it and pours over the corner. Its frame is the top of the section and
-// a strip of the panel below the edge, where the light runs down the sides.
-// Where WebGL 2 is missing a still CSS beam stands in.
+// The light is React Bits' Laser Flow (LaserFlow.vue), in the brand's green,
+// with the panel as its surface and its beam drawn as the "1" (oneHeight,
+// oneLift): the mark's head, set upright, with its stem carried straight
+// down to the panel's top edge, where the light runs out along the edge (a
+// thin lit line: edge, and a small foot: flare) and pours over the corner;
+// and it keeps running (flow): fine dust streaming down beside the stroke,
+// in a halo that stays smooth. Its frame is the top of the section and a strip of the
+// panel below the edge, where the light runs down the sides. Where WebGL 2
+// is missing a still "1" stands in.
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import LaserFlow from "~/components/one-guarantee/LaserFlow.vue";
 
@@ -19,10 +24,19 @@ const panel = ref<HTMLElement | null>(null);
 const failed = ref(false);
 // On phones the beam comes down the middle, and fewer pixels are shaded.
 const narrow = ref(false);
-// Where the beam comes down, across the whole section (the beam's own frame):
-// 60% across the content frame (50% on phones), which is narrower than the
-// section on screens wider than the frame.
+// Where the "1" stands (the middle of its stem), across the whole section
+// (the light's own frame): 60% across the content frame (50% on phones),
+// which is narrower than the section on screens wider than the frame.
 const beamPosition = ref(0.6);
+// The "1": the scale of the mark's head (the mark's own height), and how far
+// its stem is carried on below the mark's foot. The whole figure takes FIGURE
+// of the room over the panel's edge (on phones: what is left under the
+// wordmark and its line), and its stem is about a third of the mark's height
+// wide, so MARK of the room keeps it a slender stroke.
+const oneHeight = ref(0);
+const oneLift = ref(0);
+const FIGURE = 0.62;
+const MARK = 0.15;
 
 let query: MediaQueryList | null = null;
 let sizes: ResizeObserver | null = null;
@@ -31,6 +45,14 @@ const place = () => {
   const across = narrow.value ? 0.5 : 0.6;
   const whole = section.value?.getBoundingClientRect();
   const inner = frame.value?.getBoundingClientRect();
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  // On phones the figure starts where the mask in the CSS lets the light show
+  // (18.5rem down).
+  const room = inner?.height ?? 0;
+  const figure = Math.max(0, narrow.value ? room - 18.5 * rem : FIGURE * room);
+  const mark = Math.min(MARK * room, 0.36 * figure);
+  oneHeight.value = mark;
+  oneLift.value = figure - mark;
   beamPosition.value = whole && inner && whole.width > 0 ? (inner.left - whole.left + across * inner.width) / whole.width : across;
 };
 
@@ -51,14 +73,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section ref="section" class="og-hero">
+  <section ref="section" class="og-hero" :style="{ '--one-h': `${oneHeight}px`, '--one-lift': `${oneLift}px` }">
     <div class="og-hero__laser" aria-hidden="true">
       <LaserFlow
         :surface="panel"
         :beam-position="beamPosition"
         color="#3fff38"
         :intensity="1.8"
-        :flare="1.5"
+        :flare="0.85"
         :spread="1.5"
         :spill="1"
         :fog="0.2"
@@ -70,6 +92,10 @@ onBeforeUnmount(() => {
         :speed="1.5"
         :seed="3"
         :dpr="narrow ? 1.5 : undefined"
+        :one-height="oneHeight"
+        :one-lift="oneLift"
+        :flow="1"
+        :edge="0.4"
         mouse-interaction
         intro
         @unsupported="failed = true"
@@ -81,7 +107,7 @@ onBeforeUnmount(() => {
       <div class="og-hero__copy">
         <h1 class="og-hero__title type-display-s">
           <span class="sr-only">{{ t("seo.oneGuarantee.h1") }}</span>
-          <span aria-hidden="true">One<span class="og-grad">Guarantee</span></span>
+          <span aria-hidden="true">One<span class="og-grad ob-green">Guarantee</span></span>
         </h1>
         <p v-rise class="og-hero__lead type-intro">{{ t("oneGuarantee.hero.lead") }}</p>
       </div>
@@ -93,11 +119,11 @@ onBeforeUnmount(() => {
       <h2 v-blur-reveal class="og-hero__claim type-display-s">
         <span>{{ t("oneGuarantee.problem.line1") }}</span>
         {{ " " }}
-        <span>{{ t("oneGuarantee.problem.line2") }} <span class="og-grad">{{ t("oneGuarantee.problem.accent") }}</span></span>
+        <span>{{ t("oneGuarantee.problem.line2") }} <span class="og-grad ob-green">{{ t("oneGuarantee.problem.accent") }}</span></span>
       </h2>
       <p v-rise class="og-hero__text type-intro">
         {{ t("oneGuarantee.problem.text") }}
-        <span class="og-hero__text-accent">{{ t("oneGuarantee.problem.textAccent") }}</span>
+        <span class="og-hero__text-accent ob-green">{{ t("oneGuarantee.problem.textAccent") }}</span>
       </p>
     </div>
   </section>
@@ -129,16 +155,40 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-/* Without WebGL 2: a still beam and its glow on the edge. */
+/* Without WebGL 2: a still "1" and its glow on the edge. */
 .og-hero__beam-still {
   position: absolute;
   inset: 0 0 auto;
   height: var(--top-h);
   background:
-    radial-gradient(ellipse 0.5rem 62% at var(--beam-x) 100%, rgb(240 255 244 / 0.95), transparent),
-    radial-gradient(ellipse 4rem 66% at var(--beam-x) 100%, rgb(110 255 160 / 0.28), transparent),
     radial-gradient(ellipse 34% 5% at var(--beam-x) 100%, rgb(235 255 240 / 0.9), transparent),
     radial-gradient(ellipse 42% 34% at var(--beam-x) 100%, rgb(60 230 110 / 0.22), transparent);
+}
+
+/* The figure of LaserFlow's shader: the upright mark (ONE there) in its box,
+   0.588 of its height wide with the middle of its stem 0.426 of the height
+   from the left, --one-lift over the edge; and under it the stem carried on. */
+.og-hero__beam-still::before,
+.og-hero__beam-still::after {
+  position: absolute;
+  background: #f0fff4;
+  content: "";
+  filter: drop-shadow(0 0 0.75rem rgb(60 240 110 / 0.7));
+}
+
+.og-hero__beam-still::before {
+  bottom: var(--one-lift);
+  left: calc(var(--beam-x) - 0.4256 * var(--one-h));
+  width: calc(0.5879 * var(--one-h));
+  height: var(--one-h);
+  clip-path: polygon(47.2% 0, 98.7% 0, 100% 100%, 44.8% 100%, 45.6% 39.5%, 91.3% 31.2%, 0 31.2%);
+}
+
+.og-hero__beam-still::after {
+  bottom: 0;
+  left: calc(var(--beam-x) - 0.1623 * var(--one-h));
+  width: calc(0.3246 * var(--one-h));
+  height: calc(var(--one-lift) + 1px);
 }
 
 /* The content frame, as on the landing: as wide as the screen up to 1920px,
@@ -233,8 +283,8 @@ onBeforeUnmount(() => {
     --beam-x: 50%;
   }
 
-  /* The beam would run through the wordmark and its line (white on white):
-     here it shows only from under them. */
+  /* The light would run through the wordmark and its line (white on white):
+     here it shows only from under them, where the "1" is. */
   .og-hero__laser {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 14rem, #000 18.5rem, #000 calc(100% - 8rem), transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0, transparent 14rem, #000 18.5rem, #000 calc(100% - 8rem), transparent 100%);
