@@ -159,7 +159,7 @@ export default defineNuxtConfig({
     "nuxt-keen-slider",
   ],
 
-  css: ["~/assets/css/tailwind.css", "~/assets/css/guarantee-pill.css"],
+  css: ["~/assets/css/tailwind.css", "~/assets/css/guarantee-pill.css", "~/assets/css/green-text.css"],
 
   app: {
     head: {

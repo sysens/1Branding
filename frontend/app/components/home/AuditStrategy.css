@@ -35,10 +35,8 @@
   --plan-size: var(--section-title-size);
   --plan-lh: var(--type-h1-lh);
   --plan-ls: var(--type-h1-ls);
-  /* A is a fifth smaller than the display step: it was heavier than B and the
-     step cards beside it. */
-  --letter-a-size: calc(var(--type-display-s-size) * 0.8);
-  --letter-b-size: var(--type-h1-size);
+  /* A and B, each in its ring. */
+  --letter-size: var(--type-h1-size);
   /* Lines of the plan and of the text, as they set in English. */
   --plan-lines: 1;
   --text-lines: 4;
@@ -92,8 +90,7 @@
     --plan-lh: var(--type-h2-lh);
     --plan-ls: var(--type-h2-ls);
     --plan-lines: 1;
-    --letter-a-size: calc(var(--type-h1-size) * 0.8);
-    --letter-b-size: var(--type-h2-size);
+    --letter-size: var(--type-h2-size);
   }
 }
 
@@ -103,8 +100,7 @@
     --plan-size: var(--type-h3-size);
     --plan-lh: var(--type-h3-lh);
     --plan-ls: var(--type-h3-ls);
-    --letter-a-size: calc(var(--type-h2-size) * 0.8);
-    --letter-b-size: var(--type-h3-size);
+    --letter-size: var(--type-h3-size);
   }
 }
 
@@ -173,7 +169,9 @@
   white-space: nowrap;
 }
 
-/* The path: absolutely placed in design units inside a 1500x200 strip. */
+/* The path: absolutely placed in design units inside a 1500x246 strip (it
+   was 200 tall; the 46 units its larger cards and rings take come off the
+   space above it and above the plan, so the block is as tall as before). */
 /* The path centred on the page like the heading above it (across the whole
    frame): it is sized by the screen's height (--u), so on a short screen it is
    narrower than the frame's padded part and, left-aligned, sat off to the
@@ -182,14 +180,14 @@
   display: flex;
   justify-content: center;
   width: calc(2000 * var(--u-w));
-  margin-top: calc(82 * var(--u));
+  margin-top: calc(62 * var(--u));
   margin-left: calc(-277 * var(--u-w));
 }
 
 .audit__row {
   position: relative;
   width: calc(1500 * var(--u));
-  height: calc(200 * var(--u));
+  height: calc(246 * var(--u));
 }
 
 .audit__links {
@@ -236,10 +234,10 @@
 }
 
 /* The labels are on the type scale, not in design units, so a box or an end
-   node is no longer exactly as wide as in the design: each one is centred on
-   its design centre (a step box 153 units wide, A at 92 and B at 82 units
-   from their left edge) instead of hanging from its left edge, and a box
-   grows around a label that is wider than it (small screens, long words). */
+   node is not exactly as wide as drawn: each one is centred on its centre
+   point (76.5 units from a step's left, 82 from an end's) instead of hanging
+   from its left edge, and a box grows around a label that is wider than it
+   (small screens, long words). */
 .audit__step,
 .audit__end {
   position: absolute;
@@ -250,10 +248,10 @@
 
 .audit__step {
   justify-content: center;
-  gap: calc(16 * var(--u));
+  gap: calc(18 * var(--u));
   width: max-content;
-  min-width: calc(153 * var(--u));
-  height: calc(160 * var(--u));
+  min-width: calc(180 * var(--u));
+  height: calc(188 * var(--u));
   padding: calc(10 * var(--u)) 0.5rem 0;
   translate: calc(76.5 * var(--u) - 50%) 0;
   border: calc(2 * var(--u)) solid #262626;
@@ -266,12 +264,11 @@
 .audit__step.is-lit {
   border-color: rgb(0 245 98 / 0.55);
   box-shadow: 0 0 calc(34 * var(--u)) rgb(0 245 98 / 0.22), inset 0 0 calc(22 * var(--u)) rgb(0 245 98 / 0.08);
-  transform: translateY(calc(-4 * var(--u)));
 }
 
 .audit__icon {
-  width: calc(70 * var(--u));
-  height: calc(70 * var(--u));
+  width: calc(84 * var(--u));
+  height: calc(84 * var(--u));
   fill: none;
   stroke: #f2f2f2;
   stroke-width: 1.7;
@@ -314,66 +311,48 @@
   gap: calc(14 * var(--u));
 }
 
-/* A hangs from the row's middle line (its at() y): the letter, whose line
-   box is trimmed to 0.82 of its size, is lifted by half that box, so its
-   centre sits on the line at whatever step the letter takes, level with
-   the step cards' centres and B's ring. */
-.audit__end--start {
-  translate: calc(92 * var(--u) - 50%) calc(-0.41 * var(--letter-a-size));
-}
-
+/* A and B are the same node: a ring 168 units across with its letter in the
+   middle, the ring's centre on the row's line. Each is grey until the path
+   lights it (A as it starts, B as it arrives), then green. */
+.audit__end--start,
 .audit__end--target {
   translate: calc(82 * var(--u) - 50%) 0;
-}
-
-/* A and B are single glyphs used as the path's end nodes: the line box is
-   trimmed to the letter (0.82) so the label sits right under it. */
-.audit__letter {
-  font-family: var(--app-font-display);
-  font-size: var(--letter-a-size);
-  font-weight: 700;
-  line-height: 0.82;
-  letter-spacing: 0;
-  background: linear-gradient(180deg, #ffffff 0%, #e4e4e4 45%, #9b9b9b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  transition: filter 0.5s ease;
-}
-
-.audit__end--start.is-lit .audit__letter {
-  background-image: linear-gradient(180deg, #8dffb6 0%, #00f562 55%, #00b847 100%);
-  filter: drop-shadow(0 0 calc(14 * var(--u)) rgb(0 245 98 / 0.45));
 }
 
 .audit__ring {
   display: grid;
   place-items: center;
-  width: calc(140 * var(--u));
-  height: calc(140 * var(--u));
-  border: calc(4.5 * var(--u)) solid #3b3b3b;
+  width: calc(168 * var(--u));
+  height: calc(168 * var(--u));
+  border: calc(5 * var(--u)) solid #3b3b3b;
   border-radius: 50%;
   transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* B is a step smaller than A, to sit inside its ring; nudged right (in em,
-   so it follows the step) to centre it optically. */
-.audit__letter--b {
-  padding-left: 0.06em;
-  font-size: var(--letter-b-size);
-  background: none;
+/* The line box is trimmed to the letter (0.82), so it sits in the ring's
+   middle. */
+.audit__letter {
   color: #3b3b3b;
+  font-family: var(--app-font-display);
+  font-size: var(--letter-size);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: 0;
   transition: color 0.5s ease;
 }
 
-.audit__end--target.is-lit .audit__ring {
+.audit__end.is-lit .audit__ring {
   border-color: var(--green);
   box-shadow: 0 0 calc(40 * var(--u)) rgb(0 245 98 / 0.35), inset 0 0 calc(24 * var(--u)) rgb(0 245 98 / 0.15);
-  animation: audit-pulse 2.4s ease-in-out 0.5s infinite;
 }
 
-.audit__end--target.is-lit .audit__letter--b {
+.audit__end.is-lit .audit__letter {
   color: var(--green);
+}
+
+/* B, once reached, keeps pulsing. */
+.audit__end--target.is-lit .audit__ring {
+  animation: audit-pulse 2.4s ease-in-out 0.5s infinite;
 }
 
 @keyframes audit-pulse {
@@ -384,7 +363,7 @@
   /* The shared heading size; a long line wraps rather than leave the container. */
   max-width: min(100%, 90.625rem);
   margin-inline: auto;
-  margin-top: calc(110 * var(--u)) !important;
+  margin-top: calc(84 * var(--u)) !important;
   font-family: var(--app-font-display);
   font-size: var(--plan-size);
   text-wrap: balance;
@@ -394,10 +373,12 @@
   text-align: center;
 }
 
-/* Running text: centred at a reading measure, the block centred. */
+/* Running text: centred, a third wider than the reading measure (it sits
+   under a row and a heading far wider than it, and read as a narrow column),
+   the block centred. */
 .audit__text {
   box-sizing: content-box;
-  max-width: var(--type-measure);
+  max-width: calc(var(--type-measure) * 1.34);
   margin-top: calc(24 * var(--u)) !important;
   padding-inline: 1.25rem;
   color: #999ca0;
@@ -530,11 +511,6 @@
     border-color: rgb(0 245 98 / 0.55);
   }
 
-  .audit__end--start .audit__letter {
-    width: 4.5rem;
-    text-align: center;
-  }
-
   .audit__ring {
     width: 4.5rem;
     height: 4.5rem;
@@ -639,9 +615,9 @@
   color: color-mix(in oklab, #fff calc(100% - var(--progress) * 40%), #6b6f73);
 }
 
-.audit__heading .audit__green {
-  color: color-mix(in oklab, var(--green) calc(15% + var(--progress) * 85%), #2f3431);
-  text-shadow: 0 0 calc(var(--progress) * 38 * var(--u)) rgb(0 245 98 / calc(var(--progress) * 0.45));
+/* The site's lit green (.ob-green), dim until the path earns it. */
+.audit__lit {
+  opacity: calc(0.28 + var(--progress) * 0.72);
 }
 
 /* The comet's tail. */
@@ -728,7 +704,7 @@
     animation: audit-breathe 2.2s ease-in-out 0.9s infinite;
   }
 
-  .audit__end--start.is-lit .audit__letter {
+  .audit__end--start.is-lit .audit__ring {
     animation: audit-pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.4) both;
   }
 

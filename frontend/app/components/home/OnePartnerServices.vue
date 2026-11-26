@@ -83,11 +83,8 @@ onBeforeUnmount(() => clearTimeout(hoverTimer));
   <section id="services" class="services" aria-labelledby="services-title">
     <!-- The brand's slogan stays English on every language's page. -->
     <h2 id="services-title" class="services__title" lang="en">
-      <span v-blur-reveal class="services__one">{{ `${t("home.services.one")} ` }}</span>
-      <span v-blur-reveal class="services__rest">
-        <span>{{ `${t("home.services.partner")} ` }}</span>
-        <span>{{ t("home.services.every") }} <span class="services__accent">{{ t("home.services.solution") }}</span></span>
-      </span>
+      <span v-blur-reveal class="services__line"><span class="ob-green">{{ t("home.services.one") }}</span> {{ `${t("home.services.partner")} ` }}</span>
+      <span v-blur-reveal class="services__line">{{ t("home.services.every") }} <span class="ob-green">{{ t("home.services.solution") }}</span></span>
     </h2>
     <p v-rise class="services__subtitle">{{ t("home.services.subtitle") }}</p>
     <!-- What OneBranding is in one plain sentence. -->
@@ -162,7 +159,7 @@ onBeforeUnmount(() => clearTimeout(hoverTimer));
 
     <!-- The section's last line, centred under the list and the card. -->
     <p v-rise class="services__closing" lang="en">
-      <span>{{ t("home.services.closingFirst") }}</span> <span class="services__closing-muted">{{ t("home.services.closingLead") }}<span class="services__accent">{{ t("home.services.closingAccent") }}</span></span>
+      <span>{{ t("home.services.closingFirst") }}</span> <span class="services__closing-muted">{{ t("home.services.closingLead") }}<span class="ob-green">{{ t("home.services.closingAccent") }}</span></span>
     </p>
   </section>
 </template>

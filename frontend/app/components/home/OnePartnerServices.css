@@ -8,60 +8,28 @@
   color: #fff;
 }
 
-/* ONE spans both lines; PARTNER. and EVERY SOLUTION. stack beside it. ONE is
-   the display-l step (display-m, then display-s, on phones too narrow for the
-   lockup). The two stacked lines are drawn at 0.47 of it and both line
-   heights are trimmed (0.74 / 0.76) so together they are exactly as tall as
-   ONE: the lockup is one shape, so these stay fractions of the step. */
+/* Two centred lines of one size: ONE PARTNER. over EVERY SOLUTION. (ONE used
+   to stand two lines tall beside the rest.) The display-s step, or smaller
+   where the longer line would not fit the screen: that line is about 9.4 of
+   its own size wide. Uppercase, so caps tracking and a tight line height. */
 .services__title {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.03em;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
   margin: 0;
   padding-inline: 1.25rem;
   font-family: var(--app-font-display);
-  font-size: var(--type-display-l-size);
+  font-size: min(var(--type-display-s-size), (100vw - 2.5rem) / 9.4);
   font-weight: 700;
-  line-height: 0.74;
+  line-height: 0.9;
   letter-spacing: var(--type-caps-ls);
+  text-align: center;
 }
 
-@media (max-width: 599px) {
-  .services__title {
-    font-size: var(--type-display-m-size);
-  }
-}
-
-@media (max-width: 374px) {
-  .services__title {
-    font-size: var(--type-display-s-size);
-  }
-}
-
-.services__one {
-  padding-block: 0.02em;
-  background: linear-gradient(100deg, #00c92f 0%, #00f83c 30%, #00d634 62%, #009b2c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.services__rest {
-  display: flex;
-  flex-direction: column;
-  gap: 0.06em;
-  padding-top: 0.01em;
-  font-size: 0.47em;
-  line-height: 0.76;
+.services__line {
+  display: block;
   white-space: nowrap;
-}
-
-.services__accent {
-  background: linear-gradient(90deg, #00e536, #00b52e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .services__subtitle {

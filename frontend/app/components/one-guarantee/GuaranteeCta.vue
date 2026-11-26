@@ -8,10 +8,12 @@ const localePath = useLocalePath();
 const MARK_PATH = "M919 811A213.5 213.5 0 1 1 1009 827L1095 499L1006 500L904 588L1060 590L974 613Z";
 // The "1" itself, in black, under the disc: the mark breathes with light (a
 // glow behind it swells and fades, the disc brightens and dims), and this
-// keeps the light out of the cut-out. Its stem is drawn on past the disc's
-// rim (the last two points), so the glow round the disc is cut by it too and
-// the "1" stays open at its foot, as in the mark.
+// keeps the light out of the cut-out. It is clipped to the disc's circle
+// (DISC), so the "1" stays open at its foot, down to the rim, and no further:
+// outside the disc the glow is a whole ring. (The stem used to run on past
+// the rim and cut a black bar through the glow under the disc.)
 const ONE_POINTS = "1009,827 1095,499 1006,500 904,588 1060,590 974,613 919,811 886,930 957,1024";
+const DISC = { cx: 1000.5, cy: 613.7, r: 213.5 };
 </script>
 
 <template>
@@ -23,8 +25,13 @@ const ONE_POINTS = "1009,827 1095,499 1006,500 904,588 1060,590 974,613 919,811 
             <stop offset="0" stop-color="#06f01e" />
             <stop offset="1" stop-color="#0c9c3a" />
           </linearGradient>
+          <clipPath id="og-cta-disc">
+            <circle :cx="DISC.cx" :cy="DISC.cy" :r="DISC.r" />
+          </clipPath>
         </defs>
-        <polygon class="og-cta__mark-one" :points="ONE_POINTS" />
+        <g clip-path="url(#og-cta-disc)">
+          <polygon class="og-cta__mark-one" :points="ONE_POINTS" />
+        </g>
         <path :d="MARK_PATH" fill="url(#og-cta-mark)" />
       </svg>
     </div>
@@ -32,7 +39,7 @@ const ONE_POINTS = "1009,827 1095,499 1006,500 904,588 1060,590 974,613 919,811 
     <h2 v-blur-reveal class="og-cta__title type-display-s">
       <span>{{ t("oneGuarantee.cta.line1") }}</span>
       {{ " " }}
-      <span class="og-grad">{{ t("oneGuarantee.cta.line2") }}</span>
+      <span class="og-grad ob-green">{{ t("oneGuarantee.cta.line2") }}</span>
     </h2>
     <p v-rise class="og-cta__text type-intro">{{ t("oneGuarantee.cta.text") }}</p>
     <p v-rise class="og-cta__action">
@@ -73,14 +80,12 @@ const ONE_POINTS = "1009,827 1095,499 1006,500 904,588 1060,590 974,613 919,811 
 }
 
 /* The disc brightens and dims with it. (On the <svg>, not the path: Safari
-   does not run CSS filters on an SVG's children.) overflow: the stem of the
-   "1" runs out of the view box. */
+   does not run CSS filters on an SVG's children.) */
 .og-cta__mark svg {
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  overflow: visible;
   animation: og-cta-lit 2.6s ease-in-out infinite;
 }
 
@@ -127,7 +132,7 @@ const ONE_POINTS = "1009,827 1095,499 1006,500 904,588 1060,590 974,613 919,811 
   }
 }
 
-/* The copy is over the mark's glow and the foot of its "1", which run down behind it. */
+/* The copy is over the mark's glow, which runs down behind it. */
 .og-cta__title,
 .og-cta__text,
 .og-cta__action {

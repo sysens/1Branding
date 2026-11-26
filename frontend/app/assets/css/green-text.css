@@ -1,0 +1,84 @@
+/* The site's green for text (.ob-green): the look of the contact page's
+   "won't wait". A green ground running from deep to bright (100deg), with a
+   dark patch and a bright patch drifting through it, clipped to the letters.
+   The patches' centres are two registered custom properties, so the browser
+   can animate them; where an element has an animation of its own (an
+   entrance), the patches simply stand where they start.
+
+   Every green word of a heading or a statement wears it, on every page: add
+   the class in the template, next to the component's own class (which keeps
+   the size, weight and place). Its declarations are !important on purpose:
+   components painted their greens each in their own way, and this one look
+   has to win over all of them, also inside scoped styles.
+
+   Not for small interface text (links, labels, menu states): a gradient that
+   small reads as noise. Those keep the plain green.
+
+   .ob-green--solid is the same green without the patches, for letters that
+   are each their own box (words animated letter by letter): a patch per
+   letter would stripe the word. */
+@property --green-dark-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 20%;
+}
+
+@property --green-light-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 70%;
+}
+
+/* Where the text cannot be clipped to, the ground's middle green. */
+.ob-green {
+  color: #13b538 !important;
+  text-shadow: none !important;
+}
+
+.ob-green--solid {
+  color: #17c241 !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: none !important;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .ob-green:not(.ob-green--solid) {
+    background:
+      radial-gradient(ellipse 34% 120% at var(--green-dark-x) 62%, rgb(2 34 10 / 0.8), rgb(2 34 10 / 0) 100%),
+      radial-gradient(ellipse 30% 100% at var(--green-light-x) 36%, rgb(120 255 130 / 0.85), rgb(120 255 130 / 0) 100%),
+      linear-gradient(100deg, #0b9a2d 0%, #13b538 50%, #1fd048 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation:
+      ob-green-dark 6s ease-in-out infinite alternate,
+      ob-green-light 7.5s ease-in-out infinite alternate;
+  }
+}
+
+/* A block of green text on a tight line: its box ends above the tails of
+   g, y, р and у, and the clipped background ends with the box, which cut
+   them. Room for the tails under the line, taken back from the space below,
+   so nothing moves. (Text that stays inline needs none: an inline box is as
+   tall as the font.) */
+.ob-green--tails {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+@keyframes ob-green-dark {
+  from { --green-dark-x: -5%; }
+  to { --green-dark-x: 75%; }
+}
+
+@keyframes ob-green-light {
+  from { --green-light-x: 105%; }
+  to { --green-light-x: 15%; }
+}
+
+/* One still lit state. */
+@media (prefers-reduced-motion: reduce) {
+  .ob-green {
+    animation: none !important;
+  }
+}

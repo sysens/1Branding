@@ -18,8 +18,10 @@ export const COMPANY = {
   // The WhatsApp number of the request form's buttons (wa.me links). For now
   // the office phone: to be confirmed by the owners before it is advertised.
   whatsapp: { display: "+998 93 560 80 00", e164: "+998935608000" },
-  postalCode: "100047",
   country: "UZ",
+  // The office: the C-Space Park coworking space, as Google Maps lists it.
+  place: "C-Space Park",
+  geo: { latitude: 41.3452744, longitude: 69.328451 },
   hours: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "10:00", closes: "19:00" },
   // The prices on /pricing run from $35 (a presentation) to $5,900 (branding).
   priceRange: "$35–$5900",
@@ -27,41 +29,41 @@ export const COMPANY = {
 
 type Address = {
   street: string;
-  district: string;
   city: string;
   country: string;
-  /** The whole address as one line, in the local order. */
+  /** The whole address as one line, in the local order, the place's name with it. */
   full: string;
 };
 
+// The address of C-Space Park as Google Maps gives it ("Durmon Road 1,
+// Tashkent, Uzbekistan"); the listing has no postal code, so none is stated.
 export const COMPANY_ADDRESS: Record<SiteLocale, Address> = {
   en: {
-    street: "18A Amir Temur St., office 5",
-    district: "Shaykhantakhur district",
+    street: "Durmon Road 1",
     city: "Tashkent",
     country: "Uzbekistan",
-    full: "18A Amir Temur St., office 5, Shaykhantakhur district, Tashkent 100047, Uzbekistan",
+    full: "C-Space Park, Durmon Road 1, Tashkent, Uzbekistan",
   },
   ru: {
-    street: "ул. Амира Темура, 18А, офис 5",
-    district: "Шайхантахурский район",
+    street: "ул. Дурмон йули, 1",
     city: "Ташкент",
     country: "Узбекистан",
-    full: "г. Ташкент, Шайхантахурский район, ул. Амира Темура, 18А, офис 5, Узбекистан, 100047",
+    full: "г. Ташкент, ул. Дурмон йули, 1, C-Space Park, Узбекистан",
   },
   uz: {
-    street: "Amir Temur koʻchasi, 18A, 5-ofis",
-    district: "Shayxontohur tumani",
+    street: "Durmon yoʻli koʻchasi, 1",
     city: "Toshkent",
     country: "Oʻzbekiston",
-    full: "Toshkent sh., Shayxontohur tumani, Amir Temur koʻchasi, 18A, 5-ofis, Oʻzbekiston, 100047",
+    full: "Toshkent sh., Durmon yoʻli koʻchasi, 1, C-Space Park, Oʻzbekiston",
   },
 };
 
-/** Google Maps search for the office (no coordinates are invented here). */
-export const COMPANY_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  `${COMPANY.name}, ${COMPANY_ADDRESS.en.street}, ${COMPANY_ADDRESS.en.city}`
-)}`;
+/** What a map is searched by: the place's name with its address. */
+export const COMPANY_MAP_QUERY = `${COMPANY.place}, ${COMPANY_ADDRESS.en.street}, ${COMPANY_ADDRESS.en.city}`;
+
+/** The office on Google Maps: C-Space Park's own listing (its place link). */
+export const COMPANY_MAP_URL =
+  "https://www.google.com/maps/place/C-Space+Park/@41.3452744,69.328451,17z/data=!4m6!3m5!1s0x38aef5002c4b8ff9:0xe2734b1a5c12289d!8m2!3d41.3452744!4d69.328451!16s%2Fg%2F11p1k6wjr1";
 
 export type SocialKind = "instagram" | "telegram" | "behance" | "linkedin";
 

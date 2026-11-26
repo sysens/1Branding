@@ -36,7 +36,7 @@ const toggle = (index: number) => {
       <header class="brandbook-index__head">
         <h2 :id="`${baseId}-title`" v-blur-reveal class="brandbook-index__title">
           <span>{{ t("projectsPage.brandbook.title") }}</span>
-          <span class="brandbook-index__accent">{{ t("projectsPage.brandbook.accent") }}</span>
+          <span class="brandbook-index__accent ob-green ob-green--tails">{{ t("projectsPage.brandbook.accent") }}</span>
         </h2>
         <p v-rise class="brandbook-index__intro">{{ t("projectsPage.brandbook.intro") }}</p>
       </header>

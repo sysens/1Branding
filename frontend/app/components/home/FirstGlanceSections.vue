@@ -72,7 +72,7 @@ const sections = computed<ProductStorySection[]>(() => {
         <div class="first-glance-section__copy">
           <h2>
             {{ section.titleLead }}
-            <span>{{ section.titleAccent }}</span>
+            <span class="ob-green">{{ section.titleAccent }}</span>
           </h2>
 
           <p>{{ section.description }}</p>

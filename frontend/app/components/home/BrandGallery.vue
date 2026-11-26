@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
       <div class="gallery__pinned">
         <h2 class="gallery__heading">
           <span v-blur-reveal class="gallery__heading-line">{{ heading.lead }}</span>
-          <span v-if="heading.accent" v-blur-reveal class="gallery__heading-line gallery__heading-line--accent">{{ ` ${heading.accent}` }}</span>
+          <span v-if="heading.accent" v-blur-reveal class="gallery__heading-line gallery__heading-line--accent ob-green">{{ ` ${heading.accent}` }}</span>
         </h2>
 
         <div ref="track" class="gallery__track">

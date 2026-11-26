@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
       :class="{ 'is-active': active === g }"
     >
       <header class="price-group__head">
-        <h2 :id="titleId(g)" class="price-group__title price-title">{{ group.title }}</h2>
+        <h2 :id="titleId(g)" class="price-group__title price-title ob-green">{{ group.title }}</h2>
         <p v-if="group.description" class="price-group__text">{{ group.description }}</p>
       </header>
 

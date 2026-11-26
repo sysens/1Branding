@@ -12,6 +12,21 @@
 // tyres and the dark stay dark, and the car (an ellipse round it) is left
 // alone.
 //
+// The wheels turn: each tyre has a green ring painted on it, and two lights
+// with tails run round that ring, clockwise (the way a wheel rolls when the
+// car heads right). The ring is already as green as the screen gets, so
+// light alone would not show on it: between the lights the ring is dimmed,
+// and a light brings it back with a white-hot head. Which pixels are a ring
+// comes from a mask cut from the picture (RINGS, made by
+// scripts/prepare-car-rings.mjs: the track's green lies a pixel from a ring
+// in places); where a pixel is on its ring's round comes from the ring's
+// ellipse (WHEELS: its centre and half-axes; the rings are seen at an angle).
+//
+// The canvas is laid over the picture as it is (no blend mode): the shader
+// writes the light to add and, as alpha, how much of the picture to take
+// away under it. The light is scaled by what the picture leaves room for
+// (1 - picture), which is what "screen" blending does.
+//
 // The heading stands in the picture's dark sky, over the car, so the two are
 // on screen together. On a short, wide window the picture is one screen tall
 // at most and cropped (object-fit: cover, held 20% down); the shader is told
@@ -24,6 +39,7 @@ import { mountShaderCanvas, type ShaderCanvas } from "~/utils/shaderCanvas";
 const { t } = useI18n();
 
 const CAR = "/one-guarantee-page/car.webp";
+const RINGS = "/one-guarantee-page/masks/car-rings.png";
 // Where the lanes meet, in the picture (x right, y up; just off its left edge).
 const VANISH: [number, number] = [-0.06, 0.59];
 const FLOW = 1;
@@ -32,14 +48,32 @@ const FLOW = 1;
 // its foot, not the sky the heading stands in.
 const PICTURE_RATIO = 2;
 const PICTURE_HOLD = 0.2;
+// The tyres' green rings, measured on the picture (1774 x 887; x right, y up,
+// as shares of its width and height): the rear wheel, the near front one, the
+// far front one.
+const WHEELS: Array<[number, number, number, number]> = [
+  [0.2926, 0.5006, 0.0066, 0.0583],
+  [0.3929, 0.4679, 0.0121, 0.0814],
+  [0.6561, 0.5039, 0.0176, 0.055],
+];
+// Turns of the lights round a ring each second.
+const WHEEL_TURNS = 0.85;
+// How much of the ring's light is taken away between the lights.
+const RING_DIM = 0.64;
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
 const FRAGMENT = `
 uniform sampler2D uImage;
+uniform sampler2D uRings;
 uniform vec2 uVanish;
 uniform float uFlow;
 uniform vec2 uCrop;
+uniform vec4 uWheelA;
+uniform vec4 uWheelB;
+uniform vec4 uWheelC;
+uniform float uTurns;
+uniform float uDim;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -52,6 +86,15 @@ float noise(vec2 p) {
   vec2 f = fract(p);
   f = f * f * (3. - 2. * f);
   return mix(mix(hash(i), hash(i + vec2(1., 0.)), f.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), f.x), f.y);
+}
+
+// The two lights with tails running round a wheel's ring (clockwise: the
+// head goes towards smaller angles), about that wheel only.
+float wheel(vec2 uv, vec4 ring) {
+  vec2 d = (uv - ring.xy) / ring.zw;
+  float turn = atan(d.y, d.x) / 6.2831853;
+  float g = fract(turn * 2. + uTime * uTurns * 2.);
+  return step(length(d), 1.7) * pow(1. - g, 2.2) * smoothstep(0., .05, g);
 }
 
 void main() {
@@ -91,7 +134,16 @@ void main() {
   // Nearer the camera (farther from the vanishing point): brighter.
   float near = smoothstep(0., .9, r);
   vec3 col = (img * 1.5 + vec3(.05, .35, .1)) * glow * light * car * (.5 + .8 * near);
-  gl_FragColor = vec4(col, 1.);
+
+  // The wheels' rings: dimmed between the lights; a light gives the ring back
+  // and burns white at its head.
+  float ring = smoothstep(.1, .6, texture2D(uRings, uv).r);
+  float lit = wheel(uv, uWheelA) + wheel(uv, uWheelB) + wheel(uv, uWheelC);
+  float dim = uDim * ring * (1. - smoothstep(0., .5, lit));
+  col += vec3(.7, 1., .75) * ring * pow(lit, 2.4) * 1.5;
+
+  // Added as "screen" would add it; alpha takes the picture away under it.
+  gl_FragColor = vec4(min(col, 1.) * (1. - img), clamp(dim, 0., 1.));
 }
 `;
 
@@ -105,11 +157,20 @@ onMounted(() => {
   shader = mountShaderCanvas(element, {
     fragment: FRAGMENT,
     maxDpr: 1.5,
-    textures: { uImage: texture },
+    textures: { uImage: texture, uRings: RINGS },
     uniforms: () => {
       // A box wider than the picture shows only part of its height.
       const shown = Math.min(1, PICTURE_RATIO / (element.clientWidth / Math.max(1, element.clientHeight)));
-      return { uVanish: VANISH, uFlow: FLOW, uCrop: [shown, (1 - PICTURE_HOLD) * (1 - shown)] };
+      return {
+        uVanish: VANISH,
+        uFlow: FLOW,
+        uCrop: [shown, (1 - PICTURE_HOLD) * (1 - shown)],
+        uWheelA: WHEELS[0]!,
+        uWheelB: WHEELS[1]!,
+        uWheelC: WHEELS[2]!,
+        uTurns: WHEEL_TURNS,
+        uDim: RING_DIM,
+      };
     },
   });
 });
@@ -125,7 +186,7 @@ onBeforeUnmount(() => {
     <div class="og-speed__frame">
       <div class="og-speed__copy">
         <h2 v-blur-reveal class="og-speed__title type-display-s">{{ t("oneGuarantee.speed.title") }}</h2>
-        <p v-rise class="og-speed__sub type-h3">{{ t("oneGuarantee.speed.sub") }}</p>
+        <p v-rise class="og-speed__sub type-h3 ob-green">{{ t("oneGuarantee.speed.sub") }}</p>
       </div>
 
       <div class="og-speed__picture">
@@ -205,7 +266,6 @@ onBeforeUnmount(() => {
   inset: 0;
   width: 100%;
   height: 100%;
-  mix-blend-mode: screen;
   pointer-events: none;
 }
 

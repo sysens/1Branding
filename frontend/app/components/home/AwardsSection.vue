@@ -56,7 +56,7 @@ const subtitle = computed(() => t("home.awards.subtitle") || "for the brands we 
     <header class="awards-section__heading">
       <h2 id="awards-title">
         <span v-blur-reveal class="awards-section__year">{{ `${year} ` }}</span>
-        <span v-blur-reveal class="awards-section__title">{{ title }}</span>
+        <span v-blur-reveal class="awards-section__title ob-green">{{ title }}</span>
       </h2>
       <p v-blur-reveal>{{ subtitle }}</p>
     </header>

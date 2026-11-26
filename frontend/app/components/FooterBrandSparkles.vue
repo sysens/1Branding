@@ -5,7 +5,7 @@ import Sparkles from "~/components/ui/Sparkles.vue";
 <template>
   <div class="footer-brand-sparkles">
     <h2 class="footer-brand-sparkles__title">
-      <span>One</span>branding
+      <span class="ob-green">One</span>branding
     </h2>
 
     <div class="footer-brand-sparkles__stage" aria-hidden="true">

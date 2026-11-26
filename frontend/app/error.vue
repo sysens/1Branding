@@ -17,7 +17,7 @@ const goHome = () => clearError({ redirect: localePath("/") });
 
 <template>
   <main class="error-page">
-    <p class="error-page__code">{{ error?.statusCode || 500 }}</p>
+    <p class="error-page__code ob-green">{{ error?.statusCode || 500 }}</p>
     <h1 class="error-page__title">
       {{ notFound ? t("errorPage.notFoundTitle") : t("errorPage.title") }}
     </h1>

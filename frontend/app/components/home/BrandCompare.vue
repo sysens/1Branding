@@ -38,7 +38,7 @@ const go = (step: 1 | -1) => {
   <section class="compare-section" aria-labelledby="compare-title" aria-roledescription="carousel">
     <h2 id="compare-title" class="compare-section__title">
       <span v-blur-reveal>{{ `${t("home.compare.titleFirst")} ` }}</span>
-      <span v-blur-reveal>{{ t("home.compare.titleLead") }}<span class="compare-section__accent">{{ t("home.compare.titleAccent") }}</span></span>
+      <span v-blur-reveal>{{ t("home.compare.titleLead") }}<span class="compare-section__accent ob-green">{{ t("home.compare.titleAccent") }}</span></span>
     </h2>
     <p v-rise class="compare-section__hint">{{ t("home.compare.hint") }}</p>
 

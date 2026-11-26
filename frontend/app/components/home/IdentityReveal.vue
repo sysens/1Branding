@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
             v-for="(word, wordIndex) in line"
             :key="word.index"
             class="identity__word"
-            :class="`identity__word--${word.tone}`"
+            :class="[`identity__word--${word.tone}`, { 'ob-green ob-green--tails': word.tone === 'accent' }]"
             data-blur-reveal="manual"
           >{{ wordIndex < line.length - 1 ? `${word.text} ` : word.text }}</span>
         </span>
@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
           v-for="(word, wordIndex) in layout.paragraph"
           :key="word.index"
           class="identity__word"
-          :class="`identity__word--${word.tone}`"
+          :class="[`identity__word--${word.tone}`, { 'ob-green ob-green--tails': word.tone === 'accent' }]"
           data-blur-reveal="manual"
         >{{ wordIndex < layout.paragraph.length - 1 ? `${word.text} ` : word.text }}</span>
       </p>

@@ -49,7 +49,7 @@ const onLeave = (element: Element, done: () => void) => {
 <template>
   <section class="faq" aria-labelledby="faq-title">
     <h2 id="faq-title" v-blur-reveal class="faq__title">
-      {{ t("home.faq.titleLead") }} <span class="faq__green">{{ t("home.faq.titleAccent") }}</span>
+      {{ t("home.faq.titleLead") }} <span class="faq__green ob-green">{{ t("home.faq.titleAccent") }}</span>
     </h2>
 
     <ul class="faq__list">

@@ -77,11 +77,8 @@ onBeforeUnmount(() => {
 <template>
   <section class="social" aria-labelledby="social-title">
     <h2 id="social-title" class="social__title">
-      <span v-blur-reveal class="social__one">{{ `${t("home.social.one")} ` }}</span>
-      <span v-blur-reveal class="social__rest">
-        <span class="social__brand">{{ `${t("home.social.brand")} ` }}</span>
-        <span class="social__language">{{ t("home.social.visual") }} <span class="social__accent">{{ t("home.social.language") }}</span></span>
-      </span>
+      <span v-blur-reveal class="social__line"><span class="ob-green">{{ t("home.social.one") }}</span> {{ `${t("home.social.brand")} ` }}</span>
+      <span v-blur-reveal class="social__line">{{ t("home.social.visual") }} <span class="ob-green">{{ t("home.social.language") }}</span></span>
     </h2>
     <div class="social__copy">
       <p v-rise>{{ t("home.social.text") }} <strong>{{ t("home.social.textStrong") }}</strong></p>
@@ -115,62 +112,34 @@ onBeforeUnmount(() => {
   color: #fff;
 }
 
-/* ONE spans both lines; BRAND. on top, VISUAL LANGUAGE. under it. Steps:
-   ONE display-l, BRAND. display-s, VISUAL LANGUAGE. h2 (h1 / h4 on phones,
-   where the fluid steps would make the right column twice ONE's height).
-   Uppercase, so caps tracking on each line. The tight line heights (0.74 /
-   0.8) stay: the composition is three lines locked into ONE's height. The
-   right column is stretched to ONE's height and its lines pushed to the top
-   and bottom, so BRAND. starts at ONE's top and VISUAL LANGUAGE. ends on its
-   baseline at every step size. */
+/* Two centred lines of one size: ONE BRAND. over VISUAL LANGUAGE. (ONE used
+   to stand two lines tall beside the rest.) The display-s step, or smaller
+   where the longer line would not fit the screen: that line is about --fit of
+   its own size wide (the Russian one is the longest). Uppercase, so caps
+   tracking and a tight line height. */
 .social__title {
+  --fit: 10.2;
   display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0.035em;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
   margin: 0;
   padding-inline: 1.25rem;
   font-family: var(--app-font-display);
-  font-size: var(--type-display-l-size);
+  font-size: min(var(--type-display-s-size), (100vw - 2.5rem) / var(--fit));
   font-weight: 700;
-  line-height: 0.74;
+  line-height: 0.9;
   letter-spacing: var(--type-caps-ls);
+  text-align: center;
 }
 
-.social__one {
-  padding-block: 0.02em;
-  background: linear-gradient(100deg, #00c92f 0%, #00f83c 30%, #00d634 62%, #009b2c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.social__title:lang(ru) {
+  --fit: 11.3;
 }
 
-.social__rest {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.02em;
-  padding-top: 0.005em;
-}
-
-.social__brand {
-  font-size: var(--type-display-s-size);
-  line-height: 0.74;
-  letter-spacing: var(--type-caps-ls);
-}
-
-.social__language {
-  font-size: var(--type-h2-size);
-  line-height: 0.8;
-  letter-spacing: var(--type-caps-ls);
+.social__line {
+  display: block;
   white-space: nowrap;
-}
-
-.social__accent {
-  background: linear-gradient(90deg, #00e536, #00b52e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 /* Running text: the intro step, as the landing's other section texts,
@@ -263,20 +232,6 @@ onBeforeUnmount(() => {
   .social {
     --col: 44vw;
     --gap: 1.6vw;
-  }
-
-  .social__language {
-    white-space: normal;
-  }
-}
-
-@media (max-width: 599px) {
-  .social__brand {
-    font-size: var(--type-h1-size);
-  }
-
-  .social__language {
-    font-size: var(--type-h4-size);
   }
 }
 </style>

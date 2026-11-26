@@ -62,7 +62,7 @@ const cards = computed(() => {
       <p v-blur-reveal class="og-promise__mistake type-h1">
         <span>{{ t("oneGuarantee.promise.mistake1") }}</span>
         {{ " " }}
-        <span class="og-promise__mistake-accent">{{ t("oneGuarantee.promise.mistake2") }}</span>
+        <span class="og-promise__mistake-accent ob-green ob-green--tails">{{ t("oneGuarantee.promise.mistake2") }}</span>
       </p>
       <p v-rise class="og-promise__closing-note type-intro">
         {{ t("oneGuarantee.promise.mistakeNote") }}

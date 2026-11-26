@@ -93,9 +93,16 @@ const letters = (text: string) => [...text].map((char) => (char === " " ? " " :
 const leadLetters = computed(() => letters(heroCopy.value.leadText));
 const mainLetters = computed(() => letters(heroCopy.value.mainText));
 
-// "Scroll" hint at the hero's foot; it leaves once the page has moved.
+// The "Scroll" cue beside the slogan; it leaves once the page has moved. A
+// click on it goes one screen down (with the site's smooth scroll where it runs).
 const scrolled = ref(false);
 const onScroll = () => { scrolled.value = window.scrollY > 40; };
+const lenis = useNuxtApp().$lenis as { scrollTo?: (target: number, options?: object) => void } | undefined;
+const scrollOn = () => {
+  const target = Math.round(window.innerHeight * 0.92);
+  if (lenis?.scrollTo) lenis.scrollTo(target);
+  else window.scrollTo({ top: target, behavior: "smooth" });
+};
 onMounted(() => {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -136,15 +143,19 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
           >{{ char }}</span>{{ " " }}</span>
 
           <span class="hero-slogan__tagline" lang="en">
-            <span v-for="(part, index) in heroCopy.taglineParts" :key="part" class="hero-slogan__part" :style="{ '--i': index }">{{ `${part} ` }}</span>
+            <span v-for="(part, index) in heroCopy.taglineParts" :key="part" class="hero-slogan__part ob-green" :style="{ '--i': index }">{{ `${part} ` }}</span>
           </span>
         </h1>
       </div>
-    </div>
 
-    <div class="hero-scroll" :class="{ 'is-hidden': scrolled }" aria-hidden="true">
-      <span class="hero-scroll__line" />
-      <span class="hero-scroll__label">{{ $t("home.scrollHint") }}</span>
+      <!-- The scroll cue: a mouse with its wheel turning, the word, an arrow. -->
+      <button type="button" class="hero-scroll" :class="{ 'is-hidden': scrolled }" :tabindex="scrolled ? -1 : 0" @click="scrollOn">
+        <span class="hero-scroll__mouse" aria-hidden="true"><i /></span>
+        <span class="hero-scroll__label">{{ $t("home.scrollHint") }}</span>
+        <svg class="hero-scroll__arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -419,85 +430,120 @@ onBeforeUnmount(() => window.removeEventListener("scroll", onScroll));
   }
 }
 
-/* "Scroll": a thin line with a light running down it, beside the slogan's
-   bottom right; it fades in after the slogan and away once the page moves. */
+/* The scroll cue: a dark glass pill ringed in green, so it reads over the
+   logo wall, with a mouse whose wheel runs down, the word and an arrow that
+   nods. On desktop it stands at the slogan's foot, at the content frame's
+   right edge; on phones, where the slogan fills the foot of the screen, just
+   above the slogan on the right. It fades in after the slogan and away once
+   the page moves. */
 .leading-page-shell {
   position: relative;
 }
 
 .hero-scroll {
   position: absolute;
-  /* At the content frame's right edge on screens wider than it. */
   right: calc(clamp(1.25rem, calc(2.4 * var(--fvw)), 3rem) + var(--frame-side));
-  bottom: calc(3.5svh + 0.375rem);
+  bottom: 0.375rem;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
   gap: 0.625rem;
-  color: rgb(255 255 255 / 0.6);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  padding: 0.5rem 0.875rem 0.5rem 0.625rem;
+  border: 1px solid rgb(32 232 72 / 0.5);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.6);
+  box-shadow: 0 0 1.5rem rgb(32 232 72 / 0.28), inset 0 0 0.75rem rgb(32 232 72 / 0.08);
+  color: #fff;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-scroll:hover,
+.hero-scroll:focus-visible {
+  border-color: #20e848;
+  box-shadow: 0 0 2rem rgb(32 232 72 / 0.45), inset 0 0 0.75rem rgb(32 232 72 / 0.12);
+  outline: none;
 }
 
 .hero-scroll.is-hidden {
   opacity: 0;
+  pointer-events: none;
   transform: translateY(0.5rem);
 }
 
-.hero-scroll__line {
+/* The mouse: its wheel is a green dash running down and fading. */
+.hero-scroll__mouse {
   position: relative;
-  width: 1px;
-  height: 3.5rem;
-  overflow: hidden;
-  background: rgb(255 255 255 / 0.18);
+  display: block;
+  flex: none;
+  width: 1.125rem;
+  height: 1.75rem;
+  border: 1.5px solid rgb(255 255 255 / 0.85);
+  border-radius: 0.625rem;
 }
 
-.hero-scroll__line::after {
+.hero-scroll__mouse i {
   position: absolute;
-  left: 0;
-  width: 100%;
-  height: 40%;
-  background: linear-gradient(to bottom, transparent, #20e848);
+  top: 0.3125rem;
+  left: 50%;
+  width: 0.1875rem;
+  height: 0.375rem;
+  margin-left: -0.09375rem;
+  border-radius: 0.125rem;
+  background: #20e848;
   box-shadow: 0 0 0.375rem #20e848;
-  content: "";
-  transform: translateY(-100%);
 }
 
-/* The label step, set vertically. */
 .hero-scroll__label {
   font-family: var(--app-font-sans);
   font-size: var(--type-label-size);
   font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  writing-mode: vertical-rl;
 }
 
-/* The entrance is on the parts, so the container's own opacity transition
-   (hiding on scroll) is not held by a finished animation. */
+.hero-scroll__arrow {
+  flex: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #20e848;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .hero-scroll > * {
+  .hero-scroll {
     animation: hero-scroll-in 0.8s ease 1.8s both;
   }
 
-  .hero-scroll__line::after {
-    animation: hero-scroll-run 1.8s cubic-bezier(0.6, 0, 0.3, 1) 2.2s infinite;
+  .hero-scroll__mouse i {
+    animation: hero-scroll-wheel 1.6s cubic-bezier(0.5, 0, 0.3, 1) 2.2s infinite;
+  }
+
+  .hero-scroll__arrow {
+    animation: hero-scroll-nod 1.6s ease-in-out 2.2s infinite;
   }
 }
 
 @keyframes hero-scroll-in {
-  from { opacity: 0; transform: translateY(-0.5rem); }
+  from { opacity: 0; }
 }
 
-@keyframes hero-scroll-run {
-  0% { transform: translateY(-100%); }
-  70%, 100% { transform: translateY(260%); }
+@keyframes hero-scroll-wheel {
+  0% { opacity: 1; transform: translateY(0); }
+  70%, 100% { opacity: 0; transform: translateY(0.625rem); }
+}
+
+@keyframes hero-scroll-nod {
+  0%, 100% { transform: translateY(-0.125rem); }
+  50% { transform: translateY(0.1875rem); }
 }
 
 @media (max-width: 767px) {
   .hero-scroll {
-    display: none;
+    right: 1rem;
+    bottom: calc(100% + 0.875rem);
   }
 }
 

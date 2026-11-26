@@ -134,12 +134,12 @@ export const organizationGraph = (origin: string, locale: SeoLocale, contact: Or
       slogan: "Design is how it works",
       address: {
         "@type": "PostalAddress",
-        streetAddress: `${address.street}, ${address.district}`,
+        streetAddress: address.street,
         addressLocality: address.city,
         addressRegion: address.city,
-        postalCode: COMPANY.postalCode,
         addressCountry: COMPANY.country,
       },
+      geo: { "@type": "GeoCoordinates", ...COMPANY.geo },
       hasMap: COMPANY_MAP_URL,
       priceRange: COMPANY.priceRange,
       areaServed: [

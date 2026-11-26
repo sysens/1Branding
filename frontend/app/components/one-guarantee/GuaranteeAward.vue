@@ -1,9 +1,11 @@
 <script setup lang="ts">
 // "Brand of the Year 2023": the award on its stand to the right, the lines
-// about it on the left. On phones the picture stands over the text.
+// about it on the left, the page's call to action under them. On phones the
+// picture stands over the text.
 import OptImage from "~/components/ui/OptImage.vue";
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 </script>
 
 <template>
@@ -22,13 +24,16 @@ const { t } = useI18n();
     <div class="og-award__copy">
       <p v-rise class="og-award__lines type-h4">
         <span>{{ t("oneGuarantee.award.line1") }}</span>
-        <span class="og-award__lines-accent">{{ t("oneGuarantee.award.line2") }}</span>
+        <span class="og-award__lines-accent ob-green">{{ t("oneGuarantee.award.line2") }}</span>
       </p>
       <h2 class="og-award__title">
         <span v-rise class="og-award__name type-h3 type-caps">{{ t("oneGuarantee.award.title") }}</span>
-        <span v-blur-reveal class="og-award__year type-display-l og-grad">{{ t("oneGuarantee.award.year") }}</span>
+        <span v-blur-reveal class="og-award__year type-display-l og-grad ob-green">{{ t("oneGuarantee.award.year") }}</span>
       </h2>
       <p v-rise class="og-award__note type-h4">{{ t("oneGuarantee.award.note") }}</p>
+      <p v-rise class="og-award__action">
+        <NuxtLink :to="localePath('/contact')" class="ob-button og-button og-button--caps">{{ t("oneGuarantee.cta.button") }}</NuxtLink>
+      </p>
     </div>
   </section>
 </template>
@@ -127,6 +132,12 @@ const { t } = useI18n();
   margin: clamp(0.5rem, 1 * var(--fvw), 1.2rem) 0 0;
 }
 
+/* The button under the note, at the copy's left edge (centred on phones). */
+.og-award__action {
+  display: flex;
+  margin: clamp(1.5rem, 2.6 * var(--fvw), 3rem) 0 0;
+}
+
 /* Phones: the award over the copy, which is centred. */
 @media (max-width: 767px) {
   .og-award {
@@ -158,6 +169,10 @@ const { t } = useI18n();
 
   .og-award__year {
     margin-inline: auto;
+  }
+
+  .og-award__action {
+    justify-content: center;
   }
 }
 </style>

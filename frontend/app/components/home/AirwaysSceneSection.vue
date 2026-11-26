@@ -31,7 +31,7 @@ const sceneVars = computed(() => {
 <template>
   <section id="airways-scene" ref="targetRef" class="airways-scene" aria-labelledby="airways-title">
     <h2 id="airways-title" class="airways-scene__title">
-      <span v-blur-reveal class="airways-scene__strong">{{ `${t("home.airways.strong")} ` }}</span>
+      <span v-blur-reveal class="airways-scene__strong ob-green">{{ `${t("home.airways.strong")} ` }}</span>
       <span v-blur-reveal class="airways-scene__rest">
         <span>{{ `${t("home.airways.rest1")} ` }}</span>
         <span>{{ t("home.airways.rest2") }}</span>

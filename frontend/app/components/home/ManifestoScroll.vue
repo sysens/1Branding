@@ -20,9 +20,21 @@ const MESSAGES: Segment[][][] = [
   [[{ key: "m3Line1", accent: true }], [{ key: "m3Line2" }]],
 ];
 
+// The first statement does not wait for the screen to be pinned: it comes in
+// while the white screen is still rising into view (between ENTER's two points
+// of that rise: 0 as the screen's top reaches the foot of the window, 1 as it
+// reaches the top), and it rises ahead of the screen (ENTER_LEAD, % of the
+// screen's height, at the start of the rise; none once pinned), so the white
+// never stands empty: with the screen 40% up, the statement is already in
+// view. (It used to start only once pinned, and a third of a screen of scroll
+// showed nothing but white.) Pinned, it stands in the middle and drifts up
+// as it leaves.
+//
 // Share of a statement's slice of the scroll spent fading in (and out again),
 // its blur at the edges of that slice and how far it travels across it (% of
 // the screen height): the reference's values.
+const ENTER: [number, number] = [0.12, 0.5];
+const ENTER_LEAD = 42;
 const FADE = 0.3;
 const BLUR_PX = 10;
 const SHIFT_PERCENT = 14;
@@ -55,7 +67,9 @@ const render = () => {
   const view = screen.value?.offsetHeight || window.innerHeight;
   // The statements play over the scroll before the held screens.
   const distance = section.offsetHeight - view * (1 + props.hold);
-  const scrolled = -section.getBoundingClientRect().top;
+  const top = section.getBoundingClientRect().top;
+  const scrolled = -top;
+  const entered = clamp01(1 - top / view);
   const progress = distance > 0 ? clamp01(scrolled / distance) : 0;
   const held = props.hold > 0 ? clamp01((scrolled - distance) / (view * props.hold)) : 0;
   const t = ramp(held, ...DISSOLVE);
@@ -63,13 +77,16 @@ const render = () => {
   messages.forEach((message, index) => {
     const local = progress * MESSAGES.length - index;
     const last = index === MESSAGES.length - 1;
-    // The last statement fades in and rises to the middle, then stays.
-    const shown = last ? ramp(local, 0, FADE) : Math.min(ramp(local, 0, FADE), 1 - ramp(local, 1 - FADE, 1));
+    // The first statement fades in with the screen's rise, the others over
+    // the start of their slice. The last one rises to the middle, then stays.
+    const fadeIn = index === 0 ? ramp(entered, ...ENTER) : ramp(local, 0, FADE);
+    const shown = last ? fadeIn : Math.min(fadeIn, 1 - ramp(local, 1 - FADE, 1));
     const travel = last ? Math.min(clamp01(local), 0.5) : clamp01(local);
     const blur = (1 - shown) * BLUR_PX + (last ? gone * BLUR_PX : 0);
     message.style.opacity = String(shown);
     message.style.filter = blur > 0 ? `blur(${blur.toFixed(2)}px)` : "none";
-    message.style.transform = `translate3d(0, ${(SHIFT_PERCENT - travel * 2 * SHIFT_PERCENT).toFixed(2)}%, 0)`;
+    const offset = index === 0 ? -(1 - entered) * ENTER_LEAD - travel * SHIFT_PERCENT : SHIFT_PERCENT - travel * 2 * SHIFT_PERCENT;
+    message.style.transform = `translate3d(0, ${offset.toFixed(2)}%, 0)`;
   });
   if (bar.value) bar.value.style.transform = `scaleX(${progress.toFixed(4)})`;
   if (track.value) track.value.style.opacity = (1 - ramp(progress, ...BAR_FADE)).toFixed(3);
@@ -116,7 +133,7 @@ onBeforeUnmount(() => {
         :key="index"
         class="manifesto__message"
       >
-        <span v-for="(line, lineIndex) in lines" :key="lineIndex" class="manifesto__line">
+        <span v-for="(line, lineIndex) in lines" :key="lineIndex" class="manifesto__line ob-green">
           <template v-for="(segment, segmentIndex) in line" :key="segment.key">
             {{ segmentIndex ? " " : "" }}<span :class="{ 'manifesto__ink': !segment.accent }">{{ $t(`home.manifesto.${segment.key}`) }}</span>
           </template>

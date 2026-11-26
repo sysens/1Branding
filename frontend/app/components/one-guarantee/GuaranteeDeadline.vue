@@ -31,10 +31,10 @@ const LIGHTNING = { tone: "3 203 0", core: "201 255 191", spark: "125 255 107", 
     <h2 v-blur-reveal class="og-deadline__title type-h1">
       <span>{{ t("oneGuarantee.market.line1") }}</span>
       {{ " " }}
-      <span class="og-grad">{{ t("oneGuarantee.market.line2") }}</span>
+      <span class="og-grad ob-green">{{ t("oneGuarantee.market.line2") }}</span>
     </h2>
     <p v-rise class="og-deadline__note type-h5">
-      <span class="og-deadline__note-accent">{{ t("oneGuarantee.market.noteAccent") }}</span>
+      <span class="og-deadline__note-accent ob-green">{{ t("oneGuarantee.market.noteAccent") }}</span>
       {{ t("oneGuarantee.market.note") }}
     </p>
 
@@ -47,7 +47,7 @@ const LIGHTNING = { tone: "3 203 0", core: "201 255 191", spark: "125 255 107", 
         <div class="og-offer__top">
           <h3 class="og-offer__title type-h4">
             {{ t("oneGuarantee.market.boxTitle") }}
-            <span class="og-offer__title-accent">{{ t("oneGuarantee.market.boxTitleAccent") }}</span>
+            <span class="og-offer__title-accent ob-green">{{ t("oneGuarantee.market.boxTitleAccent") }}</span>
           </h3>
           <ul v-for="(column, index) in columns" :key="index" class="og-offer__list type-small">
             <li v-for="item in column" :key="item">

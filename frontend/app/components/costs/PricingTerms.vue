@@ -60,7 +60,7 @@ const toggle = (event: MouseEvent) => {
         :dpr="1.5"
       />
       <header class="price-terms__head">
-        <h2 id="price-terms-title" class="price-terms__title price-title">{{ t("pricing.terms.title") }}</h2>
+        <h2 id="price-terms-title" class="price-terms__title price-title ob-green">{{ t("pricing.terms.title") }}</h2>
         <p class="price-terms__eyebrow">{{ t("pricing.terms.eyebrow") }}</p>
       </header>
     </div>

@@ -23,7 +23,7 @@ const localePath = useLocalePath();
 <template>
   <section class="fresh" aria-labelledby="fresh-title">
     <h2 id="fresh-title" v-blur-reveal class="fresh__title">
-      <span class="fresh__green">{{ t("home.fresh.accent") }}</span> {{ t("home.fresh.rest") }}
+      <span class="fresh__green ob-green">{{ t("home.fresh.accent") }}</span> {{ t("home.fresh.rest") }}
     </h2>
 
     <div class="fresh__rows" aria-hidden="true">

@@ -37,10 +37,10 @@
             {{ $t("nav.contacts") }}
           </a>
 
-          <!-- The language switcher: the trigger is a nav item showing the
-               current language's flag; the list, a dark glass panel, shows
-               each language's flag, its own name and a check on the current one.
-               Escape or a click outside closes it. -->
+          <!-- The language switcher: the trigger is a nav item showing a
+               globe (no flags: a language is not a country); the list, a dark
+               glass panel, shows each language's code, its own name and a
+               check on the current one. Escape or a click outside closes it. -->
           <div ref="langRoot" class="lang-switch" @keydown.esc="closeDeskLang(true)" @focusout="onLangFocusOut">
             <button
               ref="langTrigger"
@@ -54,7 +54,10 @@
               @keydown.down.prevent="openDeskLang"
               @keydown.up.prevent="openDeskLang"
             >
-              <span class="lang-switch__flag"><LangFlag :code="lang" /></span>
+              <svg class="lang-switch__globe" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" />
+                <path d="M3 12h18M12 3c2.6 2.5 3.9 5.5 3.9 9s-1.3 6.5-3.9 9c-2.6-2.5-3.9-5.5-3.9-9s1.3-6.5 3.9-9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+              </svg>
               <svg class="lang-switch__chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
                 <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
               </svg>
@@ -75,7 +78,7 @@
                   :aria-current="code === lang ? 'true' : undefined"
                   @click="onLangLink($event, code)"
                 >
-                  <span class="lang-switch__code"><LangFlag :code="code" /></span>
+                  <span class="lang-switch__code" aria-hidden="true">{{ code }}</span>
                   <span class="lang-switch__name">{{ LANGUAGE_NAMES[code] }}</span>
                   <svg class="lang-switch__check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
                     <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
@@ -205,7 +208,7 @@
               class="type-h4 block py-[1.4375rem] p-[1.25rem] text-white"
               @click="onNav($event, localePath('/one-guarantee'))"
             >
-              <span class="text-[#03CB00]">{{ $t("brand.one") }}</span>
+              <span class="ob-green">{{ $t("brand.one") }}</span>
               {{ $t("brand.oneGuaranteeSuffix") }}
             </a>
 
@@ -238,7 +241,10 @@
                     @click="isLangOpen = !isLangOpen"
                   >
                     <span class="flex items-center gap-[0.75rem]">
-                      <span class="block w-[1.75rem] h-[1.1667rem] overflow-hidden rounded-[0.25rem]"><LangFlag :code="lang" /></span>
+                      <svg class="w-[1.5rem] h-[1.5rem] flex-none" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" />
+                        <path d="M3 12h18M12 3c2.6 2.5 3.9 5.5 3.9 9s-1.3 6.5-3.9 9c-2.6-2.5-3.9-5.5-3.9-9s1.3-6.5 3.9-9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                      </svg>
                       {{ LANGUAGE_NAMES[lang] }}
                     </span>
                     <svg
@@ -278,7 +284,7 @@
                           :aria-current="code === lang ? 'true' : undefined"
                           @click="onLangLink($event, code)"
                         >
-                          <span class="block w-[1.75rem] h-[1.1667rem] overflow-hidden rounded-[0.25rem]"><LangFlag :code="code" /></span>
+                          <span class="w-[1.75rem] flex-none text-[0.8125rem] font-semibold uppercase tracking-[0.04em] text-white/50" aria-hidden="true">{{ code }}</span>
                           {{ LANGUAGE_NAMES[code] }}
                         </a>
                       </template>
@@ -299,7 +305,6 @@
 import { watch, onMounted, onBeforeUnmount, nextTick, computed, ref } from "vue";
 import HeaderServicesMenu from "~/components/HeaderServicesMenu.vue";
 import { LANGUAGE_NAMES, SITE_LOCALES, toSiteLocale, type SiteLocale } from "~/utils/locales";
-import LangFlag from "~/components/ui/LangFlag.vue";
 import { serviceBySlug, servicePath } from "~/utils/servicePages";
 
 type AppLocale = SiteLocale;
@@ -596,23 +601,20 @@ onBeforeUnmount(() => {
 /* The OneGuarantee pill's look (.site-guarantee) is in
    assets/css/guarantee-pill.css: the footer's button wears it too. */
 
-/* The language switcher: the trigger is a nav item (green with its chevron
-   turned while open); the list is a dark glass panel under the header, each
-   option showing its flag, its own name and a check on the current one. The
-   options come in one after another as it opens. */
+/* The language switcher: the trigger is a nav item, a globe (green with its
+   chevron turned while open); the list is a dark glass panel under the
+   header, each option showing its code, its own name and a check on the
+   current one. The options come in one after another as it opens. */
 .lang-switch {
   position: relative;
 }
 
-/* The current language's flag, about the height of the nav's capitals. */
-.lang-switch__flag {
+/* The globe, a little taller than the nav's capitals. */
+.lang-switch__globe {
   display: block;
   flex: none;
-  width: 1.3125rem;
-  height: 0.875rem;
-  overflow: hidden;
-  border-radius: 0.1875rem;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .lang-switch__chevron {
@@ -682,19 +684,20 @@ onBeforeUnmount(() => {
   color: #fff;
 }
 
-/* Each language's flag, a little dimmed but on the current one (ringed in
-   green) and the one under the pointer. */
+/* Each language's code (EN, RU, UZ), dimmed but on the current one (green)
+   and the one under the pointer. */
 .lang-switch__code {
   display: block;
   flex: none;
   width: 1.5rem;
-  height: 1rem;
-  overflow: hidden;
-  border-radius: 0.25rem;
   color: #9aa19c;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
   opacity: 0.8;
-  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .lang-switch__item:hover .lang-switch__code,
@@ -703,8 +706,8 @@ onBeforeUnmount(() => {
 }
 
 .lang-switch__item.is-active .lang-switch__code {
+  color: #03cb00;
   opacity: 1;
-  box-shadow: 0 0 0 1.5px #03cb00;
 }
 
 .lang-switch__name {

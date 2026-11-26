@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { COMPANY, COMPANY_ADDRESS, COMPANY_MAP_URL } from "~/utils/company";
+import { COMPANY_MAP_QUERY, COMPANY_MAP_URL } from "~/utils/company";
 
-// Google Maps' own embed (no key needed), searched by the office's street
-// address (utils/company.ts; no coordinates are made up here), and tinted dark
-// by a filter so it sits in the black page instead of a white hole.
+// Google Maps' own embed (no key needed), searched by the office's place and
+// street address (utils/company.ts), and tinted dark by a filter so it sits
+// in the black page instead of a white hole.
 const { t, locale } = useI18n();
 
-const mapSrc = computed(() => {
-  const query = `${COMPANY.name}, ${COMPANY_ADDRESS.en.street}, ${COMPANY_ADDRESS.en.city}`;
-  return `https://www.google.com/maps?q=${encodeURIComponent(query)}&hl=${locale.value}&z=16&output=embed`;
-});
+const mapSrc = computed(
+  () => `https://www.google.com/maps?q=${encodeURIComponent(COMPANY_MAP_QUERY)}&hl=${locale.value}&z=16&output=embed`
+);
 
 // The map ignores the wheel and touch until it is clicked, so scrolling the
 // page over it does not get stuck on the map; it lets go when the pointer leaves.

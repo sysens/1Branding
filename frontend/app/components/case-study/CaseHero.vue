@@ -12,7 +12,7 @@ defineProps<{ name: string; title: string; accent: string }>();
     <p class="case-hero__lines">
       <span v-if="title" class="case-hero__title"><span>{{ title }}</span></span>
       <span class="case-hero__accent" :class="{ 'case-hero__accent--alone': !title }">
-        <span>{{ title ? `& ${accent}` : accent }}</span>
+        <span class="ob-green">{{ title ? `& ${accent}` : accent }}</span>
       </span>
     </p>
   </header>

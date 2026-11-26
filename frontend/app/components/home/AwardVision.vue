@@ -21,7 +21,7 @@ const localePath = useLocalePath();
         <span v-blur-reveal>{{ t("home.vision.lineSecond") }}</span>
       </h2>
       <p v-blur-reveal class="vision__label">{{ t("home.vision.label") }}</p>
-      <p v-blur-reveal class="vision__year">{{ t("home.vision.year") }}</p>
+      <p v-blur-reveal class="vision__year ob-green">{{ t("home.vision.year") }}</p>
       <div v-rise class="vision__numeral">
         <OptImage
           src="/home/award/numeral.webp"

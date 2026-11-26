@@ -14,7 +14,7 @@ const { open } = useContactModal();
     <div class="contact-hero__content">
       <h2 id="contact-hero-title" v-blur-reveal class="contact-hero__title">
         <span class="contact-hero__line">{{ t("contacts.hero.titleFirst") }}</span>
-        <span class="contact-hero__line contact-hero__line--accent">{{ t("contacts.hero.titleSecond") }}</span>
+        <span class="contact-hero__line contact-hero__line--accent ob-green">{{ t("contacts.hero.titleSecond") }}</span>
       </h2>
       <p v-rise class="contact-hero__text">{{ t("contacts.hero.text") }}</p>
       <!-- The OneGuarantee pill's look (.site-guarantee, assets/css/guarantee-pill.css). -->

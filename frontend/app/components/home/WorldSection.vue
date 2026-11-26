@@ -11,7 +11,7 @@ const { t } = useI18n();
     <header class="world-section__heading">
       <h2 id="world-title">
         <span v-blur-reveal class="world-section__eyebrow">{{ `${t("home.world.eyebrow")} ` }}</span>
-        <span v-blur-reveal class="world-section__word">{{ t("home.world.word") }}</span>
+        <span v-blur-reveal class="world-section__word ob-green">{{ t("home.world.word") }}</span>
       </h2>
     </header>
     <!-- No reveal of its own: the globe (its picture until the 3D one is
@@ -22,7 +22,7 @@ const { t } = useI18n();
     </div>
     <h3 class="world-section__statement">
       <span v-blur-reveal class="world-section__lead">{{ `${t("home.world.lead")} ` }}</span>
-      <strong v-blur-reveal>{{ `${t("home.world.strong")} ` }}</strong>
+      <strong v-blur-reveal class="ob-green ob-green--tails">{{ `${t("home.world.strong")} ` }}</strong>
       <span v-blur-reveal class="world-section__closing">{{ t("home.world.closing") }}</span>
     </h3>
   </section>
@@ -55,7 +55,8 @@ const { t } = useI18n();
   .world-section { padding: 6rem 0 6rem; }
   .world-section__statement { margin-top: 1.5rem; padding-inline: 1.25rem; }
   .world-section__lead { max-width: 30rem; }
-  .world-section__statement strong { margin-block: 0.1em; }
+  /* Less under it by the room its letters' tails take (.ob-green--tails). */
+  .world-section__statement strong { margin-block: 0.1em -0.04em; }
   .world-section__word { margin-top: 0.05em; }
   .world-section__globe { height: auto; aspect-ratio: 1; margin-top: calc(-0.375 * var(--world-word)); }
 }

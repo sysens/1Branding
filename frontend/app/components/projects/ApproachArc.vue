@@ -221,7 +221,7 @@ const onKeydown = (event: KeyboardEvent) => {
         <h2>
           <span>{{ t("projectsPage.approach.line1") }}</span>
           {{ " " }}
-          <span class="approach__accent">{{ t("projectsPage.approach.line2") }}</span>
+          <span class="approach__accent ob-green ob-green--tails">{{ t("projectsPage.approach.line2") }}</span>
         </h2>
         <button
           type="button"

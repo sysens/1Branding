@@ -56,10 +56,10 @@ onBeforeUnmount(() => {
 
     <div class="og-designers__body">
       <p class="og-designers__figure">
-        <span class="og-designers__number type-display-xl" :data-text="t('oneGuarantee.designers.number')">
-          {{ t("oneGuarantee.designers.number") }}<span class="og-designers__plus" aria-hidden="true">+</span><span class="sr-only">+</span>
+        <span class="og-designers__count type-display-xl">
+          <span class="og-designers__number">{{ t("oneGuarantee.designers.number") }}</span><span class="og-designers__plus ob-green" aria-hidden="true">+</span><span class="sr-only">+</span>
         </span>
-        <span v-rise class="og-designers__word type-display-m og-grad" :style="{ '--chars': t('oneGuarantee.designers.word').length }">{{ t("oneGuarantee.designers.word") }}</span>
+        <span v-rise class="og-designers__word type-display-m og-grad ob-green" :style="{ '--chars': t('oneGuarantee.designers.word').length }">{{ t("oneGuarantee.designers.word") }}</span>
       </p>
       <p v-rise class="og-designers__text type-intro">{{ t("oneGuarantee.designers.text") }}</p>
     </div>
@@ -140,38 +140,31 @@ onBeforeUnmount(() => {
   margin: 0;
 }
 
-/* "500": an outline only, fading towards its foot, with a second, finer
-   outline just off it (the design's doubled line). */
-.og-designers__number {
+/* "500": one clean outline, fading towards its foot. (It had a second,
+   finer outline just off the first, which read as a doubled, frayed line.)
+   The "+" stands clear of the last zero, at its upper right, outside the
+   number's box: the number stays in the middle of the page, and the fade
+   (a mask on the number) does not reach the "+". */
+.og-designers__count {
   position: relative;
   display: inline-block;
+}
+
+.og-designers__number {
+  display: inline-block;
   color: transparent;
-  -webkit-text-stroke: 0.014em #0bf01f;
+  -webkit-text-stroke: 0.016em #17c241;
   -webkit-mask-image: linear-gradient(to bottom, #000 40%, rgb(0 0 0 / 0.35) 92%);
   mask-image: linear-gradient(to bottom, #000 40%, rgb(0 0 0 / 0.35) 92%);
 }
 
-.og-designers__number::before {
-  position: absolute;
-  top: 0.012em;
-  left: -0.008em;
-  color: transparent;
-  content: attr(data-text);
-  -webkit-text-stroke: 0.004em #45f55a;
-}
-
 .og-designers__plus {
   position: absolute;
-  top: 0.2em;
-  right: -0.04em;
-  background: linear-gradient(160deg, #19f03a 0%, #7fe6a0 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-size: 0.42em;
+  top: 0.08em;
+  left: calc(100% + 0.03em);
+  font-size: 0.34em;
   font-weight: 700;
   line-height: 1;
-  -webkit-text-stroke: 0;
 }
 
 /* "Designers" stands over the foot of the number. The word is as long as its

@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
     <div ref="inner" class="site-footer__inner">
       <p class="site-footer__headline">
         <span>{{ `${t("footerNew.headlineFirst")} ` }}</span>
-        <span>{{ t("footerNew.headlineLead") }} <span class="site-footer__green">{{ t("footerNew.headlineAccent") }}</span></span>
+        <span>{{ t("footerNew.headlineLead") }} <span class="site-footer__green ob-green">{{ t("footerNew.headlineAccent") }}</span></span>
       </p>
 
       <div class="site-footer__middle">
@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
 
       <div class="site-footer__bottom">
         <div>
-          <p class="site-footer__logo"><span class="site-footer__green">One</span>Branding</p>
+          <p class="site-footer__logo"><span class="site-footer__green ob-green">One</span>Branding</p>
           <p class="site-footer__tagline" lang="en">{{ t("footerNew.tagline") }}</p>
         </div>
         <address class="site-footer__contact">

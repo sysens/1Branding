@@ -37,7 +37,7 @@ const titleId = useId();
       <p class="case-statement__lines">
         <span v-for="(line, index) in lines" :key="index" class="case-statement__line">
           <template v-for="(part, at) in line" :key="at">
-            <span v-if="part.strong" class="case-statement__accent">{{ part.text }}</span>
+            <span v-if="part.strong" class="case-statement__accent ob-green">{{ part.text }}</span>
             <template v-else>{{ part.text }}</template>
           </template>
         </span>
@@ -45,7 +45,7 @@ const titleId = useId();
     </div>
 
     <div class="case-statement__system">
-      <h2 :id="titleId" class="case-statement__title"><span>{{ title }}</span></h2>
+      <h2 :id="titleId" class="case-statement__title"><span class="ob-green">{{ title }}</span></h2>
       <div class="case-statement__text">
         <p v-for="(parts, index) in paragraphs" :key="index">
           <template v-for="(part, at) in parts" :key="at">

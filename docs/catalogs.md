@@ -4,14 +4,14 @@ Kataloglar va xarita kartochkalari (Google, Yandex, 2GIS) Toshkentdagi qidiruv n
 
 ## 1. Asosiy qoida: hamma joyda bir xil
 
-Nom, manzil va telefon (NAP) saytdagi bilan harfma-harf bir xil bo'lsin. Google va Yandex ularni solishtiradi. Bir joyda "Amir Temur 18", boshqasida "Amir Temur ko'chasi, 18A" yozilsa, signal kuchsizlanadi.
+Nom, manzil va telefon (NAP) saytdagi bilan harfma-harf bir xil bo'lsin. Google va Yandex ularni solishtiradi. Bir joyda "Durmon 1", boshqasida "Durmon yo'li ko'chasi, 1" yozilsa, signal kuchsizlanadi.
 
 | Maydon | Qiymat |
 |---|---|
 | Nom | **OneBranding** (kalit so'z qo'shmang: "OneBranding brending agentligi Toshkent" deb yozish Google qoidasiga zid) |
-| Manzil (ru) | г. Ташкент, Шайхантахурский район, ул. Амира Темура, 18А, офис 5, 100047 |
-| Manzil (uz) | Toshkent sh., Shayxontohur tumani, Amir Temur ko'chasi, 18A, 5-ofis, 100047 |
-| Manzil (en) | 18A Amir Temur St., office 5, Shaykhantakhur district, Tashkent 100047, Uzbekistan |
+| Manzil (ru) | г. Ташкент, ул. Дурмон йули, 1, C-Space Park |
+| Manzil (uz) | Toshkent sh., Durmon yo'li ko'chasi, 1, C-Space Park |
+| Manzil (en) | C-Space Park, Durmon Road 1, Tashkent, Uzbekistan |
 | Telefon | +998 93 560 80 00 |
 | Sayt | https://onebrandingworld.com/ |
 | Ish vaqti | Dushanba–Juma 10:00–19:00 (Пн–Пт 10:00–19:00) |

@@ -22,7 +22,7 @@ const localePath = useLocalePath();
     </div>
     <div class="ceo-story__copy">
       <p v-rise>{{ t("aboutPage.ceo.story1") }}</p>
-      <p v-rise class="ceo-story__questions">
+      <p v-rise class="ceo-story__questions ob-green">
         <span>{{ t("aboutPage.ceo.questions1") }}</span>
         {{ " " }}
         <span>{{ t("aboutPage.ceo.questions2") }}</span>
@@ -32,7 +32,7 @@ const localePath = useLocalePath();
         <p v-rise class="ceo-story__ask">
           <span>{{ t("aboutPage.ceo.askLine1") }}</span>
           {{ " " }}
-          <span>{{ t("aboutPage.ceo.askLine2") }} <span class="ceo-story__accent">{{ t("aboutPage.ceo.askAccent") }}</span></span>
+          <span>{{ t("aboutPage.ceo.askLine2") }} <span class="ceo-story__accent ob-green">{{ t("aboutPage.ceo.askAccent") }}</span></span>
         </p>
         <NuxtLink v-rise :to="localePath('/contact')" class="ob-button ceo-story__button">{{ t("aboutPage.ceo.contact") }}</NuxtLink>
       </div>

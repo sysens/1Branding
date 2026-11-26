@@ -38,7 +38,7 @@ const toTop = () => {
 
     <h2 id="scroll-end-title" v-blur-reveal class="scroll-end__title">
       <span class="scroll-end__line">{{ t("contacts.scrollEnd.first") }}</span>
-      <span class="scroll-end__line scroll-end__line--accent">{{ t("contacts.scrollEnd.second") }}</span>
+      <span class="scroll-end__line scroll-end__line--accent ob-green">{{ t("contacts.scrollEnd.second") }}</span>
     </h2>
 
     <button v-rise type="button" class="scroll-end__button" @click="toTop">

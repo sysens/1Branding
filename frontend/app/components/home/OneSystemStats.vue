@@ -141,7 +141,7 @@ onBeforeUnmount(() => {
               v-for="char in word.chars"
               :key="char.index"
               class="stats__char"
-              :class="{ 'stats__char--accent': char.accent }"
+              :class="{ 'stats__char--accent ob-green ob-green--solid': char.accent }"
               :style="{ '--i': char.index }"
             >{{ char.char }}</span></span>{{ wordIndex < line.words.length - 1 ? " " : "" }}
           </template>

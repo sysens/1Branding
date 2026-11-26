@@ -64,7 +64,7 @@ usePageSeo({
         <h1 class="about-intro__title">
           <span>{{ t("aboutPage.hero.line1") }}</span>
           {{ " " }}
-          <span class="about-intro__accent">{{ t("aboutPage.hero.line2") }}</span>
+          <span class="about-intro__accent ob-green ob-green--tails">{{ t("aboutPage.hero.line2") }}</span>
         </h1>
         <p class="about-intro__text">{{ t("aboutPage.hero.intro") }}</p>
       </header>

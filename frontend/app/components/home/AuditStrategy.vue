@@ -7,30 +7,41 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 // turn and the connector after it fills toward the next one, a comet riding
 // its tip. The whole scene follows the same --progress (0..1, set on the
 // screen): a green aurora travels from A to B, a dot grid is revealed behind
-// the path and "to progress." turns green. Coordinates are the design's
-// (2000px frame), scaled by --u.
+// the path and "to progress." turns green. Coordinates are in the design's
+// units (a 2000px frame), scaled by --u.
+//
+// The six nodes stand on one straight line (LINE), evenly apart (265 units
+// centre to centre): A and B are the same ring with a letter in it (84 units
+// in radius), the four steps the same card (180 x 188). (They used to sit at
+// slightly different heights on curved connectors, A as a bare letter.)
 
 type Step = { key: "audit" | "analysis" | "strategy" | "action"; x: number; y: number };
-const STEPS: Step[] = [
-  { key: "audit", x: 550, y: 895 },
-  { key: "analysis", x: 806, y: 900 },
-  { key: "strategy", x: 1062, y: 894 },
-  { key: "action", x: 1320, y: 891 },
-];
-// Connectors: A → Audit → Analysis → Strategy → Action → B.
-const LINKS = [
-  "M408 972 C 468 972, 482 952, 545 952",
-  "M703 972 L 802 972",
-  "M958 982 C 1012 982, 1004 952, 1057 952",
-  "M1214 980 C 1268 980, 1262 952, 1314 952",
-  "M1474 963 L 1578 963",
-];
+const LINE = 970;
+// The nodes' centres, A to B.
+const CENTRES = [351, 616, 881, 1147, 1412, 1677];
+const RING = 84;
+const CARD = { half: 90, top: LINE - 94 };
+// A card's and a ring's left edge is its centre less its design half-width
+// (76.5 and 82: the CSS centres each on that point whatever its real width).
+const STEP_KEYS: Step["key"][] = ["audit", "analysis", "strategy", "action"];
+const STEPS: Step[] = STEP_KEYS.map((key, index) => ({ key, x: CENTRES[index + 1]! - 76.5, y: CARD.top }));
+const END = { start: { x: CENTRES[0]! - 82, y: LINE - RING }, target: { x: CENTRES[5]! - 82, y: LINE - RING } };
+// Connectors, A → Audit → Analysis → Strategy → Action → B: straight, from 12
+// units clear of one node's edge to 12 units short of the next one's.
+const GAP = 12;
+const edges = CENTRES.map((centre, index) => (index === 0 || index === 5 ? RING : CARD.half)).map((half, index) => ({
+  left: CENTRES[index]! - half - GAP,
+  right: CENTRES[index]! + half + GAP,
+}));
+const LINKS = edges.slice(0, -1).map((edge, index) => `M${edge.right} ${LINE} L ${edges[index + 1]!.left} ${LINE}`);
 const DOTS: Array<[number, number, number]> = [
-  // [x, y, link index whose start (0) or end (1) it marks]
-  [408, 972, 0], [545, 952, 1], [802, 972, 2], [1057, 952, 3], [1314, 952, 4],
+  // [x, y, the link that lights it: the first at A's side as the path starts, the others as link n - 1 arrives]
+  [edges[0]!.right, LINE, 0],
+  ...edges.slice(1, 5).map((edge, index): [number, number, number] => [edge.left, LINE, index + 1]),
 ];
 const ROW_TOP = 870;
 const ROW_LEFT = 250;
+const ROW_HEIGHT = 246;
 
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -128,7 +139,9 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       <div class="audit__hero">
         <h2 id="audit-title" class="audit__heading">
           <span v-blur-reveal>{{ `${t("home.audit.lineFirst")} ` }}</span>
-          <span v-blur-reveal class="audit__green">{{ t("home.audit.lineSecond") }}</span>
+          <!-- The green is on an inner span, so its brightening with the
+               scroll (opacity) and the reveal's own fade do not meet. -->
+          <span v-blur-reveal class="audit__green"><span class="audit__lit ob-green">{{ t("home.audit.lineSecond") }}</span></span>
         </h2>
         <p v-rise class="audit__aside">
           <span>{{ `${t("home.audit.asideFirst")} ` }}</span>
@@ -139,7 +152,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
       <div class="audit__scroller">
         <div ref="row" class="audit__row">
           <span class="audit__track" aria-hidden="true" />
-          <svg class="audit__links" :viewBox="`${ROW_LEFT} ${ROW_TOP} 1500 200`" aria-hidden="true" focusable="false">
+          <svg class="audit__links" :viewBox="`${ROW_LEFT} ${ROW_TOP} 1500 ${ROW_HEIGHT}`" aria-hidden="true" focusable="false">
             <defs>
               <marker id="audit-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
                 <path d="M1 1 L9 5 L1 9" fill="none" stroke="#00f562" stroke-width="1.6" />
@@ -183,8 +196,8 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
             </g>
           </svg>
 
-          <div class="audit__end audit__end--start" :class="{ 'is-lit': lit >= 1 }" :style="at(259, 972)">
-            <span class="audit__letter" aria-hidden="true">A</span>
+          <div class="audit__end audit__end--start" :class="{ 'is-lit': lit >= 1 }" :style="at(END.start.x, END.start.y)">
+            <span class="audit__ring"><span class="audit__letter" aria-hidden="true">A</span></span>
             <span class="audit__label">{{ t("home.audit.current") }}</span>
           </div>
 
@@ -216,8 +229,8 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
             <span class="audit__label">{{ t(`home.audit.steps.${item.key}`) }}</span>
           </div>
 
-          <div class="audit__end audit__end--target" :class="{ 'is-lit': lit >= 6 }" :style="at(1595, 894)">
-            <span class="audit__ring"><span class="audit__letter audit__letter--b" aria-hidden="true">B</span></span>
+          <div class="audit__end audit__end--target" :class="{ 'is-lit': lit >= 6 }" :style="at(END.target.x, END.target.y)">
+            <span class="audit__ring"><span class="audit__letter" aria-hidden="true">B</span></span>
             <span class="audit__label">{{ t("home.audit.target") }}</span>
           </div>
         </div>
@@ -225,7 +238,7 @@ const at = (x: number, y: number) => ({ left: `calc(${x - ROW_LEFT} * var(--u))`
     </div>
 
     <p v-blur-reveal class="audit__plan">
-      <span class="audit__green">{{ t("home.audit.planAccent") }}</span> {{ t("home.audit.planRest") }}
+      <span class="audit__green ob-green">{{ t("home.audit.planAccent") }}</span> {{ t("home.audit.planRest") }}
     </p>
     <p v-rise class="audit__text">{{ t("home.audit.text") }}</p>
     <NuxtLink v-rise data-pill :to="localePath('/contact')" class="audit__button ob-button">

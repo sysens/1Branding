@@ -39,7 +39,7 @@ const SIDES = ["logo", "identity"] as const;
       </svg>
       <p v-rise class="identity-compare__text">
         {{ t("projectsPage.identity.text") }}
-        <span class="identity-compare__accent">{{ t("projectsPage.identity.accent") }}</span>
+        <span class="identity-compare__accent ob-green">{{ t("projectsPage.identity.accent") }}</span>
       </p>
     </div>
   </section>
