@@ -57,9 +57,9 @@ onBeforeUnmount(() => {
     <div class="og-designers__body">
       <p class="og-designers__figure">
         <span class="og-designers__count type-display-xl">
-          <span class="og-designers__number">{{ t("oneGuarantee.designers.number") }}</span><span class="og-designers__plus ob-green" aria-hidden="true">+</span><span class="sr-only">+</span>
+          <span class="og-designers__number">{{ t("oneGuarantee.designers.number") }}</span><span class="sr-only">+</span>
         </span>
-        <span v-rise class="og-designers__word type-display-m og-grad ob-green" :style="{ '--chars': t('oneGuarantee.designers.word').length }">{{ t("oneGuarantee.designers.word") }}</span>
+        <span v-rise class="og-designers__word type-display-m og-grad ob-green" :style="{ '--chars': t('oneGuarantee.designers.word').length }">{{ t("oneGuarantee.designers.word") }}<span class="og-designers__plus ob-green" aria-hidden="true">+</span></span>
       </p>
       <p v-rise class="og-designers__text type-intro">{{ t("oneGuarantee.designers.text") }}</p>
     </div>
@@ -142,9 +142,8 @@ onBeforeUnmount(() => {
 
 /* "500": one clean outline, fading towards its foot. (It had a second,
    finer outline just off the first, which read as a doubled, frayed line.)
-   The "+" stands clear of the last zero, at its upper right, outside the
-   number's box: the number stays in the middle of the page, and the fade
-   (a mask on the number) does not reach the "+". */
+   Its "+" stands lower, at the upper right of the word under it (see the
+   word), where the number's foot meets the word. */
 .og-designers__count {
   position: relative;
   display: inline-block;
@@ -158,25 +157,28 @@ onBeforeUnmount(() => {
   mask-image: linear-gradient(to bottom, #000 40%, rgb(0 0 0 / 0.35) 92%);
 }
 
-.og-designers__plus {
-  position: absolute;
-  top: 0.08em;
-  left: calc(100% + 0.03em);
-  font-size: 0.34em;
-  font-weight: 700;
-  line-height: 1;
-}
-
 /* "Designers" stands over the foot of the number. The word is as long as its
    language makes it ("дизайнеров" is a tenth wider), so its size is also held
-   to what fits the screen: a bold letter is about 0.58em wide. */
+   to what fits the screen: a bold letter is about 0.58em wide, and the "+"
+   hanging at the word's right needs its width kept free on both sides (the
+   word stays in the middle of the page). */
 .og-designers__word {
   position: relative;
   margin-top: -0.52em;
   padding-bottom: 0.14em;
-  font-size: min(var(--type-display-m-size), (100vw - 2.5rem) / (var(--chars, 9) * 0.58));
+  font-size: min(var(--type-display-m-size), (100vw - 2.5rem) / ((var(--chars, 9) + 1.5) * 0.58));
   line-height: 1;
   white-space: nowrap;
+}
+
+/* The "+" of "500+": outside the word's box, at its upper right. */
+.og-designers__plus {
+  position: absolute;
+  top: 0.12em;
+  left: calc(100% + 0.1em);
+  font-size: 0.62em;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .og-designers__text {

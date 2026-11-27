@@ -12,11 +12,14 @@
 // tyres and the dark stay dark, and the car (an ellipse round it) is left
 // alone.
 //
-// The wheels turn: each tyre has a green ring painted on it, and two lights
-// with tails run round that ring, clockwise (the way a wheel rolls when the
-// car heads right). The ring is already as green as the screen gets, so
-// light alone would not show on it: between the lights the ring is dimmed,
-// and a light brings it back with a white-hot head. Which pixels are a ring
+// The wheels turn: each tyre has a green ring painted on it, and three
+// lights with tails run round that ring, clockwise (the way a wheel rolls
+// when the car heads right). The ring is already as green as the screen
+// gets, so light alone would not show on it: between the lights the ring is
+// dimmed, and a light brings it back with a white-hot head; a light's head
+// follows the dark end of the tail before it, and that hard step going round
+// is what reads as the wheel turning. Inside the ring, on the dark rim, five
+// faint spokes of light turn with it. Which pixels are a ring
 // comes from a mask cut from the picture (RINGS, made by
 // scripts/prepare-car-rings.mjs: the track's green lies a pixel from a ring
 // in places); where a pixel is on its ring's round comes from the ring's
@@ -57,9 +60,9 @@ const WHEELS: Array<[number, number, number, number]> = [
   [0.6561, 0.5039, 0.0176, 0.055],
 ];
 // Turns of the lights round a ring each second.
-const WHEEL_TURNS = 0.85;
+const WHEEL_TURNS = 1.1;
 // How much of the ring's light is taken away between the lights.
-const RING_DIM = 0.64;
+const RING_DIM = 0.82;
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -88,13 +91,17 @@ float noise(vec2 p) {
   return mix(mix(hash(i), hash(i + vec2(1., 0.)), f.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), f.x), f.y);
 }
 
-// The two lights with tails running round a wheel's ring (clockwise: the
-// head goes towards smaller angles), about that wheel only.
-float wheel(vec2 uv, vec4 ring) {
+// A wheel, about that wheel only. x: the three lights with tails running
+// round its ring (clockwise: a head goes towards smaller angles). y: five
+// soft spokes of light on the rim inside the ring, turning with them.
+vec2 wheel(vec2 uv, vec4 ring) {
   vec2 d = (uv - ring.xy) / ring.zw;
-  float turn = atan(d.y, d.x) / 6.2831853;
-  float g = fract(turn * 2. + uTime * uTurns * 2.);
-  return step(length(d), 1.7) * pow(1. - g, 2.2) * smoothstep(0., .05, g);
+  float rho = length(d);
+  float turn = atan(d.y, d.x) / 6.2831853 + uTime * uTurns;
+  float g = fract(turn * 3.);
+  float lights = step(rho, 1.7) * pow(1. - g, 1.7) * smoothstep(0., .05, g);
+  float spokes = pow(.5 + .5 * cos(turn * 6.2831853 * 5.), 5.) * smoothstep(.14, .32, rho) * (1. - smoothstep(.6, .78, rho));
+  return vec2(lights, spokes);
 }
 
 void main() {
@@ -138,9 +145,12 @@ void main() {
   // The wheels' rings: dimmed between the lights; a light gives the ring back
   // and burns white at its head.
   float ring = smoothstep(.1, .6, texture2D(uRings, uv).r);
-  float lit = wheel(uv, uWheelA) + wheel(uv, uWheelB) + wheel(uv, uWheelC);
-  float dim = uDim * ring * (1. - smoothstep(0., .5, lit));
-  col += vec3(.7, 1., .75) * ring * pow(lit, 2.4) * 1.5;
+  vec2 wheels = wheel(uv, uWheelA) + wheel(uv, uWheelB) + wheel(uv, uWheelC);
+  float lit = wheels.x;
+  float dim = uDim * ring * (1. - smoothstep(0., .45, lit));
+  col += vec3(.7, 1., .75) * ring * pow(lit, 2.2) * 1.7;
+  // The spokes: only on the dark of the rim, never over the ring or a bright part.
+  col += vec3(.42, .6, .46) * wheels.y * .2 * (1. - ring) * (1. - smoothstep(.12, .4, max(img.r, max(img.g, img.b))));
 
   // Added as "screen" would add it; alpha takes the picture away under it.
   gl_FragColor = vec4(min(col, 1.) * (1. - img), clamp(dim, 0., 1.));

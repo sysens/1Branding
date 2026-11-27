@@ -339,26 +339,15 @@ useGsapContext(root, ({ gsap, el }) => {
               decoding="async"
               draggable="false"
             />
-            <OptImage
-              v-if="project.hoverImage"
-              class="work-card__image work-card__image--hover"
-              :src="project.hoverImage"
-              alt=""
-              sizes="(max-width: 559px) 94vw, (max-width: 899px) 48vw, (max-width: 1279px) 32vw, 24vw"
-              loading="lazy"
-              decoding="async"
-              draggable="false"
-              :preview="false"
-            />
-            <span class="work-card__foot" aria-hidden="true">
-              <span class="work-card__badge">
-                <img v-if="project.logo" :src="project.logo.src" alt="" :width="project.logo.width" :height="project.logo.height" decoding="async" >
-                <span v-else class="work-card__initial" :style="{ color: project.ink }">{{ project.title.trim().charAt(0) }}</span>
-              </span>
-              <span class="work-card__bar">
-                <span class="work-card__title">{{ project.title }}</span>
-                <span v-if="project.category" class="work-card__category" :style="{ color: project.ink }">{{ project.category }}</span>
-              </span>
+            <!-- Over the picture when the pointer comes: its name, its category and the way in. -->
+            <span class="work-card__over" aria-hidden="true">
+              <span class="work-card__title">{{ project.title }}</span>
+              <span v-if="project.category" class="work-card__category">{{ project.category }}</span>
+              <span class="work-card__view">{{ t("projectsPage.view") }}</span>
+            </span>
+            <span class="work-card__badge" aria-hidden="true">
+              <img v-if="project.logo" :src="project.logo.src" alt="" :width="project.logo.width" :height="project.logo.height" decoding="async" >
+              <span v-else class="work-card__initial" :style="{ color: project.ink }">{{ project.title.trim().charAt(0) }}</span>
             </span>
           </NuxtLink>
         </li>
@@ -557,37 +546,25 @@ useGsapContext(root, ({ gsap, el }) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: filter 0.4s cubic-bezier(0.4, 0, 0.2, 1), scale 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
 }
 
-.work-card__link :deep(.work-card__image--hover) {
-  opacity: 0;
-}
-
-/* The foot: the white plate with the logo (30px tall, 10px around it, as
-   wide as the logo is, up to 60% of the card), and beside it the bar, below
-   the card until the pointer comes. */
-.work-card__foot {
+/* The white plate with the project's logo in the card's lower left corner
+   (30px tall, 10px around it, as wide as the logo is, up to 60% of the
+   card). It leaves when the pointer comes: the card then shows its text. */
+.work-card__badge {
   position: absolute;
-  right: 0;
   bottom: 0;
   left: 0;
   z-index: 1;
   display: flex;
-  height: 50px;
-}
-
-.work-card__badge {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: none;
   align-items: center;
   max-width: 60%;
   height: 50px;
   padding: 10px;
   background: #fff;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .work-card__badge img {
@@ -610,46 +587,82 @@ useGsapContext(root, ({ gsap, el }) => {
   text-transform: uppercase;
 }
 
-.work-card__bar {
+/* The card's text, over the picture when the pointer comes. The picture
+   itself stays (no second picture takes its place): it goes out of focus and
+   a little darker under the text. The project's name large, its category
+   under it, the way in at the foot. */
+.work-card__over {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   display: flex;
-  flex: 1;
   flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-  margin-left: -1px;
-  padding: 0 12px;
-  background: #fff;
-  translate: 0 100%;
-  transition: translate 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.work-card__title,
-.work-card__category {
-  overflow: hidden;
-  font-family: var(--app-font-sans);
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  align-items: flex-start;
+  padding: clamp(1rem, 7%, 1.75rem);
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.42) 0%, rgb(0 0 0 / 0.28) 45%, rgb(0 0 0 / 0.5) 100%);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .work-card__title {
-  margin-bottom: 3px;
-  color: #000;
-  font-size: 12px;
-  font-weight: 500;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  font-family: var(--app-font-display);
+  font-size: clamp(1.05rem, 1.45 * var(--fvw), 1.6rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .work-card__category {
-  font-size: 11px;
+  margin-top: 0.4em;
+  color: rgb(255 255 255 / 0.78);
+  font-family: var(--app-font-sans);
+  font-size: clamp(0.8rem, 0.95 * var(--fvw), 1rem);
+  line-height: 1.3;
+}
+
+.work-card__view {
+  margin-top: auto;
+  padding: 0.55em 1.1em;
+  border-radius: 0.5em;
+  background: rgb(255 255 255 / 0.9);
+  color: #0b0b0b;
+  font-family: var(--app-font-sans);
+  font-size: clamp(0.75rem, 0.85 * var(--fvw), 0.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* The text rises a little into place. */
+.work-card__title,
+.work-card__category,
+.work-card__view {
+  translate: 0 0.5rem;
+  transition: translate 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (hover: hover) {
-  .work-card__link:hover :deep(.work-card__image--hover) {
+  .work-card__link:hover :deep(.work-card__image) {
+    filter: blur(10px);
+    scale: 1.08;
+  }
+
+  .work-card__link:hover .work-card__over {
     opacity: 1;
   }
 
-  .work-card__link:hover .work-card__bar {
+  .work-card__link:hover .work-card__over > * {
     translate: 0 0;
+  }
+
+  .work-card__link:hover .work-card__badge {
+    opacity: 0;
   }
 }
 
@@ -658,8 +671,21 @@ useGsapContext(root, ({ gsap, el }) => {
   outline-offset: 3px;
 }
 
-.work-card__link:focus-visible .work-card__bar {
+.work-card__link:focus-visible :deep(.work-card__image) {
+  filter: blur(10px);
+  scale: 1.08;
+}
+
+.work-card__link:focus-visible .work-card__over {
+  opacity: 1;
+}
+
+.work-card__link:focus-visible .work-card__over > * {
   translate: 0 0;
+}
+
+.work-card__link:focus-visible .work-card__badge {
+  opacity: 0;
 }
 
 .work-empty {
@@ -709,7 +735,9 @@ useGsapContext(root, ({ gsap, el }) => {
 @media (prefers-reduced-motion: reduce) {
   .work-card__link,
   .work-card__link :deep(.work-card__image),
-  .work-card__bar,
+  .work-card__over,
+  .work-card__over > *,
+  .work-card__badge,
   .work-swap-enter-active,
   .work-swap-leave-active {
     transition: none;

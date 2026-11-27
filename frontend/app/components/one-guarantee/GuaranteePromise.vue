@@ -41,7 +41,7 @@ const cards = computed(() => {
         <h2 v-blur-reveal class="og-promise__title type-h2">
           <span>{{ t("oneGuarantee.promise.line1") }}</span>
           {{ " " }}
-          <span class="og-grad">{{ t("oneGuarantee.promise.line2") }}</span>
+          <span class="og-grad ob-green">{{ t("oneGuarantee.promise.line2") }}</span>
         </h2>
         <p v-rise class="og-promise__text type-intro">{{ t("oneGuarantee.promise.text") }}</p>
       </div>

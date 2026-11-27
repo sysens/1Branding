@@ -897,6 +897,7 @@
     }
   },
   "projectsPage": {
+    "view": "View project",
     "category": "Project category",
     "all": "All",
     "unavailable": "Projects are unavailable right now.",

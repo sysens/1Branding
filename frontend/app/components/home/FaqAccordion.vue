@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
 
-// "Frequently asked questions": one answer open at a time. An answer slides
+// "Frequently asked questions": an answer stays open until its own question
+// is pressed again, so several can be read side by side. (It was one at a
+// time: opening a question shut the one being read, which looked like the
+// answers closing by themselves.) An answer slides
 // open (and closed) the way apple.com's do: its height eases between 0 and
 // its own, and the text fades in a moment after the box starts to grow. The
 // heights are Web Animations on the panel, which Vue's <Transition> runs as
@@ -15,9 +18,10 @@ const items = computed(() => (tm("home.faq.items") as Array<{ q: unknown; a: unk
   answer: rt(item.a as never),
 })));
 
-const open = ref<number | null>(null);
+const open = ref<number[]>([]);
+const isOpen = (index: number) => open.value.includes(index);
 const toggle = (index: number) => {
-  open.value = open.value === index ? null : index;
+  open.value = isOpen(index) ? open.value.filter((item) => item !== index) : [...open.value, index];
 };
 const base = useId();
 
@@ -53,13 +57,13 @@ const onLeave = (element: Element, done: () => void) => {
     </h2>
 
     <ul class="faq__list">
-      <li v-for="(item, index) in items" :key="index" v-rise class="faq__item" :class="{ 'is-open': open === index }">
+      <li v-for="(item, index) in items" :key="index" v-rise class="faq__item" :class="{ 'is-open': isOpen(index) }">
         <h3 class="faq__heading">
           <button
             :id="`${base}-q${index}`"
             type="button"
             class="faq__question"
-            :aria-expanded="open === index"
+            :aria-expanded="isOpen(index)"
             :aria-controls="`${base}-a${index}`"
             @click="toggle(index)"
           >
@@ -69,7 +73,7 @@ const onLeave = (element: Element, done: () => void) => {
         </h3>
         <Transition :css="false" @enter="onEnter" @leave="onLeave">
           <div
-            v-show="open === index"
+            v-show="isOpen(index)"
             :id="`${base}-a${index}`"
             class="faq__panel"
             role="region"

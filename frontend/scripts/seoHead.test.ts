@@ -20,7 +20,7 @@ describe("page descriptions", () => {
 
   test("FAQ answers stay in the server HTML", () => {
     const faq = read("app/components/home/FaqAccordion.vue");
-    expect(faq).toContain('v-show="open === index"');
-    expect(faq).not.toContain('v-if="open === index"');
+    expect(faq).toContain('v-show="isOpen(index)"');
+    expect(faq).not.toContain('v-if="isOpen(index)"');
   });
 });

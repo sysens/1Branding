@@ -34,7 +34,7 @@ const { t } = useI18n();
     <div class="og-projects__copy">
       <h2 v-blur-reveal class="og-projects__title type-display-l">
         {{ t("oneGuarantee.projects.before") }}
-        <span class="og-grad">{{ t("oneGuarantee.projects.number") }}</span>
+        <span class="og-grad ob-green">{{ t("oneGuarantee.projects.number") }}</span>
         {{ t("oneGuarantee.projects.after") }}
       </h2>
       <p v-rise class="og-projects__text type-intro">{{ t("oneGuarantee.projects.text") }}</p>

@@ -60,7 +60,7 @@ const rows = computed(() => {
   <section v-if="rows.length" class="og-reviews" aria-labelledby="og-reviews-title">
     <h2 id="og-reviews-title" v-blur-reveal class="og-reviews__title type-display-s">
       {{ t("oneGuarantee.reviews.titleBefore") }}
-      <span class="og-grad">{{ t("oneGuarantee.reviews.titleAccent") }}</span>
+      <span class="og-grad ob-green">{{ t("oneGuarantee.reviews.titleAccent") }}</span>
       {{ t("oneGuarantee.reviews.titleAfter") }}
     </h2>
 

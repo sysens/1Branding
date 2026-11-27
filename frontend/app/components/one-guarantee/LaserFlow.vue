@@ -17,7 +17,12 @@
 // over the surface, and its stem carried straight on down to the surface,
 // where its light leaves it at the stem's two sides and runs out as the
 // beam's does. One white stroke with the beam's green about it; no beam over
-// it (0, the default: the plain beam from the top of the frame).
+// it (0, the default: the plain beam from the top of the frame). The stroke
+// is drawn twice: by the shader, and over it as a vector shape (an <svg>
+// polygon of the same outline). The canvas is held to 2048px on its longer
+// side and stretched over the frame, so on a large or dense screen its
+// pixels are larger than the screen's and the figure's edge came out soft;
+// the vector shape is as sharp as the screen is.
 //
 // `flow`: the original's beam comes down once and then stands still in its
 // fog. With flow the light keeps running down beside it, as in the film on
@@ -365,7 +370,8 @@ void main() {
     float notch = min(0.6878 - q.y, (q.y - 0.6054) - 0.3064 * (q.x + 0.1577)) * one * uScale;
     float open = smoothstep(-0.07, 0.02, q.x + 0.1577);
     float lit = 1.0 - 0.94 * smoothstep(-soft, soft, notch) * open;
-    float rim = 1.6 * exp(-dm / (1.5 * beamWidth)) + 1.3 * exp(-dm / (6.0 * beamWidth)) + 0.3 * exp(-dm / (22.0 * beamWidth));
+    // (Held low right at the edge: a bright bloom there made the white figure look out of focus.)
+    float rim = 0.7 * exp(-dm / (1.5 * beamWidth)) + 1.1 * exp(-dm / (6.0 * beamWidth)) + 0.3 * exp(-dm / (22.0 * beamWidth));
     rim *= 1.0 + 0.5 * flow * wave;
     col += (BEAM * 24.0 * inside + haloK * rim * (1.0 - inside) * lit) * above * drop;
   } else {
@@ -658,6 +664,8 @@ type Settings = ReturnType<typeof settings>;
 
 const containerRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
+const oneRef = ref<SVGSVGElement | null>(null);
+const oneShapeRef = ref<SVGPolygonElement | null>(null);
 
 let dispose: (() => void) | null = null;
 let wakeUp: (() => void) | null = null;
@@ -783,6 +791,42 @@ onMounted(() => {
     reveal.image = image;
   };
 
+  // The "1" as a vector shape over the canvas: the outline the shader draws
+  // (ONE there: the mark's seven corners, its stem's two edges carried down
+  // to the surface), in the frame's own pixels. Set when the frame or the
+  // figure changes; during the intro a mask lets it show as far down as the
+  // light has come (the shader's own fade: from 110 units over the front to
+  // 10 under it).
+  let oneKey = "";
+  let oneMask = "";
+  const drawOne = (width: number, height: number, beamX: number, surfaceTop: number, one: number, lift: number, front: number | null, scale: number) => {
+    const svg = oneRef.value;
+    const shape = oneShapeRef.value;
+    if (!svg || !shape) return;
+    const key = one > 0 ? [width, height, beamX, surfaceTop, one, lift].map((value) => value.toFixed(2)).join(" ") : "";
+    if (key !== oneKey) {
+      oneKey = key;
+      svg.style.display = key ? "" : "none";
+      if (key) {
+        const foot = surfaceTop - lift;
+        const low = -lift / one;
+        const corners: Array<[number, number]> = [
+          [-0.1484, 1], [0.1548, 1],
+          [0.1548 + 0.00755 * (1 - low), low], [-(0.1577 + 0.00755 * (0.6054 - low)), low],
+          [-0.1577, 0.6054], [0.1112, 0.6878], [-0.4256, 0.6878],
+        ];
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        shape.setAttribute("points", corners.map(([x, y]) => `${(beamX + x * one).toFixed(2)},${(foot - y * one).toFixed(2)}`).join(" "));
+      }
+    }
+    const mask = front === null ? "" : `linear-gradient(to bottom, #000 ${(front - 110 * scale).toFixed(1)}px, transparent ${(front + 10 * scale).toFixed(1)}px)`;
+    if (mask !== oneMask) {
+      oneMask = mask;
+      svg.style.setProperty("-webkit-mask-image", mask || "none");
+      svg.style.setProperty("mask-image", mask || "none");
+    }
+  };
+
   const render = () => {
     if (!ready) return;
     const s = settings();
@@ -864,6 +908,7 @@ onMounted(() => {
     gl.uniform4f(uniforms.uExtra, s.pulse, s.dots, 34.34 + seedValue * 7.31, 11.58 + seedValue * 3.17);
     gl.uniform1f(uniforms.uTheme, s.theme === "light" ? 1 : 0);
     gl.uniform2f(uniforms.uOne, oneHeight, oneLift);
+    drawOne(width, height, beamX, surface.top, oneHeight, oneLift, settled ? null : front, scale);
     gl.uniform1f(uniforms.uFlow, s.flow);
     gl.uniform1f(uniforms.uEdge, s.edge);
     gl.uniform3fv(uniforms.uTint, state.tints);
@@ -1053,6 +1098,10 @@ onBeforeUnmount(() => {
 <template>
   <div ref="containerRef" class="laser-flow">
     <canvas ref="canvasRef" class="laser-flow__canvas" aria-hidden="true" />
+    <!-- The "1", sharp at any pixel density (see drawOne). -->
+    <svg ref="oneRef" class="laser-flow__one" style="display: none" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <polygon ref="oneShapeRef" />
+    </svg>
   </div>
 </template>
 
@@ -1064,11 +1113,17 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
-.laser-flow__canvas {
+.laser-flow__canvas,
+.laser-flow__one {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.laser-flow__one {
+  fill: #fff;
+  shape-rendering: geometricPrecision;
 }
 </style>
