@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
 
-// "Frequently asked questions": an answer stays open until its own question
-// is pressed again, so several can be read side by side. (It was one at a
-// time: opening a question shut the one being read, which looked like the
-// answers closing by themselves.) An answer slides
+// "Frequently asked questions": one answer open at a time. Pressing another
+// question shuts the open one as the new one opens; pressing the open one
+// shuts it. An answer slides
 // open (and closed) the way apple.com's do: its height eases between 0 and
 // its own, and the text fades in a moment after the box starts to grow. The
 // heights are Web Animations on the panel, which Vue's <Transition> runs as
@@ -18,10 +17,10 @@ const items = computed(() => (tm("home.faq.items") as Array<{ q: unknown; a: unk
   answer: rt(item.a as never),
 })));
 
-const open = ref<number[]>([]);
-const isOpen = (index: number) => open.value.includes(index);
+const open = ref<number | null>(null);
+const isOpen = (index: number) => open.value === index;
 const toggle = (index: number) => {
-  open.value = isOpen(index) ? open.value.filter((item) => item !== index) : [...open.value, index];
+  open.value = isOpen(index) ? null : index;
 };
 const base = useId();
 
