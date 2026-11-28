@@ -50,7 +50,7 @@ const cards = computed(() => {
     <ol class="og-promise__cards">
       <li v-for="card in cards" :key="card.number" v-rise class="og-card">
         <p class="og-card__head">
-          <span class="og-card__number type-lead">{{ card.number }}</span>
+          <span class="og-card__number ob-green type-lead">{{ card.number }}</span>
           <component :is="card.icon" class="og-card__icon" aria-hidden="true" />
         </p>
         <h3 class="og-card__title type-h4">{{ card.title }}</h3>

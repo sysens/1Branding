@@ -68,7 +68,7 @@ const toggle = (index: number) => {
 
       <div class="brandbook-index__foot">
         <p>{{ t("projectsPage.brandbook.foot") }}</p>
-        <NuxtLink :to="servicePath('brandbook', siteLocale)" class="brandbook-index__more">
+        <NuxtLink :to="servicePath('brandbook', siteLocale)" class="brandbook-index__more ob-green">
           {{ t("projectsPage.brandbook.more") }}
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9" /></svg>
         </NuxtLink>
